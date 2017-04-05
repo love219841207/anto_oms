@@ -1,0 +1,36 @@
+<div id="top_box">
+	<div id="top_bar" ng-controller="topCtrl">
+		<div class="pull-left top_bar_left">
+			<i class="fa ml20 f20 mr20 switch_btn pointer fa-toggle-on" ng-class="{'fa-rotate-180':side_bar_1,'fa-rotate-180':side_bar_2}" ng-click='update_side_bar_status()'></i>
+			<select class="selecter" ng-change="change_station()" ng-class="{'green':now_store_bar!='','red':now_store_bar==''}" ng-model="now_station">
+				<option value="">平台选择</option>
+				<option>Amazon</option>
+				<option>Yahoo</option>
+				<option>Rakuten</option>
+			</select>
+			<i ng-show="now_station!==''" class="fa fa-fw am-flip-x" ng-class="{'green_light fa-exchange':now_store_bar!='','red_light fa-long-arrow-right':now_store_bar==''}"></i>
+			<select ng-show="now_station!==''" ng-change="change_now_store()" ng-model='now_store_bar' ng-class="{'green':now_store_bar!='','red':now_store_bar==''}" class="selecter am-flip-x">
+				<option value="">选择店铺 ..</option>
+				<option ng-repeat="item in now_store track by $index">{{item}}</option>
+			</select>
+		</div>
+		<ol class="breadcrumb bdr_no pull-right">
+			<li class="yellow_light"> <i class="fa fa-fw fa-hdd-o"></i>
+				System v{{sys_version}}
+			</li>
+			<li class="blue_light"> <i class="fa fa-fw fa-tv"></i>
+				{{u_num}}
+			</li>
+			<li class="green_light"> <i class="fa fa-fw fa-user-circle-o"></i>
+				{{u_name}}
+			</li>
+			<li>
+				<a class="red_light pointer" ng-click="logout()">
+					<span class="fa fa-sign-out"></span>
+					退出
+				</a>
+			</li>
+		</ol>
+		<div class="clearfix"></div>
+	</div>
+</div>

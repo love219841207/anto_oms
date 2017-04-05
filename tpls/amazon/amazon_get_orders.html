@@ -1,0 +1,374 @@
+<style>
+.table{margin-bottom: 10px;}
+.open_title{background: #fcf8e3;}
+</style>
+<div class="container-fluid" ng-controller="amazonCtrl">
+	<div class="row inner_bar">
+		<div class="col-lg-10 ">
+			<div class="row" ng-show="now_store_bar">
+				<div class="btn-group ml10 mt10">
+					<button 
+						type="button" 
+						id="active_tools2"
+						class="btn btn-default active_tools" 
+						ng-class="{'active':active_tools_2}"
+						ng-dblclick="
+							list_orders();
+							amazon_upload_list = false;
+							open_tool_bar = true;
+							open_info_btn = true;
+							open_filter_btn = true;
+							open_page_btn = false;
+							is_active('active_tools','2')
+						">
+						<i class="fa fa-refresh fa-fw blue"></i> 同步
+					</button>
+					<button 
+						type="button" 
+						id="active_tools0"
+						class="btn btn-default active_tools" 
+						ng-class="{'active':active_tools_0}"
+						ng-click="
+							init_list();
+							init_upload();
+							amazon_upload_list = true;
+							open_check = false;
+							open_tool_bar = false;
+							open_info_btn = false;
+							open_filter_btn = false;
+							open_page_btn = false;
+							is_active('active_tools','0')
+						">
+						<i class="fa fa-arrow-up fa-fw s_gray"></i> 上传
+					</button>
+					<button 
+						type="button" 
+						id="active_tools1"
+						class="btn btn-default active_tools" 
+						ng-class="{'active':active_tools_1}"
+						ng-click="
+							only_list();
+							amazon_upload_list = false;
+							open_tool_bar = true;
+							open_info_btn = true;
+							open_filter_btn = true;
+							open_page_btn = true;
+							is_active('active_tools','1')
+						">
+						<i class="fa fa-list-ol fa-fw s_gray"></i> 列表
+					</button>
+				</div>
+				
+				<div class="btn-group ml10 mt10" ng-show="open_tool_bar">
+					<!-- 详情按钮 -->
+					<button 
+						class="btn btn-default" 
+						ng-click="info_box=!info_box" 
+						ng-disabled="!open_info_btn">
+						<i ng-class="{'fa-folder-open':info_box}" class="fa fa-fw fa-folder s_gray"></i> 详情
+					</button>
+
+					<!-- 筛选按钮激发 -->
+					<button 
+						class="btn btn-default blue" 
+						ng-click="
+							check_no_item();
+							tool_1 = !tool_1;
+							open_check = true;
+							"
+						ng-disabled="!open_filter_btn" 
+						ng-hide="tool_1 || tool_2 || tool_3">
+						<i class="fa fa-filter fa-fw"></i> 筛选
+					</button>
+
+					<!-- 合单按钮激发 -->
+					<button 
+						id="active_tools5"
+						class="btn btn-default green active_tools" 
+						ng-class="{'active':active_tools_5}"
+						ng-click="
+							init_list();
+							tool_2 = !tool_2;
+							open_check = false;
+							open_info_btn = true;
+							open_filter_btn = false;
+							open_page_btn = false;
+							is_active('active_tools','5')"
+						ng-hide="tool_1 || tool_2 || tool_3">
+						<i class="fa fa-inbox fa-fw"></i> 合单
+					</button>
+
+					<!-- 发货按钮激发 -->
+					<button 
+						id="active_tools6"
+						class="btn btn-default yellow active_tools" 
+						ng-class="{'active':active_tools_6}"
+						ng-click="
+							init_list();
+							tool_3=!tool_3;
+							open_check = false;
+							open_info_btn = false;
+							open_filter_btn = false;
+							open_page_btn = false;
+							is_active('active_tools','6')" 
+						ng-hide="tool_1 || tool_2 || tool_3">
+						<i class="fa fa-fw fa-truck"></i> 发货
+					</button>
+					
+					<!-- tool_1 日期筛选按钮组 -->
+					<button type="button" class="btn btn-default" ng-show="tool_1" ng-click="tool_1=!tool_1;open_check=false">
+						<i class="fa fa-reply fa-fw red"></i> 返回
+					</button>
+
+					<button class="btn btn_fff btn-sm" ng-show="tool_1">
+						<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="search_order_line" ng-change="change_serch_line()">
+							<option value="1">未匹配</option>
+							<option value="0">无详情</option>
+							<option value="99">未通过</option>
+							<option value="2">已通过</option>
+							<option value="3">已合单</option>
+							<option value="6">已出单</option>
+							<option value="8">close</option>
+							<option value="all">所有单</option>
+						</select>
+					</button>
+
+					<button type="button" class="btn btn_fff btn-sm" ng-show="tool_1">
+						<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="search_date" ng-change="change_search_date()">
+							<option value="">日期筛选 ..</option>
+							<option value="syn_day">同步日期</option>
+							<option value="purchase_date">购买日期</option>
+							<option value="latest_ship_date">最后发货日期</option>
+						</select>
+						<span ng-hide="search_date==''">
+							<input placeholder="开始日期" class="date_icon blue" readonly="readonly" type="text" name="s_date" ng-flat-datepicker datepicker-config="datepickerConfig" ng-model="s_date"> - <input placeholder="结束日期" class="date_icon blue" readonly="readonly" type="text" name="e_date" ng-flat-datepicker datepicker-config="datepickerConfig" ng-model="e_date">
+						</span>
+					</button>
+			
+					<!-- tool_1 字段筛选按钮组 -->
+					<button type="button" class="btn btn_fff btn-sm blue" ng-show="tool_1">
+						<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="search_field" ng-change="change_search_field()">
+							<option value="">字段筛选 ..</option>
+							<option value="amazon_order_id">订单号</option>
+							<option value="buyer_email">邮箱</option>
+							<option value="buyer_name">购买人</option>
+							<option value="receive_name">收件人</option>
+						</select>
+						<span ng-hide="search_field==''">
+							<input class="key_words blue" ng-model="search_key" type="text" placeholder="关键词 ..">
+						</span>
+					</button>
+					<!-- 筛选确定按钮 -->
+					<button class="btn btn-danger" ng-click="filter_bar_submit()" ng-show="tool_1">确定</button>
+
+					<!-- 合单按钮组 -->
+					<button type="button" class="btn btn-default" ng-show="tool_2" ng-click="tool_2=!tool_2">
+						<i class="fa fa-reply fa-fw red"></i> 返回
+					</button>
+					<button type="button" 
+							id="active_tools51"
+							class="btn btn-default green active_tools" 
+							ng-show="tool_2" 
+							ng-click="onekey_common_order();is_active('active_tools','51')"
+							ng-class="{'active':active_tools_51}">
+							<i class="fa fa-coffee fa-fw"></i> 一键合单
+					</button>
+					<button type="button" 
+							id="active_tools52"
+							class="btn btn-default green active_tools" 
+							ng-show="tool_2" 
+							ng-click="list_common_order();is_active('active_tools','52')"
+							ng-class="{'active':active_tools_52}">
+						<i class="fa fa-file-text-o fa-fw"></i> 合单列表
+					</button>
+
+					<!-- 发货按钮组 -->
+					<button type="button" class="btn btn-default" ng-show="tool_3" ng-click="tool_3=!tool_3">
+						<i class="fa fa-reply fa-fw red"></i> 返回
+					</button>
+					<button type="button" class="btn btn-default" ng-show="tool_3" ng-click="">
+						<i class="fa fa-angle-double-right fa-fw"></i>发货
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div ng-show="amazon_upload_list" class="col-lg-6 col-md-8 col-sm-10 mt70 animate slide-down">
+		<div class="panel panel-primary">
+			<div class="panel-heading">导入订单</div>
+			<div class="panel-body">
+				<div class="container-fluid">
+					<form name="fileForm" ng-controller="FileController">
+						<div class="row">
+							<div class="col-lg-12">
+								<div class="blue">文件类型： 亚马逊后台订单表.txt</div>
+							</div>
+						</div>
+						<div class="row mt10">
+							<div class="col-lg-8">
+								<input type="text" ng-model="upload_store" class="form-control" placeholder="店铺名，请务必确保店铺名和导入文件的一致性。">
+							</div>
+						</div>
+						<div class="row mt10">
+							<div class="col-lg-12">
+								<button ng-click="chose_file();count_order = false;" class="btn btn-default" ngf-select="" ngf-pattern="'.txt'" name="file" ng-model="upload_file" ngf-multiple="false" required="1">选择文件</button> 
+								<i ng-show="fileForm.file.$error.required" class="fa fa-fw fa-star red"></i>
+								<span class="green">{{upload_file.name}}</span>
+							</div>
+						</div>
+						<div class="row mt10">
+							<div class="col-lg-12">
+								<button class="btn btn-primary btn-sm" ng-disabled="!fileForm.$valid || upload_store!=now_store_bar" ng-click="submit('amazon_add_list','txt','amazon')"><i class="fa fa-upload fa-fw"></i> 导 入</button>
+							</div>
+						</div>
+						<div class="row mt10">
+							<div class="col-lg-11">
+								<div class="progress" ng-show="progress_bar >=0">
+									<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{progress_bar}}" aria-valuemin="0" aria-valuemax="100" style="width:{{progress_bar}}%">
+									{{progress_bar}}%
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-1 green fa fa-fw fa-check" ng-show="upload_ok"></div>
+						</div>
+						<div ng-show="count_order" class="s_gray">
+							<hr>
+							<div>获取订单数：<span class="blue">{{count_order}}</span></div>
+							<div>实际导入数：<span class="green">{{insert_count}}</span></div>
+							<div>重复订单数：<span class="red">{{has_count}}</span></div>
+						</div>
+					</form>
+					<hr>
+					<div class="s_gray">
+						<div>邮编验证通过订单数：<span class="green">{{post_pass}}</span></div>
+						<div>邮编验证失败订单数：<span class="red">{{post_cut}}</span></div>
+						<div>无邮编/无电话订单数：<span class="yellow">{{post_no}}</span></div>
+					</div>
+				</div>
+			</div>
+			<div class="panel-footer">导入 .txt 格式的亚马逊订单。</div>
+		</div>
+	</div>
+	<div class="row mt40" ng-show="common_order_data">
+		<div class="mt20 col-lg-12">
+			<div class="btn-group mr10" ng-repeat="item in common_order_data track by $index">
+				<div ng-click="get_common_order(item.send_id);is_active('active_common',$index)" 
+					id="active_common{{$index}}"
+					ng-class="{'active':active_common_{{$index}}}"
+					class="active_common btn btn-default btn-sm mt10" 
+					>{{item.send_id}}</div>
+				<div ng-click="break_common_order(item.send_id)" class="btn btn-danger btn-sm mt10">拆</div>
+			</div>
+		</div>
+	</div>
+	<div class="row mt50">
+		<div class="col-lg-12 mt20" ng-show="get_order_list_data">
+			<div ng-repeat="item in get_order_list_data track by $index" class="animate slide-left">
+				<table class="table table-condensed table-hover f12" >
+					<tr class="white" ng-class="{'danger':item.payment_method=='COD'}">
+						<td class="green pointer" ng-click="item.is_click=!item.is_click">
+							<i ng-show="open_check" class="fa red fa-lg fa-fw" ng-class="{'fa-square-o':item.is_click==false,'fa-check-square':item.is_click==true}"></i>
+							<!-- {{item.is_click}} -->
+							<i>{{item.id}}</i>
+						</td>
+						<td class="blue"><span class="s_gray">订单号：</span>{{item.amazon_order_id}}</td>
+						<td class="red"><span class="s_gray">同步日期：</span>{{item.syn_day}}</td>
+						<td ><span class="s_gray">购买时间：</span>{{item.purchase_date}}</td>
+						<td class="green"><span class="s_gray">订单总金额：</span>{{item.order_total_money}}</td>
+						<td class="red" ng-hide="item.payment_method==''"><span class="s_gray">代引：</span>{{item.payment_method}}</td>
+						<td class="red" ng-hide="item.payment_method==''"><span><span class="s_gray">代引金额：</span>{{item.pay_money}}</span></td>
+						<td>
+							<button data-animation="am-fade-and-slide-top" data-template-url="/modal/amazon_show_one_info.html" bs-modal="modal" class="btn btn-xs btn-primary mr5" ng-click="show_one_info(item.amazon_order_id)">详情</button>
+							<button data-animation="am-fade-and-slide-top" data-template-url="/modal/amazon_note.html" bs-modal="modal" class="btn btn-xs btn-info" ng-click="change_note(item.amazon_order_id)">备注</button>
+						</td>
+					</tr>
+					<tr ng-show="info_box" class="white" ng-class="{'danger':item.payment_method=='COD'}">
+						<td></td>
+						<td class=""><span class="s_gray">购买人：</span>{{item.buyer_name}}</td>
+						<td class="green"><span class="s_gray">电话：</span>{{item.phone}}</td>
+						<td class="blue"><span class="s_gray">邮箱：</span>{{item.buyer_email}}</td>
+						<td colspan="4"><span class="s_gray">国家/货币：</span>{{item.country}}/{{item.order_total_currency}}</td>	
+					</tr>
+					<tr ng-show="info_box" class="white" ng-class="{'danger':item.payment_method=='COD'}">
+						<td></td>
+						<td class="yellow"><span class="s_gray">收件人：</span>{{item.receive_name}}</td>
+						<td class="blue"><span class="s_gray">邮编：</span>{{item.post_code}}</td>
+						<td class="green"><span class="s_gray">地址：</span>{{item.address}}</td>
+						<td colspan="4"><span class="s_gray" ng-show="item.latest_ship_date">最后发货时间：</span>{{item.latest_ship_date}}</td>
+					</tr>
+				</table>
+			</div>	
+		</div>
+		<div class="col-lg-10 s_gray" ng-show="has_orders_data">
+			<hr style="border-color:#FFF;">
+			<div>获取订单数：<span class="blue">{{count_order}}</span></div>
+			<div>实际导入数：<span class="green">{{insert_count}}</span></div>
+			<div>重复订单数：<span class="red">{{has_count}}</span></div>
+			<hr style="border-color:#FFF;">
+			<div>邮编验证通过订单数：<span class="green">{{post_pass}}</span></div>
+			<div>邮编验证失败订单数：<span class="red">{{post_cut}}</span></div>
+			<div>无邮编/无电话订单数：<span class="yellow">{{post_no}}</span></div>
+			<hr style="border-color:#FFF;">
+			<h4>检测到以下订单重复：</h4>
+			<div class="col-lg-3">
+				<table class="table table-condensed">
+					<tr ng-repeat="item in has_orders_data track by $index">
+						<td>{{$index+1}}</td>
+						<td class="red">{{item.amazon_order_id}}</td>
+					</tr>
+				</table>
+			</div>
+			
+		</div>
+
+	</div>
+	<div class="btn-group mt20 check_mail_box" ng-show="open_check">
+		<!-- 选择发信按钮组 -->
+		<button type="button" ng-show="cc_all" class="btn btn-default btn-sm" ng-click="check_all_item();">
+			<i class="fa fa-square-o fa-fw s_gray"></i> 全选
+		</button>
+      	<button type="button" ng-hide="cc_all" class="btn btn-default btn-sm" ng-click="check_no_item();">
+      		<i class="fa fa-check-square-o fa-fw s_gray"></i> 不选
+      	</button>
+      	<button type="button" class="btn btn-default btn-sm" ng-click="check_back_item();back_icon=!back_icon">
+      		<i class="fa fa-adjust fa-fw s_gray" ng-class="{'fa-flip-horizontal':back_icon}"></i>反选
+      	</button>
+      	<button type="button" class="btn btn-default btn-sm" >
+      		<i class="fa fa-envelope-o fa-fw s_gray"></i> 发信
+      	</button>
+    </div>
+	<nav>
+		<ul class="pagination" ng-show="open_page_btn">
+			<li class="pointer" ng-class="{disabled:pre_overflow}">
+				<a class="pg_s" ng-click="Previous()">
+					<span class="fa fa-angle-left fa-fw"></span>上一页
+				</a>
+			</li>
+			<li class="pointer" ng-repeat="page in pageList track by $index" ng-class="{active: isActivePage(page)}" >
+				<a ng-click="selectPage(page)" >{{ page }}</a>
+			</li>
+			<li class="pointer" ng-class="{disabled:next_overflow}">
+				<a ng-click="Next()">
+					下一页<span class="fa fa-angle-right fa-fw"></span>
+				</a>
+			</li>
+			<li class="disabled">
+				<a>
+					每页
+					<input class="page_size tagr" type="number" min="1" ng-model='change_size' ng-value="pageSize" ng-change="change_pageSize()">条</a>
+			</li>
+			<li>
+				<a>
+					<select ng-model="selectOption" style="margin:-3px 1px -2px 1px;" ng-change="clickOption()" ng-options="c as c for c in pageOption">
+						<option value="">跳转</option>
+					</select>
+				</a>
+			</li>
+			<li class="disabled">
+				<a class="pg_e">Page {{selPage}} / {{pages}}</a>
+				<a>共 {{all_num}} 条</a>
+			</li>
+		</ul>
+	</nav>
+	<div class="end_height"></div>
+</div>

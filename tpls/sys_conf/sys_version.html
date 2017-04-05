@@ -1,0 +1,13 @@
+<div class="container-fluid mt20" ng-controller="versionCtrl">
+	<div class="row">
+		<div class="col-lg-3">
+			<div class="input-group">
+				<input type="text" placeholder="请输入版本号" ng-model="new_version" class="form-control">
+					<span class="input-group-btn">
+					<button class="btn btn-primary" type="button" ng-disabled="!new_version" ng-click="updte_version()" >确定</button>
+
+				</span>
+		    </div><!-- /input-group -->
+		</div>
+	</div>
+</div>

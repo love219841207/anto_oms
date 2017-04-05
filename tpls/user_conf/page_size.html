@@ -1,0 +1,24 @@
+<div class="container-fluid mt20" ng-controller="pagesizeCtrl">
+	<div class="row">
+		<div class="col-lg-4 col-md-6 col-sm-10">
+			<div class="panel panel-default">
+				<div class="panel-heading"><i class="fa fa-fw fa-sort-numeric-asc"></i> 每页条数</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-lg-8 col-lg-offset-2">
+							<div class="input-group">
+								<input type="number" placeholder="请输每页条数" ng-model="new_pagesize" class="form-control">
+									<span class="input-group-btn">
+									<button class="btn btn-default" type="button" ng-disabled="!new_pagesize" ng-click="updte_pagesize()" >确定</button>
+
+								</span>
+						    </div><!-- /input-group -->
+						</div>
+					</div>
+				</div>
+				<div class="panel-footer">设置列表每页所展示的条数。</div>
+			</div>
+		</div>
+	</div>
+	<div class="end_height"></div>
+</div>

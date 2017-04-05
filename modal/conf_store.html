@@ -1,0 +1,134 @@
+<div class="modal" tabindex="-1" role="dialog" ng-controller="storeCtrl">
+  <div class="modal-dialog" style="width:600px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" ng-click="$hide()">&times;</button>
+        <h4 class="modal-title yellow"><i class="fa fa-fw fa-cog"></i> {{conf_store_modal_title}} 店铺配置</h4>
+        <div class="modal-body">
+        <!-- 亚马逊模块 -->
+          <div ng-show="conf_store_station=='Amazon'">  
+            <div class="input-group auto mt10 ml20 mr20 ">
+              <span class="input-group-addon" >
+                AWSACCESSKEYID
+              </span>
+              <input  type="text"
+              ng-model="awsaccesskeyid" 
+              class="form-control">
+            </div>
+            <div class="input-group auto mt10 ml20 mr20 ">
+              <span class="input-group-addon" >
+                SELLERID
+              </span>
+              <input  type="text"
+              ng-model="sellerid" 
+              class="form-control">
+            </div>
+            <div class="input-group auto mt10 ml20 mr20 ">
+              <span class="input-group-addon" >
+                SIGNATUREVERSION
+              </span>
+              <input  type="text"
+              placeholder="填：2" 
+              ng-model="signatureversion" 
+              class="form-control">
+            </div>
+            <div class="input-group auto mt10 ml20 mr20 ">
+              <span class="input-group-addon" >
+                SECRET
+              </span>
+              <input  type="password"
+              ng-model="secret" 
+              class="form-control">
+            </div>
+            <div class="input-group auto mt10 ml20 mr20 ">
+              <span class="input-group-addon" >
+                MARKETPLACEID_ID_1
+              </span>
+              <input  type="text"
+              placeholder="填：A1VC38T7YXB528" 
+              ng-model="marketplaceid_id_1" 
+              class="form-control">
+            </div>
+            <hr>
+            <div class="input-group auto mt10 ml20 mr20 ">
+              <span class="input-group-addon" >
+                邮箱昵称
+              </span>
+              <input  type="text"
+              placeholder="发件人昵称" 
+              ng-model="mail_name" 
+              class="form-control">
+            </div>
+            <div class="input-group auto mt10 ml20 mr20 ">
+              <span class="input-group-addon" >
+                邮箱账号
+              </span>
+              <input  type="text"
+              placeholder="例：anto@qq.com。" 
+              ng-model="mail_id" 
+              class="form-control">
+            </div>
+            <div class="input-group auto mt10 ml20 mr20 ">
+              <span class="input-group-addon" >
+                邮箱密码
+              </span>
+              <input  type="password"
+              ng-model="mail_pwd" 
+              class="form-control">
+            </div>
+            <div class="input-group auto mt10 ml20 mr20 ">
+              <span class="input-group-addon" >
+                SMTP地址
+              </span>
+              <input  type="text"
+              placeholder="例：smtp.qq.com" 
+              ng-model="mail_smtp" 
+              class="form-control">
+            </div>
+            <div class="input-group auto mt10 ml20 mr20 ">
+              <span class="input-group-addon" >
+                邮箱端口号
+              </span>
+              <input  type="text"
+              placeholder="采用ssl协议，默认：465，不要使用 587 ！" 
+              ng-model="mail_port" 
+              class="form-control">
+            </div>
+            <div class="input-group auto mt10 ml20 mr20 ">
+              <span class="input-group-addon" >
+                邮件回复地址
+              </span>
+              <input  type="text"
+              placeholder="客人回复邮件的地址" 
+              ng-model="mail_answer_addr" 
+              class="form-control">
+            </div>
+<!--             <div class="input-group auto mt10 ml20 mr20 ">
+              <span class="input-group-addon" >
+                秘密抄送
+              </span>
+              <input  type="text"
+              placeholder="不填则不抄送" 
+              ng-model="mail_bcc" 
+              class="form-control">
+            </div> -->
+            <div class="input-group auto mt10 ml20 mr20 ">
+              <span class="input-group-addon" >
+                上传单号后是否发送邮件通知客户（发货通知信）？
+              </span>
+              <input  type="text"
+              placeholder="是填：1，否填：0。" 
+              ng-model="mail_over_send" 
+              class="form-control">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <!-- 亚马逊按钮 -->
+        <button ng-show="conf_store_station=='Amazon'" type="button" class="btn btn-warning" ng-click="save_amazone_conf();$hide()"><i class="fa fa-fw fa-save"></i> 保 存</button>
+        <button type="button" class="btn btn-default" ng-click="$hide()">关 闭</button>
+      </div>
+    </div>
+  </div>
+</div>

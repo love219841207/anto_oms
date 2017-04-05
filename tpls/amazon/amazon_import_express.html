@@ -1,0 +1,44 @@
+<div class="container-fluid mt20" ng-controller="amazonCtrl">
+	<div class="row">
+		<div class="col-lg-6 col-md-8 col-sm-10">
+			<div class="panel panel-primary">
+				<div class="panel-heading">导入快递单</div>
+				<div class="panel-body">
+					<div class="container-fluid">
+						<form name="fileForm" ng-controller="FileController">
+							<div class="row">
+								<div class="">文件类型： OMS出的表</div>
+							</div>
+							<div class="row mt10">
+								<button ng-click="chose_file()" class="btn btn-default" ngf-select="" ngf-pattern="'.xlsx'" name="file" ng-model="upload_file" ngf-multiple="false" required="1">选择文件</button> 
+								<i ng-show="fileForm.file.$error.required" class="fa fa-fw fa-star red"></i>
+								<span class="green">{{upload_file.name}}</span>
+							</div>
+							<div class="row mt10">
+								<button class="btn btn-primary btn-sm" ng-disabled="!fileForm.$valid" ng-click="submit('oms','xlsx','amazon')"><i class="fa fa-upload fa-fw"></i> 导 入</button>
+							</div>
+							<div class="row mt10">
+								<div class="col-lg-11">
+									<div class="progress" ng-show="progress_bar >=0">
+										<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{progress_bar}}" aria-valuemin="0" aria-valuemax="100" style="width:{{progress_bar}}%">
+										{{progress_bar}}%
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-1 green fa fa-fw fa-check" ng-show="upload_ok"></div>
+							</div>
+							<div ng-show="ems_response" class="well">
+								<i class="fa fa-fw fa-exclamation-circle red"></i>已存在：<span class="red">{{ems_response.has_num}}</span> 条 <br>
+								<i class="fa fa-fw fa-check-circle green"></i>已导入：<span class="green">{{ems_response.insert_num}}</span> 条 
+							</div>
+						</form>
+						
+					</div>
+
+				</div>
+				<div class="panel-footer">导入各自快递公司的快递单。</div>
+			</div>
+		</div>
+	</div>
+	<div class="end_height"></div>
+</div>

@@ -1,0 +1,25 @@
+<div class="modal" tabindex="-1" role="dialog" ng-controller="usersCtrl">
+  <div class="modal-dialog" style="width:500px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" ng-click="$hide()">&times;</button>
+        <h4 class="modal-title blue"><i class="fa fa-fw fa-laptop"></i> 分配店铺</h4>
+        <div class="modal-body">
+          <div class="btn-group">
+              <button type="button" class="btn btn-sm btn-default" ng-click="check_all_store();cc_all=1" ng-disabled="cc_all==1"><i class="fa fa-check-square-o fa-fw"></i>全选</button>
+              <button type="button" class="btn btn-sm btn-default" ng-click="check_no_store();cc_all=0" ng-disabled="cc_all==0"><i class="fa fa-square-o fa-fw"></i>全不选</button>
+            </div>
+          <div class="list-group tagl mt10">
+            <a class="list-group-item pointer" ng-click="item.has=!item.has;" ng-repeat="item in all_store track by $index">
+            <i class="fa fa-fw red mr10" ng-class="{'fa-square-o':item.has==false,'fa-check-square-o':item.has==true}"></i> {{item.store_name}}
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="save_mystore();$hide()"><i class="fa fa-fw fa-save"></i> 保 存</button>
+        <button type="button" class="btn btn-default" ng-click="$hide()">关 闭</button>
+      </div>
+    </div>
+  </div>
+</div>

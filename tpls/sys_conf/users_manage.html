@@ -1,0 +1,53 @@
+<div class="container-fluid mt20" ng-controller="usersCtrl">
+	<div class="row">
+		<div class="col-lg-10 col-md-10 col-sm-10">
+			<div class="panel panel-primary">
+				<div class="panel-heading"><i class="fa fa-fw fa-users"></i> 员工管理</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-lg-3">
+							<div class="input-group">
+								<input ng-model='new_user' type="text" class="form-control" placeholder="员工姓名">
+								<div class="input-group-btn">
+									<div ng-click="add_user()" ng-disabled="!new_user" class="btn btn-success" type="button"><i class="fa fa-plus fa-fw"></i>新 增</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="container-fluid">
+							<table class="mt20 table table-condensed table-hover table-striped table-bordered tagc">
+								<tr class="blue info">
+									<td><i class="fa-sort-numeric-asc fa fa-fw"></i></td>
+									<td><i class="fa fa-hashtag fa-fw"></i> 工 号</td>
+									<td><i class="fa fa-user fa-fw"></i> 员 工</td>
+									<td><i class="fa fa-amazon fa-fw"></i> 亚马逊</td>
+									<td><i class="fa fa-registered fa-fw"></i> 乐 天</td>
+									<td><i class="fa fa-yahoo fa-fw"></i> 雅 虎</td>
+									<td><i class="fa fa-cog fa-fw fa-spin"></i> 操 作</td>
+								</tr>
+								<tr class="s_gray" ng-repeat="item in all_users track by $index">
+									<td class="italic success green">{{$index+1}}</td>
+									<td>{{item.u_num}}</td>
+									<td>{{item.u_name}}</td>
+									<td class="tagl green">
+										&nbsp;{{item.u_amazon | replace_symbol}} <i ng-hide="item.u_num<1001" data-animation="am-fade-and-slide-top" data-template-url="/modal/change_user_store.html" bs-modal="modal" ng-click="change_usaer_store_modal('Amazon',item.u_num)" class="fa fa-edit pointer s_gray"></i>
+									</td>
+									<td>{{item.u_rakuten | replace_symbol}}</td>
+									<td>{{item.u_yahoo | replace_symbol}}</td>
+									<td>
+										<div ng-hide="item.u_num<1001" data-animation="am-fade-and-slide-top" data-template-url="/modal/re_pwd_user.html" bs-modal="modal" ng-click="re_pwd_modal(item.u_num,item.u_name)" class="btn btn-xs btn-warning mr20"><i class="fa-undo fa fa-fw"></i>重置密码</div>
+										<div ng-hide="item.u_num<1001" data-animation="am-fade-and-slide-top" data-template-url="/modal/del_user.html" bs-modal="modal" ng-click="del_user_modal(item.u_num,item.u_name)" class="btn-danger btn btn-xs"><i class="fa fa-trash-o fa-fw"></i>删 除</div>
+									</td>
+								</tr>
+							</table>	
+						</div>
+					</div>
+				</div>
+				<div class="panel-footer">对员工进行管理。<span class="red">默认和重置密码都为：123456。</span></div>
+			</div>
+		</div>
+	</div>
+	<div class="end_height"></div>
+</div>

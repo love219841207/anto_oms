@@ -1,0 +1,80 @@
+<style>
+.cal_wrapper{
+  display: block !important;
+}
+</style>
+<div ng-controller="plugCtrl">
+  <div class="container-fluid">
+    <div class="row">
+      <nav class="navbar bdr_no gray bg_opacity">
+        <div id="header_txt">
+          <div class="fa fa-github pull-left" style="font-size:24px;margin-top: 12px;"></div>
+          <div class="pull-left" style="margin-top:1px;">安藤订单管理系统</div>
+          <div class="clearfix"></div>
+        </div>
+      </nav>
+    </div>
+    <div class="row" ng-controller="loginCtrl">
+      <div class="col-lg-10 col-lg-offset-1">
+        <div class="col-lg-5 col-md-12 col-xs-12 pull-right">
+          <form name="loginForm">
+            <div class="panel bg_opacity panel-default auto" id="login_box">
+              <div class="panel-body">
+                <div class="input-group auto mt10 ml20 mr20 ">
+                  <span class="input-group-addon" >
+                    <span class="fa fa-user fa-fw"></span>
+                  </span>
+                  <input  type="text"
+                          placeholder="工号" 
+                          ng-model="u_num" 
+                          name="u_num" 
+                          required   
+                          maxlength="4" 
+                          ng-maxlength="4"
+                          ng-class="{'error':loginForm.u_num.$invalid && loginForm.u_num.$touched}"
+                          class="form-control login_input">   
+                </div>
+                <div class="input-group auto mr20 ml20 mt20">
+                  <span class="input-group-addon">
+                    <span class="fa fa-key fa-fw"></span>
+                  </span>
+                  <input  type="password" 
+                          placeholder="密码"
+                          ng-model="u_pwd"
+                          name="u_pwd" 
+                          required
+                          ng-class="{'error':loginForm.u_pwd.$invalid && loginForm.u_pwd.$touched}"
+                          class="form-control login_input"></div>
+              </div>
+              <div id="login_btn" class="btn mt10 btn-danger" ng-click="save()">登&nbsp;&nbsp;&nbsp;录</div>
+            </div>
+          </form>
+        </div>
+        <div class="col-lg-7 col-md-12 col-sm-12 col-xs-12 pull-left">
+          <div class="jumbotron bg_opacity" id="update_panel">
+            <h4>系统更新</h4>
+            <ul>
+              <li>2、时间区间的结束日期要大于一天。例如：搜索 2017-03-02 到 2017-03-03 的数据，请选择 [2017-03-02] [2017-03-04] 含义为从 2017-03-02 的0点 到 2017-03-04 的0点的数据。</li>
+              <li>1、完美支持浏览器前进后退操作。</li>
+            </ul>
+
+          </div>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+    </div>
+    <div class="container">
+      <nav class="navbar bg_opacity navbar-default navbar-fixed-bottom" style=" border-top:none;">
+        <div id="footer_txt" class="pull-right gray">
+          <i class="fa fa-chrome fa-spin"></i>
+          请使用Chrome浏览器进行访问&nbsp;&nbsp;&nbsp;&nbsp;
+          <span class="fa fa-mortar-board"></span>
+          Powered by ycmbcd
+        </div>
+        <div class="clearfix"></div>
+      </nav>
+    </div>
+  </div>
+  <!-- alert消息弹框 -->
+  <div uib-alert ng-repeat="alert in alerts" dismiss-on-timeout='5300' ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert($index)"><div id="alert_icon" class="{{alerts.icon}}"></div>{{alert.msg}}</div>
+</div>

@@ -1,0 +1,58 @@
+<div class="container-fluid mt20" ng-controller="storeCtrl">
+	<div class="row">
+		<div class="col-lg-9 col-md-9 col-sm-10">
+			<div class="panel panel-primary">
+				<div class="panel-heading"><i class="fa fa-fw fa-cube"></i> 店铺管理</div>
+				<div class="panel-body">
+					<div class="input-group col-lg-6">
+						<div class="input-group-btn" uib-dropdown>
+					    	<button id="single-button" type="button" class="btn btn-success" uib-dropdown-toggle>
+					    		<span class="drop_val">{{click_key}}</span>
+					    		<span class="caret"></span>
+					    	</button>
+					    	<ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
+					    		<li>
+									<a href ng-click="click_me('Amazon')">Amazon</a>
+								</li>
+								<li>
+									<a href ng-click="click_me('Yahoo')">Yahoo</a>
+								</li>
+								<li>
+									<a href ng-click="click_me('Rakuten')">Rakuten</a>
+								</li>
+					    	</ul>
+						</div>
+						<input ng-model='new_store' type="text" class="form-control" placeholder="新的店铺名">
+						<span class="input-group-btn">
+							<button ng-click="add_store()" ng-disabled="!new_store||click_key=='请选择...'" class="btn btn-success" type="button"><i class="fa fa-plus fa-fw"></i>新 增</button>
+						</span>
+					</div>
+					<table class="table table-condensed table-hover table-striped table-bordered mt20 tagc">
+						<tr class="red danger">
+							<td><i class="fa-sort-numeric-asc fa fa-fw"></i></td>
+							<td><i class="fa fa-desktop fa-fw"></i> 平 台</td>
+							<td><i class="fa fa-address-book-o fa-fw"></i> 店铺名</td>
+							<td><i class="fa fa-cog fa-fw fa-spin"></i> 操 作</td>
+							<td><i class="fa fa-envelope-open-o fa-fw"></i> 邮件模板</td>
+						</tr>
+						<tr class="blue" ng-repeat="item in all_store track by $index">
+							<td class="italic success green">{{$index+1}}</td>
+							<td>{{item.station}}</td>
+							<td>{{item.store_name}}</td>
+							<td>
+								<div data-animation="am-fade-and-slide-top" data-template-url="/modal/conf_store.html" bs-modal="modal" ng-click="conf_store_modal(item.station,item.store_name)" class="btn btn-xs btn-warning mr10"><i class="fa fa-gear fa-fw"></i>配 置</div>
+								<div data-animation="am-fade-and-slide-top" data-template-url="/modal/del_store.html" bs-modal="modal" ng-click="del_store_modal(item.id,item.store_name)" class="btn-danger btn btn-xs"><i class="fa fa-trash-o fa-fw"></i>删 除</div>
+							</td>
+							<td>
+								<div data-animation="am-fade-and-slide-top" data-template-url="/modal/express_mail.html" bs-modal="modal" ng-click="express_mail_modal(item.station,item.store_name)" class="btn btn-xs btn-default mr10"><i class="fa fa-envelope fa-fw"></i> 发货通知信模板</div>
+								<div data-animation="am-fade-and-slide-top" data-template-url="/modal/mail_tpl.html" bs-modal="modal" ng-click="mail_tpl(item.station,item.store_name)" class="btn btn-xs btn-default mr10"><i class="fa fa-envelope-o fa-fw"></i> 模板管理</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div class="panel-footer">对店铺进行管理。<span class="red">店铺名不能重名，建议【平台】+【店铺名命名】。</span></div>
+			</div>
+		</div>
+	</div>
+	<div class="end_height"></div>
+</div>

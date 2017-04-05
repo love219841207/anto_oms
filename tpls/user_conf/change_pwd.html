@@ -1,0 +1,21 @@
+<div class="container-fluid mt20" ng-controller="changepwdCtrl">
+	<div class="row">
+		<div class="col-lg-4 col-md-6 col-sm-10">
+			<div class="panel panel-default">
+				<div class="panel-heading"><i class="fa fa-fw fa-unlock-alt"></i> 密码修改</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-lg-6 col-lg-offset-3">
+							<input type="password" placeholder="旧密码" ng-model="old_pwd" class="form-control mt10">
+							<input type="password" placeholder="新密码" ng-model="new_pwd" class="form-control mt10">
+							<input type="password" placeholder="重复新密码" ng-model="re_new_pwd" class="form-control mt10">
+							<button class="btn btn-danger mt10" style="width:100%" type="button" ng-disabled="!old_pwd || !new_pwd || !re_new_pwd" ng-click="change_pwd()" >修 &nbsp;&nbsp; 改</button>
+						</div>
+					</div>
+				</div>
+				<div class="panel-footer">修改你的账户密码。</div>
+			</div>
+		</div>
+	</div>
+	<div class="end_height"></div>
+</div>

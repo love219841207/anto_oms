@@ -1,0 +1,66 @@
+<div class="container-fluid mt20" ng-controller="postCtrl">
+	<div class="row">
+		<div class="col-lg-9 col-md-9 col-sm-10">
+			<div class="panel panel-primary">
+				<div class="panel-heading"><i class="fa fa-fw fa-asterisk"></i> 邮编更新</div>
+				<div class="panel-body">
+					<div class="container-fluid">
+						<form name="fileForm" ng-controller="FileController">
+							<div class="row">
+								<div class="">文件类型： 日本邮编.csv</div>
+							</div>
+							<div class="row mt10">
+								<button ng-click="chose_file()" class="btn btn-default" ngf-select="" ngf-pattern="'.csv'" name="file" ng-model="upload_file" ngf-multiple="false" required="1">选择文件</button> 
+								<i ng-show="fileForm.file.$error.required" class="fa fa-fw fa-star red"></i>
+								<span class="green">{{upload_file.name}}</span>
+							</div>
+							<div class="row mt10">
+								<button class="btn btn-primary btn-sm mr10" ng-disabled="!fileForm.$valid" ng-click="submit('post','csv','amazon')"><i class="fa fa-upload fa-fw"></i> 导 入</button>
+								<button class="btn btn-success btn-sm" ng-click="look_post()"><i class="fa fa-feed fa-fw"></i> 检 测</button>
+							</div>
+							<div class="row mt10">
+								<div class="col-lg-11">
+									<div class="progress" ng-show="progress_bar >=0">
+										<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{progress_bar}}" aria-valuemin="0" aria-valuemax="100" style="width:{{progress_bar}}%">
+										{{progress_bar}}%
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-1 green fa fa-fw fa-check" ng-show="upload_ok"></div>
+							</div>
+							<div ng-show="post_response" class="well">
+								<i class="fa fa-fw fa-inbox green"></i>已导入：<span class="green">{{post_response.insert_num}}</span> 条
+								<table class="table table-bordered mt20">
+									<tr class="success green">
+										<td>ID</td>
+										<td>邮编</td>
+										<td>地址</td>
+									</tr>
+									<tr ng-repeat="item in post_response.look_data1 track by $index" class="s_gray">
+										<td>{{item.id}}</td>
+										<td>{{item.post_code}}</td>
+										<td>{{item.post_name}}</td>
+									</tr>
+									<tr class="s_gray">
+										<td>...</td>
+										<td>...</td>
+										<td>...</td>
+									</tr>
+									<tr ng-repeat="item in post_response.look_data2 track by $index" class="s_gray">
+										<td>{{item.id}}</td>
+										<td>{{item.post_code}}</td>
+										<td>{{item.post_name}}</td>
+									</tr>
+								</table> 
+							</div>
+						</form>
+						
+					</div>
+
+				</div>
+				<div class="panel-footer">上传覆盖邮编地址库，从 .csv 文件的第二行导入数据。<br><span class="red">文件A列为自增ID，B列为邮编，C列为地址。存为 .csv 文件后请用记事本打开再另存为 UTF-8 编码导入，否则会乱码。 </span><br>点击检测检测导入的数据格式是否乱码（展示5条）。</div>
+			</div>
+		</div>
+	</div>
+	<div class="end_height"></div>
+</div>

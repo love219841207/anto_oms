@@ -1,0 +1,18 @@
+<div class="modal" tabindex="-1" role="dialog" ng-controller="storeCtrl">
+  <div class="modal-dialog" style="width:500px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" ng-click="$hide()">&times;</button>
+        <h4 class="modal-title yellow"><i class="fa fa-fw fa-undo"></i>重置密码</h4>
+        <div class="modal-body">
+        	确定重置工号：<span class="red">{{re_pwd_u_num}}</span> 员工：<span class="red">{{re_pwd_u_name}}</span> 的密码？
+        </div>
+      </div>
+      <div class="modal-footer">
+        <!-- 亚马逊按钮 -->
+        <button type="button" class="btn btn-warning" ng-click="re_pwd_user();$hide()"><i class="fa fa-fw fa-undo"></i>重 置</button>
+        <button type="button" class="btn btn-default" ng-click="$hide()">关 闭</button>
+      </div>
+    </div>
+  </div>
+</div>

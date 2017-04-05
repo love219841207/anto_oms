@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html ng-app='myApp'>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title ng-bind="title"></title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<!-- bootstrap -->
+<link rel="stylesheet" href="/css/bootstrap.css">
+<!-- 扩充字体图标 -->
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+<!-- 扩充动画 -->
+<link rel="stylesheet" href="/css/angular-motion.css">
+<link rel="stylesheet" href="/css/ng-animate.css">
+<!-- 日本日历 -->
+<link rel="stylesheet" href="/lib/jp_cal/cal.css" type="text/css" />
+<!-- datepicker -->
+<link rel="stylesheet" href="/css/ng-flat-datepicker.css">
+<!-- 系统样式 -->
+<link rel="stylesheet" href="/css/style.css">
+
+<!-- angular本体 -->
+<script src="/lib/angular.min.js"></script>
+<!-- angular路由 -->
+<script src="/lib/angular-ui-router.js"></script>
+<!-- angular动画 -->
+<script src="/lib/angular-animate.min.js"></script>
+<!-- ionic.bundle -->
+<script src="/lib/ionic.bundle.js"></script>
+<!-- 注入ui-bootstrap -->
+<script src="/lib/ui-bootstrap-tpls-2.0.2.js"></script>
+<!-- 注入angularStrap -->
+<script src="/lib/angular-strap.min.js"></script>
+<!-- angular中文 -->
+<script src="/lib/angular-locale_zh.js"></script>
+<!-- angular文件上传 -->
+<script src="/lib/ng-file-upload.min.js"></script>
+<script src="/lib/ng-file-upload-shim.min.js"></script>
+
+<!-- 日期 -->
+<script src="/lib/moment-with-locales.js"></script>
+<script src="/lib/ng-flat-datepicker.js"></script>
+
+<!-- 路由配置 -->
+<script src="/js/app.js"></script>
+
+<!-- 控制器 -->
+<script src="/js/ctrl_plug.js"></script>
+<script src="/js/ctrl_site.js"></script>
+<script src="/js/ctrl_login.js"></script>
+<!-- store 控制器 -->
+<script src="/js/amazon/ctrl_amazon.js"></script>
+<!-- user 控制器 -->
+<script src="/js/user_conf/ctrl_pagesize.js"></script>
+<script src="/js/user_conf/ctrl_changepwd.js"></script>
+<!-- sys 控制器 -->
+<script src="/js/sys_conf/ctrl_version.js"></script>
+<script src="/js/sys_conf/ctrl_store.js"></script>
+<script src="/js/sys_conf/ctrl_post.js"></script>
+<script src="/js/sys_conf/ctrl_users.js"></script>
+<script type="text/javascript" src="/lib/jp_cal/cal2.js" charset="UTF-8"></script>
+<!-- jquery -->
+<script src="/lib/wangEditor/jquery-1.10.2.min.js"></script>
+<!-- wangEditor -->
+<script src="/lib/wangEditor/wangEditor.js"></script>
+<link rel="stylesheet" href="/lib/wangEditor/wangEditor.min.css">
+<!-- 过滤器 -->
+<script src="/js/filters.js"></script>
+<!-- 服务 -->
+<script src="/js/services.js"></script>
+<!-- 自定义指令 -->
+<script src="/js/directives.js"></script>
+
+</head>
+<body ng-class="{'bg_image':bg}">
+<div id="info1" class="hidden">跳转状态</div>
+<div id="info2" class="hidden">模板状态</div>
+<div ui-view></div>
+</body>
+</html>

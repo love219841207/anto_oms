@@ -1,0 +1,19 @@
+<style>
+.table{margin-bottom: 10px;}
+.open_title{background: #fcf8e3;}
+</style>
+<div class="container-fluid mt20" ng-controller="amazonCtrl">
+	<div class="row">
+		<div class="col-lg-6 col-md-6 col-sm-10">
+			<div class="panel panel-primary">
+				<div class="panel-heading">生成发货单</div>
+				<div class="panel-body">
+					<button class="btn btn-success mr20" type="button" ng-click="list_orders('gtx')" >佐川宅配便 (日本)</button>
+					<button class="btn btn-success mr20" type="button" ng-click="list_orders('gtx')" >黑猫 (日本)</button>
+				</div>
+				<div class="panel-footer">点击按钮生成对应快递公司的发货单。</div>
+			</div>
+		</div>
+	</div>
+	<div class="end_height"></div>
+</div>

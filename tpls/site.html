@@ -1,0 +1,28 @@
+<div ng-controller="plugCtrl">
+	<div ng-controller="siteCtrl">
+		<div ui-view="topbar" class="navbar-fixed-top"></div>
+		<div ui-view="sidebar"></div>
+		<div ui-view="show" id="show_box" class="animate slide-top" ng-class="{'to_200':side_bar_1,'to_60':side_bar_2}"><h3 style="padding-left:30px" class="blue">欢迎使用{{now_store_bar}}</h3></div>
+	</div>
+
+	<!-- alert消息弹框 -->
+	<div uib-alert ng-repeat="alert in alerts" dismiss-on-timeout='5300' ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert($index)"><div id="alert_icon" class="{{alerts.icon}}"></div>{{alert.msg}}</div>
+
+	<!-- 遮罩 -->
+	<div id="shadow" ng-show="ss_is_open">
+		<div id="shadow_item">
+			<!-- 数据同步 -->
+			<ion-spinner ng-show="ss_syn" icon="ripple" class="ss-white"></ion-spinner>
+			<!-- 写入 -->
+			<ion-spinner ng-show="ss_write" icon="lines" class="ss-green"></ion-spinner>
+			<!-- 读取 -->
+			<ion-spinner ng-show="ss_read" icon="ios-small" class="ss-blue"></ion-spinner>
+			<!-- 生成 -->
+			<ion-spinner ng-show="ss_make" icon="dots" class="ss-yellow"></ion-spinner>
+			<div id="shadow_txt">{{shadow_txt}}</div>
+		</div>
+	</div>
+	<div id="loading" ng-show="loading_is_open">
+		<i class="fa fa-pulse fa-spinner fa-fw"></i><span class="f12"> Loading</span>
+	</div>
+</div>
