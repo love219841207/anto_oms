@@ -1,6 +1,6 @@
 <div class="container-fluid mt20" ng-controller="logCtrl">
 	<div class="row">
-		<div class="col-lg-10 col-md-10 col-sm-10">
+		<div class="col-lg-12 col-md-12 col-sm-12">
 			<div class="panel panel-primary">
 				<div class="panel-heading"><i class="fa fa-fw fa-file-code-o"></i> 系统日志</div>
 				<div class="panel-body">
@@ -14,6 +14,7 @@
 							</select>
 						</div>
 
+						<div class="btn btn-info btn" ng-click="log_s_date='';log_e_date=''">所有日期</div>
 						<div class="btn btn-sm btn-default">
 							<input placeholder="开始日期" class="date_icon blue" readonly="readonly" type="text" name="log_s_date" ng-flat-datepicker datepicker-config="datepickerConfig" ng-model="log_s_date"> - <input placeholder="结束日期" class="date_icon blue" readonly="readonly" type="text" name="log_e_date" ng-flat-datepicker datepicker-config="datepickerConfig" ng-model="log_e_date">
 						</div>
@@ -25,22 +26,25 @@
 							</select>
 						</div>
 						
-						<div class="btn btn-warning btn" ng-click="load_logs()">确 定</div>
+						<div class="btn btn-warning btn" ng-click="load_logs('search','')">确 定</div>
 					</div>
-					<table class="table table-condensed table-hover table-responsive table-bordered mt20">
+					<table ng-repeat="item in res_logs track by $index" class="table table-condensed table-hover table-responsive table-bordered mt20 f12 s_gray">
 						<tr class="warning yellow">
-							<td>时间</td>
-							<td>操作</td>
-							<td>员工</td>
+							<td>ID</td>
+							<td>时 间 <span class="red">{{$index+1}}</span></td>
+							<td>操 作 <span class="red">{{$index+1}}</span></td>
+							<td class="tagc">员 工 <span class="red">{{$index+1}}</span></td>
 						</tr>
-						<tr ng-repeat="item in all_log track by $index">
-							<td>{{item.do_time}}</td>
-							<td>{{item.who_do}}</td>
-							<td>{{item.who_name}}</td>
+						<tr ng-repeat="(key, value) in item" ng-click="bg_green=!bg_green" ng-class="{'bg_green':bg_green}">
+							<td>{{value.id}}</td>
+							<td>{{value.do_time}}</td>
+							<td>{{value.who_do}}</td>
+							<td class="tagc">{{value.who_name}}</td>
 						</tr>
 					</table>
+					<div ng-show="more_btn" class="btn btn-warning btn-sm col-lg-2 pull-right" ng-click="more_logs('sys')">加载更多</div>
 				</div>
-				<div class="panel-footer">日志查看。</div>
+				<div class="panel-footer">单条点击标注；点击确定查看筛选结果。</div>
 			</div>
 		</div>
 	</div>

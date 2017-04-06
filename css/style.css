@@ -109,6 +109,10 @@ li{
 .mb10{
 	margin-bottom: 10px;
 }
+.bg_green{
+	background: #CF0;
+	color:#2a2a2a;
+}
 .italic{
 	font-style: italic;
 }

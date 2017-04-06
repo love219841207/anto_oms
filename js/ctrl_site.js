@@ -254,9 +254,11 @@ app.controller('FileController', ['$rootScope','$scope', 'Upload' , '$timeout','
     }
 }]);
 
-app.controller('logCtrl', ['$scope','$state','$stateParams','$http','$log', function($scope,$state,$stateParams,$http,$log){
+app.controller('logCtrl', ['$scope','$state','$stateParams','$http','$log','$timeout', function($scope,$state,$stateParams,$http,$log,$timeout){
     $scope.log_type = 'all';    //默认所有类型
     $scope.log_user = 'all';    //默认所有人
+    $scope.log_s_date = '';    //默认日期
+    $scope.log_e_date = '';    //默认日期
 
     //获取员工列表
     $scope.get_user_list = function(){
@@ -270,10 +272,57 @@ app.controller('logCtrl', ['$scope','$state','$stateParams','$http','$log', func
     }
     $scope.get_user_list();
 
-    $scope.load_logs = function(){
-        console.log($scope.log_type);
-        console.log($scope.log_s_date);
-        console.log($scope.log_e_date);
-        console.log($scope.log_user);
+    $scope.log_page = 0;
+    $scope.res_logs = [];
+    $scope.load_logs = function(e,user){
+        $scope.loading_shadow('open'); //打开loading
+
+        if(user == ''){
+
+        }else{
+            $scope.log_user = user; //我的日志
+        }
+        
+        if(e == 'search'){
+            $scope.log_page = 0;
+            $scope.res_logs = [];
+        }
+
+        if($scope.log_s_date == $scope.log_e_date && $scope.log_s_date != ''){
+            $scope.plug_alert('danger','警告，日期区间不能相同。','fa fa-exclamation-triangle');
+            return false;
+        }else{
+            if($scope.log_s_date == undefined){
+                $scope.log_s_date = '';
+            }
+            if($scope.log_e_date == undefined){
+                $scope.log_e_date = '';
+            }
+            $http.get('/fuck/systems/sys_log.php', {params:{log_type:$scope.log_type,log_s_date:$scope.log_s_date,log_e_date:$scope.log_e_date,log_user:$scope.log_user,log_page:$scope.log_page}
+            }).success(function(data) {
+                $timeout(function(){$scope.loading_shadow('close');},300); //关闭loading
+                if(data == ''){
+                    $scope.more_btn = false;
+                    $scope.plug_alert('warning','所有数据加载完毕。','fa fa-file-code-o');
+                }else{
+                    $scope.res_logs.push(data);
+                    $scope.more_btn = true;
+                }
+            }).error(function(data) {
+                alert("严重！日志读取失败。");
+                $log.info(data);
+            });
+        }
+    }
+
+    $scope.more_logs = function(e){
+        $scope.log_page = $scope.log_page +1;
+
+        if(e == 'sys'){
+            $scope.load_logs(e,$scope.log_user);
+        }
+        if(e == 'my'){
+            $scope.load_logs(e,$scope.log_user);
+        }
     }
 }]);
