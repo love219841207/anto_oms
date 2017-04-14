@@ -639,6 +639,7 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
                 $timeout(function(){$scope.shadow('close');},500); //关闭shadow
                 $scope.plug_alert('success','删除完成。','fa fa-smile-o');
             }else{
+                $log.info(data);
                 $scope.plug_alert('danger','删除失败，请联系管理员。','fa fa-ban');
             }
         }).error(function(data) {

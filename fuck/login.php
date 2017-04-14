@@ -23,7 +23,7 @@ if(isset($_POST['u_num'])){
 		$_SESSION['oms_u_name'] = $res['u_name'];
 
 		//日志
-		$do = '[login] 登入系统';
+		$do = '[Login] 登入系统';
 		oms_log($_SESSION['oms_u_name'],$do,'system');
 
     	echo "go";
@@ -95,7 +95,7 @@ if(isset($_GET['logout'])){
 	session_destroy();
 
 	//日志
-	$do = '[logout] 登出系统';
+	$do = '[Logout] 登出系统';
 	oms_log($_SESSION['oms_u_name'],$do,'system');
 
 	echo "bye";

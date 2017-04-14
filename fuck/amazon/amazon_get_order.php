@@ -400,6 +400,16 @@ if(isset($_GET['onekey_common_order'])){
 	//查询所有合单号
 	$sql = "SELECT send_id FROM amazon_response_list WHERE store='{$store}' AND send_id LIKE 'H-%' GROUP BY send_id";
 	$res = $db->getAll($sql);
+
+	$all_one = '';
+	foreach ($res as $value) {
+		$all_one = $all_one.'['.$value['send_id'].']';
+	}
+
+	//日志
+	$do = '[合单]：'.$all_one;
+	oms_log($u_name,$do,'amazon_order');
+
 	echo json_encode($res);
 }
 
@@ -425,6 +435,10 @@ if(isset($_GET['break_common_order'])){
 	$send_id = $_GET['break_common_order'];
 	$sql = "UPDATE amazon_response_list SET send_id = amazon_order_id WHERE send_id = '{$send_id}'";
 	$res = $db->execute($sql);
+
+	//日志
+	$do = '[拆单]：'.$send_id;
+	oms_log($u_name,$do,'amazon_order');
 	echo 'ok';
 }
 
@@ -860,6 +874,7 @@ if(isset($_GET['import_add_list'])){
 if(isset($_POST['del_items'])){
 	$del_items = $_POST['del_items'];
 	$del_items = '('.$del_items.')';
+	$del_log_items = addslashes($_POST['del_items']);
 
 	// 删除response_list
 	$sql = "DELETE FROM amazon_response_list WHERE amazon_order_id IN $del_items";
@@ -868,6 +883,10 @@ if(isset($_POST['del_items'])){
 	// 删除info
 	$sql = "DELETE FROM amazon_response_info WHERE amazon_order_id IN $del_items";
 	$res = $db->execute($sql);
+
+	//日志
+	$do = '[删除订单]：'.$del_log_items;
+	oms_log($u_name,$do,'amazon_order');
 
 	echo 'ok';
 }
