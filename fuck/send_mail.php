@@ -39,6 +39,11 @@ if(isset($_POST['send_mail'])){
 			$mail_topic = $res['mail_topic'];
 			$mail_html = $res['mail_html'];
 			$mail_txt = $res['mail_txt'];
+			//替换信件变量
+			$mail_topic = str_replace('#购买人#', '测试员', $mail_topic);
+			$mail_topic = str_replace('#快递单号#', '1234567890', $mail_topic);
+			$mail_html = str_replace('#购买人#', '测试员', $mail_html);
+			$mail_html = str_replace('#快递单号#', '1234567890', $mail_html);
 		}
 
 		//发送

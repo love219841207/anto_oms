@@ -5,7 +5,7 @@
         <i class="fa fa-close f20 close" ng-click="$hide()"></i>
         <h4 class="modal-title blue"><i class="fa fa-fw fa-envelope"></i> {{express_mail_modal_store}} 发货通知信</h4>
         <div class="modal-body">
-          <div>参考变量：$user_name$ $express_num$</div>
+          <div>参考变量：| <span class="pointer" ng-click="add_var('#购买人#')">#购买人#</span> | <span class="pointer" ng-click="add_var('#收件人#')">#收件人#</span> | <span class="pointer" ng-click="add_var('#快递单号#')">#快递单号#</span> |</div>
           <input class="form-control" ng-model="express_mail_modal_topic" type="text" placeholder="主题">
         	<div style="color:#000;height: 200px;" ng-model="express_mail_html" contenteditable="true"></div>
           <div class="mt10">

@@ -1,4 +1,4 @@
-var myApp = angular.module('myApp', ['ui.router','ui.bootstrap','ngAnimate','mgcrea.ngStrap','ionic','ngFileUpload','ngFlatDatepicker']);
+var myApp = angular.module('myApp', ['ui.router','ui.bootstrap','ngAnimate','mgcrea.ngStrap','ionic','ngFileUpload','ngFlatDatepicker','angular-drag']);
 //由于整个应用都会和路由打交道，所以这里把$state和$stateParams这两个对象放到$rootScope上，方便其它地方引用和注入。
 myApp.run(function($rootScope, $state, $stateParams) {
     $rootScope.$state = $state;

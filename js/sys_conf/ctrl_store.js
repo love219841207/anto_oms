@@ -152,6 +152,12 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log', function($scope,$
         $scope.read_mail_tpl();
     }
 
+    // 点击添加信件变量
+    $scope.add_var = function(e){
+        $scope.express_mail_html = $scope.express_mail_html + e;
+        $scope.express_mail_txt = $scope.express_mail_txt + e;
+    }
+
     //新增店铺邮件模板
     $scope.add_mail_tpl = function(){
         $http.get('/fuck/systems/store_manage.php', {params:{

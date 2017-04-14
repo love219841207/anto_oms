@@ -406,8 +406,12 @@ if(isset($_GET['onekey_common_order'])){
 		$all_one = $all_one.'['.$value['send_id'].']';
 	}
 
-	//日志
-	$do = '[合单]：'.$all_one;
+	// 日志
+	if($all_one ==''){
+		$do = '[合单]：本次无合单';
+	}else{
+		$do = '[合单]：'.$all_one;
+	}
 	oms_log($u_name,$do,'amazon_order');
 
 	echo json_encode($res);
