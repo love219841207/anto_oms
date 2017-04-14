@@ -616,6 +616,37 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
         })
     }
 
+    //check_items 选择项
+    $scope.check_items = function(){
+        $rootScope.my_checked = new Array();
+        angular.forEach($scope.get_order_list_data, function(value, index){
+            if($scope.get_order_list_data[index].is_click == true){
+                $scope.my_checked.push("'"+$scope.get_order_list_data[index].amazon_order_id+"'");
+            }
+        })
+    }
+
+    // 删除订单
+    $scope.amz_del_items = function(){
+        $scope.shadow('open','ss_make','正在删除，请稍后。');
+        var ppd = $scope.my_checked.join(',');
+        var post_data = {del_items:ppd};
+
+        $http.post('/fuck/amazon/amazon_get_order.php', post_data).success(function(data) {
+            if(data == 'ok'){
+                $scope.selectPage(1); //此处remove
+                
+                $timeout(function(){$scope.shadow('close');},500); //关闭shadow
+                $scope.plug_alert('success','删除完成。','fa fa-smile-o');
+            }else{
+                $scope.plug_alert('danger','删除失败，请联系管理员。','fa fa-ban');
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:订单失败。");
+        });
+    }
+
 //合单
     //一键合单
     $scope.onekey_common_order = function(){

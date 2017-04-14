@@ -855,3 +855,19 @@ if(isset($_GET['import_add_list'])){
 
 	echo json_encode($final_res);
 }
+
+// 删除订单
+if(isset($_POST['del_items'])){
+	$del_items = $_POST['del_items'];
+	$del_items = '('.$del_items.')';
+
+	// 删除response_list
+	$sql = "DELETE FROM amazon_response_list WHERE amazon_order_id IN $del_items";
+	$res = $db->execute($sql);
+
+	// 删除info
+	$sql = "DELETE FROM amazon_response_info WHERE amazon_order_id IN $del_items";
+	$res = $db->execute($sql);
+
+	echo 'ok';
+}

@@ -53,6 +53,9 @@
 							open_info_btn = true;
 							open_filter_btn = true;
 							open_page_btn = true;
+							tool_1 = false;
+							tool_2 = false;
+							tool_3 = false;
 							is_active('active_tools','1')
 						">
 						<i class="fa fa-list-ol fa-fw s_gray"></i> 列表
@@ -159,7 +162,7 @@
 						</span>
 					</button>
 					<!-- 筛选确定按钮 -->
-					<button class="btn btn-danger" ng-click="filter_bar_submit()" ng-show="tool_1">确定</button>
+					<button class="btn btn-danger" ng-click="filter_bar_submit()" id="filter_btn" ng-show="tool_1">确定</button>
 
 					<!-- 合单按钮组 -->
 					<button type="button" class="btn btn-default" ng-show="tool_2" ng-click="tool_2=!tool_2">
@@ -262,10 +265,28 @@
 		</div>
 	</div>
 	<div class="row mt50">
-		<div class="col-lg-12 mt20" ng-show="get_order_list_data">
+		<div class="col-lg-12 mt10" ng-show="get_order_list_data">
+			<div class="btn-group check_mail_box animate slide-left" ng-show="open_check">
+				<!-- 选择发信删除按钮组 -->
+				<button type="button" ng-show="cc_all" class="btn btn-default btn-sm" ng-click="check_all_item();">
+					<i class="fa fa-square-o fa-fw s_gray"></i>全选
+				</button>
+		      	<button type="button" ng-hide="cc_all" class="btn btn-default btn-sm" ng-click="check_no_item();">
+		      		<i class="fa fa-check-square-o fa-fw s_gray"></i>不选
+		      	</button>
+		      	<button type="button" class="btn btn-default btn-sm" ng-click="check_back_item();back_icon=!back_icon">
+		      		<i class="fa fa-adjust fa-fw s_gray" ng-class="{'fa-flip-horizontal':back_icon}"></i>反选
+		      	</button>
+		      	<button type="button" class="btn btn-default btn-sm yellow">
+		      		<i class="fa fa-envelope-o fa-fw"></i>发信
+		      	</button>
+		      	<button type="button" ng-click="check_items()" data-animation="am-fade-and-slide-top" data-template-url="/modal/amazon_del_item.html" bs-modal="modal" class="btn btn-default btn-sm red">
+		      		<i class="fa fa-trash-o fa-fw"></i>删除
+		      	</button>
+		    </div>
 			<div ng-repeat="item in get_order_list_data track by $index" class="animate slide-left">
 				<table class="table table-condensed table-hover f12" >
-					<tr class="white" ng-class="{'danger':item.payment_method=='COD'}">
+					<tr class="white" ng-class="{'danger':item.payment_method=='COD','bg_yellow':item.is_click}">
 						<td class="green pointer" ng-click="item.is_click=!item.is_click">
 							<i ng-show="open_check" class="fa red fa-lg fa-fw" ng-class="{'fa-square-o':item.is_click==false,'fa-check-square':item.is_click==true}"></i>
 							<!-- {{item.is_click}} -->
@@ -282,14 +303,14 @@
 							<button data-animation="am-fade-and-slide-top" data-template-url="/modal/amazon_note.html" bs-modal="modal" class="btn btn-xs btn-info" ng-click="change_note(item.amazon_order_id)">备注</button>
 						</td>
 					</tr>
-					<tr ng-show="info_box" class="white" ng-class="{'danger':item.payment_method=='COD'}">
+					<tr ng-show="info_box" class="white" ng-class="{'danger':item.payment_method=='COD','bg_yellow':item.is_click}">
 						<td></td>
 						<td class=""><span class="s_gray">购买人：</span>{{item.buyer_name}}</td>
 						<td class="green"><span class="s_gray">电话：</span>{{item.phone}}</td>
 						<td class="blue"><span class="s_gray">邮箱：</span>{{item.buyer_email}}</td>
 						<td colspan="4"><span class="s_gray">国家/货币：</span>{{item.country}}/{{item.order_total_currency}}</td>	
 					</tr>
-					<tr ng-show="info_box" class="white" ng-class="{'danger':item.payment_method=='COD'}">
+					<tr ng-show="info_box" class="white" ng-class="{'danger':item.payment_method=='COD','bg_yellow':item.is_click}">
 						<td></td>
 						<td class="yellow"><span class="s_gray">收件人：</span>{{item.receive_name}}</td>
 						<td class="blue"><span class="s_gray">邮编：</span>{{item.post_code}}</td>
@@ -322,21 +343,7 @@
 		</div>
 
 	</div>
-	<div class="btn-group mt20 check_mail_box" ng-show="open_check">
-		<!-- 选择发信按钮组 -->
-		<button type="button" ng-show="cc_all" class="btn btn-default btn-sm" ng-click="check_all_item();">
-			<i class="fa fa-square-o fa-fw s_gray"></i> 全选
-		</button>
-      	<button type="button" ng-hide="cc_all" class="btn btn-default btn-sm" ng-click="check_no_item();">
-      		<i class="fa fa-check-square-o fa-fw s_gray"></i> 不选
-      	</button>
-      	<button type="button" class="btn btn-default btn-sm" ng-click="check_back_item();back_icon=!back_icon">
-      		<i class="fa fa-adjust fa-fw s_gray" ng-class="{'fa-flip-horizontal':back_icon}"></i>反选
-      	</button>
-      	<button type="button" class="btn btn-default btn-sm" >
-      		<i class="fa fa-envelope-o fa-fw s_gray"></i> 发信
-      	</button>
-    </div>
+	
 	<nav>
 		<ul class="pagination" ng-show="open_page_btn">
 			<li class="pointer" ng-class="{disabled:pre_overflow}">

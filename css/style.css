@@ -29,6 +29,9 @@ li{
 .op_red{
 	background: rgba(255, 127, 107, 0.62);
 }
+.dark{
+	color:#2a2a2a;
+}
 .error{
 	background: #ffd6d6}
 .f20{
@@ -39,6 +42,9 @@ li{
 }
 .f12{
 	font-size: 12px !important;
+}
+.f20{
+	font-size: 20px !important;
 }
 .f10{
 	font-size: 10px !important;
@@ -109,8 +115,8 @@ li{
 .mb10{
 	margin-bottom: 10px;
 }
-.bg_green{
-	background: #CF0;
+.bg_yellow{
+	background: #fff6c8;
 	color:#2a2a2a;
 }
 .italic{
@@ -352,8 +358,7 @@ li{
 	border-top-right-radius: 0px !important;
 }
 .check_mail_box{
-	position: fixed;
-	bottom: 10px;
+	margin-bottom: 10px;
 }
 /* 旋转 */
 .scroll_0{
