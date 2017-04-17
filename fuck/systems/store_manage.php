@@ -133,7 +133,7 @@ if(isset($_GET['del_mail_tpl'])){
 	echo 'ok';
 }
 
-//编辑邮件模板
+//读取、编辑邮件模板
 if(isset($_GET['edit_mail_tpl'])){
 	$id = $_GET['edit_mail_tpl'];
 	$sql = "SELECT * FROM mail_tpl WHERE id = '{$id}'";

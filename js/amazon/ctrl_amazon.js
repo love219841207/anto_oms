@@ -618,12 +618,51 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
 
     //check_items 选择项
     $scope.check_items = function(){
-        $rootScope.my_checked = new Array();
+        $scope.my_checked = new Array();
         angular.forEach($scope.get_order_list_data, function(value, index){
             if($scope.get_order_list_data[index].is_click == true){
                 $scope.my_checked.push("'"+$scope.get_order_list_data[index].amazon_order_id+"'");
             }
         })
+    }
+
+    // 邮件模板查询
+    $scope.get_mail_tpl = function(){
+        $http.get('/fuck/systems/store_manage.php', {
+            params:{
+                read_mail_tpl:$rootScope.now_store_bar
+            }
+        }).success(function(data) {
+            $scope.mail_tpls = data;
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:邮件模板查询失败。");
+        });
+    }
+
+    // 默认模板为空
+    $scope.to_mail_tpl = '';
+
+    // 读取邮件模板内容
+    $scope.read_mail_info = function(){
+        $http.get('/fuck/systems/store_manage.php', {
+            params:{
+                edit_mail_tpl:$scope.to_mail_tpl
+            }
+        }).success(function(data) {
+            document.getElementById('mail_info_topic').innerHTML = data.mail_topic;
+            document.getElementById('mail_info_html').innerHTML = data.mail_html;
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:邮件内容读取失败。");
+        });
+    }
+
+    // 发信
+    $scope.amz_mail_items = function(){
+        $log.info($scope.to_mail_tpl);
+        alert($scope.my_checked);
+        // post
     }
 
     // 删除订单
