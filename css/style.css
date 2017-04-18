@@ -125,7 +125,7 @@ li{
 	margin-bottom: 10px;
 }
 .bg_yellow{
-	background: #fff6c8;
+	background: #fff6c8 !important;
 	color:#f44336;
 }
 .italic{

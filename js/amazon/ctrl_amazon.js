@@ -660,9 +660,39 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
 
     // 发信
     $scope.amz_mail_items = function(){
-        $log.info($scope.to_mail_tpl);
-        alert($scope.my_checked);
-        // post
+        // $scope.shadow('open','ss_make','正在发信，请稍后。');
+
+        var post_data = {
+            send_mail:'amazon',
+            store:$rootScope.now_store_bar,
+            station:'Amazon',
+            mail_tpl:$scope.to_mail_tpl,
+            order_items:$scope.my_checked};
+        $http.post('/fuck/amazon_send_mail.php', post_data).success(function(data) {
+            if(data == 'ok'){
+                $timeout(function(){$scope.shadow('close');},500); //关闭shadow
+                $scope.plug_alert('success','发信完成。','fa fa-smile-o');
+            }else{
+                // $log.info(data);
+                $scope.plug_alert('danger','发信失败，请联系管理员。','fa fa-ban');
+            }
+            $log.info(data)
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:订单失败。");
+        });
+
+        $http.get('/fuck/amazon_send_mail.php', {
+            params:{
+                send_mail:$rootScope.now_store_bar
+            }
+        }).success(function(data) {
+            $scope.common_order_data = data;
+            $timeout(function(){$scope.shadow('close');},500); //关闭shadow
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:一键合单失败。");
+        });
     }
 
     // 删除订单
