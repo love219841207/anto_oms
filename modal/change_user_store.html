@@ -4,16 +4,16 @@
       <div class="modal-header">
         <i class="fa fa-close f20 close" ng-click="$hide()"></i>
         <h4 class="modal-title blue"><i class="fa fa-fw fa-laptop"></i> 分配店铺</h4>
-        <div class="modal-body">
-          <div class="btn-group">
-              <button type="button" class="btn btn-sm btn-default" ng-click="check_all_store();cc_all=1" ng-disabled="cc_all==1"><i class="fa fa-check-square-o fa-fw"></i>全选</button>
-              <button type="button" class="btn btn-sm btn-default" ng-click="check_no_store();cc_all=0" ng-disabled="cc_all==0"><i class="fa fa-square-o fa-fw"></i>全不选</button>
-            </div>
-          <div class="list-group tagl mt10">
-            <a class="list-group-item pointer" ng-click="item.has=!item.has;" ng-repeat="item in all_store track by $index">
-            <i class="fa fa-fw red mr10" ng-class="{'fa-square-o':item.has==false,'fa-check-square-o':item.has==true}"></i> {{item.store_name}}
-            </a>
+      </div>
+      <div class="modal-body">
+        <div class="btn-group">
+            <button type="button" class="btn btn-sm btn-default" ng-click="check_all_store();cc_all=1" ng-disabled="cc_all==1"><i class="fa fa-check-square-o fa-fw"></i>全选</button>
+            <button type="button" class="btn btn-sm btn-default" ng-click="check_no_store();cc_all=0" ng-disabled="cc_all==0"><i class="fa fa-square-o fa-fw"></i>全不选</button>
           </div>
+        <div class="list-group tagl mt10">
+          <a class="list-group-item pointer" ng-click="item.has=!item.has;" ng-repeat="item in all_store track by $index">
+          <i class="fa fa-fw red mr10" ng-class="{'fa-square-o':item.has==false,'fa-check-square-o':item.has==true}"></i> {{item.store_name}}
+          </a>
         </div>
       </div>
       <div class="modal-footer">

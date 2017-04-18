@@ -18,6 +18,15 @@ a:hover{
 li{
 	list-style: none;
 }
+/*模态框移动头*/
+.modal-header{
+	cursor: move;
+	border-bottom: none;
+}
+.modal-header:hover{
+	background: #eef7e7;
+	border-radius: 5px;
+}
 /*多选框*/
 .checkbox{
 	opacity: 0;

@@ -4,14 +4,15 @@
       <div class="modal-header">
         <i class="fa fa-close f20 close" ng-click="$hide()"></i>
         <h4 class="modal-title blue"><i class="fa fa fa-envelope-o fa-fw"></i> 发 信</h4>
-        <div class="modal-body">
+      </div>
+      <div class="modal-body">
           <div ng-show="my_checked==''" class="blue tagc mt10 f20">请选择订单</div>
           <div ng-show="my_checked!=''" class="blue">发信至以下订单：</div>
           <table ng-show="my_checked!=''" class="table table-bordered table-condensed mt10">
             <tr class="f12 info"><td class="tagc blue">序号</td><td class="tagc blue">订单号</td></tr>
             <tr ng-repeat="(key,val) in my_checked track by $index"><td class="tagc blue">{{$index+1}}</td><td class="tagc blue">{{val}}</td></tr>
           </table>
-          <hr>
+          <div ng-show="my_checked!=''"><hr></div>
           <div ng-show="my_checked!=''" class="blue mt20">选择邮件模板：
 			<select class="selecter" ng-model="to_mail_tpl" ng-change="read_mail_info()">
 	          	<option value="">选择模板..</option>
@@ -25,7 +26,6 @@
 			</div>
           </div>
         </div>
-      </div>
       <div class="modal-footer">
         <button type="button" ng-disabled="my_checked==''||to_mail_tpl==''" class="btn btn-primary" ng-click="amz_mail_items()"><i class="fa fa-fw fa-paper-plane"></i> 发 送</button>
         <button type="button" class="btn btn-default" ng-click="$hide()">关 闭</button>
