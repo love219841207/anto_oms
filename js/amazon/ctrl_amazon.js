@@ -660,7 +660,7 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
 
     // 发信
     $scope.amz_mail_items = function(){
-        // $scope.shadow('open','ss_make','正在发信，请稍后。');
+        $scope.shadow('open','ss_make','正在发信，请稍后。');
 
         var post_data = {
             send_mail:'amazon',
@@ -668,30 +668,37 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
             station:'Amazon',
             mail_tpl:$scope.to_mail_tpl,
             order_items:$scope.my_checked};
+
         $http.post('/fuck/amazon_send_mail.php', post_data).success(function(data) {
-            if(data == 'ok'){
+            if(data.status == 'ok'){
+                $scope.send_error_num = data.error_num;
+                $scope.send_ok_num = data.ok_num;
                 $timeout(function(){$scope.shadow('close');},500); //关闭shadow
-                $scope.plug_alert('success','发信完成。','fa fa-smile-o');
+
+                //读取错误信件info
+                $scope.read_error_mail();
             }else{
-                // $log.info(data);
+                $log.info(data);
                 $scope.plug_alert('danger','发信失败，请联系管理员。','fa fa-ban');
             }
-            $log.info(data)
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
-            $log.info("error:订单失败。");
+            $log.info("error:发信失败。");
         });
+    }
 
+    //读取错误邮件info
+    $scope.read_error_mail = function(){
         $http.get('/fuck/amazon_send_mail.php', {
             params:{
-                send_mail:$rootScope.now_store_bar
+                read_error_mail:'read'
             }
         }).success(function(data) {
-            $scope.common_order_data = data;
-            $timeout(function(){$scope.shadow('close');},500); //关闭shadow
+            $scope.error_mail = data;
+            $scope.plug_alert('success','发信完成。','fa fa-smile-o');
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
-            $log.info("error:一键合单失败。");
+            $log.info("error:邮件内容读取失败。");
         });
     }
 
@@ -713,7 +720,7 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
             }
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
-            $log.info("error:订单失败。");
+            $log.info("error:删除订单失败。");
         });
     }
 

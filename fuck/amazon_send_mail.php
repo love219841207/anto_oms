@@ -4,8 +4,15 @@ require_once("./header.php");
 
 
 // $mail->SMTPDebug = true; 
-// $mail->SMTPDebug = 4;    
+// $mail->SMTPDebug = 4;   
+// 读取错误邮件
+if(isset($_GET['read_error_mail'])){
+	$sql = "SELECT * FROM mail_error";
+	$res = $db->getAll($sql);
+	echo json_encode($res);
+}
 
+// 亚马逊发信
 if(isset($_POST['send_mail'])){
 	// amazon发信
 	if($_POST['send_mail'] == 'amazon'){
@@ -28,6 +35,12 @@ if(isset($_POST['send_mail'])){
 
 		// 遍历amazon_order_id
 		$order_ids = explode(',', $order_items);
+
+		// 清空邮件错误表
+	    $sql = "TRUNCATE mail_error";
+	    $res = $db->execute($sql);
+		$error_num = 0;
+		$ok_num = 0;
 		foreach ($order_ids as $value) {
 			//读取信件内容
 			$sql = "SELECT * FROM mail_tpl WHERE id = '{$mail_tpl}'";
@@ -69,10 +82,20 @@ if(isset($_POST['send_mail'])){
 			$mail->AltBody = $mail_txt;	//未设置HTML将会收到的内容
 
 			if(!$mail->send()) {
-			    echo '邮件发送失败.';
-			    echo 'Mailer Error: ' . $mail->ErrorInfo;
+			    // echo '邮件发送失败.';
+			    $error_info = $mail->ErrorInfo;
+
+			    // 发信失败，记录在案
+			    $sql = "INSERT INTO mail_error (error_order_id,error_info) VALUES ('{$value}','{$error_info}')";
+			    $res = $db->execute($sql);
+			    $error_num = $error_num + 1;
 			} else {
+				$ok_num = $ok_num + 1;
 			}
 		}	# 遍历id
+		$final_res['status'] = 'ok';
+		$final_res['error_num'] = $error_num;
+		$final_res['ok_num'] = $ok_num;
+		echo json_encode($final_res);
 	}
 }
