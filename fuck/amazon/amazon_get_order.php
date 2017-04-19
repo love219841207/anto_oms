@@ -389,16 +389,20 @@ if(isset($_GET['onekey_common_order'])){
 		UPDATE amazon_response_list a,
 		(SELECT a.id FROM amazon_response_list a,
 		(SELECT receive_name,count(id) as num
-		FROM amazon_response_list WHERE store='{$store}'
+		FROM amazon_response_list WHERE store='{$store}' AND order_line = '2'
 		group by receive_name,phone,post_code
 		having num>1) b
 		WHERE a.receive_name = b.receive_name) b
 		SET a.send_id = concat('H-',a.phone)
-		WHERE a.id = b.id;";
+		WHERE a.id = b.id";
+	$res = $db->execute($sql);
+
+	//order_line
+	$sql = "UPDATE amazon_response_list SET order_line = '3' WHERE order_line = '2' AND store = '{$store}'";
 	$res = $db->execute($sql);
 
 	//查询所有合单号
-	$sql = "SELECT send_id FROM amazon_response_list WHERE store='{$store}' AND send_id LIKE 'H-%' GROUP BY send_id";
+	$sql = "SELECT send_id FROM amazon_response_list WHERE store='{$store}' AND send_id LIKE 'H-%' AND order_line = '3' GROUP BY send_id";
 	$res = $db->getAll($sql);
 
 	$all_one = '';
@@ -421,7 +425,7 @@ if(isset($_GET['onekey_common_order'])){
 if(isset($_GET['list_common_order'])){
 	$store = $_GET['list_common_order'];
 	//查询所有合单号
-	$sql = "SELECT send_id FROM amazon_response_list WHERE store='{$store}' AND send_id LIKE 'H-%' GROUP BY send_id";
+	$sql = "SELECT send_id FROM amazon_response_list WHERE store='{$store}' AND send_id LIKE 'H-%' AND order_line = '3' GROUP BY send_id";
 	$res = $db->getAll($sql);
 	echo json_encode($res);
 }
