@@ -100,23 +100,6 @@
 						ng-hide="tool_1 || tool_2 || tool_3">
 						<i class="fa fa-inbox fa-fw"></i> 合单
 					</button>
-
-					<!-- 发货按钮激发 -->
-					<button 
-						id="active_tools6"
-						class="btn btn-default yellow active_tools" 
-						ng-class="{'active':active_tools_6}"
-						ng-click="
-							init_list();
-							tool_3=!tool_3;
-							open_check = false;
-							open_info_btn = false;
-							open_filter_btn = false;
-							open_page_btn = false;
-							is_active('active_tools','6')" 
-						ng-hide="tool_1 || tool_2 || tool_3">
-						<i class="fa fa-fw fa-truck"></i> 发货
-					</button>
 					
 					<!-- tool_1 日期筛选按钮组 -->
 					<button type="button" class="btn btn-default" ng-show="tool_1" ng-click="tool_1=!tool_1;open_check=false">
@@ -125,6 +108,7 @@
 
 					<button class="btn btn_fff btn-sm" ng-show="tool_1">
 						<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="search_order_line" ng-change="change_serch_line()">
+							<option value="mark">标记</option>
 							<option value="1">未匹配</option>
 							<option value="0">无详情</option>
 							<option value="99">未通过</option>
@@ -136,7 +120,7 @@
 						</select>
 					</button>
 
-					<button type="button" class="btn btn_fff btn-sm" ng-show="tool_1">
+					<button type="button" class="btn btn_fff btn-sm" ng-show="tool_1 && search_order_line!='mark'">
 						<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="search_date" ng-change="change_search_date()">
 							<option value="">日期筛选 ..</option>
 							<option value="syn_day">同步日期</option>
@@ -149,7 +133,7 @@
 					</button>
 			
 					<!-- tool_1 字段筛选按钮组 -->
-					<button type="button" class="btn btn_fff btn-sm blue" ng-show="tool_1">
+					<button type="button" class="btn btn_fff btn-sm blue" ng-show="tool_1 && search_order_line!='mark'">
 						<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="search_field" ng-change="change_search_field()">
 							<option value="">字段筛选 ..</option>
 							<option value="amazon_order_id">订单号</option>
@@ -183,14 +167,6 @@
 							ng-click="list_common_order();is_active('active_tools','52')"
 							ng-class="{'active':active_tools_52}">
 						<i class="fa fa-file-text-o fa-fw"></i> 合单列表
-					</button>
-
-					<!-- 发货按钮组 -->
-					<button type="button" class="btn btn-default" ng-show="tool_3" ng-click="tool_3=!tool_3">
-						<i class="fa fa-reply fa-fw red"></i> 返回
-					</button>
-					<button type="button" class="btn btn-default" ng-show="tool_3" ng-click="">
-						<i class="fa fa-angle-double-right fa-fw"></i>发货
 					</button>
 				</div>
 			</div>
@@ -277,10 +253,16 @@
 		      	<button type="button" class="btn btn-default btn-sm" ng-click="check_back_item();back_icon=!back_icon">
 		      		<i class="fa fa-adjust fa-fw s_gray" ng-class="{'fa-flip-horizontal':back_icon}"></i>反选
 		      	</button>
+		      	<button type="button" ng-click="mark_orders('1')" class="btn btn-default btn-sm">
+		      		<i class="fa fa-star fa-fw yellow"></i>标记
+		      	</button>
+		      	<button type="button" ng-click="mark_orders('0')" class="btn btn-default btn-sm">
+		      		<i class="fa fa-star-o fa-fw yellow"></i>不标记
+		      	</button>
 		      	<button type="button" ng-click="check_items();get_mail_tpl()" data-animation="am-fade-and-slide-top" data-template-url="/modal/amazon_send_mail.html" bs-modal="modal" class="btn btn-default btn-sm blue">
 		      		<i class="fa fa-envelope-o fa-fw"></i>发信
 		      	</button>
-		      	<button type="button" ng-click="check_items()" data-animation="am-fade-and-slide-top" data-template-url="/modal/amazon_del_item.html" bs-modal="modal" class="btn btn-default btn-sm red">
+		      	<button type="button" ng-click="check_items();" data-animation="am-fade-and-slide-top" data-template-url="/modal/amazon_del_item.html" bs-modal="modal" class="btn btn-default btn-sm red">
 		      		<i class="fa fa-trash-o fa-fw"></i>删除
 		      	</button>
 		    </div>
@@ -291,6 +273,7 @@
 							<i ng-show="open_check" class="fa red fa-lg fa-fw" ng-class="{'fa-square-o':item.is_click==false,'fa-check-square':item.is_click==true}"></i>
 							<!-- {{item.is_click}} -->
 							<i>{{item.id}}</i>
+							<i ng-show="item.is_mark==1" class="fa yellow fa-fw" ng-class="{'fa-star':item.is_mark==1}"></i>
 						</td>
 						<td class="blue"><span class="s_gray">订单号：</span>{{item.amazon_order_id}}</td>
 						<td class="red"><span class="s_gray">同步日期：</span>{{item.syn_day}}</td>

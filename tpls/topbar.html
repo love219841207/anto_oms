@@ -15,13 +15,16 @@
 			</select>
 		</div>
 		<ol class="breadcrumb bdr_no pull-right">
-			<li class="yellow_light"> <i class="fa fa-fw fa-hdd-o"></i>
+			<li>
+				<span class="ml10 fa" ng-class="{'green_light fa-wifi':repo_status,'yellow_light fa-spinner fa-pulse':!repo_status}"></span> 
+				<span ng-class="{'green_light':repo_status,'yellow_light':!repo_status}">Repo</span></li>
+			<li class="green_light"> <i class="fa fa-fw fa-hdd-o"></i>
 				System v{{sys_version}}
 			</li>
 			<li class="blue_light"> <i class="fa fa-fw fa-tv"></i>
 				{{u_num}}
 			</li>
-			<li class="green_light"> <i class="fa fa-fw fa-user-circle-o"></i>
+			<li class="blue_light"> <i class="fa fa-fw fa-user-circle-o"></i>
 				{{u_name}}
 			</li>
 			<li>

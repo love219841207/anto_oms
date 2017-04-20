@@ -289,19 +289,25 @@ if(isset($_POST['items_count'])){
     $search_field = $_POST['search_field'];
     $search_key = $_POST['search_key'];
 
-    if($search_field == ''){   //0没有筛选条件
-        if($start_date =='' or $end_date ==''){
-            $sql = "SELECT count(1) as cc FROM amazon_response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}'";
-        }else{
-            $sql = "SELECT count(1) as cc FROM amazon_response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}'";
-        }
+    // 标记订单查询
+    if($search_order_line == 'mark'){
+    	$sql = "SELECT count(1) as cc FROM amazon_response_list WHERE is_mark = '1' AND store = '{$store}'";
     }else{
-        if($start_date =='' or $end_date ==''){
-            $sql = "SELECT count(1) as cc FROM amazon_response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' AND {$search_field} LIKE '%{$search_key}%'";
-        }else{
-            $sql = "SELECT count(1) as cc FROM amazon_response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}'";
-        }
+    	if($search_field == ''){   //0没有筛选条件
+	        if($start_date =='' or $end_date ==''){
+	            $sql = "SELECT count(1) as cc FROM amazon_response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}'";
+	        }else{
+	            $sql = "SELECT count(1) as cc FROM amazon_response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}'";
+	        }
+	    }else{
+	        if($start_date =='' or $end_date ==''){
+	            $sql = "SELECT count(1) as cc FROM amazon_response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' AND {$search_field} LIKE '%{$search_key}%'";
+	        }else{
+	            $sql = "SELECT count(1) as cc FROM amazon_response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}'";
+	        }
+	    }
     }
+
     $res = $db->getOne($sql);
     echo $res['cc'];
     
@@ -319,18 +325,23 @@ if(isset($_POST['get_order_list'])){
     $search_field = $_POST['search_field'];
     $search_key = $_POST['search_key'];
 
-    if($search_field == ''){   //0没有筛选条件
-        if($start_date =='' or $end_date ==''){
-            $sql = "SELECT * FROM amazon_response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' ORDER BY id DESC limit {$start},{$page_size}";
-        }else{
-            $sql = "SELECT * FROM amazon_response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}' ORDER BY id DESC limit {$start},{$page_size}";
-        }
+    // 标记订单查询
+    if($search_order_line == 'mark'){
+    	$sql = "SELECT * FROM amazon_response_list WHERE is_mark = '1' AND store = '{$store}' ORDER BY id DESC limit {$start},{$page_size}";
     }else{
-        if($start_date =='' or $end_date ==''){
-            $sql = "SELECT * FROM amazon_response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' ORDER BY id DESC limit {$start},{$page_size}";
-        }else{
-            $sql = "SELECT * FROM amazon_response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}' ORDER BY id DESC limit {$start},{$page_size}";
-        }
+    	if($search_field == ''){   //0没有筛选条件
+	        if($start_date =='' or $end_date ==''){
+	            $sql = "SELECT * FROM amazon_response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' ORDER BY id DESC limit {$start},{$page_size}";
+	        }else{
+	            $sql = "SELECT * FROM amazon_response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}' ORDER BY id DESC limit {$start},{$page_size}";
+	        }
+	    }else{
+	        if($start_date =='' or $end_date ==''){
+	            $sql = "SELECT * FROM amazon_response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' ORDER BY id DESC limit {$start},{$page_size}";
+	        }else{
+	            $sql = "SELECT * FROM amazon_response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}' ORDER BY id DESC limit {$start},{$page_size}";
+	        }
+	    }
     }
     $res = $db->getAll($sql);
     foreach ($res as $key => $value) {
@@ -895,6 +906,19 @@ if(isset($_POST['del_items'])){
 	//日志
 	$do = '[删除订单]：'.$del_log_items;
 	oms_log($u_name,$do,'amazon_order');
+
+	echo 'ok';
+}
+
+// 标记订单查询
+if(isset($_GET['mark_orders'])){
+	$mark_orders = $_GET['mark_orders'];
+	$method = $_GET['method'];
+	$mark_orders = '('.$mark_orders.')';
+
+	// 标记
+	$sql = "UPDATE amazon_response_list SET is_mark = '{$method}' WHERE amazon_order_id in $mark_orders";
+	$res = $db->execute($sql);
 
 	echo 'ok';
 }

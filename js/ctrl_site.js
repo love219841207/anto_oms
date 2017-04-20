@@ -2,6 +2,7 @@ var app=angular.module('myApp');
 //面板控制器
 app.controller('siteCtrl', ['$rootScope','$scope','$state','$stateParams','$http','$log','$timeout','$ionicLoading', function($rootScope,$scope,$state,$stateParams,$http,$log,$timeout,$ionicLoading){
     $rootScope.bg = false;
+
     //设置日期格式
     $scope.datepickerConfig = {
         allowFuture: true,
@@ -97,9 +98,33 @@ app.controller('siteCtrl', ['$rootScope','$scope','$state','$stateParams','$http
 
 }])
 
-app.controller('topCtrl', ['$rootScope','$scope','$state','$stateParams','$http','$log', function($rootScope,$scope,$state,$stateParams,$http,$log){
+app.controller('topCtrl', ['$rootScope','$scope','$state','$stateParams','$http','$log','$timeout', function($rootScope,$scope,$state,$stateParams,$http,$log,$timeout){
     $rootScope.now_station = '';    //初始化员工选择的平台
     $rootScope.now_store_bar = '';  //初始化员工选择的店铺
+
+    // 连接库存系统
+    $scope.ping_repo = function(){
+        $http.get('/fuck/ping_repo.php', {params:{ping_repo:"ping"}
+        }).success(function(data) {
+            if(data.repo_status == 1){
+                $timeout(function(){
+                    $scope.repo_status = true;
+                },300);
+            }else{
+                $scope.repo_status = false;
+            }
+            
+            $timeout(function(){
+                $scope.repo_status = false;
+                $scope.ping_repo();
+            },10000);
+            
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("连接repo失败。");
+        });
+    }
+    $scope.ping_repo();
 
     //平台切换
     $scope.change_station = function(){

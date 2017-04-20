@@ -2,16 +2,69 @@
 .table{margin-bottom: 10px;}
 .open_title{background: #fcf8e3;}
 </style>
-<div class="container-fluid mt20" ng-controller="amazonCtrl">
-	<div class="row">
-		<div class="col-lg-6 col-md-6 col-sm-10">
+<div class="container-fluid mt20" ng-controller="amazon_send_Ctrl">
+	<div class="row" ng-show="now_store_bar">
+		<div class="col-lg-12 col-md-12 col-sm-12">
 			<div class="panel panel-primary">
 				<div class="panel-heading">生成发货单</div>
 				<div class="panel-body">
-					<button class="btn btn-success mr20" type="button" ng-click="list_orders('gtx')" >佐川宅配便 (日本)</button>
-					<button class="btn btn-success mr20" type="button" ng-click="list_orders('gtx')" >黑猫 (日本)</button>
+					<div class="btn-group ml10 mt10">
+						<button 
+							type="button" 
+							id="active_tools0"
+							class="btn btn-default active_tools" 
+							ng-click="
+								is_active('active_tools','0');
+								format_table = true;
+								format_order()"
+							ng-class="{'active':active_tools_0}"
+							>
+							<i class="fa fa-th-list fa-fw red"></i> 订单格式化
+						</button>
+						<button 
+							type="button" 
+							id="active_tools1"
+							class="btn btn-default active_tools" 
+							ng-click="
+								is_active('active_tools','1');
+								format_table = false"
+							ng-class="{'active':active_tools_1}"
+							>
+							<i class="fa fa-truck fa-fw yellow"></i> 待发货
+						</button>
+						<button 
+							type="button" 
+							id="active_tools2"
+							class="btn btn-default active_tools" 
+							ng-click="
+								is_active('active_tools','2');
+								format_table = false"
+							ng-class="{'active':active_tools_2}"
+							>
+							<i class="fa fa-list-alt fa-fw blue"></i> 冻结表
+						</button>
+					</div>
+					<table ng-show="format_table" class="table table-bordered table-condensed table-hover table-striped mt20">
+						<tr class="s_gray">
+							<td class="tagc"><i class="fa-sort-numeric-asc fa fa-fw"></i></td>
+							<td>发货ID</td>
+							<td>收件人</td>
+							<td>SKU</td>
+							<td>数量</td>
+							<td>OMS ID</td>
+							<td>担当者</td>
+						</tr>
+						<tr>
+							<td class="tagc">{{$index+1}}</td>
+							<td>{{$item.send_id}}</td>
+							<td>{{$item.receive_name}}</td>
+							<td>{{$item.send_id}}</td>
+							<td>{{$item.send_id}}</td>
+							<td>{{$item.send_id}}</td>
+						</tr>
+					</table>
 				</div>
-				<div class="panel-footer">点击按钮生成对应快递公司的发货单。</div>
+				<div class="panel-footer">【订单格式化】对订单进行sku、客人信息的格式化。<br>【待发货】进行发货操作。<br>【冻结表】对冻结订单进行操作。<br><span class='red'>本页面操作均连接到库存系统进行，请确保两个系统的通信稳定。</span></div>
 			</div>
 		</div>
 	</div>

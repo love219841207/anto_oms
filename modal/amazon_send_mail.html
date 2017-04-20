@@ -1,4 +1,4 @@
-<div class="modal" tabindex="-1" role="dialog" ng-controller="amazonCtrl">
+<div class="modal" tabindex="-1" role="dialog">
   <div class="modal-dialog" style="width:800px;">
     <div class="modal-content">
       <div class="modal-header">
@@ -32,7 +32,7 @@
           <div>发送失败数：<span class="red">{{send_error_num}}</span></div>
           <table ng-show="send_error_num" class="table table-bordered table-condensed table-striped mt10">
             <tr class="danger red">
-              <td class="tagc">序列</td>
+              <td class="tagc"><i class="fa-sort-numeric-asc fa fa-fw"></i></td>
               <td>发件失败订单号</td>
               <td>错误详情</td>
             </tr>

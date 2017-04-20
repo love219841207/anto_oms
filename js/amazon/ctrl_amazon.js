@@ -395,7 +395,7 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
 
 //分页组件
     //查询总数
-    $scope.get_count = function(){
+    $scope.get_count = function(e){
         if($scope.click_key == "0"){    //如果没有筛选条件
             $scope.search_key_words='';
         }else{
@@ -542,6 +542,7 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
     //获取序列内容_分页查询
     $scope.to_page = function(page){
         $scope.loading_shadow('open'); //打开loading
+        $scope.now_page = page;
 
         //计算分页开始值
         start = (page - 1)*$scope.pageSize;
@@ -618,12 +619,14 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
 
     //check_items 选择项
     $scope.check_items = function(){
-        $scope.my_checked = new Array();
+        var my_checked = new Array();
         angular.forEach($scope.get_order_list_data, function(value, index){
             if($scope.get_order_list_data[index].is_click == true){
-                $scope.my_checked.push("'"+$scope.get_order_list_data[index].amazon_order_id+"'");
+                my_checked.push("'"+$scope.get_order_list_data[index].amazon_order_id+"'");
             }
         })
+        $scope.my_checked = my_checked;
+        $scope.my_checked_items = my_checked.join(',');
     }
 
     // 邮件模板查询
@@ -667,7 +670,7 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
             store:$rootScope.now_store_bar,
             station:'Amazon',
             mail_tpl:$scope.to_mail_tpl,
-            order_items:$scope.my_checked};
+            order_items:$scope.my_checked_items};
 
         $http.post('/fuck/amazon_send_mail.php', post_data).success(function(data) {
             if(data.status == 'ok'){
@@ -705,12 +708,13 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
     // 删除订单
     $scope.amz_del_items = function(){
         $scope.shadow('open','ss_make','正在删除，请稍后。');
-        var ppd = $scope.my_checked.join(',');
-        var post_data = {del_items:ppd};
+
+        var post_data = {del_items:$scope.my_checked_items};
 
         $http.post('/fuck/amazon/amazon_get_order.php', post_data).success(function(data) {
             if(data == 'ok'){
-                $scope.selectPage(1); //此处remove
+                $scope.get_count();
+                $scope.to_page($scope.now_page);
                 
                 $timeout(function(){$scope.shadow('close');},500); //关闭shadow
                 $scope.plug_alert('success','删除完成。','fa fa-smile-o');
@@ -837,5 +841,28 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
         });
     }
 
+    // 标记订单
+    $scope.mark_orders = function(e){
+        $scope.check_items();   // 选择项
+
+        $scope.loading_shadow('open'); //打开loading
+        $http.get('/fuck/amazon/amazon_get_order.php', {
+            params:{
+                mark_orders:$scope.my_checked_items,
+                method:e
+            }
+        }).success(function(data) {
+            if(data == 'ok'){
+                $scope.selectPage($scope.now_page);
+            }else{
+                 $scope.plug_alert('danger','操作失败。','fa fa-ban');
+            }
+            $log.info(data)
+            $timeout(function(){$scope.loading_shadow('close');},300); //关闭loading
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:订单标记失败。");
+        });
+    }
     
 }])
