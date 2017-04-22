@@ -7,6 +7,8 @@ if($u_name==''){
 }
 
 $dir = dirname(__FILE__);
-require_once($dir."/../pdo/PdoMySQL.class.php");//PDO
+require_once($dir."/../pdo/PdoMySQL.class.php");//OMS_PDO
+require_once($dir."/../pdo/repo.PdoMySQL.class.php");//REPO_PDO
 
 $db = new PdoMySQL();
+$rdb = new RepoPdoMySQL();

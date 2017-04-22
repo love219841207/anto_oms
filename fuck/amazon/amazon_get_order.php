@@ -133,8 +133,9 @@ if(isset($_GET['list_orders'])){
 			@$address = $address0.$address1.$address2;
 
 			//sql
-			$sql = "INSERT INTO amazon_response_list(store,syn_day,latest_ship_date,order_type,purchase_date,payment_method,pay_money,buyer_email,amazon_order_id,buyer_name,order_total_currency,order_total_money,phone,receive_name,country,post_code,address,send_id,order_line) VALUES ('{$store}','{$syn_day}','{$latest_ship_date}','{$order_type}','{$purchase_date}','{$payment_method}','{$pay_money}','{$buyer_email}','{$amazon_order_id}','{$buyer_name}','{$order_total_currency}','{$order_total_money}','{$phone}','{$receive_name}','{$country}','{$post_code}','{$address}','{$amazon_order_id}','0')";
+			$sql = "INSERT INTO amazon_response_list(store,syn_day,latest_ship_date,order_type,purchase_date,payment_method,pay_money,buyer_email,amazon_order_id,buyer_name,order_total_currency,order_total_money,phone,receive_name,country,post_code,address,send_id,order_line) VALUES ('{$store}','{$syn_day}','{$latest_ship_date}','{$order_type}','{$purchase_date}','{$payment_method}','{$pay_money}','{$buyer_email}','{$amazon_order_id}','{$buyer_name}','{$order_total_currency}','{$order_total_money}','{$phone}','{$receive_name}','{$country}','{$post_code}','{$address}','ready','0')";
 			$res = $db->execute($sql);
+
 			usleep(50000);
 			$insert_count = $insert_count + 1;
 	    }else{
@@ -145,6 +146,9 @@ if(isset($_GET['list_orders'])){
 	    	continue;
 	    }
 	}
+	//send_id变成AMZ+id
+	$sql = "UPDATE amazon_response_list SET send_id = concat('amz',id) WHERE send_id = 'ready'";
+	$res = $db->execute($sql);
 
 	//final_red
 	$final_res['status'] = 'list_ok';	//状态
@@ -401,10 +405,10 @@ if(isset($_GET['onekey_common_order'])){
 		(SELECT a.id FROM amazon_response_list a,
 		(SELECT receive_name,count(id) as num
 		FROM amazon_response_list WHERE store='{$store}' AND order_line = '2'
-		group by receive_name,phone,post_code
+		group by receive_name,phone,post_code,buyer_email,address,payment_method
 		having num>1) b
 		WHERE a.receive_name = b.receive_name) b
-		SET a.send_id = concat('H-',a.phone)
+		SET a.send_id = concat('H',a.phone)
 		WHERE a.id = b.id";
 	$res = $db->execute($sql);
 
@@ -413,7 +417,7 @@ if(isset($_GET['onekey_common_order'])){
 	$res = $db->execute($sql);
 
 	//查询所有合单号
-	$sql = "SELECT send_id FROM amazon_response_list WHERE store='{$store}' AND send_id LIKE 'H-%' AND order_line = '3' GROUP BY send_id";
+	$sql = "SELECT send_id FROM amazon_response_list WHERE store='{$store}' AND send_id LIKE 'H%' AND order_line = '3' GROUP BY send_id";
 	$res = $db->getAll($sql);
 
 	$all_one = '';
@@ -436,7 +440,7 @@ if(isset($_GET['onekey_common_order'])){
 if(isset($_GET['list_common_order'])){
 	$store = $_GET['list_common_order'];
 	//查询所有合单号
-	$sql = "SELECT send_id FROM amazon_response_list WHERE store='{$store}' AND send_id LIKE 'H-%' AND order_line = '3' GROUP BY send_id";
+	$sql = "SELECT send_id FROM amazon_response_list WHERE store='{$store}' AND send_id LIKE 'H%' AND order_line = '3' GROUP BY send_id";
 	$res = $db->getAll($sql);
 	echo json_encode($res);
 }
@@ -452,7 +456,7 @@ if(isset($_GET['get_common_order'])){
 //拆单
 if(isset($_GET['break_common_order'])){
 	$send_id = $_GET['break_common_order'];
-	$sql = "UPDATE amazon_response_list SET send_id = amazon_order_id WHERE send_id = '{$send_id}'";
+	$sql = "UPDATE amazon_response_list SET send_id = concat('amz',id) WHERE send_id = '{$send_id}'";
 	$res = $db->execute($sql);
 
 	//日志

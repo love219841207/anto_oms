@@ -857,7 +857,6 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
             }else{
                  $scope.plug_alert('danger','操作失败。','fa fa-ban');
             }
-            $log.info(data)
             $timeout(function(){$scope.loading_shadow('close');},300); //关闭loading
         }).error(function(data) {
             alert("系统错误，请联系管理员。");

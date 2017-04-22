@@ -36,7 +36,7 @@
               <td>发件失败订单号</td>
               <td>错误详情</td>
             </tr>
-            <tr ng-repeat="item in error_mail">
+            <tr ng-repeat="item in error_mail track by $index">
               <td class="tagc green">{{$index+1}}</td>
               <td class="blue">{{item.error_order_id}}</td>
               <td class="red">{{item.error_info}}</td>

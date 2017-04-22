@@ -67,6 +67,7 @@
 					<button 
 						class="btn btn-default" 
 						ng-click="info_box=!info_box" 
+						ng-class="{'active':info_box}"
 						ng-disabled="!open_info_btn">
 						<i ng-class="{'fa-folder-open':info_box}" class="fa fa-fw fa-folder s_gray"></i> 详情
 					</button>
@@ -136,6 +137,7 @@
 					<button type="button" class="btn btn_fff btn-sm blue" ng-show="tool_1 && search_order_line!='mark'">
 						<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="search_field" ng-change="change_search_field()">
 							<option value="">字段筛选 ..</option>
+							<option value="id">ID</option>
 							<option value="amazon_order_id">订单号</option>
 							<option value="buyer_email">邮箱</option>
 							<option value="buyer_name">购买人</option>

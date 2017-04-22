@@ -15,7 +15,6 @@
 							class="btn btn-default active_tools" 
 							ng-click="
 								is_active('active_tools','0');
-								format_table = true;
 								format_order()"
 							ng-class="{'active':active_tools_0}"
 							>
@@ -44,27 +43,47 @@
 							<i class="fa fa-list-alt fa-fw blue"></i> 冻结表
 						</button>
 					</div>
-					<table ng-show="format_table" class="table table-bordered table-condensed table-hover table-striped mt20">
-						<tr class="s_gray">
+					<table ng-show="format_table" class="animate slide-top table table-bordered table-condensed table-hover table-striped mt20 f12">
+						<tr class="blue info animate slide-right">
 							<td class="tagc"><i class="fa-sort-numeric-asc fa fa-fw"></i></td>
-							<td>发货ID</td>
-							<td>收件人</td>
-							<td>SKU</td>
+							<td>合单发货ID</td>
+							<td>OMS-ID</td>
+							<!-- <td>包裹ID</td> -->
+							<td>SKU（出品SKU，客人看）</td>
+							<td>商品代码（拆后，仓库看）</td>
 							<td>数量</td>
-							<td>OMS ID</td>
-							<td>担当者</td>
+							<!-- <td>电话</td> -->
+							<!-- <td>邮编</td> -->
+							<!-- <td>地址</td> -->
+							<td>收件人</td>
+							<td>代引金额</td>
+							<td>是否自提</td>
+							<!-- <td>email</td> -->
+							<!-- <td>店铺</td> -->
+							<td>担当</td>	
 						</tr>
-						<tr>
+						<tr class="animate slide-right" ng-repeat="item in format_table track by $index" ng-class="{'bg_yellow':bg_yellow}" ng-dblclick="bg_yellow=!bg_yellow">
 							<td class="tagc">{{$index+1}}</td>
-							<td>{{$item.send_id}}</td>
-							<td>{{$item.receive_name}}</td>
-							<td>{{$item.send_id}}</td>
-							<td>{{$item.send_id}}</td>
-							<td>{{$item.send_id}}</td>
+							<td>{{item.send_id}}</td>
+							<td>{{item.oms_id}}</td>
+							<!-- <td>{{item.pack_id}}</td> -->
+							<td>{{item.sku}}</td>
+							<td ng-class="{'red':item.error_info=='no_sku'}">{{item.goods_code}}</td>
+							<td class="tagr">{{item.out_num}}</td>
+							<!-- <td>{{item.who_tel}}</td> -->
+							<!-- <td>{{item.who_post}}</td> -->
+							<!-- <td>{{item.who_house}}</td> -->
+							<td>{{item.who_name}}</td>
+							<!-- <td>{{item.is_cod}}</td> -->
+							<td class="tagr" ng-class="{'red':item.is_cod=='COD'}">{{item.due_money}}</td>
+							<td>{{item.need_not_send}}</td>
+							<!-- <td>{{item.who_email}}</td> -->
+							<!-- <td>{{item.store_name}}</td> -->
+							<td class="blue tagc">{{item.holder}}</td>
 						</tr>
 					</table>
 				</div>
-				<div class="panel-footer">【订单格式化】对订单进行sku、客人信息的格式化。<br>【待发货】进行发货操作。<br>【冻结表】对冻结订单进行操作。<br><span class='red'>本页面操作均连接到库存系统进行，请确保两个系统的通信稳定。</span></div>
+				<div class="panel-footer">【订单格式化】拆分别名福袋商品，SKU检测、横杆替换，包裹体积分配，代引金额运算等。<br>【待发货】进行发货操作。<br>【冻结表】对冻结订单进行操作。<br>双击标记。<br><span class='red'>本页面操作均连接到库存系统进行，请确保两个系统的通信稳定。</span></div>
 			</div>
 		</div>
 	</div>
