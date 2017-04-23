@@ -116,7 +116,7 @@ if(isset($_GET['check_sku'])){
         $res = $rdb->getOne($sql);
         if(empty($res)){
     		//如果没有此商品,error
-    		$sql = "UPDATE amazon_format SET error_info = 'no_sku' WHERE id = '{$now_id}';";
+    		$sql = "UPDATE amazon_format SET error_info = 'no_sku' WHERE id = '{$now_id}'";
         	$res = $db->execute($sql);
         }
 	}
@@ -124,10 +124,46 @@ if(isset($_GET['check_sku'])){
 	echo 'ok';
 }
 
+// 读取格式化列表
 if(isset($_GET['read_format_table'])){
 	$store = $_GET['read_format_table'];
 
-	$sql = "SELECT * FROM amazon_format WHERE store_name = '{$store}' ORDER BY error_info DESC";
+	$sql = "SELECT * FROM amazon_format WHERE store_name = '{$store}' ORDER BY id DESC";
 	$res = $db->getAll($sql);
 	echo json_encode($res);
+}
+
+// 修改格式化列表字段
+if(isset($_GET['change_format_field'])){
+	$id = $_GET['change_format_field'];
+	$field_name = $_GET['field_name'];
+	$new_key = addslashes($_GET['new_key']);
+	$old_key = $_GET['old_key'];
+	$oms_id = $_GET['oms_id'];
+
+	//是否是 goods_code
+	if($field_name == 'goods_code'){
+		//检测是否存在此 goods_code
+		$sql = "SELECT 1 FROM goods_type WHERE goods_code='{$new_key}' limit 1";
+        $res = $rdb->getOne($sql);
+        if(empty($res)){
+    		//如果没有此商品代码,error
+    		echo 'no_has';
+        }else{
+        	//更新字段
+        	$sql = "UPDATE amazon_format SET $field_name = '{$new_key}' WHERE id = '{$id}'";
+        	$res = $db->execute($sql);
+
+        	//更新报错
+        	$sql = "UPDATE amazon_format SET error_info = '0' WHERE id = '{$id}'";
+        	$res = $db->execute($sql);
+
+        	//日志
+			$do = '[Format] 修改OMS_ID：'.$oms_id.' 的商品代码：'.$old_key.' 为 '.$new_key;
+			oms_log($u_name,$do,'amazon_format');
+        	echo 'ok';
+        }
+	}
+
+	
 }

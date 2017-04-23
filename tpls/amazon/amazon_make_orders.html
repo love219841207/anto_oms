@@ -14,6 +14,9 @@
 							id="active_tools0"
 							class="btn btn-default active_tools" 
 							ng-click="
+								ready_send = false;
+								make_table = false;
+								pause_table = false;
 								is_active('active_tools','0');
 								format_order()"
 							ng-class="{'active':active_tools_0}"
@@ -26,7 +29,9 @@
 							class="btn btn-default active_tools" 
 							ng-click="
 								is_active('active_tools','1');
-								format_table = false"
+								format_table = false;
+								make_table = false;
+								pause_table = false;"
 							ng-class="{'active':active_tools_1}"
 							>
 							<i class="fa fa-truck fa-fw yellow"></i> 待发货
@@ -37,11 +42,29 @@
 							class="btn btn-default active_tools" 
 							ng-click="
 								is_active('active_tools','2');
-								format_table = false"
+								format_table = false;
+								make_table = false;
+								ready_send = false;"
 							ng-class="{'active':active_tools_2}"
 							>
 							<i class="fa fa-list-alt fa-fw blue"></i> 冻结表
 						</button>
+						<button 
+							type="button" 
+							id="active_tools3"
+							class="btn btn-default active_tools" 
+							ng-click="
+								is_active('active_tools','3');
+								format_table = false;
+								pause_table = false;
+								ready_send = false;"
+							ng-class="{'active':active_tools_3}"
+							>
+							<i class="fa fa-list-alt fa-fw blue"></i> 出单
+						</button>
+					</div>
+					<div class="btn pull-right btn-primary">
+						分配包裹(处理完所有SKU才能分)
 					</div>
 					<table ng-show="format_table" class="animate slide-top table table-bordered table-condensed table-hover table-striped mt20 f12">
 						<tr class="blue info animate slide-right">
@@ -68,7 +91,18 @@
 							<td>{{item.oms_id}}</td>
 							<!-- <td>{{item.pack_id}}</td> -->
 							<td>{{item.sku}}</td>
-							<td ng-class="{'red':item.error_info=='no_sku'}">{{item.goods_code}}</td>
+							<td ng-class="{'red danger':item.error_info=='no_sku'}">{{item.goods_code}}
+							<i ng-click="aa_goods_code=!aa_goods_code" 
+				                class="fa fa-edit fa-fw pointer blue"
+				                ng-show="item.error_info=='no_sku'"
+				                ></i>
+				              	<div ng-show="aa_goods_code" class="input-group">
+				                	<input class="form-control input-sm" placeholder="商品代码 更正为..." type="text" id="goods_code{{item.id}}">
+				                	<span class="input-group-btn">
+				                  		<button class="btn btn-default btn-danger btn-sm" type="button" ng-click="change_format_field('goods_code',item.id,item.goods_code,item.oms_id);aa_goods_code=!aa_goods_code">确定</button>
+				               		</span>
+				              	</div>
+							</td>
 							<td class="tagr">{{item.out_num}}</td>
 							<!-- <td>{{item.who_tel}}</td> -->
 							<!-- <td>{{item.who_post}}</td> -->
@@ -83,7 +117,13 @@
 						</tr>
 					</table>
 				</div>
-				<div class="panel-footer">【订单格式化】拆分别名福袋商品，SKU检测、横杆替换，包裹体积分配，代引金额运算等。<br>【待发货】进行发货操作。<br>【冻结表】对冻结订单进行操作。<br>双击标记。<br><span class='red'>本页面操作均连接到库存系统进行，请确保两个系统的通信稳定。</span></div>
+				<div class="panel-footer">
+					<span ng-show="format_table">【订单格式化】拆分别名福袋商品，SKU检测、横杆替换，包裹体积分配，代引金额运算等。<br></span>
+					<span ng-show="ready_send">【待发货】进行发货操作。<br></span>
+					<span ng-show="pause_table">【冻结表】对冻结订单进行操作。<br></span>
+					<span>双击标记。<br></span>
+					<span class='red'>本页面操作均连接到库存系统进行，请确保两个系统的通信稳定。</span>
+				</div>
 			</div>
 		</div>
 	</div>
