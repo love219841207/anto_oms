@@ -21,6 +21,8 @@ if(isset($_GET['format_order'])){
 		who_name,	#收货人
 		is_cod,		#是否代引
 		due_money,	#代引金额，写出全部的item金额，根据cod，更新是否是代引
+		express_company,
+		send_method,
 		who_email,	#邮编
 		store_name,	#店铺名
 		holder,		#担当者
@@ -36,6 +38,8 @@ if(isset($_GET['format_order'])){
 		list.receive_name,
 		list.payment_method,
 		info.cod_money+info.item_price,	#带引金额
+		'佐川急便',
+		'宅配便',
 		list.buyer_email,
 		'{$store}',
 		'{$u_name}',
@@ -44,6 +48,10 @@ if(isset($_GET['format_order'])){
 
 	// 格式化表代引金额
 	$sql = "UPDATE amazon_format SET due_money = '' WHERE is_cod <> 'COD'";
+	$res = $db->execute($sql);
+
+	//	更新黑猫地址	（神奈川県，埼玉県，茨城県，群馬県，山梨県）
+	$sql = "UPDATE amazon_format SET express_company = 'ヤマト運輸',send_method = '宅急便' WHERE who_house LIKE '%神奈川県%' OR who_house LIKE '%埼玉県%' OR who_house LIKE '%茨城県%' OR who_house LIKE '%群馬県%' OR who_house LIKE '%山梨県%'";
 	$res = $db->execute($sql);
 
 	// 更改状态
@@ -164,6 +172,18 @@ if(isset($_GET['change_format_field'])){
         	echo 'ok';
         }
 	}
+}
 
-	
+// 验证格式化表通过
+if(isset($_GET['check_format_ok'])){
+	$store = $_GET['check_format_ok'];
+	$sql = "SELECT count(1) as error_count FROM amazon_format WHERE store_name = '{$store}' AND error_info <> '0'";
+	$res = $db->getOne($sql);
+	$error_count = $res['error_count'];
+	if($error_count == 0){
+		echo 'ok';
+	}else{
+		echo 'no';
+	}
+
 }

@@ -100,7 +100,7 @@ app.controller('amazon_send_Ctrl', ['$rootScope','$scope','$state','$http','$log
                 read_format_table:$scope.now_store_bar
             }
         }).success(function(data) {
-        	
+        	$scope.check_format_ok();	//验证格式化表error
             $scope.format_table = data;
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
@@ -118,6 +118,7 @@ app.controller('amazon_send_Ctrl', ['$rootScope','$scope','$state','$http','$log
         }).success(function(data) {
             if(data == 'ok'){
                 $scope.read_format_table();
+                $scope.check_format_ok();
             }else if(data == 'no_has'){
             	$scope.plug_alert('danger','无此商品代码','fa fa-ban');
             }else{
@@ -127,6 +128,24 @@ app.controller('amazon_send_Ctrl', ['$rootScope','$scope','$state','$http','$log
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
             $log.info("error:格式化字段修改失败。");
+        });
+    }
+
+    // 查看格式化表是否通过error
+    $scope.check_format_ok =  function(){
+    	$http.get('/fuck/amazon/amazon_make_orders.php', {params:{check_format_ok:$scope.now_store_bar}
+        }).success(function(data) {
+            if(data == 'ok'){
+                $scope.format_ok = true;
+            }else if(data == 'no'){
+            	$scope.format_ok = false;
+            }else{
+                $scope.plug_alert('danger','格式化表通过验证失败。','fa fa-ban');
+                $log.info(data);
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:格式化表通过验证失败。");
         });
     }
 

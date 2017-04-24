@@ -63,7 +63,7 @@
 							<i class="fa fa-list-alt fa-fw blue"></i> 出单
 						</button>
 					</div>
-					<div class="btn pull-right btn-primary">
+					<div ng-disabled="!format_ok" class="btn pull-right btn-primary">
 						分配包裹(处理完所有SKU才能分)
 					</div>
 					<table ng-show="format_table" class="animate slide-top table table-bordered table-condensed table-hover table-striped mt20 f12">
@@ -71,7 +71,9 @@
 							<td class="tagc"><i class="fa-sort-numeric-asc fa fa-fw"></i></td>
 							<td>合单发货ID</td>
 							<td>OMS-ID</td>
-							<!-- <td>包裹ID</td> -->
+							<td>快递公司</td>
+							<td>配送方式</td>
+							<td>包裹ID</td>
 							<td>SKU（出品SKU，客人看）</td>
 							<td>商品代码（拆后，仓库看）</td>
 							<td>数量</td>
@@ -89,7 +91,9 @@
 							<td class="tagc">{{$index+1}}</td>
 							<td>{{item.send_id}}</td>
 							<td>{{item.oms_id}}</td>
-							<!-- <td>{{item.pack_id}}</td> -->
+							<td>{{item.express_company}}</td>
+							<td>{{item.send_method}}</td>
+							<td>{{item.pack_id}}</td>
 							<td>{{item.sku}}</td>
 							<td ng-class="{'red danger':item.error_info=='no_sku'}">{{item.goods_code}}
 							<i ng-click="aa_goods_code=!aa_goods_code" 
