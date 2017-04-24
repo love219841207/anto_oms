@@ -42,56 +42,6 @@ app.controller('amazon_send_Ctrl', ['$rootScope','$scope','$state','$http','$log
         });
     }
 
-    // 拆福袋和别名-连接Repo
-    $scope.fu_bag = function(){
-    	$scope.read_format_table();
-    	$scope.shadow('open','ss_write','正在拆福袋 / 别名 SKU');
-    	if($scope.repo_status == '1'){
-	        $http.get('/fuck/amazon/amazon_make_orders.php', {
-	            params:{
-	                fu_bag:$scope.now_store_bar
-	            }
-	        }).success(function(data) {
-	            if(data == 'ok'){
-	            	$timeout(function(){$scope.check_sku();},2000);
-	            }else{
-	            	$scope.plug_alert('danger','拆福袋 / 别名失败。','fa fa-ban');
-	            }
-	        }).error(function(data) {
-	            alert("系统错误，请联系管理员。");
-	            $log.info("error:拆福袋失败。");
-	        });
-    	}else{
-    		$scope.plug_alert('warning','库存系统连接失败。','fa fa-unlink');
-    	}
-    	
-    }
-
-    // 验证sku-连接Repo
-    $scope.check_sku = function(){
-    	$scope.read_format_table();
-    	$scope.shadow('open','ss_write','正在检测 SKU');
-    	if($scope.repo_status == '1'){
-	        $http.get('/fuck/amazon/amazon_make_orders.php', {
-	            params:{
-	                check_sku:$scope.now_store_bar
-	            }
-	        }).success(function(data) {
-	            if(data == 'ok'){
-	            	$timeout(function(){$scope.shadow('open','ss_read','即将完成');},2000);
-        			$timeout(function(){$scope.read_format_table();$scope.shadow('close');},4000); //关闭shadow
-	            }else{
-	            	$scope.plug_alert('danger','sku验证失败。','fa fa-ban');
-	            }
-	        }).error(function(data) {
-	            alert("系统错误，请联系管理员。");
-	            $log.info("error:sku验证失败。");
-	        });
-    	}else{
-    		$scope.plug_alert('warning','库存系统连接失败。','fa fa-unlink');
-    	}
-    	
-    }
 
     // 读取格式化订单表
     $scope.read_format_table = function(){

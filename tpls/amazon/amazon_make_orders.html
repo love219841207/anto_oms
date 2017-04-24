@@ -63,8 +63,8 @@
 							<i class="fa fa-list-alt fa-fw blue"></i> 出单
 						</button>
 					</div>
-					<div ng-disabled="!format_ok" class="btn pull-right btn-primary">
-						分配包裹(处理完所有SKU才能分)
+					<div ng-disabled="!format_ok" class="btn pull-right btn-primary" ng-click="expression">
+						转入待发货
 					</div>
 					<table ng-show="format_table" class="animate slide-top table table-bordered table-condensed table-hover table-striped mt20 f12">
 						<tr class="blue info animate slide-right">

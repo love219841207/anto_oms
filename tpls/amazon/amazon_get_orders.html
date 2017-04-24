@@ -110,9 +110,9 @@
 					<button class="btn btn_fff btn-sm" ng-show="tool_1">
 						<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="search_order_line" ng-change="change_serch_line()">
 							<option value="mark">标记</option>
-							<option value="1">未匹配</option>
-							<option value="0">无详情</option>
+							<!-- <option value="no_sku">SKU错误</option> -->
 							<option value="99">未通过</option>
+							<option value="0">无详情</option>
 							<option value="2">已通过</option>
 							<option value="3">已合单</option>
 							<option value="6">已出单</option>
@@ -121,7 +121,7 @@
 						</select>
 					</button>
 
-					<button type="button" class="btn btn_fff btn-sm" ng-show="tool_1 && search_order_line!='mark'">
+					<button type="button" class="btn btn_fff btn-sm" ng-show="tool_1 && search_order_line!='mark' && search_order_line!='99'">
 						<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="search_date" ng-change="change_search_date()">
 							<option value="">日期筛选 ..</option>
 							<option value="syn_day">同步日期</option>
@@ -134,7 +134,7 @@
 					</button>
 			
 					<!-- tool_1 字段筛选按钮组 -->
-					<button type="button" class="btn btn_fff btn-sm blue" ng-show="tool_1 && search_order_line!='mark'">
+					<button type="button" class="btn btn_fff btn-sm blue" ng-show="tool_1 && search_order_line!='mark' && search_order_line!='99'">
 						<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="search_field" ng-change="change_search_field()">
 							<option value="">字段筛选 ..</option>
 							<option value="id">ID</option>
@@ -270,7 +270,7 @@
 		    </div>
 			<div ng-repeat="item in get_order_list_data track by $index" class="animate slide-left">
 				<table class="table table-condensed table-hover f12" >
-					<tr class="white" ng-class="{'danger':item.payment_method=='COD','bg_yellow':item.is_click}">
+					<tr class="white" ng-class="{'warning':item.order_line=='99','danger':item.sku_ok=='0','bg_yellow':item.is_click}">
 						<td class="green pointer" ng-click="item.is_click=!item.is_click">
 							<i ng-show="open_check" class="fa red fa-lg fa-fw" ng-class="{'fa-square-o':item.is_click==false,'fa-check-square':item.is_click==true}"></i>
 							<!-- {{item.is_click}} -->

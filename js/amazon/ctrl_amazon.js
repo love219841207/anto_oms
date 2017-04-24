@@ -170,7 +170,7 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
         $http.get('/fuck/amazon/amazon_get_order.php', {params:{get_order_info:store}
         }).success(function(data) {
             if(data.status == 'info_ok'){
-                $timeout(function(){$scope.check_list_post(store)},1000);
+                $timeout(function(){$scope.express_company(store)},1000);
             }else{
                 $scope.plug_alert('warning','同步超时，请重试。','fa fa-clock-o');
                 $timeout(function(){$scope.shadow('close');},1000); //关闭shadow
@@ -179,6 +179,69 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
             $log.info("error:服务器响应亚马逊ListOrderItems同步订单详情通信失败。");
+        });
+    }
+
+    // 分配快递公司
+    $scope.express_company = function(){
+        $scope.shadow('open','ss_write','正在分配配送公司');
+        $http.get('/fuck/amazon/amazon_get_order.php', {
+            params:{
+                express_company:$scope.now_store_bar
+            }
+        }).success(function(data) {
+            if(data == 'ok'){
+                $timeout(function(){$scope.fu_bag();},2000);
+            }else{
+                $log.info(data);
+                $scope.plug_alert('danger','快递公司分配失败。','fa fa-ban');
+                $timeout(function(){$scope.shadow('close');},1000); //关闭shadow
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:拆福袋失败。");
+        });
+    }
+
+    // 拆福袋和别名-连接Repo
+    $scope.fu_bag = function(){
+        $scope.shadow('open','ss_write','正在拆福袋 / 别名 SKU');
+        $http.get('/fuck/amazon/amazon_get_order.php', {
+            params:{
+                fu_bag:$scope.now_store_bar
+            }
+        }).success(function(data) {
+            if(data == 'ok'){
+                $timeout(function(){$scope.check_sku();},2000);
+            }else{
+                $log.info(data);
+                $scope.plug_alert('danger','拆福袋 / 别名失败。','fa fa-ban');
+                $timeout(function(){$scope.shadow('close');},1000); //关闭shadow
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:拆福袋失败。");
+        });
+    }
+
+    // 验证sku-连接Repo
+    $scope.check_sku = function(){
+        $scope.shadow('open','ss_write','正在检测 SKU');
+        $http.get('/fuck/amazon/amazon_get_order.php', {
+            params:{
+                check_sku:$scope.now_store_bar
+            }
+        }).success(function(data) {
+            if(data == 'ok'){
+                $timeout(function(){$scope.check_list_post(store)},1000);
+            }else{
+                $log.info(data);
+                $scope.plug_alert('danger','sku验证失败。','fa fa-ban');
+                $timeout(function(){$scope.shadow('close');},1000); //关闭shadow
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:sku验证失败。");
         });
     }
 
@@ -648,6 +711,7 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
 
     // 读取邮件模板内容
     $scope.read_mail_info = function(){
+        $log.info($scope.to_mail_tpl)
         $http.get('/fuck/systems/store_manage.php', {
             params:{
                 edit_mail_tpl:$scope.to_mail_tpl
