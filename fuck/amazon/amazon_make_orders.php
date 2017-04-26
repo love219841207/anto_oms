@@ -46,17 +46,17 @@ if(isset($_GET['format_order'])){
 		'{$today}' from amazon_response_list list,amazon_response_info info where list.amazon_order_id = info.amazon_order_id AND list.order_line = '3' AND list.store = '{$store}'";
 	$res = $db->execute($sql);
 
-	// 格式化表代引金额
-	$sql = "UPDATE amazon_format SET due_money = '' WHERE is_cod <> 'COD'";
-	$res = $db->execute($sql);
+	// // 格式化表代引金额
+	// $sql = "UPDATE amazon_format SET due_money = '' WHERE is_cod <> 'COD'";
+	// $res = $db->execute($sql);
 
-	//	更新黑猫地址	（神奈川県，埼玉県，茨城県，群馬県，山梨県）
-	$sql = "UPDATE amazon_format SET express_company = 'ヤマト運輸',send_method = '宅急便' WHERE who_house LIKE '%神奈川県%' OR who_house LIKE '%埼玉県%' OR who_house LIKE '%茨城県%' OR who_house LIKE '%群馬県%' OR who_house LIKE '%山梨県%'";
-	$res = $db->execute($sql);
+	// //	更新黑猫地址	（神奈川県，埼玉県，茨城県，群馬県，山梨県）
+	// $sql = "UPDATE amazon_format SET express_company = 'ヤマト運輸',send_method = '宅急便' WHERE who_house LIKE '%神奈川県%' OR who_house LIKE '%埼玉県%' OR who_house LIKE '%茨城県%' OR who_house LIKE '%群馬県%' OR who_house LIKE '%山梨県%'";
+	// $res = $db->execute($sql);
 
-	// 配送方式
-	$sql = "UPDATE amazon_format SET pack_id = concat('p',oms_id) WHERE send_method = '宅配便' OR send_method = '宅急便'";
-	$res = $db->execute($sql);
+	// // 配送方式
+	// $sql = "UPDATE amazon_format SET pack_id = concat('p',oms_id) WHERE send_method = '宅配便' OR send_method = '宅急便'";
+	// $res = $db->execute($sql);
 
 	// 更改状态
 	$sql = "UPDATE amazon_response_list SET order_line = '4' WHERE order_line = '3' AND store = '{$store}'";
@@ -75,37 +75,37 @@ if(isset($_GET['read_format_table'])){
 }
 
 // 修改格式化列表字段
-if(isset($_GET['change_format_field'])){
-	$id = $_GET['change_format_field'];
-	$field_name = $_GET['field_name'];
-	$new_key = addslashes($_GET['new_key']);
-	$old_key = $_GET['old_key'];
-	$oms_id = $_GET['oms_id'];
+// if(isset($_GET['change_format_field'])){
+// 	$id = $_GET['change_format_field'];
+// 	$field_name = $_GET['field_name'];
+// 	$new_key = addslashes($_GET['new_key']);
+// 	$old_key = $_GET['old_key'];
+// 	$oms_id = $_GET['oms_id'];
 
-	//是否是 goods_code
-	if($field_name == 'goods_code'){
-		//检测是否存在此 goods_code
-		$sql = "SELECT 1 FROM goods_type WHERE goods_code='{$new_key}' limit 1";
-        $res = $rdb->getOne($sql);
-        if(empty($res)){
-    		//如果没有此商品代码,error
-    		echo 'no_has';
-        }else{
-        	//更新字段
-        	$sql = "UPDATE amazon_format SET $field_name = '{$new_key}' WHERE id = '{$id}'";
-        	$res = $db->execute($sql);
+// 	//是否是 goods_code
+// 	if($field_name == 'goods_code'){
+// 		//检测是否存在此 goods_code
+// 		$sql = "SELECT 1 FROM goods_type WHERE goods_code='{$new_key}' limit 1";
+//         $res = $rdb->getOne($sql);
+//         if(empty($res)){
+//     		//如果没有此商品代码,error
+//     		echo 'no_has';
+//         }else{
+//         	//更新字段
+//         	$sql = "UPDATE amazon_format SET $field_name = '{$new_key}' WHERE id = '{$id}'";
+//         	$res = $db->execute($sql);
 
-        	//更新报错
-        	$sql = "UPDATE amazon_format SET error_info = '0' WHERE id = '{$id}'";
-        	$res = $db->execute($sql);
+//         	//更新报错
+//         	$sql = "UPDATE amazon_format SET error_info = '0' WHERE id = '{$id}'";
+//         	$res = $db->execute($sql);
 
-        	//日志
-			$do = '[Format] 修改OMS_ID：'.$oms_id.' 的商品代码：'.$old_key.' 为 '.$new_key;
-			oms_log($u_name,$do,'amazon_format');
-        	echo 'ok';
-        }
-	}
-}
+//         	//日志
+// 			$do = '[Format] 修改OMS_ID：'.$oms_id.' 的商品代码：'.$old_key.' 为 '.$new_key;
+// 			oms_log($u_name,$do,'amazon_format');
+//         	echo 'ok';
+//         }
+// 	}
+// }
 
 // 验证格式化表通过
 if(isset($_GET['check_format_ok'])){

@@ -9,43 +9,57 @@
 				<div class="btn-group ml10 mt10">
 					<button 
 						type="button" 
-						id="active_tools2"
+						id="active_tools1"
 						class="btn btn-default active_tools" 
-						ng-class="{'active':active_tools_2}"
+						ng-class="{'active':active_tools_1}"
 						ng-dblclick="
 							list_orders();
 							amazon_upload_list = false;
 							open_tool_bar = false;
-							open_info_btn = true;
-							open_filter_btn = true;
 							open_page_btn = false;
-							is_active('active_tools','2')
+							is_active('active_tools','1')
 						">
+						<!-- 说明：点击同步list_orders(),上传列表关闭，tool_bar工具条关闭，页码关闭-->
 						<i class="fa fa-refresh fa-fw blue"></i> 同步
 					</button>
 					<button 
 						type="button" 
-						id="active_tools0"
+						id="active_tools2"
 						class="btn btn-default active_tools" 
-						ng-class="{'active':active_tools_0}"
+						ng-class="{'active':active_tools_2}"
 						ng-click="
 							init_list();
 							init_upload();
 							amazon_upload_list = true;
-							open_check = false;
 							open_tool_bar = false;
-							open_info_btn = false;
-							open_filter_btn = false;
 							open_page_btn = false;
-							is_active('active_tools','0')
+							is_active('active_tools','2')
 						">
+						<!-- 说明：点击清空数据层，初始化上传init_upload，加载上传组件，tool_bar工具条关闭，页码关闭 -->
 						<i class="fa fa-arrow-up fa-fw s_gray"></i> 上传
 					</button>
 					<button 
 						type="button" 
-						id="active_tools1"
+						id="active_tools3"
 						class="btn btn-default active_tools" 
-						ng-class="{'active':active_tools_1}"
+						ng-class="{'active':active_tools_3}"
+						ng-hide="need_check_number==0"
+						ng-click="
+							need_check();
+							init_list();
+							amazon_upload_list = false;
+							open_tool_bar = false;
+							open_page_btn = false;
+							is_active('active_tools','3')
+						">
+						<!-- 说明：点击清空数据层，tool_bar工具条关闭，页码关闭。如果没有需要验证，则隐藏按钮 -->
+						<span class="badge badge_danger">{{need_check_number}}</span> 待验证
+					</button>
+					<button 
+						type="button" 
+						id="active_tools4"
+						class="btn btn-default active_tools" 
+						ng-class="{'active':active_tools_4}"
 						ng-click="
 							only_list();
 							amazon_upload_list = false;
@@ -56,7 +70,7 @@
 							tool_1 = false;
 							tool_2 = false;
 							tool_3 = false;
-							is_active('active_tools','1')
+							is_active('active_tools','4')
 						">
 						<i class="fa fa-list-ol fa-fw s_gray"></i> 列表
 					</button>
@@ -99,7 +113,7 @@
 							open_page_btn = false;
 							is_active('active_tools','5')"
 						ng-hide="tool_1 || tool_2 || tool_3">
-						<i class="fa fa-inbox fa-fw"></i> 合单
+						<i class="fa fa-inbox fa-fw"></i> 合单通过
 					</button>
 					
 					<!-- tool_1 日期筛选按钮组 -->
@@ -109,19 +123,20 @@
 
 					<button class="btn btn_fff btn-sm" ng-show="tool_1">
 						<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="search_order_line" ng-change="change_serch_line()">
-							<option value="mark">标记</option>
-							<!-- <option value="no_sku">SKU错误</option> -->
-							<option value="99">未通过</option>
-							<option value="0">无详情</option>
+							<option ng-hide="now_list_order_count.mark_count==0" value="mark">标记</option>
+							<option ng-hide="now_list_order_count.no_info_count==0" value="0">无详单</option>
+							<option ng-hide="now_list_order_count.no_post_count==0" value="post_ok">卡邮编</option>
+							<option ng-hide="now_list_order_count.no_tel_count==0" value="tel_ok">卡电话</option>
+							<option ng-hide="now_list_order_count.no_sku_count==0" value="sku_ok">卡SKU</option>
+							<option ng-hide="now_list_order_count.no_yfcode_count==0" value="yfcode_ok">卡运代</option>
 							<option value="2">已通过</option>
-							<option value="3">已合单</option>
-							<option value="6">已出单</option>
-							<option value="8">close</option>
+							<option value="3">已冻结</option>
+							<option value="5">close</option>
 							<option value="all">所有单</option>
 						</select>
 					</button>
 
-					<button type="button" class="btn btn_fff btn-sm" ng-show="tool_1 && search_order_line!='mark' && search_order_line!='99'">
+					<button type="button" class="btn btn_fff btn-sm" ng-show="tool_1 && search_order_line!='mark' && search_order_line!='0' && search_order_line!='post_ok' && search_order_line!='tel_ok' && search_order_line!='sku_ok' && search_order_line!='yfcode_ok'">
 						<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="search_date" ng-change="change_search_date()">
 							<option value="">日期筛选 ..</option>
 							<option value="syn_day">同步日期</option>
@@ -134,7 +149,7 @@
 					</button>
 			
 					<!-- tool_1 字段筛选按钮组 -->
-					<button type="button" class="btn btn_fff btn-sm blue" ng-show="tool_1 && search_order_line!='mark' && search_order_line!='99'">
+					<button type="button" class="btn btn_fff btn-sm blue" ng-show="tool_1 && search_order_line!='mark' && search_order_line!='0' && search_order_line!='post_ok' && search_order_line!='tel_ok' && search_order_line!='sku_ok' && search_order_line!='yfcode_ok'">
 						<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="search_field" ng-change="change_search_field()">
 							<option value="">字段筛选 ..</option>
 							<option value="id">ID</option>
@@ -220,11 +235,11 @@
 						</div>
 					</form>
 					<hr>
-					<div class="s_gray">
+					<!-- <div class="s_gray">
 						<div>邮编验证通过订单数：<span class="green">{{post_pass}}</span></div>
 						<div>邮编验证失败订单数：<span class="red">{{post_cut}}</span></div>
 						<div>无邮编/无电话订单数：<span class="yellow">{{post_no}}</span></div>
-					</div>
+					</div> -->
 				</div>
 			</div>
 			<div class="panel-footer">导入 .txt 格式的亚马逊订单。</div>
@@ -270,7 +285,8 @@
 		    </div>
 			<div ng-repeat="item in get_order_list_data track by $index" class="animate slide-left">
 				<table class="table table-condensed table-hover f12" >
-					<tr class="white" ng-class="{'warning':item.order_line=='99','danger':item.sku_ok=='0','bg_yellow':item.is_click}">
+					<tr class="white" 
+						ng-class="{'danger':item.order_line=='0' || item.post_ok=='2'|| item.tel_ok=='2' || item.sku_ok=='2' || item.yfcode_ok=='2','bg_yellow':item.is_click}">
 						<td class="green pointer" ng-click="item.is_click=!item.is_click">
 							<i ng-show="open_check" class="fa red fa-lg fa-fw" ng-class="{'fa-square-o':item.is_click==false,'fa-check-square':item.is_click==true}"></i>
 							<!-- {{item.is_click}} -->
@@ -284,18 +300,18 @@
 						<td class="red" ng-hide="item.payment_method==''"><span class="s_gray">代引：</span>{{item.payment_method}}</td>
 						<td class="red" ng-hide="item.payment_method==''"><span><span class="s_gray">代引金额：</span>{{item.pay_money}}</span></td>
 						<td>
-							<button data-animation="am-fade-and-slide-top" data-template-url="/modal/amazon_show_one_info.html" bs-modal="modal" class="btn btn-xs btn-primary mr5" ng-click="show_one_info(item.amazon_order_id)">详情</button>
+							<button data-animation="am-fade-and-slide-top" data-template-url="/modal/amazon_show_one_info.html" bs-modal="modal" class="btn btn-xs btn-primary mr5" ng-click="show_one_info(item.amazon_order_id)">详单</button>
 							<button data-animation="am-fade-and-slide-top" data-template-url="/modal/amazon_note.html" bs-modal="modal" class="btn btn-xs btn-info" ng-click="change_note(item.amazon_order_id)">备注</button>
 						</td>
 					</tr>
-					<tr ng-show="info_box" class="white" ng-class="{'danger':item.payment_method=='COD','bg_yellow':item.is_click}">
+					<tr ng-show="info_box" class="white" ng-class="{'danger':item.order_line=='0' || item.post_ok=='2'|| item.tel_ok=='2' || item.sku_ok=='2' || item.yfcode_ok=='2','bg_yellow':item.is_click}">
 						<td></td>
 						<td class=""><span class="s_gray">购买人：</span>{{item.buyer_name}}</td>
 						<td class="green"><span class="s_gray">电话：</span>{{item.phone}}</td>
 						<td class="blue"><span class="s_gray">邮箱：</span>{{item.buyer_email}}</td>
 						<td colspan="4"><span class="s_gray">国家/货币：</span>{{item.country}}/{{item.order_total_currency}}</td>	
 					</tr>
-					<tr ng-show="info_box" class="white" ng-class="{'danger':item.payment_method=='COD','bg_yellow':item.is_click}">
+					<tr ng-show="info_box" class="white" ng-class="{'danger':item.order_line=='0' || item.post_ok=='2'|| item.tel_ok=='2' || item.sku_ok=='2' || item.yfcode_ok=='2','bg_yellow':item.is_click}">
 						<td></td>
 						<td class="yellow"><span class="s_gray">收件人：</span>{{item.receive_name}}</td>
 						<td class="blue"><span class="s_gray">邮编：</span>{{item.post_code}}</td>
@@ -310,10 +326,9 @@
 			<div>获取订单数：<span class="blue">{{count_order}}</span></div>
 			<div>实际导入数：<span class="green">{{insert_count}}</span></div>
 			<div>重复订单数：<span class="red">{{has_count}}</span></div>
-			<hr style="border-color:#FFF;">
-			<div>邮编验证通过订单数：<span class="green">{{post_pass}}</span></div>
+			<!-- <div>邮编验证通过订单数：<span class="green">{{post_pass}}</span></div>
 			<div>邮编验证失败订单数：<span class="red">{{post_cut}}</span></div>
-			<div>无邮编/无电话订单数：<span class="yellow">{{post_no}}</span></div>
+			<div>无邮编/无电话订单数：<span class="yellow">{{post_no}}</span></div> -->
 			<hr style="border-color:#FFF;">
 			<h4>检测到以下订单重复：</h4>
 			<div class="col-lg-3">
@@ -324,7 +339,8 @@
 					</tr>
 				</table>
 			</div>
-			
+			<div ng-show="!syn_end" class="yellow f20"><i class="fa fa-hourglass-2 fa-fw"></i>同步未完成</div>
+			<div ng-show="syn_end" class="green f24"><i class="fa fa-hand-peace-o fa-fw"></i>本次同步结束 </div>
 		</div>
 
 	</div>
@@ -358,7 +374,32 @@
 			</li>
 			<li class="disabled">
 				<a class="pg_e">Page {{selPage}} / {{pages}}</a>
-				<a>共 {{all_num}} 条</a>
+				<a>共 {{all_num}} 条
+				<!-- 错误数统计 -->
+					<!-- 标记 -->
+				<span ng-hide="now_list_order_count.mark_count==0">/</span>
+				<i class="fa fa-star yellow fa-fw" ng-hide="now_list_order_count.mark_count==0"></i>
+				<span class="yellow" ng-hide="now_list_order_count.mark_count==0">{{now_list_order_count.mark_count}}</span>
+					<!-- 无详单 -->
+				<span ng-hide="now_list_order_count.no_info_count==0">/</span>
+				<i class="fa fa-info-circle red fa-fw" ng-hide="now_list_order_count.no_info_count==0"></i>
+				<span class="red" ng-hide="now_list_order_count.no_info_count==0">{{now_list_order_count.no_info_count}}</span>
+					<!-- 卡邮编 -->
+				<span ng-hide="now_list_order_count.no_post_count==0">/</span>
+				<i class="fa fa-truck red fa-fw" ng-hide="now_list_order_count.no_post_count==0"></i>
+				<span class="red" ng-hide="now_list_order_count.no_post_count==0">{{now_list_order_count.no_post_count}}</span>
+					<!-- 卡电话 -->
+				<span ng-hide="now_list_order_count.no_tel_count==0">/</span>
+				<i class="fa fa-phone red fa-fw" ng-hide="now_list_order_count.no_tel_count==0"></i>
+				<span class="red" ng-hide="now_list_order_count.no_tel_count==0">{{now_list_order_count.no_tel_count}}</span>
+					<!-- 卡sku -->
+				<span ng-hide="now_list_order_count.no_sku_count==0">/</span>
+				<i class="fa fa-hashtag red fa-fw" ng-hide="now_list_order_count.no_sku_count==0"></i>
+				<span class="red" ng-hide="now_list_order_count.no_sku_count==0">{{now_list_order_count.no_sku_count}}</span> 
+					<!-- 卡运代 -->
+				<i class="fa fa-code red fa-fw" ng-hide="now_list_order_count.no_yfcode_count==0"></i>
+				<span class="red" ng-hide="now_list_order_count.no_yfcode_count==0">{{now_list_order_count.no_yfcode_count}}</span> 
+				</a>
 			</li>
 		</ul>
 	</nav>

@@ -5,6 +5,7 @@ $dir = dirname(__FILE__);
 
 set_time_limit(0);
 
+// 1111111111111111111111111111111111111111  同步亚马逊订单开始 1111111111111111111111111111111111111111 
 //获取亚马逊订单列表
 if(isset($_GET['list_orders'])){
  	$store = $_GET['list_orders'];
@@ -133,7 +134,7 @@ if(isset($_GET['list_orders'])){
 			@$address = $address0.$address1.$address2;
 
 			//sql
-			$sql = "INSERT INTO amazon_response_list(store,syn_day,latest_ship_date,order_type,purchase_date,payment_method,pay_money,buyer_email,amazon_order_id,buyer_name,order_total_currency,order_total_money,phone,receive_name,country,post_code,address,send_id,order_line,express_company,send_method) VALUES ('{$store}','{$syn_day}','{$latest_ship_date}','{$order_type}','{$purchase_date}','{$payment_method}','{$pay_money}','{$buyer_email}','{$amazon_order_id}','{$buyer_name}','{$order_total_currency}','{$order_total_money}','{$phone}','{$receive_name}','{$country}','{$post_code}','{$address}','ready','0','佐川急便','宅配便')";
+			$sql = "INSERT INTO amazon_response_list(store,syn_day,latest_ship_date,order_type,purchase_date,payment_method,pay_money,buyer_email,amazon_order_id,buyer_name,order_total_currency,order_total_money,phone,receive_name,country,post_code,address,send_id,order_line,express_company,send_method) VALUES ('{$store}','{$syn_day}','{$latest_ship_date}','{$order_type}','{$purchase_date}','{$payment_method}','{$pay_money}','{$buyer_email}','{$amazon_order_id}','{$buyer_name}','{$order_total_currency}','{$order_total_money}','{$phone}','{$receive_name}','{$country}','{$post_code}','{$address}','ready','0','','')";
 			$res = $db->execute($sql);
 
 			usleep(50000);
@@ -146,7 +147,7 @@ if(isset($_GET['list_orders'])){
 	    	continue;
 	    }
 	}
-	//send_id变成AMZ+id
+	//send_id变成amz+id
 	$sql = "UPDATE amazon_response_list SET send_id = concat('amz',id) WHERE send_id = 'ready'";
 	$res = $db->execute($sql);
 
@@ -171,11 +172,11 @@ if(isset($_GET['has_orders'])){
 	echo json_encode($res);
 }
 
-//获取亚马逊订单详情
+//获取亚马逊订单详单
 if(isset($_GET['get_order_info'])){
  	$store = $_GET['get_order_info'];
  	//日志
-	$do = '[START] 同步订单详情：'.$store;
+	$do = '[START] 同步订单详单：'.$store;
 	oms_log($u_name,$do,'amazon_syn');
 
  	// 搜索出需要获取详情的订单
@@ -277,133 +278,27 @@ if(isset($_GET['get_order_info'])){
  	$final_res['status'] = 'info_ok';
 
  	//日志
-	$do = '[END] 同步订单详情：'.$store;
+	$do = '[END] 同步订单详单：'.$store;
 	oms_log($u_name,$do,'amazon_syn');
 
  	echo json_encode($final_res);
 }
 
-//查询订单总数
-if(isset($_POST['items_count'])){
-    $store = $_POST['items_count'];
-    $search_date = $_POST['search_date'];
-    $start_date = $_POST['start_date'];
-    $end_date = $_POST['end_date'];
-    $search_order_line = $_POST['search_order_line'];
-    $search_field = $_POST['search_field'];
-    $search_key = $_POST['search_key'];
+// 1111111111111111111111111111111111111111  同步亚马逊订单结束 1111111111111111111111111111111111111111 
 
-    // 标记订单查询
-    if($search_order_line == 'mark' or $search_order_line == 'no_sku' or $search_order_line == '99'){
-    	if($search_order_line == 'mark'){
-    		$sql = "SELECT count(1) as cc FROM amazon_response_list WHERE is_mark = '1' AND store = '{$store}'";
-    	}
-    	if($search_order_line == 'no_sku'){
-    		$sql = "SELECT count(1) as cc FROM amazon_response_list WHERE sku_ok = '0' AND store = '{$store}'";
-    	}
-    	if($search_order_line == '99'){
-    		$sql = "SELECT count(1) as cc FROM amazon_response_list WHERE sku_ok = '0' OR order_line = '99' AND store = '{$store}'";
-    	}
-    }else{
-    	if($search_field == ''){   //0没有筛选条件
-	        if($start_date =='' or $end_date ==''){
-	            $sql = "SELECT count(1) as cc FROM amazon_response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}'";
-	        }else{
-	            $sql = "SELECT count(1) as cc FROM amazon_response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}'";
-	        }
-	    }else{
-	        if($start_date =='' or $end_date ==''){
-	            $sql = "SELECT count(1) as cc FROM amazon_response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' AND {$search_field} LIKE '%{$search_key}%'";
-	        }else{
-	            $sql = "SELECT count(1) as cc FROM amazon_response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}'";
-	        }
-	    }
-    }
-
-    $res = $db->getOne($sql);
-    echo $res['cc'];
-    
-}
-
-//查询订单列表数据
-if(isset($_POST['get_order_list'])){
-    $store = $_POST['get_order_list'];
-    $page_size = $_POST['page_size'];
-    $start = $_POST['start'];
-    $search_order_line = $_POST['search_order_line'];
-    $search_date = $_POST['search_date'];
-    $start_date = $_POST['start_date'];
-    $end_date = $_POST['end_date'];
-    $search_field = $_POST['search_field'];
-    $search_key = $_POST['search_key'];
-
-    // 标记订单查询
-    if($search_order_line == 'mark' or $search_order_line == 'no_sku' or $search_order_line == '99'){
-    	if($search_order_line == 'mark'){
-    		$sql = "SELECT * FROM amazon_response_list WHERE is_mark = '1' AND store = '{$store}' ORDER BY id DESC limit {$start},{$page_size}";
-    	}
-    	if($search_order_line == 'no_sku'){
-    		$sql = "SELECT * FROM amazon_response_list WHERE sku_ok = '0' AND store = '{$store}' ORDER BY id DESC limit {$start},{$page_size}";
-    	}
-    	if($search_order_line == '99'){
-    		$sql = "SELECT * FROM amazon_response_list WHERE sku_ok = '0' OR order_line = '99' AND store = '{$store}' ORDER BY id DESC limit {$start},{$page_size}";
-    	}
-    }else{
-    	if($search_field == ''){   //0没有筛选条件
-	        if($start_date =='' or $end_date ==''){
-	            $sql = "SELECT * FROM amazon_response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' ORDER BY id DESC limit {$start},{$page_size}";
-	        }else{
-	            $sql = "SELECT * FROM amazon_response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}' ORDER BY id DESC limit {$start},{$page_size}";
-	        }
-	    }else{
-	        if($start_date =='' or $end_date ==''){
-	            $sql = "SELECT * FROM amazon_response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' ORDER BY id DESC limit {$start},{$page_size}";
-	        }else{
-	            $sql = "SELECT * FROM amazon_response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}' ORDER BY id DESC limit {$start},{$page_size}";
-	        }
-	    }
-    }
-    $res = $db->getAll($sql);
-    foreach ($res as $key => $value) {
-    	$res[$key]['is_click'] = false;
-    }
-
-	echo json_encode($res);
-}
-
-//展示订单列表参数
-if(isset($_GET['get_order_list_count'])){
-	$store = $_GET['get_order_list_count'];
-	$sql = "SELECT count(1) as list_count FROM amazon_response_list WHERE store = '{$store}'";
+// 2222222222222222222222222222222222222222  亚马逊订单验证开始 2222222222222222222222222222222222222222 
+// 获取未验证订单数
+if(isset($_GET['need_check_num'])){
+	$store = $_GET['need_check_num'];
+	$sql = "SELECT count(1) as need_check_num FROM amazon_response_list WHERE post_ok=0 OR tel_ok=0 OR sku_ok=0 OR yfcode_ok=0 AND store = '{$store}'";
 	$res = $db->getOne($sql);
-	$list_count = $res['list_count'];
-	$sql = "SELECT count(1) as cod_count FROM amazon_response_list WHERE store = '{$store}' AND payment_method = 'COD'";
-	$res = $db->getOne($sql);
-	$cod_count = $res['cod_count'];
-	//final_res
-	$final_res['cod_count'] = $cod_count;
-	$final_res['list_count'] = $list_count;
-	echo json_encode($final_res);
+	echo $res['need_check_num'];
 }
+// 2222222222222222222222222222222222222222  亚马逊订单验证结束 2222222222222222222222222222222222222222 
 
-//查看订单详情
-if(isset($_GET['show_one_info'])){
-	$amazon_order_id = $_GET['show_one_info'];
+// 2222222222222222222222222222222222222222  亚马逊订单验证结束 2222222222222222222222222222222222222222 
 
-	//查询订单信息
-	$sql = "SELECT * FROM amazon_response_list WHERE amazon_order_id = '{$amazon_order_id}'";
-	$res_list = $db->getAll($sql);
 
-	//查询子订单	
-	$sql = "SELECT * FROM amazon_response_info WHERE amazon_order_id = '{$amazon_order_id}'";
-	$res_info = $db->getAll($sql);
-
-	//final_res
-	$final_res['status'] = 'ok';
-	$final_res['res_list'] = $res_list;
-	$final_res['res_info'] = $res_info;
-	echo json_encode($final_res);
-}
 
 //获取分页数
 if(isset($_GET['get_pagesize'])){
@@ -423,262 +318,6 @@ if(isset($_GET['express_company'])){
 	echo 'ok';
 }
 
-// 拆福袋和别名
-if(isset($_GET['fu_bag'])){
-	$store = $_GET['fu_bag'];
-
-	// 检测福袋
-	$sql = "SELECT id,sku FROM amazon_response_info WHERE sku_ok = '0' AND store = '{$store}'";
-	$res = $db->getAll($sql);
-
-	//遍历所有sku
-	foreach ($res as $value){
-		$now_id = $value['id'];	#正在检测id
-		$now_goods = $value['sku'];	#福袋名、别名
-
-		//格式化短横线
-	 	$count_line = substr_count($now_goods,'-');
-		$replace_line = '--';
-		for($i=0;$i<$count_line;$i++){
-			$new_name = str_replace($replace_line,"-",$now_goods);
-		}
-		if($new_name != $now_goods){
-			$sql = "UPDATE amazon_response_info SET goods_code = '{$new_name}' WHERE id = '{$now_id}'";
-		}else{
-			$sql = "UPDATE amazon_response_info SET goods_code = sku WHERE id = '{$now_id}'";
-		}
-		$res = $db->execute($sql);
-
-		// 拆福袋
-		$sql = "SELECT count(1) FROM new_name WHERE new_name='{$new_name}'";
-	    $res = $rdb->getOne($sql);
-	    $count_new = $res['count(1)'];
-	    if($count_new > 0){
-	    	$sql = "SELECT goods_code FROM new_name WHERE new_name='{$new_name}'";
-	    	$res = $rdb->getAll($sql);
-	    	foreach ($res as $val) {
-	    		//拆单、并且sku通过sku_ok = 1
-	    		$sql = "INSERT INTO amazon_response_info (
-	    		store,
-	    		amazon_order_id,
-	    		order_item_id,
-	    		goods_title,
-	    		asin,
-	    		sku_ok,
-	    		sku,
-	    		goods_code,
-	    		goods_num,
-	    		b_repo_num,
-	    		shipping_price,
-	    		shipping_tax,
-	    		gift_price,
-	    		gift_tax,
-	    		item_price,
-	    		item_tax,
-	    		promotion_discount,
-	    		shipping_discount,
-	    		cod_money) SELECT 
-	    		store,
-	    		amazon_order_id,
-	    		order_item_id,
-	    		goods_title,
-	    		asin,
-	    		'1',
-	    		sku,
-	    		'{$val['goods_code']}',
-	    		goods_num,
-	    		b_repo_num,
-	    		shipping_price,
-	    		shipping_tax,
-	    		gift_price,
-	    		gift_tax,
-	    		item_price,
-	    		item_tax,
-	    		promotion_discount,
-	    		shipping_discount,
-	    		cod_money
-	    		 FROM amazon_response_info WHERE id = '{$now_id}'";
-	    		$res = $db->execute($sql);
-	    	}
-	    	// 删除原福袋item
-	    	$sql = "DELETE FROM amazon_response_info WHERE id = '{$now_id}'";
-	    	$res = $db->execute($sql);
-	    }
-	}
-
-	echo 'ok';
-}
-
-// 检测sku
-if(isset($_GET['check_sku'])){
-	$store = $_GET['check_sku'];
-
-	// 查询拆福袋完成后的本店铺订单
-	$sql = "SELECT id,goods_code FROM amazon_response_info WHERE sku_ok = '0' AND store = '{$store}'";
-	$res = $db->getAll($sql);
-
-	// 遍历验证
-	foreach ($res as $value) {
-		$now_id = $value['id'];
-		$goods_code = $value['goods_code'];
-		$sql = "SELECT 1 FROM goods_type WHERE goods_code='{$goods_code}' limit 1";
-        $res = $rdb->getOne($sql);
-        if(empty($res)){
-      //   	//查询该订单号
-      //   	$sql = "SELECT amazon_order_id FROM ";
-    		// //如果没有此商品,error
-    		// $sql = "UPDATE amazon_response_info SET error_sku = 'no_sku' WHERE id = '{$now_id}'";
-      //   	$res = $db->execute($sql);
-        }else{
-        	$sql = "UPDATE amazon_response_info SET sku_ok = '1' WHERE id = '{$now_id}'";
-        	$res = $db->execute($sql);
-        }
-	}
-
-	//检测list sku_ok未验证通过数
-	$sql = "SELECT amazon_order_id FROM amazon_response_list WHERE store = '{$store}' AND sku_ok = '0'";
-	$res = $db->getAll($sql);
-	foreach ($res as $value) {
-		$amazon_order_id = $value['amazon_order_id'];
-		// 查询总item 数
-		$sql = "SELECT count(1) as ycm FROM amazon_response_info WHERE amazon_order_id = '{$amazon_order_id}'";
-		$res = $db->getOne($sql);
-		$item_count = $res['ycm'];
-		// 查询sku_ok item数
-		$sql = "SELECT count(1) as bcd FROM amazon_response_info WHERE amazon_order_id = '{$amazon_order_id}' AND sku_ok = '1'";
-		$res = $db->getOne($sql);
-		$sku_ok_count = $res['bcd'];
-		if($item_count == $sku_ok_count){
-			//更新list sku通过
-			$sql = "UPDATE amazon_response_list SET sku_ok = '1' WHERE amazon_order_id = '{$amazon_order_id}'";
-			$res = $db->execute($sql);
-		}
-	}
-
-	echo 'ok';
-
-}
-
-//批量同步后列表验证配送地址&电话
-if(isset($_GET['check_list_post'])){
-	$store = $_GET['check_list_post'];
-
-	//搜出未验证的地址的订单号 order_line=1
-	$sql = "SELECT amazon_order_id FROM amazon_response_list WHERE store = '{$store}' AND order_line = '1'";
-	$res = $db->getAll($sql);
-	//初始化数
-	$no = 0;
-	$pass = 0;
-	$cut = 0;
-	foreach ($res as $value) {
-		$amazon_order_id = $value['amazon_order_id'];
-		//检测电话是否填写
-		$sql = "SELECT phone FROM amazon_response_list WHERE amazon_order_id = '{$amazon_order_id}'";
-		$res = $db->getOne($sql);
-		if($res['phone']==''){
-			$sql = "UPDATE amazon_response_list SET order_line = '99' WHERE amazon_order_id = '{$amazon_order_id}'";
-			$res = $db->execute($sql);
-			$no = $no + 1;
-		}else{
-			$sql = "SELECT post_code,address FROM amazon_response_list WHERE amazon_order_id = '{$amazon_order_id}'";
-			$res = $db->getOne($sql);
-			$post_code = $res['post_code'];
-			$address = $res['address'];
-			//拿去匹配
-			$sql = "SELECT post_name FROM oms_post WHERE post_code = '{$post_code}'";
-			$res = $db->getAll($sql);
-
-			if(empty($res)){
-				$sql = "UPDATE amazon_response_list SET order_line = '99' WHERE amazon_order_id = '{$amazon_order_id}'";
-				$res = $db->execute($sql);
-				$no = $no + 1;
-			}else{
-				$has_post = 0;
-				foreach ($res as $value) {
-					$post_name = $value['post_name'];
-					if(strpos($address, $post_name)!==false){
-						$has_post = 1;
-
-					}else{
-						//一个邮编可能会有多个地址
-						if($has_post==1){
-							$has_post = 1;
-						}else{
-							$has_post = 0;
-						}
-					}
-				}
-
-				//如果通过，更新order_line
-				if($has_post == 1){
-					$sql = "UPDATE amazon_response_list SET order_line = '2' WHERE amazon_order_id = '{$amazon_order_id}'";
-					$res = $db->execute($sql);
-					$pass = $pass + 1;
-				}else if($has_post == 0){
-					$sql = "UPDATE amazon_response_list SET order_line = '99' WHERE amazon_order_id = '{$amazon_order_id}'";
-					$res = $db->execute($sql);
-					$cut = $cut + 1;
-				}
-			}
-		}
-	}
-	$final_res['no'] = $no;
-	$final_res['pass'] = $pass;
-	$final_res['cut'] = $cut;
-	echo json_encode($final_res);
-}
-
-//验证配送地址&电话
-if(isset($_GET['check_post'])){
-	$amazon_order_id = $_GET['check_post'];
-
-	//检测电话是否填写
-	$sql = "SELECT phone FROM amazon_response_list WHERE amazon_order_id = '{$amazon_order_id}'";
-	$res = $db->getOne($sql);
-	if($res['phone']==''){
-		$sql = "UPDATE amazon_response_list SET order_line = '99' WHERE amazon_order_id = '{$amazon_order_id}'";
-		$res = $db->execute($sql);
-		echo 'no';die;
-	}else{
-		$sql = "SELECT post_code,address FROM amazon_response_list WHERE amazon_order_id = '{$amazon_order_id}'";
-		$res = $db->getOne($sql);
-		$post_code = $res['post_code'];
-		$address = $res['address'];
-		//拿去匹配
-		$sql = "SELECT post_name FROM oms_post WHERE post_code = '{$post_code}'";
-		$res = $db->getAll($sql);
-
-		if(empty($res)){
-			echo 'no';die;
-		}else{
-			$has_post = 0;
-			foreach ($res as $value) {
-				$post_name = $value['post_name'];
-				if(strpos($address, $post_name)!==false){
-					$has_post = 1;
-
-				}else{
-					//一个邮编可能会有多个地址
-					if($has_post==1){
-						$has_post = 1;
-					}else{
-						$has_post = 0;
-					}
-				}
-			}
-			//如果通过，更新order_line
-			if($has_post == 1){
-				$sql = "UPDATE amazon_response_list SET order_line = '2' WHERE amazon_order_id = '{$amazon_order_id}'";
-				$res = $db->execute($sql);
-				echo 'pass';
-			}else if($has_post == 0){
-				$sql = "UPDATE amazon_response_list SET order_line = '99' WHERE amazon_order_id = '{$amazon_order_id}'";
-				$res = $db->execute($sql);
-				echo 'cut';
-			}
-		}
-	}
-}
 
 //一键合单
 if(isset($_GET['onekey_common_order'])){
@@ -748,42 +387,7 @@ if(isset($_GET['break_common_order'])){
 	echo 'ok';
 }
 
-//修改list字段，多字段修改
-if(isset($_GET['change_list_field'])){
-	$amazon_order_id = $_GET['change_list_field'];
-	$field_name = $_GET['field_name'];
-	$new_key = addslashes($_GET['new_key']);
-	$sql = "UPDATE amazon_response_list SET $field_name = '{$new_key}' WHERE amazon_order_id = '{$amazon_order_id}'";
-	$res = $db->execute($sql);
-	echo 'ok';
-}
 
-//修改info字段，多字段修改
-if(isset($_GET['change_info_field'])){
-	$order_item_id = $_GET['change_info_field'];
-	$field_name = $_GET['field_name'];
-	$new_key = addslashes($_GET['new_key']);
-	$sql = "UPDATE amazon_response_info SET $field_name = '{$new_key}' WHERE order_item_id = '{$order_item_id}'";
-	$res = $db->execute($sql);
-	echo 'ok';
-}
-
-//修改订单备注
-if(isset($_GET['change_note'])){
-	$amazon_order_id = $_GET['change_note'];
-	$new_key = addslashes($_GET['note']);
-	$sql = "UPDATE amazon_response_list SET order_note = '{$new_key}' WHERE amazon_order_id = '{$amazon_order_id}'";
-	$res = $db->execute($sql);
-	echo 'ok';
-}
-
-//读取订单备注
-if(isset($_GET['read_note'])){
-	$amazon_order_id = $_GET['read_note'];
-	$sql = "SELECT order_note FROM amazon_response_list WHERE amazon_order_id = '{$amazon_order_id}'";
-	$res = $db->getOne($sql);
-	echo $res['order_note'];
-}
 
 //导入亚马逊订单 = 手动
 if(isset($_GET['import_add_list'])){

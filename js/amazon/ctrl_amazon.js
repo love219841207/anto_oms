@@ -1,12 +1,14 @@
 var app=angular.module('myApp');
 app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$timeout','$compile', function($rootScope,$scope,$state,$http,$log,$timeout,$compile){
+
+// 00000000000000000000000000000000000000  亚马逊初始化开始 00000000000000000000000000000000000000
     //默认tool_bar关闭
     $scope.tool_1 = false;
     $scope.tool_2 = false;
     $scope.tool_3 = false;
 
     //order_line select默认值
-    $scope.search_order_line = '99';
+    $scope.search_order_line = 'mark';
 
     //查询分页数
     $http.get('/fuck/amazon/amazon_get_order.php', {params:{get_pagesize:'get'}
@@ -28,9 +30,10 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
         $scope.post_pass = '';  //邮编通过数
         $scope.post_cut = '';   //邮编未通过数
         $scope.post_no = '';    //无邮编数
+        $scope.syn_end = false; //同步关闭
     }
 
-//筛选组
+    //筛选组
     //初始化日期筛选
     $scope.init_date_bar = function(){
         $scope.search_date = '';
@@ -85,25 +88,13 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
         $scope.get_count();     //分配页码
         $scope.to_page('1');   //再次初始化数据
     }
-
-    //判断是否选择店铺
-    $scope.check_store = function(){
-        if($rootScope.now_store_bar==''){
-            $scope.plug_alert('warning','请选择店铺！','fa fa-exclamation-triangle');
-            return false;
-        }else{
-            return $rootScope.now_store_bar;
-        }
-    }
+// 00000000000000000000000000000000000000  亚马逊初始化结束 00000000000000000000000000000000000000
+// 1111111111111111111111111111111111111111  同步亚马逊订单开始 1111111111111111111111111111111111111111 
 
 	//同步亚马逊订单列表
     $scope.list_orders = function(){
         $scope.init_list(); //初始化列表数据
         $scope.init_filter_bar(); //初始化筛选组
-
-        //检测店铺
-        store = $scope.check_store();
-        if(store == false)return false;
 
         $scope.shadow('open','ss_syn','正在同步 Amazon 订单列表');
         $http.get('/fuck/amazon/amazon_get_order.php', {params:{list_orders:store}
@@ -136,41 +127,16 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
         });
     }
 
-    //展示订单列表
-    $scope.only_list = function(){
-        $scope.init_list(); //初始化列表数据
-        $scope.init_filter_bar(); //初始化筛选组
-
-        //检测店铺
-        store = $scope.check_store();
-        if(store == false)return false;
-
-        $scope.shadow('open','ss_read','正在加载订单列表');
-
-        $scope.get_count();     //分配页码
-        $scope.to_page('1');   //初始化数据
-    };
-
-    // //加载列表统计参数？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？
-    // $scope.only_list_count = function(){
-    //     $http.get('/fuck/amazon/amazon_get_order.php', {params:{get_order_list_count:$rootScope.now_store_bar}
-    //     }).success(function(data) {
-    //         $scope.get_order_list_count_data = data;
-            
-    //         // $log.info(data);
-    //     }).error(function(data) {
-    //         alert("系统错误，请联系管理员。");
-    //         $log.info("error:正在加载数据列表失败。");
-    //     });
-    // };
-
-    //获取订单详情
+    //获取订单详单
     $scope.get_order_info = function(store){
-        $scope.shadow('open','ss_syn','正在同步 Amazon 订单详情');
+        $scope.shadow('open','ss_syn','正在同步 Amazon 订单详单');
         $http.get('/fuck/amazon/amazon_get_order.php', {params:{get_order_info:store}
         }).success(function(data) {
             if(data.status == 'info_ok'){
-                $timeout(function(){$scope.express_company(store)},1000);
+                $scope.plug_alert('success','订单同步完毕。','fa fa-smile-o');
+                $timeout(function(){$scope.shadow('close');},1000); //关闭shadow
+                $scope.need_check_num();    //获取需要验证的订单数
+                $scope.syn_end = true;
             }else{
                 $scope.plug_alert('warning','同步超时，请重试。','fa fa-clock-o');
                 $timeout(function(){$scope.shadow('close');},1000); //关闭shadow
@@ -178,295 +144,62 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
             $log.info(data);
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
-            $log.info("error:服务器响应亚马逊ListOrderItems同步订单详情通信失败。");
+            $log.info("error:服务器响应亚马逊ListOrderItems同步订单详单通信失败。");
         });
     }
 
-    // 分配快递公司
-    $scope.express_company = function(){
-        $scope.shadow('open','ss_write','正在分配配送公司');
+// 1111111111111111111111111111111111111111  同步亚马逊订单结束 1111111111111111111111111111111111111111 
+
+// 2222222222222222222222222222222222222222  亚马逊订单验证开始 2222222222222222222222222222222222222222 
+
+    // 获取需要验证订单数
+    $scope.need_check_num = function(){
         $http.get('/fuck/amazon/amazon_get_order.php', {
             params:{
-                express_company:$scope.now_store_bar
+                need_check_num:$scope.now_store_bar
+            }
+        }).success(function(data) {
+            $scope.need_check_number = data;
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:获取需要验证订单数失败。");
+        });
+    }
+    $scope.need_check_num();    //页面载入预读取
+
+    // 点击验证按钮
+    $scope.need_check = function(){
+        $http.get('/fuck/common/check_order.php', {
+            params:{
+                need_check:$scope.now_store_bar,
+                station:$scope.now_station,
+                check_method:'all'
             }
         }).success(function(data) {
             if(data == 'ok'){
-                $timeout(function(){$scope.fu_bag();},2000);
+                $scope.plug_alert('success','验证完成。','fa fa-smile-o');
+                $scope.need_check_num();
             }else{
-                $log.info(data);
-                $scope.plug_alert('danger','快递公司分配失败。','fa fa-ban');
-                $timeout(function(){$scope.shadow('close');},1000); //关闭shadow
-            }
-        }).error(function(data) {
-            alert("系统错误，请联系管理员。");
-            $log.info("error:拆福袋失败。");
-        });
-    }
-
-    // 拆福袋和别名-连接Repo
-    $scope.fu_bag = function(){
-        $scope.shadow('open','ss_write','正在拆福袋 / 别名 SKU');
-        $http.get('/fuck/amazon/amazon_get_order.php', {
-            params:{
-                fu_bag:$scope.now_store_bar
-            }
-        }).success(function(data) {
-            if(data == 'ok'){
-                $timeout(function(){$scope.check_sku();},2000);
-            }else{
-                $log.info(data);
-                $scope.plug_alert('danger','拆福袋 / 别名失败。','fa fa-ban');
-                $timeout(function(){$scope.shadow('close');},1000); //关闭shadow
-            }
-        }).error(function(data) {
-            alert("系统错误，请联系管理员。");
-            $log.info("error:拆福袋失败。");
-        });
-    }
-
-    // 验证sku-连接Repo
-    $scope.check_sku = function(){
-        $scope.shadow('open','ss_write','正在检测 SKU');
-        $http.get('/fuck/amazon/amazon_get_order.php', {
-            params:{
-                check_sku:$scope.now_store_bar
-            }
-        }).success(function(data) {
-            if(data == 'ok'){
-                $timeout(function(){$scope.check_list_post(store)},1000);
-            }else{
-                $log.info(data);
-                $scope.plug_alert('danger','sku验证失败。','fa fa-ban');
-                $timeout(function(){$scope.shadow('close');},1000); //关闭shadow
-            }
-        }).error(function(data) {
-            alert("系统错误，请联系管理员。");
-            $log.info("error:sku验证失败。");
-        });
-    }
-
-    //批量验证配送地址
-    $scope.check_list_post = function(store){
-        $scope.shadow('open','ss_read','正在验证配送地址');
-        $http.get('/fuck/amazon/amazon_get_order.php', {
-            params:{
-                check_list_post:store
-            }
-        }).success(function(data) {
-            $log.info(data)
-            $scope.plug_alert('success','订单同步完毕。','fa fa-smile-o');
-            $timeout(function(){$scope.shadow('close');},1000); //关闭shadow
-            $scope.post_no = data.no;
-            $scope.post_pass = data.pass;
-            $scope.post_cut = data.cut;
-        }).error(function(data) {
-            alert("系统错误，请联系管理员。");
-            $log.info("error:批量验证配送地址失败。");
-        });
-    }
-
-    //验证单个配送地址
-    $scope.check_post = function(amazon_order_id){
-        $http.get('/fuck/amazon/amazon_get_order.php', {
-            params:{
-                check_post:amazon_order_id
-            }
-        }).success(function(data) {
-            $log.info(data)
-            if(data == 'pass'){
-                $scope.plug_alert('success','验证通过。','fa fa-smile-o');
-            }else if(data == 'cut'){
-                $scope.plug_alert('danger','验证失败。','fa fa-ban');
-            }else if(data == 'no'){
-                $scope.plug_alert('danger','邮编或电话不存在。','fa fa-ban');
-            }else{
-                $scope.plug_alert('danger','系统错误。','fa fa-ban');
-            }
-            $timeout(function(){$scope.loading_shadow('close');},300); //关闭loading
-        }).error(function(data) {
-            alert("系统错误，请联系管理员。");
-            $log.info("error:验证配送地址失败。");
-        });
-    }
-
-    //查看单个详情
-    $scope.show_one_info = function(amazon_order_id){
-        $scope.loading_shadow('open'); //打开loading
-        $http.get('/fuck/amazon/amazon_get_order.php', {params:{show_one_info:amazon_order_id}
-        }).success(function(data) {
-            if(data.status=='ok'){
-                $timeout(function(){$scope.loading_shadow('close');},300); //关闭loading 
-                $scope.one_res_list = data.res_list;
-                $scope.one_res_info = data.res_info;
-            }else{
-                $scope.plug_alert('danger','系统错误，请联系管理员。','fa fa-ban');
-            }
-        }).error(function(data) {
-            // $log.info(data);
-            alert("系统错误，请联系管理员。");
-            $log.info("error:查看单个详情失败。");
-        });
-    }
-
-    //验证电话号码格式
-    $scope.check_phone = function(){
-        $scope.pass_phone = false;
-        var dom = document.querySelector('#phone');
-        var phone = angular.element(dom).val();
-        if(isNaN(phone)){
-            if(phone.indexOf("-") > 0){
-                phone = phone.replace(/-/g, "");
-                angular.element(dom).val(phone);
-                $scope.check_phone();
-            }else{
-                angular.element(dom).val('');
-                $scope.pass_phone = false;
-            }
-        }else{
-            var len = phone.length;
-            if(len == 10){
-                var a1 = phone.slice(0,2);
-                var a2 = phone.slice(2,6);
-                var a3 = phone.slice(6,10);
-                phone = a1+"-"+a2+"-"+a3;
-                angular.element(dom).val(phone);
-                $scope.pass_phone = true;
-            }if(len == 11){
-                var a1 = phone.slice(0,3);
-                var a2 = phone.slice(3,7);
-                var a3 = phone.slice(7,11);
-                phone = a1+"-"+a2+"-"+a3;
-                angular.element(dom).val(phone);
-                $scope.pass_phone = true;
-            }if(len > 11){
-                var a1 = phone.slice(0,3);
-                var a2 = phone.slice(3,7);1
-                var a3 = phone.slice(7,11);
-                phone = a1+"-"+a2+"-"+a3;
-                angular.element(dom).val(phone);
-                $scope.pass_phone = true;
-                $scope.plug_alert('danger','电话长度超过了。','fa fa-ban');
-            }
-        }   
-    }
-
-    //修改list单个字段
-    $scope.change_list_field = function(field_name,amazon_order_id){
-        var dom = document.querySelector('#'+field_name);
-        var new_key = angular.element(dom).val();
-        // $log.info('#'+field_name);
-        // $log.info(new_key);
-        $http.get('/fuck/amazon/amazon_get_order.php', {params:{change_list_field:amazon_order_id,field_name:field_name,new_key:new_key}
-        }).success(function(data) {
-            if(data == 'ok'){
-                $scope.show_one_info(amazon_order_id);
-            }else{
-                $scope.plug_alert('danger','修改失败。','fa fa-ban');
+                $scope.plug_alert('danger','验证任务失败。','fa fa-ban');
                 $log.info(data);
             }
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
-            $log.info("error:修改list单个字段失败。");
+            $log.info("error:验证订单失败。");
         });
     }
 
-    //修改info单个字段
-    $scope.change_info_field = function(order_item_id,field_name,index,amazon_order_id){
-        // $log.info(order_item_id+' # '+field_name+'+'+index);
-        var dom = document.querySelector('#'+field_name+'_'+index);
-        var new_key = angular.element(dom).val();
-        // $log.info(new_key);
-        $http.get('/fuck/amazon/amazon_get_order.php', {params:{change_info_field:order_item_id,field_name:field_name,new_key:new_key}
-        }).success(function(data) {
-            if(data == 'ok'){
-                $scope.show_one_info(amazon_order_id);
-            }else{
-                $scope.plug_alert('danger','修改失败。','fa fa-ban');
-                $log.info(data);
-            }
-        }).error(function(data) {
-            alert("系统错误，请联系管理员。");
-            $log.info("error:修改info单个字段失败。");
-        });
-    }
+// 2222222222222222222222222222222222222222  亚马逊订单验证结束 2222222222222222222222222222222222222222 
 
-    //订单发货列表查询
-    $scope.get_express_list = function(){
-        $http.get('/fuck/amazon/amazon_send_express.php', {params:{amazon_express:'get'}
-        }).success(function(data) {
-            $scope.plug_alert('success','修改完成。','fa fa-smile-o');
-            $scope.express_list = data;
-        }).error(function(data) {
-            alert("系统错误，请联系管理员。");
-            $log.info("error:订单发货列表查询失败。");
-        });
-    }
+// 3333333333333333333333333333333333333333  亚马逊列表展示开始 3333333333333333333333333333333333333333
 
-    // //清空快递单(测试用)
-    // $scope.truncate_express = function(){
-    //     $http.get('/fuck/amazon/amazon_send_express.php', {params:{truncate_express:'truncate'}
-    //     }).success(function(data) {
-    //         if(data=='ok'){
-    //             $scope.plug_alert('success','已清空。','icon-ok');
-    //             $scope.get_express_list();
-    //         }else{
-    //             alert('清空失败。');
-    //             alert(data);
-    //         }
-    //     }).error(function(data) {
-    //         alert("系统错误，请联系管理员。");
-    //         $log.info("error:订单发货列表清空失败。");
-    //     });
-    // }
-
-    // //单品发货
-    // $scope.send_one = function(){
-    //     $http.get('/fuck/amazon/send_one.php', {
-    //         params:{
-    //             send_one:$scope.AmazonOrderID,
-    //             ShippingMethod:$scope.ShippingMethod,
-    //             CarrierName:$scope.CarrierName,
-    //             ShipperTrackingNumber:$scope.ShipperTrackingNumber
-    //         }
-    //     }).success(function(data) {
-
-    //         $log.info(data);
-    //     }).error(function(data) {
-    //         alert("系统错误，请联系管理员。");
-    //         $log.info("error:单品发货失败。");
-    //     });
-    // }
-
-    //订单发货
-    $scope.send_express = function(){
-        $scope.shadow('open','ss_syn','正在提交快递单号至 Amazon');
-        $http.get('/fuck/amazon/amazon_send_express.php', {params:{send_express:'send'}
-        }).success(function(data) {
-            if(data=='ok'){
-                $scope.plug_alert('success','已提交至亚马逊。','fa fa-smile-o');
-                $scope.truncate_express();
-                $timeout(function(){$scope.shadow('close');},1000);
-            }else{
-                $scope.plug_alert('danger','系统错误，请联系管理员。','fa fa-ban');
-            }
-            $log.info(data);
-        }).error(function(data) {
-            alert("系统错误，请联系管理员。");
-            $log.info("error:单品发货失败。");
-        });
-    }
-
-//分页组件
     //查询总数
-    $scope.get_count = function(e){
-        if($scope.click_key == "0"){    //如果没有筛选条件
-            $scope.search_key_words='';
-        }else{
-            if($scope.search_key_words == ''){
-            }
-        }
+    $scope.get_count = function(e){     //分页组件
+    $scope.list_order_count(); //统计标记和错误数
+
         var post_data = {
             items_count:$rootScope.now_store_bar,
+            station:$scope.now_station,
             search_date:$scope.search_date,
             start_date:$scope.s_date,
             end_date:$scope.e_date,
@@ -475,7 +208,7 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
             search_key:$scope.search_key
         };
         // $log.info(post_data);
-        $http.post('/fuck/amazon/amazon_get_order.php', post_data).success(function(data) { 
+        $http.post('/fuck/common/search_order.php', post_data).success(function(data) { 
             //数据获取总数
             $scope.all_num = data;
             //分页参数
@@ -613,6 +346,7 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
         //查询列表
         var post_data = {
             get_order_list:$rootScope.now_store_bar,
+            station:$scope.now_station,
             start:start,
             search_order_line:$scope.search_order_line,
             page_size:$scope.pageSize,
@@ -623,7 +357,7 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
             search_key:$scope.search_key
         };
         // $log.info(post_data);
-        $http.post('/fuck/amazon/amazon_get_order.php', post_data).success(function(data) {  
+        $http.post('/fuck/common/search_order.php', post_data).success(function(data) {  
             $scope.get_order_list_data = data;
             $timeout(function(){$scope.loading_shadow('close');},300); //关闭loading
             $timeout(function(){$scope.shadow('close');},300); //关闭shadow
@@ -650,6 +384,249 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
             $scope.to_page('1');   //再次初始化数据
         }
     }
+
+    //展示订单列表
+    $scope.only_list = function(){
+        $scope.init_list(); //初始化列表数据
+        $scope.init_filter_bar(); //初始化筛选组
+
+        $scope.shadow('open','ss_read','正在加载订单列表');
+        
+        $scope.get_count();     //分配页码
+        $scope.to_page('1');   //初始化数据
+    };
+
+    // 加载列表标记、统计错误数，在分页上显示
+    $scope.list_order_count = function(){
+        $http.get('/fuck/common/search_order.php', {params:{list_order_count:$scope.now_store_bar,station:$scope.now_station}
+        }).success(function(data) {
+            $scope.now_list_order_count = data;
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:正在加载数据列表失败。");
+        });
+    };
+// 3333333333333333333333333333333333333333  亚马逊列表展示结束 3333333333333333333333333333333333333333  
+
+// 4444444444444444444444444444444444444444  查看修改列表字段开始   4444444444444444444444444444444444444444
+
+    //查看单个详情
+    $scope.show_one_info = function(order_id){
+        $scope.loading_shadow('open'); //打开loading
+        $http.get('/fuck/common/change_order.php', {
+            params:{
+                store:$scope.now_store_bar,
+                station:$scope.now_station,
+                show_one_info:order_id
+            }
+        }).success(function(data) {
+            if(data.status=='ok'){
+                $timeout(function(){$scope.loading_shadow('close');},300); //关闭loading 
+                $scope.one_res_list = data.res_list;
+                $scope.one_res_info = data.res_info;
+            }else{
+                $scope.plug_alert('danger','系统错误，请联系管理员。','fa fa-ban');
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:查看单个详情失败。");
+        });
+    }
+
+    // 验证修改的list字段
+    $scope.need_check_list = function(field_name,order_id){
+        var dom = document.querySelector('#'+field_name);
+        var new_key = angular.element(dom).val();
+        
+        $http.get('/fuck/common/check_order.php', {
+            params:{
+                need_check:$scope.now_store_bar,
+                station:$scope.now_station,
+                check_method:'list',
+                field_name:field_name,
+                new_key:new_key
+            }
+        }).success(function(data) {
+            if(data == 'ok'){
+                $scope.change_list_field(field_name,order_id);
+            }else{
+                $scope.plug_alert('danger','验证失败。','fa fa-ban');
+                $log.info(data);
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:验证list失败。");
+        });
+    }
+
+    // 修改list字段
+    $scope.change_list_field = function(field_name,order_id,new_key){    //字段名，订单号
+
+        $http.get('/fuck/common/change_order.php', {
+            params:{
+                change_list_field:'change',
+                store:$scope.now_store_bar,
+                station:$scope.now_station,
+                order_id:order_id,
+                field_name:field_name,
+                new_key:new_key}
+        }).success(function(data) {
+            if(data == 'ok'){
+                $scope.show_one_info(order_id);
+            }else{
+                $scope.plug_alert('danger','修改失败。','fa fa-ban');
+                $log.info(data);
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:修改list单个字段失败。");
+        });
+    }
+
+    //修改info单个字段
+    $scope.change_info_field = function(order_item_id,field_name,index,amazon_order_id){
+        // $log.info(order_item_id+' # '+field_name+'+'+index);
+        var dom = document.querySelector('#'+field_name+'_'+index);
+        var new_key = angular.element(dom).val();
+        // $log.info(new_key);
+        $http.get('/fuck/amazon/amazon_get_order.php', {params:{change_info_field:order_item_id,field_name:field_name,new_key:new_key}
+        }).success(function(data) {
+            if(data == 'ok'){
+                $scope.show_one_info(amazon_order_id);
+            }else{
+                $scope.plug_alert('danger','修改失败。','fa fa-ban');
+                $log.info(data);
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:修改info单个字段失败。");
+        });
+    }
+// 4444444444444444444444444444444444444444  查看修改列表字段结束   4444444444444444444444444444444444444444
+    
+
+    // 分配快递公司
+    $scope.express_company = function(){
+        $scope.shadow('open','ss_write','正在分配配送公司');
+        $http.get('/fuck/amazon/amazon_get_order.php', {
+            params:{
+                express_company:$scope.now_store_bar
+            }
+        }).success(function(data) {
+            if(data == 'ok'){
+                $timeout(function(){$scope.fu_bag();},2000);
+            }else{
+                $log.info(data);
+                $scope.plug_alert('danger','快递公司分配失败。','fa fa-ban');
+                $timeout(function(){$scope.shadow('close');},1000); //关闭shadow
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:拆福袋失败。");
+        });
+    }
+
+
+    //验证单个配送地址
+    $scope.check_post = function(amazon_order_id){
+        $http.get('/fuck/amazon/amazon_get_order.php', {
+            params:{
+                check_post:amazon_order_id
+            }
+        }).success(function(data) {
+            $log.info(data)
+            if(data == 'pass'){
+                $scope.plug_alert('success','验证通过。','fa fa-smile-o');
+            }else if(data == 'cut'){
+                $scope.plug_alert('danger','验证失败。','fa fa-ban');
+            }else if(data == 'no'){
+                $scope.plug_alert('danger','邮编或电话不存在。','fa fa-ban');
+            }else{
+                $scope.plug_alert('danger','系统错误。','fa fa-ban');
+            }
+            $timeout(function(){$scope.loading_shadow('close');},300); //关闭loading
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:验证配送地址失败。");
+        });
+    }
+
+   
+
+    //验证电话号码格式
+    $scope.check_phone = function(){
+        $scope.pass_phone = false;
+        var dom = document.querySelector('#phone');
+        var phone = angular.element(dom).val();
+        if(isNaN(phone)){
+            if(phone.indexOf("-") > 0){
+                phone = phone.replace(/-/g, "");
+                angular.element(dom).val(phone);
+                $scope.check_phone();
+            }else{
+                angular.element(dom).val('');
+                $scope.pass_phone = false;
+            }
+        }else{
+            var len = phone.length;
+            if(len == 10){
+                var a1 = phone.slice(0,2);
+                var a2 = phone.slice(2,6);
+                var a3 = phone.slice(6,10);
+                phone = a1+"-"+a2+"-"+a3;
+                angular.element(dom).val(phone);
+                $scope.pass_phone = true;
+            }if(len == 11){
+                var a1 = phone.slice(0,3);
+                var a2 = phone.slice(3,7);
+                var a3 = phone.slice(7,11);
+                phone = a1+"-"+a2+"-"+a3;
+                angular.element(dom).val(phone);
+                $scope.pass_phone = true;
+            }if(len > 11){
+                var a1 = phone.slice(0,3);
+                var a2 = phone.slice(3,7);1
+                var a3 = phone.slice(7,11);
+                phone = a1+"-"+a2+"-"+a3;
+                angular.element(dom).val(phone);
+                $scope.pass_phone = true;
+                $scope.plug_alert('danger','电话长度超过了。','fa fa-ban');
+            }
+        }   
+    }
+
+
+    //订单发货列表查询
+    $scope.get_express_list = function(){
+        $http.get('/fuck/amazon/amazon_send_express.php', {params:{amazon_express:'get'}
+        }).success(function(data) {
+            $scope.plug_alert('success','修改完成。','fa fa-smile-o');
+            $scope.express_list = data;
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:订单发货列表查询失败。");
+        });
+    }
+
+    //订单发货
+    $scope.send_express = function(){
+        $scope.shadow('open','ss_syn','正在提交快递单号至 Amazon');
+        $http.get('/fuck/amazon/amazon_send_express.php', {params:{send_express:'send'}
+        }).success(function(data) {
+            if(data=='ok'){
+                $scope.plug_alert('success','已提交至亚马逊。','fa fa-smile-o');
+                $scope.truncate_express();
+                $timeout(function(){$scope.shadow('close');},1000);
+            }else{
+                $scope.plug_alert('danger','系统错误，请联系管理员。','fa fa-ban');
+            }
+            $log.info(data);
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:单品发货失败。");
+        });
+    }
+
 
     //全选
     $scope.check_all_item = function(){
@@ -918,6 +895,7 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
         }).success(function(data) {
             if(data == 'ok'){
                 $scope.selectPage($scope.now_page);
+                $scope.list_order_count();  //统计
             }else{
                  $scope.plug_alert('danger','操作失败。','fa fa-ban');
             }

@@ -52,8 +52,8 @@ li{
 .f12{
 	font-size: 12px !important;
 }
-.f20{
-	font-size: 20px !important;
+.f24{
+	font-size: 24px !important;
 }
 .f10{
 	font-size: 10px !important;
@@ -127,6 +127,9 @@ li{
 .bg_yellow{
 	background: #fff6c8 !important;
 	color:#f44336;
+}
+.bg_yellow td{
+	background: #fff6c8 !important;
 }
 .italic{
 	font-style: italic;
@@ -268,6 +271,9 @@ li{
 .btn_fff{
 	background: #FFF;
     border: 1px solid #c6c6c6;
+}
+.badge_danger{
+	background: #FF5722 !important;
 }
 /*selecter*/
 .selecter {
