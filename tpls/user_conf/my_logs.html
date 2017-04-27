@@ -27,12 +27,16 @@
 						<tr class="warning yellow">
 							<td>ID</td>
 							<td>时 间 <span class="red">{{$index+1}}</span></td>
+							<td>平 台 <span class="red">{{$index+1}}</span></td>
+							<td>店 铺 <span class="red">{{$index+1}}</span></td>
 							<td>操 作 <span class="red">{{$index+1}}</span></td>
 							<td class="tagc">员 工 <span class="red">{{$index+1}}</span></td>
 						</tr>
 						<tr ng-repeat="(key, value) in item" ng-click="bg_yellow=!bg_yellow" ng-class="{'bg_yellow':bg_yellow}">
 							<td>{{value.id}}</td>
 							<td>{{value.do_time}}</td>
+							<td>{{value.station}}</td>
+							<td>{{value.store}}</td>
 							<td>{{value.who_do}}</td>
 							<td class="tagc">{{value.who_name}}</td>
 						</tr>

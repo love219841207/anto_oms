@@ -97,7 +97,7 @@
               <div ng-show="aa_goods_title" class="input-group">
                 <input class="form-control input-sm" placeholder="品名 更改为..." type="text" id="goods_title_{{$index}}">
                 <span class="input-group-btn">
-                  <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="change_info_field(item.order_item_id,'goods_title',$index,item.amazon_order_id);aa_goods_title=!aa_goods_title">确定</button>
+                  <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="change_info_field(item.id,'goods_title',$index,item.amazon_order_id);aa_goods_title=!aa_goods_title">确定</button>
                 </span>
               </div></td>
           </tr>
@@ -108,13 +108,13 @@
           <tr>
             <td class="s_gray">商品代码</td>
             <td class="green">{{item.goods_code}}
-              <i ng-click="aa_goods_code=!goods_code" 
+              <i ng-click="aa_goods_code=!aa_goods_code" 
                 class="fa fa-edit fa-fw pointer gray"
                 ></i>
-              <div ng-show="goods_code" class="input-group">
+              <div ng-show="aa_goods_code" class="input-group">
                 <input class="form-control input-sm" placeholder="商品代码 更改为..." type="text" id="goods_code_{{$index}}">
                 <span class="input-group-btn">
-                  <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="change_info_field(item.order_item_id,'goods_code',$index,item.amazon_order_id);goods_code=!goods_code">确定</button>
+                  <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="change_info_field(item.id,'goods_code',$index,item.amazon_order_id);aa_goods_code=!aa_goods_code">确定</button>
                 </span>
               </div>
             </td>
@@ -128,7 +128,7 @@
               <div ng-show="aa_goods_num" class="input-group">
                 <input class="form-control input-sm" placeholder="数量 更改为..." type="number" id="goods_num_{{$index}}">
                 <span class="input-group-btn">
-                  <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="change_info_field(item.order_item_id,'goods_num',$index,item.amazon_order_id);aa_goods_num=!aa_goods_num">确定</button>
+                  <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="change_info_field(item.id,'goods_num',$index,item.amazon_order_id);aa_goods_num=!aa_goods_num">确定</button>
                 </span>
               </div>
             </td>
@@ -142,7 +142,7 @@
                 <div ng-show="aa_item_price" class="input-group">
                   <input class="form-control input-sm" placeholder="子订单价格 更改为..." type="number" id="item_price_{{$index}}">
                   <span class="input-group-btn">
-                    <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="change_info_field(item.order_item_id,'item_price',$index,item.amazon_order_id);aa_item_price=!aa_item_price">确定</button>
+                    <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="change_info_field(item.id,'item_price',$index,item.amazon_order_id);aa_item_price=!aa_item_price">确定</button>
                   </span>
                 </div>
               </td>

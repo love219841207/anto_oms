@@ -30,7 +30,7 @@ if(isset($_GET['show_one_info'])){
 	echo json_encode($final_res);
 }
 
-//修改list字段，多字段修改
+//修改list字段
 if(isset($_GET['change_list_field'])){
 	$store = $_GET['store'];
     $station = strtolower($_GET['station']);
@@ -53,42 +53,130 @@ if(isset($_GET['change_list_field'])){
 		$ch_field = '邮箱';
 		$sql = "UPDATE $response_list SET $field_name = '{$new_key}' WHERE $order_id_field = '{$order_id}'";
 	}
-
-	
 	$res = $db->execute($sql);
-
-	
 
 	// 日志
 	$do = '订单【'.$order_id.'】修改【'.$ch_field.'】为【'.$new_key.'】';
-	oms_log($u_name,$do,'amazon_syn');
+	oms_log($u_name,$do,'amazon_order',$station,$store);
 
 	echo 'ok';
 }
 
-//修改info字段，多字段修改
+//修改info字段
 if(isset($_GET['change_info_field'])){
-	$order_item_id = $_GET['change_info_field'];
+	$id = $_GET['change_info_field'];
 	$field_name = $_GET['field_name'];
+	$order_id = $_GET['order_id'];
 	$new_key = addslashes($_GET['new_key']);
-	$sql = "UPDATE amazon_response_info SET $field_name = '{$new_key}' WHERE order_item_id = '{$order_item_id}'";
-	$res = $db->execute($sql);
-	echo 'ok';
+	$station = strtolower($_GET['station']);
+	$store = $_GET['store'];
+	$response_info = $station.'_response_info';
+
+	if($field_name == 'goods_title'){
+		$ch_field = '品名';
+	}
+	if($field_name == 'goods_code'){
+		$ch_field = '商品代码';
+	}
+	if($field_name == 'goods_num'){
+		$ch_field = '数量';
+	}
+	if($field_name == 'item_price'){
+		$ch_field = '子订单价格';
+	}
+
+	// 如果是商品代码，检测
+	if($field_name == 'goods_code'){
+		$sql = "SELECT * FROM goods_type WHERE goods_code ='{$new_key}'";
+		$res = $rdb->getOne($sql);
+		if(empty($res)){
+			echo '无此商品代码。';
+		}else{
+			$sql = "UPDATE $response_info SET $field_name = '{$new_key}' WHERE id = '{$id}'";
+			$res = $db->execute($sql);
+			echo 'ok';
+		}
+	}else{
+		$sql = "UPDATE $response_info SET $field_name = '{$new_key}' WHERE id = '{$id}'";
+		$res = $db->execute($sql);
+
+		// 日志
+		$do = '订单【'.$order_id.'】修改【'.$ch_field.'】为【'.$new_key.'】';
+		oms_log($u_name,$do,'amazon_order',$station,$store);
+		echo 'ok';
+	}
+
+	
 }
 
 //修改订单备注
 if(isset($_GET['change_note'])){
-	$amazon_order_id = $_GET['change_note'];
+	$order_id = $_GET['change_note'];
 	$new_key = addslashes($_GET['note']);
-	$sql = "UPDATE amazon_response_list SET order_note = '{$new_key}' WHERE amazon_order_id = '{$amazon_order_id}'";
+	$station = strtolower($_GET['station']);
+	$store = $_GET['store'];
+	$order_id_field = $station.'_order_id';
+	$response_list = $station.'_response_list';
+
+	$sql = "UPDATE $response_list SET order_note = '{$new_key}' WHERE $order_id_field = '{$order_id}'";
 	$res = $db->execute($sql);
+	// 日志
+	$do = '订单【'.$order_id.'】备注为【'.$new_key.'】';
+	oms_log($u_name,$do,'amazon_order',$station,$store);
 	echo 'ok';
 }
 
 //读取订单备注
 if(isset($_GET['read_note'])){
-	$amazon_order_id = $_GET['read_note'];
-	$sql = "SELECT order_note FROM amazon_response_list WHERE amazon_order_id = '{$amazon_order_id}'";
+	$order_id = $_GET['read_note'];
+	$station = strtolower($_GET['station']);
+	$order_id_field = $station.'_order_id';
+	$response_list = $station.'_response_list';
+
+	$sql = "SELECT order_note FROM $response_list WHERE $order_id_field = '{$order_id}'";
 	$res = $db->getOne($sql);
 	echo $res['order_note'];
+}
+
+// 标记订单查询
+if(isset($_GET['mark_orders'])){
+	$mark_orders = $_GET['mark_orders'];
+	$method = $_GET['method'];
+	$station = strtolower($_GET['station']);
+	$mark_orders = '('.$mark_orders.')';
+
+	$response_list = $station.'_response_list';
+	$order_id_field = $station.'_order_id';
+	// 标记
+	$sql = "UPDATE $response_list SET is_mark = '{$method}' WHERE $order_id_field in $mark_orders";
+	$res = $db->execute($sql);
+
+	echo 'ok';
+}
+
+// 删除订单
+if(isset($_POST['del_items'])){
+	$del_items = $_POST['del_items'];
+	$del_items = '('.$del_items.')';
+	$del_log_items = addslashes($_POST['del_items']);
+	$station = strtolower($_POST['station']);
+	$store = $_POST['store'];
+
+	$response_list = $station.'_response_list';
+	$response_info = $station.'_response_info';
+	$order_id_field = $station.'_order_id';
+
+	// 删除response_list
+	$sql = "DELETE FROM $response_list WHERE $order_id_field IN $del_items";
+	$res = $db->execute($sql);
+
+	// 删除info
+	$sql = "DELETE FROM $response_info WHERE $order_id_field IN $del_items";
+	$res = $db->execute($sql);
+
+	//日志
+	$do = ' [删除订单]：'.$del_log_items;
+	oms_log($u_name,$do,'amazon_order',$station,$store);
+
+	echo 'ok';
 }

@@ -9,10 +9,11 @@ set_time_limit(0);
 //获取亚马逊订单列表
 if(isset($_GET['list_orders'])){
  	$store = $_GET['list_orders'];
+ 	$station = strtolower($_GET['station']);
 
  	//日志
 	$do = '[START] 同步订单列表：'.$store;
-	oms_log($u_name,$do,'amazon_syn');
+	oms_log($u_name,$do,'amazon_syn',$station,$store);
 
  	$syn_day = date('Y-m-d');	//同步日期
  	//所有oms_has状态变成0
@@ -159,7 +160,7 @@ if(isset($_GET['list_orders'])){
 
 	//日志
 	$do = '[END] 同步订单列表：'.$store;
-	oms_log($u_name,$do,'amazon_syn');
+	oms_log($u_name,$do,'amazon_syn',$station,$store);
 
 	echo json_encode($final_res);
 }
@@ -175,9 +176,11 @@ if(isset($_GET['has_orders'])){
 //获取亚马逊订单详单
 if(isset($_GET['get_order_info'])){
  	$store = $_GET['get_order_info'];
+ 	$station = strtolower($_GET['station']);
+ 	
  	//日志
 	$do = '[START] 同步订单详单：'.$store;
-	oms_log($u_name,$do,'amazon_syn');
+	oms_log($u_name,$do,'amazon_syn',$station,$store);
 
  	// 搜索出需要获取详情的订单
  	$sql = "SELECT amazon_order_id FROM amazon_response_list WHERE store = '{$store}' AND oms_order_info_status='0'";
@@ -279,7 +282,7 @@ if(isset($_GET['get_order_info'])){
 
  	//日志
 	$do = '[END] 同步订单详单：'.$store;
-	oms_log($u_name,$do,'amazon_syn');
+	oms_log($u_name,$do,'amazon_syn',$station,$store);
 
  	echo json_encode($final_res);
 }
@@ -649,38 +652,4 @@ if(isset($_GET['import_add_list'])){
 	oms_log($u_name,$do,'amazon_import');
 
 	echo json_encode($final_res);
-}
-
-// 删除订单
-if(isset($_POST['del_items'])){
-	$del_items = $_POST['del_items'];
-	$del_items = '('.$del_items.')';
-	$del_log_items = addslashes($_POST['del_items']);
-
-	// 删除response_list
-	$sql = "DELETE FROM amazon_response_list WHERE amazon_order_id IN $del_items";
-	$res = $db->execute($sql);
-
-	// 删除info
-	$sql = "DELETE FROM amazon_response_info WHERE amazon_order_id IN $del_items";
-	$res = $db->execute($sql);
-
-	//日志
-	$do = '[删除订单]：'.$del_log_items;
-	oms_log($u_name,$do,'amazon_order');
-
-	echo 'ok';
-}
-
-// 标记订单查询
-if(isset($_GET['mark_orders'])){
-	$mark_orders = $_GET['mark_orders'];
-	$method = $_GET['method'];
-	$mark_orders = '('.$mark_orders.')';
-
-	// 标记
-	$sql = "UPDATE amazon_response_list SET is_mark = '{$method}' WHERE amazon_order_id in $mark_orders";
-	$res = $db->execute($sql);
-
-	echo 'ok';
 }
