@@ -1,4 +1,4 @@
-<div class="modal" tabindex="-1" role="dialog">
+<div class="modal" tabindex="-1" role="dialog" ng-controller="amazonCtrl">
   <div class="modal-dialog" style="width:600px;">
     <div class="modal-content">
       <div class="modal-header modal-drag">
@@ -17,7 +17,17 @@
           </tr>
           <tr>
             <td class="s_gray">邮箱</td>
-            <td class="s_gray">{{item.buyer_email}}</td>
+            <td class="s_gray">{{item.buyer_email}}
+              <i ng-click="aa_email=!aa_email" 
+                class="fa fa-edit fa-fw pointer gray"
+                ></i>
+              <div ng-show="aa_email" class="input-group">
+                <input class="form-control input-sm" placeholder="邮箱 更改为..." type="email" name="email" ng-model="email" id="buyer_email">
+                <span class="input-group-btn">
+                  <button ng-disabled="!email" class="btn btn-default btn-danger btn-sm" type="button" ng-click="need_check_list('buyer_email',item.amazon_order_id);aa_email=!aa_email">确定</button>
+                </span>
+              </div>
+            </td>
           </tr>
             <td class="s_gray">收件人</td>
             <td class="s_gray">{{item.receive_name}}

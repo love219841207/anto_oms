@@ -271,7 +271,7 @@ if(isset($_GET['need_check_list'])){
 	$response_list = $station.'_response_list';
 
 	//	收件人/电话/地址
-	if($field_name == 'receive_name' or $field_name == 'phone'){
+	if($field_name == 'receive_name' or $field_name == 'phone' or $field_name == 'buyer_email'){
 		echo 'ok';
 	}
 

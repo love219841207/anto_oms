@@ -60,7 +60,7 @@ if(isset($_GET['change_list_field'])){
 	
 
 	// 日志
-	$do = '订单【'.$order_id.'】修改【'.$field_name.'】为【'.$new_key.'】';
+	$do = '订单【'.$order_id.'】修改【'.$ch_field.'】为【'.$new_key.'】';
 	oms_log($u_name,$do,'amazon_syn');
 
 	echo 'ok';
