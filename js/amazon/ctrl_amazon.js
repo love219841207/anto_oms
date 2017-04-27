@@ -169,6 +169,7 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
 
     // 点击验证按钮
     $scope.check_all_field = function(){
+        $scope.shadow('open','ss_read','正在验证订单，请稍后');
         $http.get('/fuck/common/check_order.php', {
             params:{
                 check_all_field:$scope.now_store_bar,
@@ -176,6 +177,7 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
             }
         }).success(function(data) {
             if(data == 'ok'){
+                $timeout(function(){$scope.shadow('close');},1000); //关闭shadow
                 $scope.plug_alert('success','验证完成。','fa fa-smile-o');
                 $scope.need_check_num();
             }else{
