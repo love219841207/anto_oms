@@ -16,20 +16,6 @@
             <td class="s_gray">{{item.buyer_name}}</td>
           </tr>
           <tr>
-            <td class="s_gray">邮编</td>
-            <td class="s_gray">{{item.post_code}}
-              <i ng-click="aa_post_code=!aa_post_code" 
-                class="fa fa-edit fa-fw pointer gray"
-                ></i>
-              <div ng-show="aa_post_code" class="input-group">
-                <input class="form-control input-sm" placeholder="邮编 更改为..." type="text" id="post_code">
-                <span class="input-group-btn">
-                  <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="need_check_list('post_code',item.amazon_order_id);aa_post_code=!aa_post_code">确定</button>
-                </span>
-              </div>
-            </td>
-          </tr>
-          <tr>
             <td class="s_gray">邮箱</td>
             <td class="s_gray">{{item.buyer_email}}</td>
           </tr>
@@ -60,18 +46,27 @@
             </td>
           </tr>
           <tr>
-            <td class="s_gray">地址</td>
-            <td class="s_gray">{{item.address}}
-              <i ng-click="aa_address=!aa_address" 
-                class="fa fa-edit fa-fw pointer gray"
+            <td class="s_gray">邮编</td>
+            <td class="s_gray" ng-class="{'danger red':item.post_ok==2}">{{item.post_code}}
+                <i ng-click="aa_post_addr=!aa_post_addr" 
+                class="fa fa-edit fa-fw pointer"
                 ></i>
-              <div ng-show="aa_address" class="input-group">
-                <input class="form-control input-sm" placeholder="地址 更改为..." type="text" id="address">
-                <span class="input-group-btn">
-                  <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="need_check_list('address',item.amazon_order_id);aa_address=!aa_address">确定</button>
-                </span>
-              </div>
-            </td>
+                <i class="fa fa-lightbulb-o fa-fw pointer blue" ng-click="read_oms_post(item.post_code)"></i></td>
+          </tr>
+          <tr class="blue warning" ng-repeat="item in now_post_name track by $index" ng-show="now_post_name">
+            <td>参考地域</td>
+            <td>{{item.post_name}}</td>
+          </tr>
+          <tr>
+            <td class="s_gray">地址</td>
+            <td class="s_gray" ng-class="{'danger red':item.post_ok==2}">{{item.address}}</td>
+          </tr>
+          <tr ng-show="aa_post_addr">
+            <td><input type="text" id="new_post_code" style="width:80px;padding-left: 4px;" placeholder=".. 新的邮编"></td>
+            <td><input type="text" id="new_address" style="width:400px;padding-left: 4px;" placeholder=".. 新的地址"></td>
+          </tr>
+          <tr ng-show="aa_post_addr">
+            <td colspan="2"><div class="btn btn-warning btn-xs f14 pull-right" ng-click="change_post_addr(item.amazon_order_id)">&nbsp;&nbsp;&nbsp;&nbsp;修&nbsp;&nbsp;&nbsp;正&nbsp;&nbsp;&nbsp;</div></td>
           </tr>
         </table>
         <table class="table table-hover table-condensed table-bordered" ng-repeat="item in one_res_info track by $index">

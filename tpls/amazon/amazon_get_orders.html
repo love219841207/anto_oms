@@ -45,7 +45,7 @@
 						ng-class="{'active':active_tools_3}"
 						ng-hide="need_check_number==0"
 						ng-click="
-							need_check();
+							check_all_field();
 							init_list();
 							amazon_upload_list = false;
 							open_tool_bar = false;
@@ -278,6 +278,9 @@
 		      	</button>
 		      	<button type="button" ng-click="check_items();get_mail_tpl()" data-animation="am-fade-and-slide-top" data-template-url="/modal/amazon_send_mail.html" bs-modal="modal" class="btn btn-default btn-sm blue">
 		      		<i class="fa fa-envelope-o fa-fw"></i>发信
+		      	</button>
+		      	<button type="button" data-animation="am-fade-and-slide-top" data-template-url="/modal/post_addr.html" bs-modal="modal" class="btn btn-default btn-sm blue">
+		      		<i class="fa fa-truck fa-fw"></i>邮编查询
 		      	</button>
 		      	<button type="button" ng-click="check_items();" data-animation="am-fade-and-slide-top" data-template-url="/modal/amazon_del_item.html" bs-modal="modal" class="btn btn-default btn-sm red">
 		      		<i class="fa fa-trash-o fa-fw"></i>删除

@@ -5,8 +5,42 @@ $dir = dirname(__FILE__);
 
 set_time_limit(0);
 
-//总体验证
-function check_all_field($station,$store){
+// --- 搜索邮编查询 ---
+if(isset($_GET['search_oms_post'])){
+	$search_oms_post = addslashes($_GET['search_oms_post']);
+	$sql = "SELECT * FROM oms_post WHERE post_code LIKE '%{$search_oms_post}%' LIMIT 0,100";
+	$res = $db->getAll($sql);
+	echo json_encode($res);
+}
+if(isset($_GET['search_oms_addr'])){
+	$search_oms_addr = addslashes($_GET['search_oms_addr']);
+	$sql = "SELECT * FROM oms_post WHERE post_name LIKE '%{$search_oms_addr}%' LIMIT 0,100";
+	$res = $db->getAll($sql);
+	echo json_encode($res);
+}
+// --- 搜索邮编查询 ---
+
+// 获取邮编地址结果
+if(isset($_GET['read_oms_post'])){
+	$post_code = $_GET['read_oms_post'];
+	$sql = "SELECT post_name FROM oms_post WHERE post_code = '{$post_code}'";
+	$res = $db->getAll($sql);
+	echo json_encode($res);
+}
+
+// 获取未验证订单数
+if(isset($_GET['need_check_num'])){
+	$store = $_GET['need_check_num'];
+	$sql = "SELECT count(1) as need_check_num FROM amazon_response_list WHERE post_ok=0 OR tel_ok=0 OR sku_ok=0 OR yfcode_ok=0 AND store = '{$store}'";
+	$res = $db->getOne($sql);
+	echo $res['need_check_num'];
+}
+
+// AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 总体验证开始 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+if(isset($_GET['check_all_field'])){
+	$store = $_GET['check_all_field'];
+	$station = strtolower($_GET['station']);
+
 	$db = new PdoMySQL();
 	$rdb = new RepoPdoMySQL();
 	$order_id = $station.'_order_id';
@@ -222,26 +256,60 @@ function check_all_field($station,$store){
 // 44444444444444444444 运费代码验证结束 44444444444444444444
 	echo 'ok';
 }
+// AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 总体验证结束 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 
-// 订单检测
-if(isset($_GET['need_check'])){
-	$store = $_GET['need_check'];
+// BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB 列表字段验证开始 BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+
+if(isset($_GET['need_check_list'])){
+	$store = $_GET['need_check_list'];
 	$station = strtolower($_GET['station']);
-	$check_method = $_GET['check_method'];
+	$field_name = $_GET['field_name'];
+	$order_id = $_GET['order_id'];
+	$new_key = addslashes($_GET['new_key']);
 
-	if($check_method == 'all'){		//订单检测
-		check_all_field($station,$store);
-	}else if($check_method == 'list'){	//list 字段检测
-		$field_name = $_GET['field_name'];
-		$new_key = addslashes($_GET['new_key']);
-		check_list_field($field_name,$new_key);
+	$order_id_field = $station.'_order_id';
+	$response_list = $station.'_response_list';
 
+	//	收件人/电话/地址
+	if($field_name == 'receive_name' or $field_name == 'phone'){
+		echo 'ok';
+	}
+
+}
+
+// BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB 列表字段验证结束 BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+
+// 邮编、地址验证。通过则更新。
+if(isset($_GET['change_post_addr'])){
+	$store = $_GET['change_post_addr'];
+	$station = strtolower($_GET['station']);
+	$order_id = $_GET['order_id'];
+	$order_id_field = $station.'_order_id';
+	$response_list = $station.'_response_list';
+	$new_post_code = addslashes($_GET['new_post_code']);
+	$new_address = addslashes($_GET['new_address']);
+
+	// 查询出该 post_code 的对应市区
+	$sql = "SELECT post_name FROM oms_post WHERE post_code = '{$new_post_code}'";
+	$res = $db->getOne($sql);
+	$post_name = $res['post_name'];
+	if($post_name == ''){
+		echo '邮编不存在。';
+	}else{
+		// 邮编和地址匹配
+		if(strstr($new_address, $post_name) == true){
+
+			// 保存并更新post_ok = 1
+			$sql = "UPDATE $response_list SET post_code = '{$new_post_code}',address = '{$new_address}',post_ok = 1 WHERE $order_id_field = '{$order_id}'";
+		    $res = $db->execute($sql);
+
+		    // 日志
+			$do = '订单【'.$order_id.'】修改邮编【'.$new_post_code.'】地址【'.$new_address.'】';
+			oms_log($u_name,$do,'amazon_syn');
+
+			echo 'ok';
+		}else{
+			echo '邮编、地址不匹配。';
+		}
 	}
 }
-
-// 55555555555555555555 列表字段验证开始 55555555555555555555
-function check_list_field($field_name,$new_key){
-	echo $field_name;
-	echo $new_key;
-}
-// 55555555555555555555 列表字段验证结束 55555555555555555555

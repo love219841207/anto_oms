@@ -41,8 +41,28 @@ if(isset($_GET['change_list_field'])){
 	$response_list = $station.'_response_list';
 	$order_id_field = $station.'_order_id';
 
-	$sql = "UPDATE $response_list SET $field_name = '{$new_key}' WHERE $order_id_field = '{$order_id}'";
+	if($field_name == 'phone'){
+		$ch_field = '电话';
+		$sql = "UPDATE $response_list SET $field_name = '{$new_key}',tel_ok = 1 WHERE $order_id_field = '{$order_id}'";
+	}
+	if($field_name == 'receive_name'){
+		$ch_field = '收件人';
+		$sql = "UPDATE $response_list SET $field_name = '{$new_key}' WHERE $order_id_field = '{$order_id}'";
+	}
+	if($field_name == 'buyer_email'){
+		$ch_field = '邮箱';
+		$sql = "UPDATE $response_list SET $field_name = '{$new_key}' WHERE $order_id_field = '{$order_id}'";
+	}
+
+	
 	$res = $db->execute($sql);
+
+	
+
+	// 日志
+	$do = '订单【'.$order_id.'】修改【'.$field_name.'】为【'.$new_key.'】';
+	oms_log($u_name,$do,'amazon_syn');
+
 	echo 'ok';
 }
 

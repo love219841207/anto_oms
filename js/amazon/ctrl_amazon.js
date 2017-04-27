@@ -97,11 +97,11 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
         $scope.init_filter_bar(); //初始化筛选组
 
         $scope.shadow('open','ss_syn','正在同步 Amazon 订单列表');
-        $http.get('/fuck/amazon/amazon_get_order.php', {params:{list_orders:store}
+        $http.get('/fuck/amazon/amazon_get_order.php', {params:{list_orders:$scope.now_store_bar}
         }).success(function(data) {
             if(data.status == 'list_ok'){
                 $scope.shadow('open','ss_write','正在保存数据');
-                $timeout(function(){$scope.has_orders(store)},1000);
+                $timeout(function(){$scope.has_orders($scope.now_store_bar)},1000);
             }
             $scope.count_order = data.count_order;
             $scope.insert_count = data.insert_count;
@@ -154,7 +154,7 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
 
     // 获取需要验证订单数
     $scope.need_check_num = function(){
-        $http.get('/fuck/amazon/amazon_get_order.php', {
+        $http.get('/fuck/common/check_order.php', {
             params:{
                 need_check_num:$scope.now_store_bar
             }
@@ -168,12 +168,11 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
     $scope.need_check_num();    //页面载入预读取
 
     // 点击验证按钮
-    $scope.need_check = function(){
+    $scope.check_all_field = function(){
         $http.get('/fuck/common/check_order.php', {
             params:{
-                need_check:$scope.now_store_bar,
-                station:$scope.now_station,
-                check_method:'all'
+                check_all_field:$scope.now_store_bar,
+                station:$scope.now_station
             }
         }).success(function(data) {
             if(data == 'ok'){
@@ -409,10 +408,51 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
 // 3333333333333333333333333333333333333333  亚马逊列表展示结束 3333333333333333333333333333333333333333  
 
 // 4444444444444444444444444444444444444444  查看修改列表字段开始   4444444444444444444444444444444444444444
+    // 读取邮编地址
+    $scope.read_oms_post = function(post_code){
+        $http.get('/fuck/common/check_order.php', {
+            params:{
+                read_oms_post:post_code}
+        }).success(function(data) {
+            $scope.now_post_name = data;
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:读取邮编地址失败。");
+        });
+    }
+
+    // --- 搜索邮编查询开始 ---
+    $scope.search_oms_post = function(){
+        $scope.search_post_addr = ''; //清空另一个
+        $http.get('/fuck/common/check_order.php', {
+            params:{
+                search_oms_post:$scope.search_post_code}
+        }).success(function(data) {
+            $scope.oms_post_addr_data = data;
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:搜索邮编地址失败。");
+        });
+    }
+    $scope.search_oms_addr = function(){
+        $scope.search_post_code = '';   //清空另一个
+        $http.get('/fuck/common/check_order.php', {
+            params:{
+                search_oms_addr:$scope.search_post_addr}
+        }).success(function(data) {
+            $scope.oms_post_addr_data = data;
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:搜索邮编地址失败。");
+        });
+    }
+    // --- 搜索邮编查询结束 ---
 
     //查看单个详情
     $scope.show_one_info = function(order_id){
         $scope.loading_shadow('open'); //打开loading
+        // 初始化参考地域
+        $scope.now_post_name = '';
         $http.get('/fuck/common/change_order.php', {
             params:{
                 store:$scope.now_store_bar,
@@ -437,21 +477,50 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
     $scope.need_check_list = function(field_name,order_id){
         var dom = document.querySelector('#'+field_name);
         var new_key = angular.element(dom).val();
-        
+
         $http.get('/fuck/common/check_order.php', {
             params:{
-                need_check:$scope.now_store_bar,
+                need_check_list:$scope.now_store_bar,
                 station:$scope.now_station,
-                check_method:'list',
                 field_name:field_name,
-                new_key:new_key
+                new_key:new_key,
+                order_id:order_id
             }
         }).success(function(data) {
             if(data == 'ok'){
-                $scope.change_list_field(field_name,order_id);
+                $scope.to_page($scope.now_page);
+                $scope.change_list_field(field_name,order_id,new_key);
             }else{
-                $scope.plug_alert('danger','验证失败。','fa fa-ban');
-                $log.info(data);
+                $scope.plug_alert('danger',data,'fa fa-ban');
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:验证list失败。");
+        });
+    }
+
+    // 验证邮编、地址并修改
+    $scope.change_post_addr = function(order_id){
+        var dom = document.querySelector('#new_post_code');
+        var new_post_code = angular.element(dom).val();
+        var dom = document.querySelector('#new_address');
+        var new_address = angular.element(dom).val();
+
+        $http.get('/fuck/common/check_order.php', {
+            params:{
+                change_post_addr:$scope.now_store_bar,
+                station:$scope.now_station,
+                new_post_code:new_post_code,
+                new_address:new_address,
+                order_id:order_id
+            }
+        }).success(function(data) {
+            if(data == 'ok'){
+                $scope.to_page($scope.now_page);
+                $scope.show_one_info(order_id);
+                $scope.plug_alert('success','通过。','fa fa-smile-o');
+            }else{
+                $scope.plug_alert('danger',data,'fa fa-ban');
             }
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
@@ -461,7 +530,6 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
 
     // 修改list字段
     $scope.change_list_field = function(field_name,order_id,new_key){    //字段名，订单号
-
         $http.get('/fuck/common/change_order.php', {
             params:{
                 change_list_field:'change',
@@ -485,7 +553,6 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
 
     //修改info单个字段
     $scope.change_info_field = function(order_item_id,field_name,index,amazon_order_id){
-        // $log.info(order_item_id+' # '+field_name+'+'+index);
         var dom = document.querySelector('#'+field_name+'_'+index);
         var new_key = angular.element(dom).val();
         // $log.info(new_key);
@@ -501,6 +568,48 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
             alert("系统错误，请联系管理员。");
             $log.info("error:修改info单个字段失败。");
         });
+    }
+
+    //验证电话号码格式
+    $scope.check_phone = function(){
+        $scope.pass_phone = false;
+        var dom = document.querySelector('#phone');
+        var phone = angular.element(dom).val();
+        if(isNaN(phone)){
+            if(phone.indexOf("-") > 0){
+                phone = phone.replace(/-/g, "");
+                angular.element(dom).val(phone);
+                $scope.check_phone();
+            }else{
+                angular.element(dom).val('');
+                $scope.pass_phone = false;
+            }
+        }else{
+            var len = phone.length;
+            if(len == 10){
+                var a1 = phone.slice(0,2);
+                var a2 = phone.slice(2,6);
+                var a3 = phone.slice(6,10);
+                phone = a1+"-"+a2+"-"+a3;
+                angular.element(dom).val(phone);
+                $scope.pass_phone = true;
+            }if(len == 11){
+                var a1 = phone.slice(0,3);
+                var a2 = phone.slice(3,7);
+                var a3 = phone.slice(7,11);
+                phone = a1+"-"+a2+"-"+a3;
+                angular.element(dom).val(phone);
+                $scope.pass_phone = true;
+            }if(len > 11){
+                var a1 = phone.slice(0,3);
+                var a2 = phone.slice(3,7);1
+                var a3 = phone.slice(7,11);
+                phone = a1+"-"+a2+"-"+a3;
+                angular.element(dom).val(phone);
+                $scope.pass_phone = true;
+                $scope.plug_alert('danger','电话长度超过了。','fa fa-ban');
+            }
+        }   
     }
 // 4444444444444444444444444444444444444444  查看修改列表字段结束   4444444444444444444444444444444444444444
     
@@ -553,47 +662,7 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
 
    
 
-    //验证电话号码格式
-    $scope.check_phone = function(){
-        $scope.pass_phone = false;
-        var dom = document.querySelector('#phone');
-        var phone = angular.element(dom).val();
-        if(isNaN(phone)){
-            if(phone.indexOf("-") > 0){
-                phone = phone.replace(/-/g, "");
-                angular.element(dom).val(phone);
-                $scope.check_phone();
-            }else{
-                angular.element(dom).val('');
-                $scope.pass_phone = false;
-            }
-        }else{
-            var len = phone.length;
-            if(len == 10){
-                var a1 = phone.slice(0,2);
-                var a2 = phone.slice(2,6);
-                var a3 = phone.slice(6,10);
-                phone = a1+"-"+a2+"-"+a3;
-                angular.element(dom).val(phone);
-                $scope.pass_phone = true;
-            }if(len == 11){
-                var a1 = phone.slice(0,3);
-                var a2 = phone.slice(3,7);
-                var a3 = phone.slice(7,11);
-                phone = a1+"-"+a2+"-"+a3;
-                angular.element(dom).val(phone);
-                $scope.pass_phone = true;
-            }if(len > 11){
-                var a1 = phone.slice(0,3);
-                var a2 = phone.slice(3,7);1
-                var a3 = phone.slice(7,11);
-                phone = a1+"-"+a2+"-"+a3;
-                angular.element(dom).val(phone);
-                $scope.pass_phone = true;
-                $scope.plug_alert('danger','电话长度超过了。','fa fa-ban');
-            }
-        }   
-    }
+    
 
 
     //订单发货列表查询
