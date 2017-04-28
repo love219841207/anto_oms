@@ -163,7 +163,7 @@ if(isset($_GET['mark_orders'])){
 	echo 'ok';
 }
 
-// 删除订单
+// 删除订单，实则修改order_id=-1
 if(isset($_POST['del_items'])){
 	$del_items = $_POST['del_items'];
 	$del_items = '('.$del_items.')';
@@ -172,19 +172,36 @@ if(isset($_POST['del_items'])){
 	$store = $_POST['store'];
 
 	$response_list = $station.'_response_list';
-	$response_info = $station.'_response_info';
 	$order_id_field = $station.'_order_id';
 
-	// 删除response_list
-	$sql = "DELETE FROM $response_list WHERE $order_id_field IN $del_items";
-	$res = $db->execute($sql);
-
-	// 删除info
-	$sql = "DELETE FROM $response_info WHERE $order_id_field IN $del_items";
+	// 删除response_list，取消标记
+	$sql = "UPDATE $response_list SET order_line = '-1',is_mark='0' WHERE $order_id_field IN $del_items";
 	$res = $db->execute($sql);
 
 	//日志
 	$do = ' [删除订单]：【'.$del_log_items.'】';
+	oms_log($u_name,$do,'amazon_order',$station,$store);
+
+	echo 'ok';
+}
+
+// 还原订单，实则修改order_id=1 返回到订单验证前，同步后状态
+if(isset($_POST['return_items'])){
+	$return_items = $_POST['return_items'];
+	$return_items = '('.$return_items.')';
+	$res_log_items = addslashes($_POST['return_items']);
+	$station = strtolower($_POST['station']);
+	$store = $_POST['store'];
+
+	$response_list = $station.'_response_list';
+	$order_id_field = $station.'_order_id';
+
+	// 还原response_list
+	$sql = "UPDATE $response_list SET order_line = '1' WHERE $order_id_field IN $return_items";
+	$res = $db->execute($sql);
+
+	//日志
+	$do = ' [还原订单]：【'.$res_log_items.'】';
 	oms_log($u_name,$do,'amazon_order',$station,$store);
 
 	echo 'ok';

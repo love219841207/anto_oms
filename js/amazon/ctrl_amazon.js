@@ -629,6 +629,7 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
             $scope.get_order_list_data[index].is_click = true;
         })
         $scope.cc_all = false;
+        $scope.check_items();
     }
     $scope.cc_all = true; //默认显示全选按钮
     
@@ -638,6 +639,7 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
             $scope.get_order_list_data[index].is_click = false;
         })
         $scope.cc_all = true;
+        $scope.check_items();
     }
 
     //反选
@@ -648,8 +650,8 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
             }else{
                 $scope.get_order_list_data[index].is_click = true;
             }
-            
         })
+        $scope.check_items();
     }
 
     //check_items 选择项
@@ -747,6 +749,29 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
             }else{
                 $log.info(data);
                 $scope.plug_alert('danger','删除失败，请联系管理员。','fa fa-ban');
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:删除订单失败。");
+        });
+    }
+
+    //还原订单
+    $scope.amz_return =  function(){
+        $scope.shadow('open','ss_make','正在还原，请稍后。');
+
+        var post_data = {return_items:$scope.my_checked_items,station:$scope.now_station,store:$scope.now_store_bar};
+
+        $http.post('/fuck/common/change_order.php', post_data).success(function(data) {
+            if(data == 'ok'){
+                $scope.get_count();
+                $scope.to_page($scope.now_page);
+                
+                $timeout(function(){$scope.shadow('close');},500); //关闭shadow
+                $scope.plug_alert('success','还原完成。','fa fa-smile-o');
+            }else{
+                $log.info(data);
+                $scope.plug_alert('danger','还原失败，请联系管理员。','fa fa-ban');
             }
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
