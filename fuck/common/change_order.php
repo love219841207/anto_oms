@@ -41,6 +41,11 @@ if(isset($_GET['change_list_field'])){
 	$response_list = $station.'_response_list';
 	$order_id_field = $station.'_order_id';
 
+	//查询原字段值
+	$sql = "SELECT $field_name as o_key FROM $response_list WHERE $order_id_field = '{$order_id}'";
+	$res = $db->getOne($sql);
+	$o_key = $res['o_key'];
+
 	if($field_name == 'phone'){
 		$ch_field = '电话';
 		$sql = "UPDATE $response_list SET $field_name = '{$new_key}',tel_ok = 1 WHERE $order_id_field = '{$order_id}'";
@@ -56,7 +61,7 @@ if(isset($_GET['change_list_field'])){
 	$res = $db->execute($sql);
 
 	// 日志
-	$do = '订单【'.$order_id.'】修改【'.$ch_field.'】为【'.$new_key.'】';
+	$do = '订单【'.$order_id.'】修改 <'.$ch_field.'>【'.$o_key.'】为【'.$new_key.'】';
 	oms_log($u_name,$do,'amazon_order',$station,$store);
 
 	echo 'ok';
@@ -85,6 +90,11 @@ if(isset($_GET['change_info_field'])){
 		$ch_field = '子订单价格';
 	}
 
+	//查询原字段值
+	$sql = "SELECT $field_name as o_key FROM $response_info WHERE id = '{$id}'";
+	$res = $db->getOne($sql);
+	$o_key = $res['o_key'];
+
 	// 如果是商品代码，检测
 	if($field_name == 'goods_code'){
 		$sql = "SELECT * FROM goods_type WHERE goods_code ='{$new_key}'";
@@ -99,13 +109,12 @@ if(isset($_GET['change_info_field'])){
 	}else{
 		$sql = "UPDATE $response_info SET $field_name = '{$new_key}' WHERE id = '{$id}'";
 		$res = $db->execute($sql);
-
-		// 日志
-		$do = '订单【'.$order_id.'】修改【'.$ch_field.'】为【'.$new_key.'】';
-		oms_log($u_name,$do,'amazon_order',$station,$store);
 		echo 'ok';
 	}
 
+	// 日志
+	$do = '订单【'.$order_id.'】修改 <'.$ch_field.'>【'.$o_key.'】为【'.$new_key.'】';
+	oms_log($u_name,$do,'amazon_order',$station,$store);
 	
 }
 
@@ -175,7 +184,7 @@ if(isset($_POST['del_items'])){
 	$res = $db->execute($sql);
 
 	//日志
-	$do = ' [删除订单]：'.$del_log_items;
+	$do = ' [删除订单]：【'.$del_log_items.'】';
 	oms_log($u_name,$do,'amazon_order',$station,$store);
 
 	echo 'ok';
