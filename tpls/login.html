@@ -2,6 +2,19 @@
 .cal_wrapper{
   display: block !important;
 }
+.label{
+  color: #f44336;
+  font-weight: normal;
+}
+.label-danger{
+  background: #F2dede;
+}
+.label-success{
+  background: #dff0d8;
+}
+.label-warning{
+  background: #FcF8e3;
+}
 </style>
 <div ng-controller="plugCtrl">
   <div class="container-fluid">
@@ -55,7 +68,12 @@
             <h4>系统更新</h4>
             <ul>
               <li>2、时间区间的结束日期要大于一天。例如：搜索 2017-03-02 到 2017-03-03 的数据，请选择 [2017-03-02] [2017-03-04] 含义为从 2017-03-02 的0点 到 2017-03-04 的0点的数据。</li>
-              <li>1、完美支持浏览器前进后退操作。</li>
+              <li>1、订单背景色说明 <br><br>
+                  <span class="label bg_yellow">选中订单</span>
+                  <span class="label label-danger">验证不通过订单</span>
+                  <span class="label label-success">验证通过待合单</span>
+                  <span class="label label-warning">已经合单</span>
+                  <span class="label label-info">冻结订单</span></li>
             </ul>
 
           </div>

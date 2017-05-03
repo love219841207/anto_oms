@@ -5,13 +5,12 @@ $dir = dirname(__FILE__);
 
 set_time_limit(0);
 
-// 1111111111111111111111111111111111111111  同步亚马逊订单开始 1111111111111111111111111111111111111111 
-//获取亚马逊订单列表
+// 同步亚马逊订单列表
 if(isset($_GET['list_orders'])){
  	$store = $_GET['list_orders'];
  	$station = strtolower($_GET['station']);
 
- 	//日志
+	//日志
 	$do = '[START] 同步订单列表：'.$store;
 	oms_log($u_name,$do,'amazon_syn',$station,$store);
 
@@ -41,7 +40,6 @@ if(isset($_GET['list_orders'])){
 	$param['Version']          		= '2013-09-01'; 					//*
 	$param['OrderStatus.Status.1']    = 'Unshipped';			//ListOrders
 	$param['OrderStatus.Status.2']    = 'PartiallyShipped';		//ListOrders
-
 	$param['CreatedAfter']  = '2016-12-01T00:30:00Z';	//传值
 	$url = array();
 	foreach ($param as $key => $val) {
@@ -49,7 +47,6 @@ if(isset($_GET['list_orders'])){
 	    $val = str_replace("%7E", "~", rawurlencode($val));
 	    $url[] = "{$key}={$val}";
 	}
-
 	sort($url);
 
 	$arr   = implode('&', $url);
@@ -165,19 +162,11 @@ if(isset($_GET['list_orders'])){
 	echo json_encode($final_res);
 }
 
-//查询已存在订单号
-if(isset($_GET['has_orders'])){
-	$store = $_GET['has_orders'];
-	$sql = "SELECT order_id FROM amazon_response_list WHERE oms_has_me = 'has' ORDER BY id DESC";
-	$res = $db->getAll($sql);
-	echo json_encode($res);
-}
-
-//获取亚马逊订单详单
+// 获取亚马逊订单详单
 if(isset($_GET['get_order_info'])){
  	$store = $_GET['get_order_info'];
  	$station = strtolower($_GET['station']);
- 	
+
  	//日志
 	$do = '[START] 同步订单详单：'.$store;
 	oms_log($u_name,$do,'amazon_syn',$station,$store);
@@ -229,7 +218,6 @@ if(isset($_GET['get_order_info'])){
 		    $val = str_replace("%7E", "~", rawurlencode($val));
 		    $url[] = "{$key}={$val}";
 		}
-
 		sort($url);
 
 		$arr   = implode('&', $url);
@@ -284,36 +272,3 @@ if(isset($_GET['get_order_info'])){
 
  	echo json_encode($final_res);
 }
-
-// 1111111111111111111111111111111111111111  同步亚马逊订单结束 1111111111111111111111111111111111111111 
-
-
-
-// 2222222222222222222222222222222222222222  亚马逊订2222222222222222222222222222222222222222 
-
-
-
-//获取分页数
-if(isset($_GET['get_pagesize'])){
-	$get_pagesize = $_GET['get_pagesize'];
-	$sql = "SELECT page_size FROM user_oms WHERE u_num = '{$_SESSION['oms_u_num']}'";
-	$res = $db->getOne($sql);
-	echo $res['page_size'];
-}
-
-// 分配快递公司
-if(isset($_GET['express_company'])){
-	$store = $_GET['express_company'];
-
-	//	更新黑猫地址	（神奈川県，埼玉県，茨城県，群馬県，山梨県）
-	$sql = "UPDATE amazon_response_list SET express_company = 'ヤマト運輸',send_method = '宅急便' WHERE address LIKE '%神奈川県%' OR address LIKE '%埼玉県%' OR address LIKE '%茨城県%' OR address LIKE '%群馬県%' OR address LIKE '%山梨県%' AND store = '{$store}' AND order_line = '1'";
-	$res = $db->execute($sql);
-	echo 'ok';
-}
-
-
-
-
-
-
-

@@ -1,24 +1,15 @@
 var app=angular.module('myApp');
-app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$timeout','$compile', function($rootScope,$scope,$state,$http,$log,$timeout,$compile){
+app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$timeout','$compile', function($rootScope,$scope,$state,$http,$log,$timeout,$compile){
 
-// 00000000000000000000000000000000000000  亚马逊初始化开始 00000000000000000000000000000000000000
-    //默认tool_bar关闭
+// 初始化开始
+	//默认tool_bar关闭
     $scope.tool_1 = false;
     $scope.tool_2 = false;
     $scope.tool_3 = false;
 
-    //order_line select默认值
+    //筛选默认值
     $scope.search_order_line = 'mark';
 
-    //查询分页数
-    $http.get('/fuck/amazon/amazon_get_order.php', {params:{get_pagesize:'get'}
-    }).success(function(data) {
-        $scope.pageSize = data;
-    }).error(function(data) {
-        alert("系统错误，请联系管理员。");
-        $log.info("error:PageSize获取失败。");
-    });
-    
     //初始化数据view层
     $scope.init_list = function(){
         $scope.get_order_list_data = '';    //订单列表数据
@@ -33,7 +24,6 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
         $scope.syn_end = false; //同步关闭
     }
 
-    //筛选组
     //初始化日期筛选
     $scope.init_date_bar = function(){
         $scope.search_date = '';
@@ -71,6 +61,18 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
         $scope.init_s_key();    //初始化关键词
     }
 
+    //查询用户分页数
+    $http.get('/fuck/common/list_order.php', {
+    	params:{
+    		get_pagesize:'get'
+    	}
+    }).success(function(data) {
+        $scope.pageSize = data;
+    }).error(function(data) {
+        alert("系统错误，请联系管理员。error:PageSize获取失败。");
+        $log.info("error:PageSize获取失败。");
+    });
+
     //筛选组确定按钮
     $scope.filter_bar_submit = function(){
         if($scope.search_date != ''){
@@ -88,16 +90,24 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
         $scope.get_count();     //分配页码
         $scope.to_page('1');   //再次初始化数据
     }
-// 00000000000000000000000000000000000000  亚马逊初始化结束 00000000000000000000000000000000000000
-// 1111111111111111111111111111111111111111  同步亚马逊订单开始 1111111111111111111111111111111111111111 
 
-	//同步亚马逊订单列表
-    $scope.list_orders = function(){
-        $scope.init_list(); //初始化列表数据
-        $scope.init_filter_bar(); //初始化筛选组
+// 初始化结束
+// 订单同步开始
+	// 同步列表
+	$scope.list_orders = function(){
+        $scope.init_list(); 		// 初始化列表数据
+        $scope.init_filter_bar(); 	// 初始化筛选组
 
-        $scope.shadow('open','ss_syn','正在同步 Amazon 订单列表');
-        $http.get('/fuck/amazon/amazon_get_order.php', {params:{list_orders:$scope.now_store_bar,station:$scope.now_station}
+        if($scope.now_station == 'Amazon'){
+        	var url = '/fuck/amazon/get_order.php';
+        }
+
+        $scope.shadow('open','ss_syn','正在同步 '+$scope.now_store_bar+' 订单列表');
+        $http.get(url, {
+        	params:{
+        		list_orders:$scope.now_store_bar,
+        		station:$scope.now_station
+        	}
         }).success(function(data) {
             if(data.status == 'list_ok'){
                 $scope.shadow('open','ss_write','正在保存数据');
@@ -108,15 +118,19 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
             $scope.has_count = data.has_count;
             $log.info(data);
         }).error(function(data) {
-            alert("系统错误，请联系管理员。");
+            alert("系统错误，请联系管理员。error:亚马逊ListOrders通信失败。");
             $log.info("error:亚马逊ListOrders通信失败。");
         });
     }
 
-    //判断订单是否重复
+    // 判断订单是否重复
     $scope.has_orders = function(store){
         $scope.shadow('open','ss_read','判断重复数据');
-        $http.get('/fuck/amazon/amazon_get_order.php', {params:{has_orders:store}
+        $http.get('/fuck/common/list_order.php', {
+        	params:{
+        		has_orders:store,
+        		station:$scope.now_station
+        	}
         }).success(function(data) {
             $scope.has_orders_data = data;
             $timeout(function(){$scope.get_order_info(store)},1500);
@@ -129,8 +143,15 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
 
     //获取订单详单
     $scope.get_order_info = function(store){
-        $scope.shadow('open','ss_syn','正在同步 Amazon 订单详单');
-        $http.get('/fuck/amazon/amazon_get_order.php', {params:{get_order_info:store,station:$scope.now_station}
+    	if($scope.now_station == 'Amazon'){
+        	var url = '/fuck/amazon/get_order.php';
+        }
+        $scope.shadow('open','ss_syn','正在同步 '+$scope.now_store_bar+' 订单详单');
+        $http.get(url, {
+        	params:{
+        		get_order_info:store,
+        		station:$scope.now_station
+        	}
         }).success(function(data) {
             if(data.status == 'info_ok'){
                 $scope.plug_alert('success','订单同步完毕。','fa fa-smile-o');
@@ -143,16 +164,13 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
             }
             $log.info(data);
         }).error(function(data) {
-            alert("系统错误，请联系管理员。");
-            $log.info("error:服务器响应亚马逊ListOrderItems同步订单详单通信失败。");
+            alert("系统错误，请联系管理员。error:获取订单详单通信失败。");
+            $log.info("error:获取订单详单通信失败。");
         });
     }
-
-// 1111111111111111111111111111111111111111  同步亚马逊订单结束 1111111111111111111111111111111111111111 
-
-// 2222222222222222222222222222222222222222  亚马逊订单验证开始 2222222222222222222222222222222222222222 
-
-    // 获取需要验证订单数
+// 订单同步结束
+// 验证开始
+	// 获取需要验证订单数
     $scope.need_check_num = function(){
         $http.get('/fuck/common/check_order.php', {
             params:{
@@ -161,7 +179,7 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
         }).success(function(data) {
             $scope.need_check_number = data;
         }).error(function(data) {
-            alert("系统错误，请联系管理员。");
+            alert("系统错误，请联系管理员。error:获取需要验证订单数失败。");
             $log.info("error:获取需要验证订单数失败。");
         });
     }
@@ -185,15 +203,12 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
                 $log.info(data);
             }
         }).error(function(data) {
-            alert("系统错误，请联系管理员。");
+            alert("系统错误，请联系管理员。error:验证订单失败。");
             $log.info("error:验证订单失败。");
         });
     }
-
-// 2222222222222222222222222222222222222222  亚马逊订单验证结束 2222222222222222222222222222222222222222 
-
-// 3333333333333333333333333333333333333333  亚马逊列表展示开始 3333333333333333333333333333333333333333
-
+// 验证结束
+// 列表展示开始
     //查询总数
     $scope.get_count = function(e){     //分页组件
     $scope.list_order_count(); //统计标记和错误数
@@ -335,7 +350,6 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
             alert("系统错误，请联系管理员。");
         });         
     }
-
     //获取序列内容_分页查询
     $scope.to_page = function(page){
         $scope.loading_shadow('open'); //打开loading
@@ -369,9 +383,9 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
     }
 
     //修改search_order_line
-    $scope.change_serch_line = function(){
-        $scope.to_page(1);
+    $scope.change_search_line = function(){
         $scope.get_count();
+        $scope.to_page(1);
     }
 
     //修改分页参数
@@ -407,10 +421,9 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
             $log.info("error:正在加载数据列表失败。");
         });
     };
-// 3333333333333333333333333333333333333333  亚马逊列表展示结束 3333333333333333333333333333333333333333  
-
-// 4444444444444444444444444444444444444444  查看修改列表字段开始   4444444444444444444444444444444444444444
-    // 读取邮编地址
+// 列表展示结束
+// 修改列表字段开始
+	// 读取邮编地址
     $scope.read_oms_post = function(post_code){
         $http.get('/fuck/common/check_order.php', {
             params:{
@@ -453,8 +466,7 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
     //查看单个详情
     $scope.show_one_info = function(order_id){
         $scope.loading_shadow('open'); //打开loading
-        // 初始化参考地域
-        $scope.now_post_name = '';
+        $scope.now_post_name = '';	// 初始化参考地域
         $http.get('/fuck/common/change_order.php', {
             params:{
                 store:$scope.now_store_bar,
@@ -467,11 +479,29 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
                 $scope.one_res_list = data.res_list;
                 $scope.one_res_info = data.res_info;
             }else{
+                $log.info(data);
                 $scope.plug_alert('danger','系统错误，请联系管理员。','fa fa-ban');
             }
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
             $log.info("error:查看单个详情失败。");
+        });
+    }
+
+    // 查看库存数
+    $scope.check_repo = function(goods_code,id,order_id){
+    	$http.get('/fuck/common/change_order.php', {
+            params:{
+            	store:$scope.now_store_bar,
+                station:$scope.now_station,
+                check_repo:goods_code,
+                id:id
+            }
+        }).success(function(data) {
+        	$scope.show_one_info(order_id);
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:查看库存数失败。");
         });
     }
 
@@ -542,6 +572,7 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
                 new_key:new_key}
         }).success(function(data) {
             if(data == 'ok'){
+                $scope.to_page($scope.now_page);
                 $scope.show_one_info(order_id);
             }else{
                 $scope.plug_alert('danger','修改失败。','fa fa-ban');
@@ -554,7 +585,7 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
     }
 
     //修改info字段
-    $scope.change_info_field = function(id,field_name,index,amazon_order_id){
+    $scope.change_info_field = function(id,field_name,index,order_id){
         var dom = document.querySelector('#'+field_name+'_'+index);
         var new_key = angular.element(dom).val();
         
@@ -564,12 +595,13 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
                 station:$scope.now_station,
                 store:$scope.now_store_bar,
                 field_name:field_name,
-                order_id:amazon_order_id,
+                order_id:order_id,
                 new_key:new_key
             }
         }).success(function(data) {
             if(data == 'ok'){
-                $scope.show_one_info(amazon_order_id);
+                $scope.to_page($scope.now_page);
+                $scope.show_one_info(order_id);
             }else{
                 $scope.plug_alert('danger',data,'fa fa-ban');
             }
@@ -620,10 +652,9 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
             }
         }   
     }
-// 4444444444444444444444444444444444444444  查看修改列表字段结束   4444444444444444444444444444444444444444
-    
-// 5555555555555555555555555555555555555555  订单操作开始   5555555555555555555555555555555555555555
-    //全选
+// 修改列表字段结束
+// 订单操作开始
+	//全选
     $scope.check_all_item = function(){
         angular.forEach($scope.get_order_list_data, function(value, index){
             $scope.get_order_list_data[index].is_click = true;
@@ -659,7 +690,7 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
         var my_checked = new Array();
         angular.forEach($scope.get_order_list_data, function(value, index){
             if($scope.get_order_list_data[index].is_click == true){
-                my_checked.push("'"+$scope.get_order_list_data[index].amazon_order_id+"'");
+                my_checked.push("'"+$scope.get_order_list_data[index].order_id+"'");
             }
         })
         $scope.my_checked = my_checked;
@@ -667,8 +698,8 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
     }
 
     //备注按钮点击
-    $scope.change_note = function(amazon_order_id){
-        $scope.change_note_order_id = amazon_order_id;  //备注传值
+    $scope.change_note = function(order_id){
+        $scope.change_note_order_id = order_id;  //备注传值
         $scope.loading_shadow('open'); //打开loading
         //读取备注
         $http.get('/fuck/common/change_order.php', {
@@ -778,9 +809,214 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
             $log.info("error:删除订单失败。");
         });
     }
-// 5555555555555555555555555555555555555555  订单操作结束   5555555555555555555555555555555555555555
 
-    // 分配快递公司
+    // 检测商品代码
+    $scope.check_goods_code = function(){
+        var dom = document.querySelector('#add_goods_code');
+        var add_goods_code = angular.element(dom).val();
+        $http.get('/fuck/common/check_order.php', {
+            params:{
+                check_goods_code:add_goods_code
+            }
+        }).success(function(data) {
+            if(data == 'ok'){
+                
+            }else{
+                $log.info(data);
+                angular.element(dom).val('');   //清空
+                $scope.plug_alert('danger','无此商品代码。','fa fa-ban');
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:商品代码检测失败。");
+        });
+    }
+
+    // 运算代引
+    $scope.to_cod = function(order_id){
+        var post_data = {
+                to_cod:order_id,
+                station:$scope.now_station,
+                store:$scope.now_store_bar
+            };
+        $http.post('/fuck/common/change_order.php', post_data).success(function(data) {
+            if(data == 'ok'){
+                $scope.get_count();
+                $scope.to_page($scope.now_page);
+                $scope.show_one_info(order_id);
+            }else{
+                $log.info(data+'代引计算错误');
+                $scope.plug_alert('danger','严重！代引计算错误。','fa fa-ban');
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:代引计算错误。");
+        });
+    }
+
+    // 添加item
+    $scope.add_item = function(order_id){
+        var dom = document.querySelector('#add_goods_code');
+        var add_goods_code = angular.element(dom).val();
+        var dom = document.querySelector('#add_goods_num');
+        var add_goods_num = angular.element(dom).val();
+        var dom = document.querySelector('#add_item_price');
+        var add_item_price = angular.element(dom).val();
+        var dom = document.querySelector('#add_yfcode');
+        var add_yfcode = angular.element(dom).val();
+        var dom = document.querySelector('#add_cod_money');
+        var add_cod_money = angular.element(dom).val();
+
+        var post_data = {
+                add_item:add_goods_code,
+                add_goods_num:add_goods_num,
+                add_item_price:add_item_price,
+                add_yfcode:add_yfcode,
+                add_cod_money:add_cod_money,
+                order_id:order_id,
+                station:$scope.now_station,
+                store:$scope.now_store_bar};
+
+        $http.post('/fuck/common/change_order.php', post_data).success(function(data) {
+            if(data == 'ok'){
+                $scope.to_cod(order_id);    //计算COD
+            }else{
+                $log.info(data);
+                $scope.plug_alert('danger','添加项目失败，请联系管理员。','fa fa-ban');
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:添加item失败。");
+        });
+    }
+
+    // 删除item
+    $scope.del_item = function(order_id,id){
+        var post_data = {
+                del_item:id,
+                station:$scope.now_station,
+                store:$scope.now_store_bar};
+
+        $http.post('/fuck/common/change_order.php', post_data).success(function(data) {
+            if(data == 'ok'){
+                $scope.to_cod(order_id);    //计算COD
+            }else{
+                $log.info(data);
+                $scope.plug_alert('danger','删除项目失败，请联系管理员。','fa fa-ban');
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:删除item失败。");
+        });
+    }
+
+    //合单
+    //一键合单
+    $scope.onekey_common_order = function(){
+        $scope.shadow('open','ss_write','正在合单');
+        $scope.init_list(); //初始化列表数据
+        $http.get('/fuck/common/list_order.php', {
+            params:{
+                onekey_common_order:$scope.now_store_bar,
+                station:$scope.now_station
+            }
+        }).success(function(data) {
+            $scope.common_order_data = data;
+            $log.info(data)
+            $timeout(function(){$scope.shadow('close');},500); //关闭shadow
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:一键合单失败。");
+        });
+    }
+
+    //获取某个合单
+    $scope.get_common_order = function(send_id){
+        $scope.get_order_list_data = '';
+        $scope.loading_shadow('open'); //打开loading
+        $http.get('/fuck/common/list_order.php', {
+            params:{
+                get_common_order:send_id,
+                station:$scope.now_station
+            }
+        }).success(function(data) {
+            $scope.get_order_list_data = data;
+            $timeout(function(){$scope.loading_shadow('close');},300); //关闭loading
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:获取某个合单失败。");
+        });
+    }
+
+    //获取合单列表
+    $scope.list_common_order = function(){
+        $scope.init_list(); //初始化列表数据
+        $scope.loading_shadow('open'); //打开loading
+        $http.get('/fuck/common/list_order.php', {
+            params:{
+                list_common_order:$rootScope.now_store_bar,
+                station:$scope.now_station
+            }
+        }).success(function(data) {
+            $scope.common_order_data = data;
+            $timeout(function(){$scope.loading_shadow('close');},300); //关闭loading
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:获取合单列表失败。");
+        });
+    }
+
+    //拆单
+    $scope.break_common_order = function(send_id){
+        $scope.init_list(); //初始化列表数据
+        $scope.shadow('open','ss_write','正在拆：'+send_id);
+        $http.get('/fuck/common/list_order.php', {
+            params:{
+                break_common_order:send_id,
+                station:$scope.now_station,
+                store:$scope.now_store_bar
+            }
+        }).success(function(data) {
+            if(data == 'ok'){
+                $scope.plug_alert('success','拆单完成。','fa fa-smile-o');
+                $scope.list_common_order();
+            }else{
+                $scope.plug_alert('danger','拆单失败。','fa fa-ban');
+            }
+            $timeout(function(){$scope.shadow('close');},500); //关闭shadow
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:获取合单列表失败。");
+        });
+    }
+
+    //扣库存
+    $scope.sub_repo = function(){
+    	$scope.init_list(); //初始化列表数据
+    	$http.get('/fuck/common/list_order.php', {
+            params:{
+                sub_repo:'get',
+                station:$scope.now_station,
+                store:$scope.now_store_bar
+            }
+        }).success(function(data) {
+        	$log.info(data)
+            if(data == 'ok'){
+                $scope.plug_alert('success','扣库完成。','fa fa-smile-o');
+            }else{
+                $scope.plug_alert('danger','扣库失败。','fa fa-ban');
+            }
+            $timeout(function(){$scope.shadow('close');},500); //关闭shadow
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:扣库存失败。");
+        });
+    }
+// 订单操作结束
+
+
+
+// 分配快递公司
     $scope.express_company = function(){
         $scope.shadow('open','ss_write','正在分配配送公司');
         $http.get('/fuck/amazon/amazon_get_order.php', {
@@ -916,81 +1152,4 @@ app.controller('amazonCtrl', ['$rootScope','$scope','$state','$http','$log','$ti
         });
     }
 
-    
-
-//合单
-    //一键合单
-    $scope.onekey_common_order = function(){
-        $scope.shadow('open','ss_write','正在合单');
-        $scope.init_list(); //初始化列表数据
-        $http.get('/fuck/amazon/amazon_get_order.php', {
-            params:{
-                onekey_common_order:$rootScope.now_store_bar
-            }
-        }).success(function(data) {
-            $scope.common_order_data = data;
-            $timeout(function(){$scope.shadow('close');},500); //关闭shadow
-        }).error(function(data) {
-            alert("系统错误，请联系管理员。");
-            $log.info("error:一键合单失败。");
-        });
-    }
-
-    //获取某个合单
-    $scope.get_common_order = function(send_id){
-        $scope.get_order_list_data = '';
-        $scope.loading_shadow('open'); //打开loading
-        $http.get('/fuck/amazon/amazon_get_order.php', {
-            params:{
-                get_common_order:send_id
-            }
-        }).success(function(data) {
-            $scope.get_order_list_data = data;
-            $timeout(function(){$scope.loading_shadow('close');},300); //关闭loading
-        }).error(function(data) {
-            alert("系统错误，请联系管理员。");
-            $log.info("error:获取某个合单失败。");
-        });
-    }
-
-    //获取合单列表
-    $scope.list_common_order = function(){
-        $scope.init_list(); //初始化列表数据
-        $scope.loading_shadow('open'); //打开loading
-        $http.get('/fuck/amazon/amazon_get_order.php', {
-            params:{
-                list_common_order:$rootScope.now_store_bar
-            }
-        }).success(function(data) {
-            $scope.common_order_data = data;
-            $timeout(function(){$scope.loading_shadow('close');},300); //关闭loading
-        }).error(function(data) {
-            alert("系统错误，请联系管理员。");
-            $log.info("error:获取合单列表失败。");
-        });
-    }
-
-    //拆单
-    $scope.break_common_order = function(send_id){
-        $scope.init_list(); //初始化列表数据
-        $scope.shadow('open','ss_write','正在拆：'+send_id);
-        $http.get('/fuck/amazon/amazon_get_order.php', {
-            params:{
-                break_common_order:send_id
-            }
-        }).success(function(data) {
-            if(data == 'ok'){
-                $scope.plug_alert('success','拆单完成。','fa fa-smile-o');
-                $scope.list_common_order();
-            }else{
-                $scope.plug_alert('danger','拆单失败。','fa fa-ban');
-            }
-            $timeout(function(){$scope.shadow('close');},500); //关闭shadow
-        }).error(function(data) {
-            alert("系统错误，请联系管理员。");
-            $log.info("error:获取合单列表失败。");
-        });
-    }
-
-    
 }])

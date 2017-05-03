@@ -1,8 +1,7 @@
 <style>
 .table{margin-bottom: 10px;}
-.open_title{background: #fcf8e3;}
 </style>
-<div class="container-fluid" ng-controller="amazonCtrl">
+<div class="container-fluid" ng-controller="orderCtrl">
 	<div class="row inner_bar">
 		<div class="col-lg-10 ">
 			<div class="row" ng-show="now_store_bar">
@@ -14,7 +13,7 @@
 						ng-class="{'active':active_tools_1}"
 						ng-dblclick="
 							list_orders();
-							amazon_upload_list = false;
+							upload_list = false;
 							open_tool_bar = false;
 							open_page_btn = false;
 							is_active('active_tools','1')
@@ -30,7 +29,7 @@
 						ng-click="
 							init_list();
 							init_upload();
-							amazon_upload_list = true;
+							upload_list = true;
 							open_tool_bar = false;
 							open_page_btn = false;
 							is_active('active_tools','2')
@@ -47,7 +46,7 @@
 						ng-click="
 							check_all_field();
 							init_list();
-							amazon_upload_list = false;
+							upload_list = false;
 							open_tool_bar = false;
 							open_page_btn = false;
 							is_active('active_tools','3')
@@ -62,7 +61,7 @@
 						ng-class="{'active':active_tools_4}"
 						ng-click="
 							only_list();
-							amazon_upload_list = false;
+							upload_list = false;
 							open_tool_bar = true;
 							open_info_btn = true;
 							open_filter_btn = true;
@@ -113,7 +112,7 @@
 							open_page_btn = false;
 							is_active('active_tools','5')"
 						ng-hide="tool_1 || tool_2 || tool_3">
-						<i class="fa fa-inbox fa-fw"></i> 合单通过
+						<i class="fa fa-inbox fa-fw"></i> 合单扣库
 					</button>
 					
 					<!-- tool_1 日期筛选按钮组 -->
@@ -122,14 +121,14 @@
 					</button>
 
 					<button class="btn btn_fff btn-sm" ng-show="tool_1">
-						<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="search_order_line" ng-change="change_serch_line()">
+						<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="search_order_line" ng-change="change_search_line()">
 							<option ng-hide="now_list_order_count.mark_count==0" value="mark">标记</option>
 							<option ng-hide="now_list_order_count.no_info_count==0" value="0">无详单</option>
 							<option ng-hide="now_list_order_count.no_post_count==0" value="post_ok">卡邮编</option>
 							<option ng-hide="now_list_order_count.no_tel_count==0" value="tel_ok">卡电话</option>
 							<option ng-hide="now_list_order_count.no_sku_count==0" value="sku_ok">卡SKU</option>
 							<option ng-hide="now_list_order_count.no_yfcode_count==0" value="yfcode_ok">卡运代</option>
-							<option value="2">已通过</option>
+							<option value="2">已合单</option>
 							<option value="3">已冻结</option>
 							<option value="5">close</option>
 							<option value="all">所有单</option>
@@ -154,7 +153,7 @@
 						<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="search_field" ng-change="change_search_field()">
 							<option value="">字段筛选 ..</option>
 							<option value="id">ID</option>
-							<option value="amazon_order_id">订单号</option>
+							<option value="order_id">订单号</option>
 							<option value="buyer_email">邮箱</option>
 							<option value="buyer_name">购买人</option>
 							<option value="receive_name">收件人</option>
@@ -186,11 +185,19 @@
 							ng-class="{'active':active_tools_52}">
 						<i class="fa fa-file-text-o fa-fw"></i> 合单列表
 					</button>
+					<button type="button" 
+							id="active_tools53"
+							class="btn btn-default green active_tools" 
+							ng-show="tool_2" 
+							ng-click="sub_repo();is_active('active_tools','53')"
+							ng-class="{'active':active_tools_53}">
+						<i class="fa fa-cubes fa-fw"></i> 扣库存
+					</button>
 				</div>
 			</div>
 		</div>
 	</div>
-	<div ng-show="amazon_upload_list" class="col-lg-6 col-md-8 col-sm-10 mt70 animate slide-down">
+	<div ng-show="upload_list" class="col-lg-6 col-md-8 col-sm-10 mt70 animate slide-down">
 		<div class="panel panel-primary">
 			<div class="panel-heading">导入订单</div>
 			<div class="panel-body">
@@ -215,7 +222,7 @@
 						</div>
 						<div class="row mt10">
 							<div class="col-lg-12">
-								<button class="btn btn-primary btn-sm" ng-disabled="!fileForm.$valid || upload_store!=now_store_bar" ng-click="submit('amazon_add_list','txt','amazon')"><i class="fa fa-upload fa-fw"></i> 导 入</button>
+								<button ng-show="now_station=='Amazon'" class="btn btn-primary btn-sm" ng-disabled="!fileForm.$valid || upload_store!=now_store_bar" ng-click="submit('amazon_add_list','txt','amazon')"><i class="fa fa-upload fa-fw"></i> 导入-{{now_store_bar}}</button>
 							</div>
 						</div>
 						<div class="row mt10">
@@ -280,45 +287,47 @@
 		      	<button type="button" ng-hide="search_order_line=='-1'" ng-disabled="my_checked==''" ng-click="mark_orders('0')" class="btn btn-default btn-sm">
 		      		<i class="fa fa-star-o fa-fw yellow"></i>不标记
 		      	</button>
-		      	<button type="button" ng-click="check_items();get_mail_tpl()" ng-hide="search_order_line=='-1'" ng-disabled="my_checked==''" data-animation="am-fade-and-slide-top" data-template-url="/modal/amazon_send_mail.html" bs-modal="modal" class="btn btn-default btn-sm blue">
+		      	<button type="button" ng-click="check_items();get_mail_tpl()" ng-hide="search_order_line=='-1'" ng-disabled="my_checked==''" data-animation="am-fade-and-slide-top" data-template-url="/modal/send_mail.html" bs-modal="modal" class="btn btn-default btn-sm blue">
 		      		<i class="fa fa-envelope-o fa-fw"></i>发信
 		      	</button>
 		      	<button ng-show="search_order_line=='-1'" ng-disabled="my_checked==''" ng-click="amz_return()" class="btn btn-success btn-sm">
 		      		<i class="fa fa-undo fa-fw"></i>还原
 		      	</button>
-		      	<button ng-hide="search_order_line=='-1'" ng-disabled="my_checked==''" type="button" ng-click="check_items()" data-animation="am-fade-and-slide-top" data-template-url="/modal/amazon_del_item.html" bs-modal="modal" class="btn btn-default btn-sm red">
+		      	<button ng-hide="search_order_line=='-1'" ng-disabled="my_checked==''" type="button" ng-click="check_items()" data-animation="am-fade-and-slide-top" data-template-url="/modal/del_item.html" bs-modal="modal" class="btn btn-default btn-sm red">
 		      		<i class="fa fa-trash-o fa-fw"></i>删除
 		      	</button>
 		    </div>
 			<div ng-repeat="item in get_order_list_data track by $index" class="animate slide-left">
-				<table class="table table-condensed table-hover f12" >
-					<tr class="white" 
-						ng-class="{'danger':item.order_line=='0' || item.post_ok=='2'|| item.tel_ok=='2' || item.sku_ok=='2' || item.yfcode_ok=='2','bg_yellow':item.is_click}">
-						<td class="green pointer" ng-click="item.is_click=!item.is_click;check_items()">
+				<table class="table table-condensed table-hover table-bordered f12" >
+					<tr	ng-class="
+							{'danger':item.order_line=='0' || item.post_ok=='2' || item.tel_ok=='2' || item.sku_ok=='2' || item.yfcode_ok=='2','bg_yellow':item.is_click,
+							'success':item.order_line=='1' && item.post_ok=='1' && item.tel_ok=='1' && item.sku_ok=='1' && item.yfcode_ok=='1','warning':item.order_line=='2'}">
+						<td style="width:8%" class="green pointer" ng-click="item.is_click=!item.is_click;check_items()">
 							<i ng-show="open_check" class="fa red fa-lg fa-fw" ng-class="{'fa-square-o':item.is_click==false,'fa-check-square':item.is_click==true}"></i>
 							<!-- {{item.is_click}} -->
 							<i>{{item.id}}</i>
 							<i ng-show="item.is_mark==1" class="fa yellow fa-fw" ng-class="{'fa-star':item.is_mark==1}"></i>
 						</td>
-						<td class="blue"><span class="s_gray">订单号：</span>{{item.amazon_order_id}}</td>
-						<td class="green"><span class="s_gray">同步日期：</span>{{item.syn_day}}</td>
-						<td ><span class="s_gray">购买时间：</span>{{item.purchase_date}}</td>
-						<td class="green"><span class="s_gray">订单总金额：</span>{{item.order_total_money}}</td>
-						<td class="yellow" ng-hide="item.payment_method==''"><span class="s_gray">代引：</span>{{item.payment_method}}</td>
-						<td class="yellow" ng-hide="item.payment_method==''"><span><span class="s_gray">代引金额：</span>{{item.pay_money}}</span></td>
-						<td>
-							<button data-animation="am-fade-and-slide-top" data-template-url="/modal/amazon_show_one_info.html" bs-modal="modal" class="btn btn-xs btn-primary mr5" ng-click="show_one_info(item.amazon_order_id)">详单</button>
-							<button data-animation="am-fade-and-slide-top" data-template-url="/modal/amazon_note.html" bs-modal="modal" class="btn btn-xs btn-info" ng-click="change_note(item.amazon_order_id)">备注</button>
+						<td style="width:17%" class="blue"><span class="s_gray">订单号：</span>{{item.order_id}}</td>
+						<td style="width:15%" class="green"><span class="s_gray">同步日期：</span>{{item.syn_day}}</td>
+						<td style="width:30%"><span class="s_gray">购买时间：</span>{{item.purchase_date}}</td>
+						<td style="width:11%" class="green"><span class="s_gray">总金额：</span>{{item.order_total_money}}</td>
+						<td style="width:11%" class="yellow">
+							<span ng-hide="!item.payment_method"><span class="s_gray">代引金额：</span>
+						{{item.pay_money}}</span></td>
+						<td style="width:8%" class="tagc">
+							<button data-animation="am-fade-and-slide-top" data-template-url="/modal/show_one_info.html" bs-modal="modal" class="btn btn-xs btn-primary mr5" ng-click="show_one_info(item.order_id)">详单</button>
+							<button data-animation="am-fade-and-slide-top" data-template-url="/modal/note.html" bs-modal="modal" class="btn btn-xs btn-info" ng-click="change_note(item.order_id)">备注</button>
 						</td>
 					</tr>
-					<tr ng-show="info_box" class="white" ng-class="{'danger':item.order_line=='0' || item.post_ok=='2'|| item.tel_ok=='2' || item.sku_ok=='2' || item.yfcode_ok=='2','bg_yellow':item.is_click}">
+					<tr ng-show="info_box" class="white">
 						<td>发货ID：{{item.send_id}}</td>
 						<td class=""><span class="s_gray">购买人：</span>{{item.buyer_name}}</td>
 						<td class="green"><span class="s_gray">电话：</span>{{item.phone}}</td>
 						<td class="blue"><span class="s_gray">邮箱：</span>{{item.buyer_email}}</td>
 						<td colspan="4"><span class="s_gray">国家/货币：</span>{{item.country}}/{{item.order_total_currency}}</td>	
 					</tr>
-					<tr ng-show="info_box" class="white" ng-class="{'danger':item.order_line=='0' || item.post_ok=='2'|| item.tel_ok=='2' || item.sku_ok=='2' || item.yfcode_ok=='2','bg_yellow':item.is_click}">
+					<tr ng-show="info_box" class="white">
 						<td></td>
 						<td class="yellow"><span class="s_gray">收件人：</span>{{item.receive_name}}</td>
 						<td class="blue"><span class="s_gray">邮编：</span>{{item.post_code}}</td>
@@ -342,7 +351,7 @@
 				<table class="table table-condensed">
 					<tr ng-repeat="item in has_orders_data track by $index">
 						<td>{{$index+1}}</td>
-						<td class="red">{{item.amazon_order_id}}</td>
+						<td class="red">{{item.order_id}}</td>
 					</tr>
 				</table>
 			</div>

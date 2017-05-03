@@ -1,0 +1,213 @@
+<div class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" style="width:600px;">
+    <div class="modal-content">
+      <div class="modal-header modal-drag">
+        <i class="fa fa-close f20 close" ng-click="$hide()"></i>
+        <h4 class="modal-title blue"><i class="fa fa-fw fa-info-circle"></i> 订单 <span class="red">{{item.order_id}}</span> 详单</h4>
+      </div>
+      <div class="modal-body">
+        <table class="tagl table table-hover table-bordered table-condensed" ng-repeat="item in one_res_list track by $index">
+          <tr class="bg-success green">
+            <td style="width:20%;">基本信息</td>
+            <td>ID <span class="blue">{{item.id}}</span> </td>
+          </tr>
+          <tr ng-show="item.payment_method=='COD'">
+            <td class="red warning">代引金额</td>
+            <td class="red warning">{{item.pay_money}}</td>
+          </tr>
+          <tr>
+            <td class="s_gray">购买人</td>
+            <td class="s_gray">{{item.buyer_name}}</td>
+          </tr>
+          <tr>
+            <td class="s_gray">邮箱</td>
+            <td class="s_gray">{{item.buyer_email}}
+              <i ng-click="aa_email=!aa_email" 
+                class="fa fa-edit fa-fw pointer"
+                ></i>
+              <div ng-show="aa_email" class="input-group">
+                <input class="form-control input-sm" placeholder="邮箱 更改为..." type="text" id="buyer_email">
+                <span class="input-group-btn">
+                  <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="need_check_list('buyer_email',item.order_id);aa_email=!aa_email">确定</button>
+                </span>
+              </div>
+            </td>
+          </tr>
+            <td class="s_gray">收件人</td>
+            <td class="s_gray">{{item.receive_name}}
+              <i ng-click="aa_receive_name=!aa_receive_name" 
+                class="fa fa-edit fa-fw pointer"
+                ></i>
+              <div ng-show="aa_receive_name" class="input-group">
+                <input class="form-control input-sm" placeholder="收件人 更改为..." type="text" id="receive_name">
+                <span class="input-group-btn">
+                  <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="need_check_list('receive_name',item.order_id);aa_receive_name=!aa_receive_name">确定</button>
+                </span>
+              </div>
+            </td>
+          <tr>
+            <td class="s_gray">电话</td>
+            <td class="s_gray" ng-class="{'danger red':item.tel_ok==2}">{{item.phone}}
+              <i ng-click="aa_phone=!aa_phone" 
+                class="fa fa-edit fa-fw pointer"
+                ></i>
+              <div ng-show="aa_phone" class="input-group">
+                <input class="form-control input-sm" placeholder="电话 更改为..." type="text" ng-keyup="check_phone()" id="phone">
+                <span class="input-group-btn">
+                  <button class="btn btn-default btn-danger btn-sm" ng-disabled="!pass_phone" type="button" ng-click="need_check_list('phone',item.order_id);aa_phone=!aa_phone">确定</button>
+                </span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="s_gray">邮编</td>
+            <td class="s_gray" ng-class="{'danger red':item.post_ok==2}">{{item.post_code}}
+                <i ng-click="aa_post_addr=!aa_post_addr" 
+                class="fa fa-edit fa-fw pointer"
+                ></i>
+                <i class="fa fa-lightbulb-o fa-fw pointer blue" ng-click="read_oms_post(item.post_code)"></i></td>
+          </tr>
+          <tr class="blue warning" ng-repeat="item in now_post_name track by $index" ng-show="now_post_name">
+            <td>参考地域</td>
+            <td>{{item.post_name}}</td>
+          </tr>
+          <tr>
+            <td class="s_gray">地址</td>
+            <td class="s_gray" ng-class="{'danger red':item.post_ok==2}">{{item.address}}</td>
+          </tr>
+          <tr ng-show="aa_post_addr">
+            <td><input type="text" id="new_post_code" style="width:80px;padding-left: 4px;" placeholder=".. 新的邮编"></td>
+            <td><input type="text" id="new_address" style="width:400px;padding-left: 4px;" placeholder=".. 新的地址"></td>
+          </tr>
+          <tr ng-show="aa_post_addr">
+            <td colspan="2"><div class="btn btn-warning btn-xs f14 pull-right" ng-click="change_post_addr(item.order_id)">&nbsp;&nbsp;&nbsp;&nbsp;修&nbsp;&nbsp;&nbsp;正&nbsp;&nbsp;&nbsp;</div></td>
+          </tr>
+        </table>
+        <table class="tagl table table-hover table-condensed table-bordered" ng-repeat="item in one_res_info track by $index">
+          <tr class="bg-info blue">
+            <td style="width:20%;">订单信息</td>
+            <td>订单号 <span class="yellow">{{item.order_id}}</span>
+                <div class="pull-right">
+                  <div ng-show="del_btn" class="btn btn-xs btn-danger" ng-click="del_item(item.order_id,item.id)">删除</div>
+                  <i ng-click="del_btn=!del_btn" class="fa fa-trash-o red pointer fa-fw"></i>
+                </div>
+            </td>
+          </tr>
+          <tr>
+            <td width="20%" class="s_gray">品名</td>
+            <td class="s_gray">{{item.goods_title}}
+            <!-- <i ng-click="aa_goods_title=!aa_goods_title" 
+                class="fa fa-edit fa-fw pointer"
+                ></i>
+              <div ng-show="aa_goods_title" class="input-group">
+                <input class="form-control input-sm" placeholder="品名 更改为..." type="text" id="goods_title_{{$index}}">
+                <span class="input-group-btn">
+                  <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="change_info_field(item.id,'goods_title',$index,item.order_id);aa_goods_title=!aa_goods_title">确定</button>
+                </span>
+              </div> -->
+            </td>
+          </tr>
+          <tr>
+            <td class="s_gray">SKU</td>
+            <td class="green">{{item.sku}}</td>
+          </tr>
+          <tr>
+            <td class="s_gray">商品代码</td>
+            <td class="green" ng-class="{'danger red':item.sku_ok==2}">{{item.goods_code}}
+              <i ng-click="check_repo(item.goods_code,item.id,item.order_id)" 
+                class="fa fa-cubes fa-fw pointer"
+                ></i>
+                <span class="red">{{item.b_repo_num}}</span>
+              <i ng-click="aa_goods_code=!aa_goods_code" 
+                class="fa fa-edit fa-fw pointer"
+                ></i>
+              <div ng-show="aa_goods_code" class="input-group">
+                <input class="form-control input-sm" placeholder="商品代码 更改为..." type="text" id="goods_code_{{$index}}">
+                <span class="input-group-btn">
+                  <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="change_info_field(item.id,'goods_code',$index,item.order_id);aa_goods_code=!aa_goods_code">确定</button>
+                </span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="s_gray">数量</td>
+            <td class="blue">{{item.goods_num}}
+              <!-- <i ng-click="aa_goods_num=!aa_goods_num" 
+                class="fa fa-edit fa-fw pointer"
+                ></i>
+              <div ng-show="aa_goods_num" class="input-group">
+                <input class="form-control input-sm" placeholder="数量 更改为..." type="number" id="goods_num_{{$index}}">
+                <span class="input-group-btn">
+                  <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="change_info_field(item.id,'goods_num',$index,item.order_id);aa_goods_num=!aa_goods_num">确定</button>
+                </span>
+              </div> -->
+            </td>
+          </tr>
+          <tr>
+            <td class="s_gray">子订单价格</td>
+            <td class="yellow">{{item.item_price}}
+              <!-- <i ng-click="aa_item_price=!aa_item_price" 
+                  class="fa fa-edit fa-fw pointer"
+                  ></i>
+                <div ng-show="aa_item_price" class="input-group">
+                  <input class="form-control input-sm" placeholder="子订单价格 更改为..." type="number" id="item_price_{{$index}}">
+                  <span class="input-group-btn">
+                    <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="change_info_field(item.id,'item_price',$index,item.order_id);aa_item_price=!aa_item_price">确定</button>
+                  </span>
+                </div> -->
+              </td>
+          </tr>
+          <tr>
+            <td class="s_gray">运费金额</td>
+            <td>{{item.yf_money}}</td>
+          </tr>
+          <tr ng-show="item.cod_money>1">
+            <td class="s_gray">COD Money</td>
+            <td class="yellow">{{item.cod_money}}</td>
+          </tr>
+        </table>
+        <div class="clearfix"></div>
+        <div class="btn btn-xs pull-right" ng-class="{'btn-success':!add_btn,'btn-danger':add_btn}" ng-click="add_btn = !add_btn"><i class="fa fa-fw" ng-class="{'fa-plus':!add_btn,'fa-close':add_btn}"></i></div>
+        <div class="clearfix"></div>
+        <div class="col-lg-8 col-lg-offset-2 animate slide-down" ng-show="add_btn">
+          <table class="table table-responsive mt20">
+            <tr>
+              <td class="s_gray">商品代码</td>
+              <td><input type="text" ng-blur="check_goods_code()" id="add_goods_code" class="form-control input-sm"></td>
+            </tr>
+            <tr>
+              <td class="s_gray">数 量</td>
+              <td><input type="number" id="add_goods_num" class="form-control input-sm"></td>
+            </tr>
+            <tr>
+              <td class="s_gray">子订单价格</td>
+              <td><input type="number" id="add_item_price" class="form-control input-sm"></td>
+            </tr>
+            <tr>
+              <td class="s_gray">运费代码</td>
+              <td><input type="text" id="add_yfcode" class="form-control input-sm"></td>
+            </tr>
+            <tr>
+              <td class="s_gray">运费金额</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="s_gray">COD Money</td>
+              <td><input type="number" id="add_cod_money" class="form-control input-sm"></td>
+            </tr>
+            <tr>
+              <td colspan="2" class="red">注：非代引订单不用填写 COD Money。</td>
+            </tr>
+            <tr>
+              <td colspan="2"><div class="btn btn-success btn-xs col-lg-6 col-lg-offset-3" ng-click="add_item(item.order_id);add_btn=!add_btn"><i class="fa fa-plus fa-fw"></i> 新 增</div></td>
+            </tr>
+          </table>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="$hide()">关 闭</button>
+      </div>
+    </div>
+  </div>
+</div>

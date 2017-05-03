@@ -39,7 +39,7 @@ if(isset($_GET['import_file'])){
         	//如果没有填入数目，则跳过
         }else{
         	//查询是否已经包含
-            $sql = "SELECT count(1) as c_count FROM amazon_express WHERE amazon_order_id = '{$strs[0]}'";
+            $sql = "SELECT count(1) as c_count FROM amazon_express WHERE order_id = '{$strs[0]}'";
             $res = $db->getOne($sql);
 
             if($res['c_count']==1){
@@ -47,7 +47,7 @@ if(isset($_GET['import_file'])){
             	continue;
             }else{
             	//插入
-		 		$sql = "INSERT INTO amazon_express (amazon_order_id,express_name,express_method,express_num,is_money) VALUES('{$strs[0]}','{$strs[5]}','{$strs[7]}','{$strs[6]}','{$strs[8]}')";
+		 		$sql = "INSERT INTO amazon_express (order_id,express_name,express_method,express_num,is_money) VALUES('{$strs[0]}','{$strs[5]}','{$strs[7]}','{$strs[6]}','{$strs[8]}')";
 		 		$res = $db->execute($sql);
 		 		$insert_num = $insert_num + 1;	
             }

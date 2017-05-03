@@ -71,13 +71,12 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
         })
-    //亚马逊订单管理
-        //获取订单
-        .state('site.amazon_get_orders',{
-            url: '/amazon_get_orders/{data}',
+        // 订单操作
+        .state('site.order',{
+            url: '/order/{data}',
             views:{
                 'show@site':{
-                    templateUrl: 'tpls/amazon/amazon_get_orders.html',
+                    templateUrl: 'tpls/common/order.html',
                     controller: function($scope){
                         $scope.status.isopen3 = false;
                         $scope.status.isopen2 = false;
@@ -88,6 +87,8 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
         })
+    //亚马逊订单管理
+        
 
         //订单发货
         .state('site.amazon_send_express',{

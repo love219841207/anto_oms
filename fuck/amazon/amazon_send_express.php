@@ -64,7 +64,7 @@ if(isset($_GET['send_express'])){
 			<Message>
             <MessageID>'.$message_id.'</MessageID>
             <OrderFulfillment>
-            <AmazonOrderID>'.$value['amazon_order_id'].'</AmazonOrderID>
+            <AmazonOrderID>'.$value['order_id'].'</AmazonOrderID>
             <FulfillmentDate>'.$param['Timestamp'].'</FulfillmentDate>
             <FulfillmentData>
             <CarrierName>'.$value['express_name'].'</CarrierName>
@@ -79,7 +79,7 @@ if(isset($_GET['send_express'])){
 			<Message>
             <MessageID>'.$message_id.'</MessageID>
             <OrderFulfillment>
-            <AmazonOrderID>'.$value['amazon_order_id'].'</AmazonOrderID>
+            <AmazonOrderID>'.$value['order_id'].'</AmazonOrderID>
             <FulfillmentDate>'.$param['Timestamp'].'</FulfillmentDate>
             <FulfillmentData>
             <CarrierName>'.$value['express_name'].'</CarrierName>

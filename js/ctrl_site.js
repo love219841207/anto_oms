@@ -186,7 +186,7 @@ app.controller('topCtrl', ['$rootScope','$scope','$state','$stateParams','$http'
     }
 }]) 
 
-app.controller('FileController', ['$rootScope','$scope', 'Upload' , '$timeout','$http','$log', function($rootScope,$scope,Upload,$timeout,$http,$log) {
+app.controller('FileController', ['$rootScope','$scope','$state', 'Upload' , '$timeout','$http','$log', function($rootScope,$scope,$state,Upload,$timeout,$http,$log) {
     $scope.uploadImg = '';
 
     //初始化上传
@@ -260,7 +260,7 @@ app.controller('FileController', ['$rootScope','$scope', 'Upload' , '$timeout','
                 $log.info(file_name+" 日本邮编导入失败");
             });
         }else if(file_name == 'amazon_add_list'){   //导入订单
-            $http.get('/fuck/amazon/amazon_get_order.php', {params:{import_add_list:file_name,store:$scope.upload_store}
+            $http.get('/fuck/amazon/amazon_import_list.php', {params:{import_add_list:file_name,store:$scope.upload_store}
             }).success(function(data) {
                 console.log(data)
                 $scope.count_order = data.count_order;
@@ -268,7 +268,10 @@ app.controller('FileController', ['$rootScope','$scope', 'Upload' , '$timeout','
                 $scope.has_count = data.has_count;
                 if(data.status == 'ok'){
                     $scope.plug_alert('success','数据导入完成。','fa fa-smile-o');
-                    $scope.check_list_post($scope.upload_store);
+                    $timeout(function(){$scope.shadow('close');},1000);
+                    // 刷新
+                    var time=new Date().getTime();
+                    $state.go('site.order',{data:time});
                 }
             }).error(function(data) {
                 alert("系统错误，请联系管理员。");

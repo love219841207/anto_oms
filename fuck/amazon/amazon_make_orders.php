@@ -43,7 +43,7 @@ if(isset($_GET['format_order'])){
 		list.buyer_email,
 		'{$store}',
 		'{$u_name}',
-		'{$today}' from amazon_response_list list,amazon_response_info info where list.amazon_order_id = info.amazon_order_id AND list.order_line = '3' AND list.store = '{$store}'";
+		'{$today}' from amazon_response_list list,amazon_response_info info where list.order_id = info.order_id AND list.order_line = '3' AND list.store = '{$store}'";
 	$res = $db->execute($sql);
 
 	// // 格式化表代引金额

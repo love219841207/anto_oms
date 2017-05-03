@@ -9,7 +9,7 @@
 				<span class="am-fade" ng-show="side_bar_1"> {{now_store_bar}}</span>
 				<i class="pull-right fa fa-angle-right weight" ng-class="{'scroll_90': status.isopen1,'scroll_0': !status.isopen1}"></i>
 	     	 	</uib-accordion-heading>
-				<div ui-sref="site.amazon_get_orders" ui-sref-active="active" class="list-group-item">
+				<div ui-sref="site.order" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-file-text-o ml5"></i>
 					<span class="am-fade" ng-show="side_bar_1"> 订单操作</span>
 				</div>
@@ -21,7 +21,7 @@
 					<i class="fa fa-fw fa-plus ml5"></i>
 					<span class="am-fade" ng-show="side_bar_1"> 导入快递单</span>
 				</div>
-				<div ui-sref="site.amazon_send_express" ui-sref-active="active" class="list-group-item">
+				<div ui-sref="site.amazon_get_orders" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-truck ml5"></i>
 					<span class="am-fade" ng-show="side_bar_1"> 订单发货</span>
 				</div>

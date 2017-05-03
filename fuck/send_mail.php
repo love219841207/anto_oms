@@ -105,11 +105,11 @@ if(isset($_POST['send_mail'])){
 		$mail_html = $res['mail_html'];
 	echo	$mail_txt = $res['mail_txt'];die;
 
-		// 遍历amazon_order_id
+		// 遍历order_id
 		$order_ids = explode(',', $order_items);
 		foreach ($order_ids as $value) {
 			//读取邮箱、收件人等信息
-		echo	$sql = "SELECT * FROM amazon_response_list WHERE amazon_order_id = '{$value}'";
+		echo	$sql = "SELECT * FROM amazon_response_list WHERE order_id = '{$value}'";
 			$res = $db->getOne($sql);
 
 			$to_mail = $res['buyer_email'];	#邮箱
