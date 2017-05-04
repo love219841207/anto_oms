@@ -418,7 +418,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             $scope.now_list_order_count = data;
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
-            $log.info("error:正在加载数据列表失败。");
+            $log.info("error:加载列表标记、统计错误数，在分页上显示表失败。");
         });
     };
 // 列表展示结束
@@ -922,7 +922,6 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             }
         }).success(function(data) {
             $scope.common_order_data = data;
-            $log.info(data)
             $timeout(function(){$scope.shadow('close');},500); //关闭shadow
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
@@ -992,6 +991,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
 
     //扣库存
     $scope.sub_repo = function(){
+    	 $scope.shadow('open','ss_write','正在扣库存，请稍后。');
     	$scope.init_list(); //初始化列表数据
     	$http.get('/fuck/common/list_order.php', {
             params:{
@@ -1013,32 +1013,6 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         });
     }
 // 订单操作结束
-
-
-
-// 分配快递公司
-    $scope.express_company = function(){
-        $scope.shadow('open','ss_write','正在分配配送公司');
-        $http.get('/fuck/amazon/amazon_get_order.php', {
-            params:{
-                express_company:$scope.now_store_bar
-            }
-        }).success(function(data) {
-            if(data == 'ok'){
-                $timeout(function(){$scope.fu_bag();},2000);
-            }else{
-                $log.info(data);
-                $scope.plug_alert('danger','快递公司分配失败。','fa fa-ban');
-                $timeout(function(){$scope.shadow('close');},1000); //关闭shadow
-            }
-        }).error(function(data) {
-            alert("系统错误，请联系管理员。");
-            $log.info("error:拆福袋失败。");
-        });
-    }
-
-
-
 
 
     //订单发货列表查询

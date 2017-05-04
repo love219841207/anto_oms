@@ -1,0 +1,109 @@
+<div class="container-fluid" ng-controller="readysendCtrl">
+	<button class="btn btn-warning mt10" ng-click="" id="filter_btn" ng-show="send_table"><i class="fa fa-gift fa-fw"></i>打包</button>
+	<div class="btn-group ml10 mt10 pull-right">
+		<div class="btn btn-default btn-sm">
+			<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="search_field" ng-change="change_search_field()">
+				<option value="">字段筛选 ..</option>
+				<option value="oms_id">OMS-ID</option>
+				<option value="send_id">合单发货ID</option>
+				<option value="goods_code">商品代码</option>
+				<option value="who_name">收件人</option>
+			</select>
+			<span ng-hide="search_field==''">
+				<input class="key_words blue" ng-model="search_key" type="text" placeholder="关键词 ..">
+			</span>
+		</div>
+		<button class="btn btn-primary" ng-click="filter_bar_submit()" id="filter_btn"><i class="fa fa-search fa-fw"></i></button>
+	</div>
+	<div class="clearfix"></div>
+
+	<table ng-show="send_table" class="table-responsive table table-bordered table-condensed table-hover table-striped mt20 f12">
+		<tr class="blue info animate slide-right">
+			<td class="tagc"><i class="fa-sort-numeric-asc fa fa-fw"></i></td>
+			<td>合单发货ID</td>
+			<td>OMS-ID</td>
+			<td>快递公司</td>
+			<td>配送方式</td>
+			<td>包裹ID</td>
+			<!-- <td>SKU（出品SKU，客人看）</td> -->
+			<td>商品代码</td>
+			<td>数量</td>
+			<!-- <td>电话</td> -->
+			<!-- <td>邮编</td> -->
+			<!-- <td>地址</td> -->
+			<td>收件人</td>
+			<td>代引金额</td>
+			<!-- <td>是否自提</td> -->
+			<!-- <td>email</td> -->
+			<!-- <td>店铺</td> -->
+			<td class="tagc">担当</td>
+			<td class="tagc">操作</td>
+		</tr>
+		<tr class="animate slide-right" ng-repeat="item in send_table track by $index" ng-class="{'bg_yellow':bg_yellow}" ng-dblclick="bg_yellow=!bg_yellow">
+			<td class="tagc">{{$index+1}}</td>
+			<td>{{item.send_id}}</td>
+			<td>{{item.oms_id}}</td>
+			<td>{{item.express_company}}</td>
+			<td>{{item.send_method}}</td>
+			<td>{{item.pack_id}}</td>
+			<!-- <td>{{item.sku}}</td> -->
+			<td ng-class="{'red danger':item.error_info=='no_sku'}">{{item.goods_code}}
+			<i ng-click="aa_goods_code=!aa_goods_code" 
+                class="fa fa-edit fa-fw pointer blue"
+                ng-show="item.error_info=='no_sku'"
+                ></i>
+              	<div ng-show="aa_goods_code" class="input-group">
+                	<input class="form-control input-sm" placeholder="商品代码 更正为..." type="text" id="goods_code{{item.id}}">
+                	<span class="input-group-btn">
+                  		<button class="btn btn-default btn-danger btn-sm" type="button" ng-click="change_format_field('goods_code',item.id,item.goods_code,item.oms_id);aa_goods_code=!aa_goods_code">确定</button>
+               		</span>
+              	</div>
+			</td>
+			<td class="tagr">{{item.out_num}}</td>
+			<!-- <td>{{item.who_tel}}</td> -->
+			<!-- <td>{{item.who_post}}</td> -->
+			<!-- <td>{{item.who_house}}</td> -->
+			<td>{{item.who_name}}</td>
+			<!-- <td>{{item.is_cod}}</td> -->
+			<td class="tagr" ng-class="{'red':item.is_cod=='COD'}">{{item.due_money}}</td>
+			<!-- <td>{{item.need_not_send}}</td> -->
+			<!-- <td>{{item.who_email}}</td> -->
+			<!-- <td>{{item.store_name}}</td> -->
+			<td class="blue tagc">{{item.holder}}</td>
+			<td class="blue tagc"><div class="btn btn-primary btn-xs">操作</div></td>
+		</tr>
+	</table>
+	<nav>
+		<ul class="pagination" ng-show="send_table">
+			<li class="pointer" ng-class="{disabled:pre_overflow}">
+				<a class="pg_s" ng-click="Previous()">
+					<span class="fa fa-angle-left fa-fw"></span>上一页
+				</a>
+			</li>
+			<li class="pointer" ng-repeat="page in pageList track by $index" ng-class="{active: isActivePage(page)}" >
+				<a ng-click="selectPage(page)" >{{ page }}</a>
+			</li>
+			<li class="pointer" ng-class="{disabled:next_overflow}">
+				<a ng-click="Next()">
+					下一页<span class="fa fa-angle-right fa-fw"></span>
+				</a>
+			</li>
+			<li class="disabled">
+				<a>
+					每页
+					<input class="page_size tagr" type="number" min="1" ng-model='change_size' ng-value="pageSize" ng-change="change_pageSize()">条</a>
+			</li>
+			<li>
+				<a>
+					<select ng-model="selectOption" style="margin:-3px 1px -2px 1px;" ng-change="clickOption()" ng-options="c as c for c in pageOption">
+						<option value="">跳转</option>
+					</select>
+				</a>
+			</li>
+			<li class="disabled">
+				<a class="pg_e">Page {{selPage}} / {{pages}}</a>
+				<a>共 {{all_num}} 条</a>
+			</li>
+		</ul>
+	</nav>
+</div>

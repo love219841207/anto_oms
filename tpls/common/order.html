@@ -130,7 +130,7 @@
 							<option ng-hide="now_list_order_count.no_yfcode_count==0" value="yfcode_ok">卡运代</option>
 							<option value="2">已合单</option>
 							<option value="3">已冻结</option>
-							<option value="5">close</option>
+							<option value="6">close</option>
 							<option value="all">所有单</option>
 							<option value="-1">回收站</option>
 						</select>
@@ -163,7 +163,7 @@
 						</span>
 					</button>
 					<!-- 筛选确定按钮 -->
-					<button class="btn btn-danger" ng-click="filter_bar_submit()" id="filter_btn" ng-show="tool_1">确定</button>
+					<button class="btn btn-primary" ng-click="filter_bar_submit()" id="filter_btn" ng-show="tool_1"><i class="fa fa-search fa-fw"></i></button>
 
 					<!-- 合单按钮组 -->
 					<button type="button" class="btn btn-default" ng-show="tool_2" ng-click="tool_2=!tool_2">
@@ -301,7 +301,7 @@
 				<table class="table table-condensed table-hover table-bordered f12" >
 					<tr	ng-class="
 							{'danger':item.order_line=='0' || item.post_ok=='2' || item.tel_ok=='2' || item.sku_ok=='2' || item.yfcode_ok=='2','bg_yellow':item.is_click,
-							'success':item.order_line=='1' && item.post_ok=='1' && item.tel_ok=='1' && item.sku_ok=='1' && item.yfcode_ok=='1','warning':item.order_line=='2'}">
+							'success':item.order_line=='1' && item.post_ok=='1' && item.tel_ok=='1' && item.sku_ok=='1' && item.yfcode_ok=='1','warning':item.order_line=='2','info':item.order_line=='3'}">
 						<td style="width:8%" class="green pointer" ng-click="item.is_click=!item.is_click;check_items()">
 							<i ng-show="open_check" class="fa red fa-lg fa-fw" ng-class="{'fa-square-o':item.is_click==false,'fa-check-square':item.is_click==true}"></i>
 							<!-- {{item.is_click}} -->

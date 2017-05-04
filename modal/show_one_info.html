@@ -24,6 +24,7 @@
             <td class="s_gray">{{item.buyer_email}}
               <i ng-click="aa_email=!aa_email" 
                 class="fa fa-edit fa-fw pointer"
+                ng-hide="item.order_line>3"
                 ></i>
               <div ng-show="aa_email" class="input-group">
                 <input class="form-control input-sm" placeholder="邮箱 更改为..." type="text" id="buyer_email">
@@ -37,6 +38,7 @@
             <td class="s_gray">{{item.receive_name}}
               <i ng-click="aa_receive_name=!aa_receive_name" 
                 class="fa fa-edit fa-fw pointer"
+                ng-hide="item.order_line>3"
                 ></i>
               <div ng-show="aa_receive_name" class="input-group">
                 <input class="form-control input-sm" placeholder="收件人 更改为..." type="text" id="receive_name">
@@ -50,6 +52,7 @@
             <td class="s_gray" ng-class="{'danger red':item.tel_ok==2}">{{item.phone}}
               <i ng-click="aa_phone=!aa_phone" 
                 class="fa fa-edit fa-fw pointer"
+                ng-hide="item.order_line>3"
                 ></i>
               <div ng-show="aa_phone" class="input-group">
                 <input class="form-control input-sm" placeholder="电话 更改为..." type="text" ng-keyup="check_phone()" id="phone">
@@ -64,8 +67,9 @@
             <td class="s_gray" ng-class="{'danger red':item.post_ok==2}">{{item.post_code}}
                 <i ng-click="aa_post_addr=!aa_post_addr" 
                 class="fa fa-edit fa-fw pointer"
+                ng-hide="item.order_line>3"
                 ></i>
-                <i class="fa fa-lightbulb-o fa-fw pointer blue" ng-click="read_oms_post(item.post_code)"></i></td>
+                <i class="fa fa-lightbulb-o fa-fw pointer blue" ng-hide="item.order_line>3" ng-click="read_oms_post(item.post_code)"></i></td>
           </tr>
           <tr class="blue warning" ng-repeat="item in now_post_name track by $index" ng-show="now_post_name">
             <td>参考地域</td>
@@ -83,69 +87,71 @@
             <td colspan="2"><div class="btn btn-warning btn-xs f14 pull-right" ng-click="change_post_addr(item.order_id)">&nbsp;&nbsp;&nbsp;&nbsp;修&nbsp;&nbsp;&nbsp;正&nbsp;&nbsp;&nbsp;</div></td>
           </tr>
         </table>
-        <table class="tagl table table-hover table-condensed table-bordered" ng-repeat="item in one_res_info track by $index">
+        <table class="tagl table table-hover table-condensed table-bordered" ng-repeat="item2 in one_res_info track by $index">
           <tr class="bg-info blue">
             <td style="width:20%;">订单信息</td>
-            <td>订单号 <span class="yellow">{{item.order_id}}</span>
-                <div class="pull-right">
-                  <div ng-show="del_btn" class="btn btn-xs btn-danger" ng-click="del_item(item.order_id,item.id)">删除</div>
+            <td>订单号 <span class="yellow">{{item2.order_id}}</span>
+                <div class="pull-right" ng-hide="item.order_line>3">
+                  <div ng-show="del_btn" class="btn btn-xs btn-danger" ng-click="del_item(item2.order_id,item2.id)">删除</div>
                   <i ng-click="del_btn=!del_btn" class="fa fa-trash-o red pointer fa-fw"></i>
                 </div>
             </td>
           </tr>
           <tr>
             <td width="20%" class="s_gray">品名</td>
-            <td class="s_gray">{{item.goods_title}}
+            <td class="s_gray">{{item2.goods_title}}
             <!-- <i ng-click="aa_goods_title=!aa_goods_title" 
                 class="fa fa-edit fa-fw pointer"
                 ></i>
               <div ng-show="aa_goods_title" class="input-group">
                 <input class="form-control input-sm" placeholder="品名 更改为..." type="text" id="goods_title_{{$index}}">
                 <span class="input-group-btn">
-                  <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="change_info_field(item.id,'goods_title',$index,item.order_id);aa_goods_title=!aa_goods_title">确定</button>
+                  <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="change_info_field(item2.id,'goods_title',$index,item2.order_id);aa_goods_title=!aa_goods_title">确定</button>
                 </span>
               </div> -->
             </td>
           </tr>
           <tr>
             <td class="s_gray">SKU</td>
-            <td class="green">{{item.sku}}</td>
+            <td class="green">{{item2.sku}}</td>
           </tr>
           <tr>
             <td class="s_gray">商品代码</td>
-            <td class="green" ng-class="{'danger red':item.sku_ok==2}">{{item.goods_code}}
-              <i ng-click="check_repo(item.goods_code,item.id,item.order_id)" 
+            <td class="green" ng-class="{'danger red':item2.sku_ok==2}">{{item2.goods_code}}
+              <i ng-click="check_repo(item2.goods_code,item2.id,item2.order_id)" 
                 class="fa fa-cubes fa-fw pointer"
+                ng-hide="item.order_line>3"
                 ></i>
-                <span class="red">{{item.b_repo_num}}</span>
+                <span class="red">{{item2.b_repo_num}}</span>
               <i ng-click="aa_goods_code=!aa_goods_code" 
                 class="fa fa-edit fa-fw pointer"
+                ng-hide="item.order_line>3"
                 ></i>
               <div ng-show="aa_goods_code" class="input-group">
                 <input class="form-control input-sm" placeholder="商品代码 更改为..." type="text" id="goods_code_{{$index}}">
                 <span class="input-group-btn">
-                  <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="change_info_field(item.id,'goods_code',$index,item.order_id);aa_goods_code=!aa_goods_code">确定</button>
+                  <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="change_info_field(item2.id,'goods_code',$index,item2.order_id);aa_goods_code=!aa_goods_code">确定</button>
                 </span>
               </div>
             </td>
           </tr>
           <tr>
             <td class="s_gray">数量</td>
-            <td class="blue">{{item.goods_num}}
+            <td class="blue">{{item2.goods_num}}
               <!-- <i ng-click="aa_goods_num=!aa_goods_num" 
                 class="fa fa-edit fa-fw pointer"
                 ></i>
               <div ng-show="aa_goods_num" class="input-group">
                 <input class="form-control input-sm" placeholder="数量 更改为..." type="number" id="goods_num_{{$index}}">
                 <span class="input-group-btn">
-                  <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="change_info_field(item.id,'goods_num',$index,item.order_id);aa_goods_num=!aa_goods_num">确定</button>
+                  <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="change_info_field(item2.id,'goods_num',$index,item2.order_id);aa_goods_num=!aa_goods_num">确定</button>
                 </span>
               </div> -->
             </td>
           </tr>
           <tr>
             <td class="s_gray">子订单价格</td>
-            <td class="yellow">{{item.item_price}}
+            <td class="yellow">{{item2.item_price}}
               <!-- <i ng-click="aa_item_price=!aa_item_price" 
                   class="fa fa-edit fa-fw pointer"
                   ></i>
@@ -159,15 +165,15 @@
           </tr>
           <tr>
             <td class="s_gray">运费金额</td>
-            <td>{{item.yf_money}}</td>
+            <td>{{item2.yf_money}}</td>
           </tr>
-          <tr ng-show="item.cod_money>1">
+          <tr ng-show="item2.cod_money>1">
             <td class="s_gray">COD Money</td>
-            <td class="yellow">{{item.cod_money}}</td>
+            <td class="yellow">{{item2.cod_money}}</td>
           </tr>
         </table>
         <div class="clearfix"></div>
-        <div class="btn btn-xs pull-right" ng-class="{'btn-success':!add_btn,'btn-danger':add_btn}" ng-click="add_btn = !add_btn"><i class="fa fa-fw" ng-class="{'fa-plus':!add_btn,'fa-close':add_btn}"></i></div>
+        <div class="btn btn-xs pull-right" ng-hide="item.order_line>3" ng-class="{'btn-success':!add_btn,'btn-danger':add_btn}" ng-click="add_btn = !add_btn"><i class="fa fa-fw" ng-class="{'fa-plus':!add_btn,'fa-close':add_btn}"></i></div>
         <div class="clearfix"></div>
         <div class="col-lg-8 col-lg-offset-2 animate slide-down" ng-show="add_btn">
           <table class="table table-responsive mt20">

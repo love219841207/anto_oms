@@ -71,143 +71,190 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
         })
-        // 订单操作
-        .state('site.order',{
-            url: '/order/{data}',
+
+    //亚马逊
+        // 亚马逊订单操作
+        .state('site.amazon_order',{
+            url: '/amazon_order/{data}',
             views:{
                 'show@site':{
                     templateUrl: 'tpls/common/order.html',
                     controller: function($scope){
-                        $scope.status.isopen3 = false;
-                        $scope.status.isopen2 = false;
                         $scope.status.isopen1 = true;
+                        $scope.status.isopen2 = false;
+                        $scope.status.isopen3 = false;
                         $scope.status.isopen4 = false;
                         $scope.status.isopen5 = false;
+                        $scope.status.isopen6 = false;
                     }
                 }
             }
         })
-    //亚马逊订单管理
-        
 
-        //订单发货
-        .state('site.amazon_send_express',{
-            url: '/amazon_send_express/{data}',
+        // 亚马逊上传快递单
+        .state('site.amazon_syn_express',{
+            url: '/amazon_syn_express/{data}',
             views:{
                 'show@site':{
-                    templateUrl: 'tpls/amazon/amazon_send_express.html',
+                    templateUrl: 'tpls/amazon/amazon_syn_express.html',
                     controller: function($scope){
-                        $scope.status.isopen3 = false;
-                        $scope.status.isopen2 = false;
                         $scope.status.isopen1 = true;
+                        $scope.status.isopen2 = false;
+                        $scope.status.isopen3 = false;
                         $scope.status.isopen4 = false;
                         $scope.status.isopen5 = false;
+                        $scope.status.isopen6 = false;
+                    }
+                }
+            }
+        })
+
+    // 乐天
+        // 乐天订单操作
+        .state('site.rakuten_order',{
+            url: '/rakuten_order/{data}',
+            views:{
+                'show@site':{
+                    templateUrl: 'tpls/common/order.html',
+                    controller: function($scope){
+                        $scope.status.isopen1 = false;
+                        $scope.status.isopen2 = true;
+                        $scope.status.isopen3 = false;
+                        $scope.status.isopen4 = false;
+                        $scope.status.isopen5 = false;
+                        $scope.status.isopen6 = false;
+                    }
+                }
+            }
+        })
+
+        // 乐天上传快递单
+        .state('site.rakuten_syn_express',{
+            url: '/rakuten_syn_express/{data}',
+            views:{
+                'show@site':{
+                    templateUrl: 'tpls/amazon/amazon_syn_express.html',
+                    controller: function($scope){
+                        $scope.status.isopen1 = false;
+                        $scope.status.isopen2 = true;
+                        $scope.status.isopen3 = false;
+                        $scope.status.isopen4 = false;
+                        $scope.status.isopen5 = false;
+                        $scope.status.isopen6 = false;
+                    }
+                }
+            }
+        })
+
+    // 雅虎
+        // 雅虎订单操作
+        .state('site.yahoo_order',{
+            url: '/yahoo_order/{data}',
+            views:{
+                'show@site':{
+                    templateUrl: 'tpls/common/order.html',
+                    controller: function($scope){
+                        $scope.status.isopen1 = false;
+                        $scope.status.isopen2 = false;
+                        $scope.status.isopen3 = true;
+                        $scope.status.isopen4 = false;
+                        $scope.status.isopen5 = false;
+                        $scope.status.isopen6 = false;
+                    }
+                }
+            }
+        })
+
+        // 雅虎上传快递单
+        .state('site.yahoo_syn_express',{
+            url: '/yahoo_syn_express/{data}',
+            views:{
+                'show@site':{
+                    templateUrl: 'tpls/amazon/amazon_syn_express.html',
+                    controller: function($scope){
+                        $scope.status.isopen1 = false;
+                        $scope.status.isopen2 = false;
+                        $scope.status.isopen3 = true;
+                        $scope.status.isopen4 = false;
+                        $scope.status.isopen5 = false;
+                        $scope.status.isopen6 = false;
+                    }
+                }
+            }
+        })
+
+    //发货操作
+        // 待出单
+        .state('site.ready_send',{
+            url: '/ready_send/{data}',
+            views:{
+                'show@site':{
+                    templateUrl: 'tpls/common/ready_send.html',
+                    controller: function($scope){
+                        $scope.status.isopen1 = false;
+                        $scope.status.isopen2 = false;
+                        $scope.status.isopen3 = false;
+                        $scope.status.isopen4 = true;
+                        $scope.status.isopen5 = false;
+                        $scope.status.isopen6 = false;
                     }
                 }
             }
         })
 
         //生成发货单
-        .state('site.amazon_make_orders',{
-            url: '/amazon_make_orders/{data}',
+        .state('site.make_send',{
+            url: '/make_send/{data}',
             views:{
                 'show@site':{
-                    templateUrl: 'tpls/amazon/amazon_make_orders.html',
+                    templateUrl: 'tpls/common/make_send.html',
                     controller: function($scope){
-                        $scope.status.isopen3 = false;
+                        $scope.status.isopen1 = false;
                         $scope.status.isopen2 = false;
-                        $scope.status.isopen1 = true;
-                        $scope.status.isopen4 = false;
+                        $scope.status.isopen3 = false;
+                        $scope.status.isopen4 = true;
                         $scope.status.isopen5 = false;
+                        $scope.status.isopen6 = false;
                     }
                 }
             }
         })
 
-        //导入物流单
-        .state('site.amazon_import_express',{
-            url: '/amazon_import_express/{data}',
+        //已出单
+        .state('site.close_send',{
+            url: '/close_send/{data}',
             views:{
                 'show@site':{
-                    templateUrl: 'tpls/amazon/amazon_import_express.html',
+                    templateUrl: 'tpls/common/close_send.html',
                     controller: function($scope){
-                        $scope.status.isopen3 = false;
+                        $scope.status.isopen1 = false;
                         $scope.status.isopen2 = false;
-                        $scope.status.isopen1 = true;
-                        $scope.status.isopen4 = false;
+                        $scope.status.isopen3 = false;
+                        $scope.status.isopen4 = true;
                         $scope.status.isopen5 = false;
+                        $scope.status.isopen6 = false;
                     }
                 }
             }
         })
 
-        //单品发货
-        .state('site.amazon_send_one',{
-            url: '/amazon_send_one/{data}',
+        //导入快递单
+        .state('site.import_express',{
+            url: '/import_express/{data}',
             views:{
                 'show@site':{
-                    templateUrl: 'tpls/amazon/amazon_send_one.html',
+                    templateUrl: 'tpls/common/import_express.html',
                     controller: function($scope){
-                        $scope.status.isopen3 = false;
+                        $scope.status.isopen1 = false;
                         $scope.status.isopen2 = false;
-                        $scope.status.isopen1 = true;
-                        $scope.status.isopen4 = false;
+                        $scope.status.isopen3 = false;
+                        $scope.status.isopen4 = true;
                         $scope.status.isopen5 = false;
+                        $scope.status.isopen6 = false;
                     }
                 }
             }
-        })
-
-
-    // //模板管理
-    //     //sku字段
-    //     .state('site.skufield',{
-    //         url: '/skufield/{data}',
-    //         params : { respond: '3'},
-    //         views:{
-    //             'show@site':{
-    //                 templateUrl: 'tpls/field/skufield.html'
-    //             }
-    //         }
-    //     })
-    //     //通用字段
-    //     .state('site.commonfield',{
-    //         url: '/commonfield/{data}',
-    //         params : { respond: '3'},
-    //         views:{
-    //             'show@site':{
-    //                 templateUrl: 'tpls/field/commonfield.html'
-    //             }
-    //         }
-    //     })
-    //     //雅虎字段
-    //     .state('site.yahoofield',{
-    //         url: '/yahoofield/{data}',
-    //         params : { respond: '3'},
-    //         views:{
-    //             'show@site':{
-    //                 templateUrl: 'tpls/field/yahoofield.html'
-    //             }
-    //         }
-    //     })
-    //     //乐天字段
-    //     .state('site.rakutenfield',{
-    //         url: '/rakutenfield/{data}',
-    //         views:{
-    //             'show@site':{
-    //                 templateUrl: 'tpls/field/rakutenfield.html'
-    //             }
-    //         }
-    //     })
-    //     //亚马逊字段
-    //     .state('site.amazonfield',{
-    //         url: '/amazonfield/{data}',
-    //         views:{
-    //             'show@site':{
-    //                 templateUrl: 'tpls/field/amazonfield.html'
-    //             }
-    //         }
-    //     })
+        })        
 
     //账号管理
         //PageSize
@@ -220,8 +267,9 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen1 = false;
                         $scope.status.isopen2 = false;
                         $scope.status.isopen3 = false;
-                        $scope.status.isopen4 = true;
-                        $scope.status.isopen5 = false;
+                        $scope.status.isopen4 = false;
+                        $scope.status.isopen5 = true;
+                        $scope.status.isopen6 = false;
                     }
                 }
             }
@@ -237,8 +285,9 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen1 = false;
                         $scope.status.isopen2 = false;
                         $scope.status.isopen3 = false;
-                        $scope.status.isopen4 = true;
-                        $scope.status.isopen5 = false;
+                        $scope.status.isopen4 = false;
+                        $scope.status.isopen5 = true;
+                        $scope.status.isopen6 = false;
                     }
                 }
             }
@@ -254,8 +303,9 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen1 = false;
                         $scope.status.isopen2 = false;
                         $scope.status.isopen3 = false;
-                        $scope.status.isopen4 = true;
-                        $scope.status.isopen5 = false;
+                        $scope.status.isopen4 = false;
+                        $scope.status.isopen5 = true;
+                        $scope.status.isopen6 = false;
                     }
                 }
             }
@@ -273,7 +323,8 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen2 = false;
                         $scope.status.isopen3 = false;
                         $scope.status.isopen4 = false;
-                        $scope.status.isopen5 = true;
+                        $scope.status.isopen5 = false;
+                        $scope.status.isopen6 = true;
                     }
                 }
             }
@@ -290,7 +341,8 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen2 = false;
                         $scope.status.isopen3 = false;
                         $scope.status.isopen4 = false;
-                        $scope.status.isopen5 = true;
+                        $scope.status.isopen5 = false;
+                        $scope.status.isopen6 = true;
                     }
                 }
             }
@@ -307,7 +359,8 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen2 = false;
                         $scope.status.isopen3 = false;
                         $scope.status.isopen4 = false;
-                        $scope.status.isopen5 = true;
+                        $scope.status.isopen5 = false;
+                        $scope.status.isopen6 = true;
                     }
                 }
             }
@@ -324,7 +377,8 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen2 = false;
                         $scope.status.isopen3 = false;
                         $scope.status.isopen4 = false;
-                        $scope.status.isopen5 = true;
+                        $scope.status.isopen5 = false;
+                        $scope.status.isopen6 = true;
                     }
                 }
             }
@@ -341,7 +395,8 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen2 = false;
                         $scope.status.isopen3 = false;
                         $scope.status.isopen4 = false;
-                        $scope.status.isopen5 = true;
+                        $scope.status.isopen5 = false;
+                        $scope.status.isopen6 = true;
                     }
                 }
             },

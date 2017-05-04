@@ -58,7 +58,7 @@ if(isset($_POST['items_count'])){
     $end_date = $_POST['end_date'];
     $search_order_line = $_POST['search_order_line'];
     $search_field = $_POST['search_field'];
-    $search_key = $_POST['search_key'];
+    $search_key = addslashes($_POST['search_key']);
 
     $response_list = $station.'_response_list';
 
@@ -129,7 +129,7 @@ if(isset($_POST['get_order_list'])){
     $start_date = $_POST['start_date'];
     $end_date = $_POST['end_date'];
     $search_field = $_POST['search_field'];
-    $search_key = $_POST['search_key'];
+    $search_key = addslashes($_POST['search_key']);
 
     $response_list = $station.'_response_list';
 
@@ -190,4 +190,37 @@ if(isset($_POST['get_order_list'])){
     }
 
 	echo json_encode($res);
+}
+
+// ------------------------- 查询ready_send数据 -------------------------
+
+// 查询ready_send数目
+if(isset($_POST['ready_send_count'])){
+    $search_field = $_POST['search_field'];
+    $search_key = addslashes($_POST['search_key']);
+
+    if($search_field == ''){   //0没有筛选条件  
+        $sql = "SELECT count(1) as cc FROM send_table WHERE item_line = 0";
+    }else{
+        $sql = "SELECT count(1) as cc FROM send_table WHERE item_line = 0 AND {$search_field} LIKE '%{$search_key}%'";
+    }
+    
+    $res = $db->getOne($sql);
+    echo $res['cc'];
+}
+
+//查询订单列表数据
+if(isset($_POST['ready_send_data'])){
+    $page_size = $_POST['page_size'];
+    $start = $_POST['start'];
+    $search_field = $_POST['search_field'];
+    $search_key = addslashes($_POST['search_key']);
+
+    if($search_field == ''){   //0没有筛选条件
+        $sql = "SELECT * FROM send_table WHERE item_line = 0 ORDER BY id DESC LIMIT {$start},{$page_size}";
+    }else{
+        $sql = "SELECT * FROM send_table WHERE item_line = 0 AND {$search_field} LIKE '%{$search_key}%' ORDER BY id DESC LIMIT {$start},{$page_size}";
+    }
+    $res = $db->getAll($sql);
+    echo json_encode($res);
 }
