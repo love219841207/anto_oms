@@ -124,4 +124,19 @@ app.controller('usersCtrl', ['$scope','$state','$http','$log', function($scope,$
             $scope.all_store[index].has = false;
         })
     }
+
+    //可发货
+    $scope.can_send = function(u_num){
+        $http.get('/fuck/systems/users_manage.php', {params:{can_send:u_num}
+        }).success(function(data) {
+            if(data == 'ok'){
+                $scope.get_user_list(); 
+                // var time=new Date().getTime();
+                // $state.go('site.users_manage',{data:time});
+            }
+        }).error(function(data) {
+            alert("严重！获取修改可发货失败。");
+            $log.info(data);
+        });
+    }
 }])

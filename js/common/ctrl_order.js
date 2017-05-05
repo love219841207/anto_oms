@@ -478,6 +478,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
                 $timeout(function(){$scope.loading_shadow('close');},300); //关闭loading 
                 $scope.one_res_list = data.res_list;
                 $scope.one_res_info = data.res_info;
+                $scope.one_res_logs = data.res_logs;
             }else{
                 $log.info(data);
                 $scope.plug_alert('danger','系统错误，请联系管理员。','fa fa-ban');

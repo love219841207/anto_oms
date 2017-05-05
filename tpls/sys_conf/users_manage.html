@@ -22,6 +22,7 @@
 									<td><i class="fa-sort-numeric-asc fa fa-fw"></i></td>
 									<td><i class="fa fa-hashtag fa-fw"></i> 工 号</td>
 									<td><i class="fa fa-user fa-fw"></i> 员 工</td>
+									<td><i class="fa fa-send fa-fw"></i> 发货操作</td>
 									<td><i class="fa fa-amazon fa-fw"></i> 亚马逊</td>
 									<td><i class="fa fa-registered fa-fw"></i> 乐 天</td>
 									<td><i class="fa fa-yahoo fa-fw"></i> 雅 虎</td>
@@ -31,6 +32,7 @@
 									<td class="italic success green">{{$index+1}}</td>
 									<td>{{item.u_num}}</td>
 									<td>{{item.u_name}}</td>
+									<td>{{item.can_send | replace_symbol}} <i class="green pointer fa fa-hand-pointer-o fa-fw" ng-click="can_send(item.u_num)"></i></td>
 									<td class="tagl green">
 										&nbsp;{{item.u_amazon | replace_symbol}} <i ng-hide="item.u_num<1001" data-animation="am-fade-and-slide-top" data-template-url="/modal/change_user_store.html" bs-modal="modal" ng-click="change_usaer_store_modal('Amazon',item.u_num)" class="fa fa-edit pointer s_gray"></i>
 									</td>

@@ -311,9 +311,14 @@ if(isset($_GET['change_post_addr'])){
 			$sql = "UPDATE $response_list SET post_code = '{$new_post_code}',address = '{$new_address}',post_ok = 1 WHERE order_id = '{$order_id}'";
 		    $res = $db->execute($sql);
 
+		    //查询OMS-ID
+			$sql = "SELECT id FROM $response_list WHERE order_id = '{$order_id}'";
+			$res = $db->getOne($sql);
+			$oms_id = $res['id'];
+
 		    // 日志
 			$do = '订单【'.$order_id.'】修改 <邮编/地址>【'.$o_post_code.'/'.$o_address.'】为【'.$new_post_code.'/'.$new_address.'】';
-			oms_log($u_name,$do,'amazon_order',$station,$store);
+			oms_log($u_name,$do,'amazon_order',$station,$store,$oms_id);
 
 			echo 'ok';
 		}else{

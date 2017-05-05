@@ -73,7 +73,7 @@ if(isset($_GET['onekey_common_order'])){
 		$do = '[合单]：'.$all_one;
 	}
 	$play = $station.'_order';
-	oms_log($u_name,$do,$play,$station,$store);
+	oms_log($u_name,$do,$play,$station,$store,'-');
 
 	echo json_encode($res);
 }
@@ -114,7 +114,7 @@ if(isset($_GET['break_common_order'])){
 	//日志
 	$do = '[拆单]：'.$send_id;
 	$play = $station.'_order';
-	oms_log($u_name,$do,$play,$station,$store);
+	oms_log($u_name,$do,$play,$station,$store,'-');
 	echo 'ok';
 }
 

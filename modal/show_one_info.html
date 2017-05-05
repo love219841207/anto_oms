@@ -209,6 +209,18 @@
             </tr>
           </table>
         </div>
+        <table ng-show="one_res_logs!=''" class="tagl table table-hover table-condensed table-bordered mt20">
+          <tr class="warning">
+            <td style="width:50px;" class="tagc">操作人</td>
+            <td>操作日志</td>
+            <td style="width:138px;">时 间</td>
+          </tr>
+          <tr style="color: #8a6d3b;" ng-repeat="item_log in one_res_logs track by $index">
+            <td class="tagc">{{item_log.who_name}}</td>
+            <td>{{item_log.who_do}}</td>
+            <td class="tagc">{{item_log.do_time}}</td>
+          </tr>
+        </table>
         <div class="clearfix"></div>
       </div>
       <div class="modal-footer">

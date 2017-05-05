@@ -22,10 +22,20 @@ if(isset($_GET['show_one_info'])){
 	$sql = "SELECT * FROM $response_info WHERE order_id = '{$order_id}'";
 	$res_info = $db->getAll($sql);
 
+	// 查询 OMS-ID
+	$sql = "SELECT id FROM $response_list WHERE order_id = '{$order_id}'";
+   	$res = $db->getOne($sql);
+   	$oms_id = $res['id'];
+
+	//查询操作日志
+	$sql = "SELECT * FROM oms_log WHERE oms_id = '{$oms_id}' ORDER BY id DESC";
+	$res_logs = $db->getAll($sql);
+
 	//final_res
 	$final_res['status'] = 'ok';
 	$final_res['res_list'] = $res_list;
 	$final_res['res_info'] = $res_info;
+	$final_res['res_logs'] = $res_logs;
 	echo json_encode($final_res);
 }
 
@@ -56,9 +66,10 @@ if(isset($_GET['change_list_field'])){
 	$response_list = $station.'_response_list';
 
 	//查询原字段值
-	$sql = "SELECT $field_name as o_key FROM $response_list WHERE order_id = '{$order_id}'";
+	$sql = "SELECT id,$field_name as o_key FROM $response_list WHERE order_id = '{$order_id}'";
 	$res = $db->getOne($sql);
 	$o_key = $res['o_key'];
+	$oms_id = $res['id'];
 
 	if($field_name == 'phone'){
 		$ch_field = '电话';
@@ -75,8 +86,8 @@ if(isset($_GET['change_list_field'])){
 	$res = $db->execute($sql);
 
 	// 日志
-	$do = '订单【'.$order_id.'】修改 <'.$ch_field.'>【'.$o_key.'】为【'.$new_key.'】';
-	oms_log($u_name,$do,'amazon_order',$station,$store);
+	$do = '修改 <'.$ch_field.'>【'.$o_key.'】为【'.$new_key.'】';
+	oms_log($u_name,$do,'amazon_order',$station,$store,$oms_id);
 
 	echo 'ok';
 }
@@ -145,9 +156,14 @@ if(isset($_GET['change_info_field'])){
 		echo 'ok';
 	}
 
+	//查询OMS-ID
+	$sql = "SELECT id FROM $response_list WHERE order_id = '{$order_id}'";
+	$res = $db->getOne($sql);
+	$oms_id = $res['id'];
+
 	// 日志
-	$do = '订单【'.$order_id.'】修改 <'.$ch_field.'>【'.$o_key.'】为【'.$new_key.'】';
-	oms_log($u_name,$do,'amazon_order',$station,$store);
+	$do = '修改 <'.$ch_field.'>【'.$o_key.'】为【'.$new_key.'】';
+	oms_log($u_name,$do,'amazon_order',$station,$store,$oms_id);
 	
 }
 
@@ -161,9 +177,15 @@ if(isset($_GET['change_note'])){
 
 	$sql = "UPDATE $response_list SET order_note = '{$new_key}' WHERE order_id = '{$order_id}'";
 	$res = $db->execute($sql);
+
+	//查询OMS-ID
+	$sql = "SELECT id FROM $response_list WHERE order_id = '{$order_id}'";
+	$res = $db->getOne($sql);
+	$oms_id = $res['id'];
+
 	// 日志
-	$do = '订单【'.$order_id.'】备注为【'.$new_key.'】';
-	oms_log($u_name,$do,'amazon_order',$station,$store);
+	$do = '备注为【'.$new_key.'】';
+	oms_log($u_name,$do,'amazon_order',$station,$store,$oms_id);
 	echo 'ok';
 }
 
@@ -210,7 +232,7 @@ if(isset($_POST['del_items'])){
 
 	//日志
 	$do = ' [删除订单]：【'.$del_log_items.'】';
-	oms_log($u_name,$do,'amazon_order',$station,$store);
+	oms_log($u_name,$do,'amazon_order',$station,$store,'-');
 
 	echo 'ok';
 }
@@ -231,7 +253,7 @@ if(isset($_POST['return_items'])){
 
 	//日志
 	$do = ' [还原订单]：【'.$res_log_items.'】';
-	oms_log($u_name,$do,'amazon_order',$station,$store);
+	oms_log($u_name,$do,'amazon_order',$station,$store,'-');
 
 	echo 'ok';
 }
@@ -328,7 +350,12 @@ if(isset($_POST['add_item'])){
 		$do = ' [新增一单]：订单号【'.$order_id.'】商品代码【'.$add_item.'】数量【'.$add_goods_num.'】子订单价格【'.$add_item_price.'】运费代码【'.$add_yfcode.'】运费金额【'.$add_yf_money.'】';
 	}
 
-	oms_log($u_name,$do,'amazon_order',$station,$store);
+	//查询OMS-ID
+	$sql = "SELECT id FROM $response_list WHERE order_id = '{$order_id}'";
+	$res = $db->getOne($sql);
+	$oms_id = $res['id'];
+
+	oms_log($u_name,$do,'amazon_order',$station,$store,$oms_id);
 	echo 'ok';
 }
 
@@ -337,18 +364,26 @@ if(isset($_POST['del_item'])){
 	$id = $_POST['del_item'];
 	$station = strtolower($_POST['station']);
 	$store = $_POST['store'];
+	$response_list = $station.'_response_list';
 	$response_info = $station.'_response_info';
 
 	// 查询删除的item
 	$sql = "SELECT * FROM $response_info WHERE id = '{$id}'";
 	$res = $db->getOne($sql);
+	$order_id = $res['order_id'];
 
 	// 删除
 	$sql1 = "DELETE FROM $response_info WHERE id = '{$id}'";
 	$res1 = $db->execute($sql1);
 
+	//查询OMS-ID
+	$sql = "SELECT id FROM $response_list WHERE order_id = '{$order_id}'";
+	$res2 = $db->getOne($sql);
+	$oms_id = $res2['id'];
+
 	$do = '[删除一单]：订单号【'.$res['order_id'].'】商品代码【'.$res['goods_code'].'】数量【'.$res['goods_num'].'】子订单价格【'.$res['item_price'].'】运费代码【'.$res['yfcode'].'】运费金额【'.$res['yf_money'].'】代引金额【'.$res['cod_money'].'】';
-	oms_log($u_name,$do,'amazon_order',$station,$store);
+
+	oms_log($u_name,$do,'amazon_order',$station,$store,$oms_id);
 	echo 'ok';
 
 }

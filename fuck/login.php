@@ -21,10 +21,11 @@ if(isset($_POST['u_num'])){
     }else{
 		$_SESSION['oms_u_num'] = $u_num;
 		$_SESSION['oms_u_name'] = $res['u_name'];
+		$_SESSION['oms_can_send'] = $res['can_send'];
 
 		//日志
 		$do = '[Login] 登入系统';
-		oms_log($_SESSION['oms_u_name'],$do,'system','-','-');
+		oms_log($_SESSION['oms_u_name'],$do,'system','-','-','-');
 
     	echo "go";
     }
@@ -45,7 +46,9 @@ if(isset($_GET['u_num'])){
 	if($u_num==''){
 		echo 'logout';die;
 	}
-	echo $_SESSION['oms_u_num'];
+	$final_res['u_num'] = $_SESSION['oms_u_num'];
+	$final_res['can_send'] = $_SESSION['oms_can_send'];
+	echo json_encode($final_res);
 }
 
 // 获取side_bar状态
@@ -96,7 +99,7 @@ if(isset($_GET['logout'])){
 
 	//日志
 	$do = '[Logout] 登出系统';
-	oms_log($_SESSION['oms_u_name'],$do,'system','-','-');
+	oms_log($_SESSION['oms_u_name'],$do,'system','-','-','-');
 
 	echo "bye";
 }

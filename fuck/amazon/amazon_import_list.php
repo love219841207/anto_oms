@@ -19,7 +19,7 @@ if(isset($_GET['import_add_list'])){
 
     //日志
 	$do = '[START] 导入订单：'.$store;
-	oms_log($u_name,$do,'amazon_import','amazon',$store);
+	oms_log($u_name,$do,'amazon_import','amazon',$store,'-');
     
     //所有oms_has状态变成0
  	$sql = "UPDATE amazon_response_list SET oms_has_me = '0'";
@@ -153,7 +153,7 @@ if(isset($_GET['import_add_list'])){
 
 		    	//日志
 				$do = '[ING] 导入订单：'.$order_id.' | 收件人：'.$receive_name.' | 商品：'.$sku.'*'.$goods_num;
-				oms_log($u_name,$do,'amazon_import','amazon',$store);
+				oms_log($u_name,$do,'amazon_import','amazon',$store,'-');
 
 		    }else{
 		    	$sql = "UPDATE amazon_response_list SET oms_has_me = 'has' WHERE order_id = '{$order_id}'";
@@ -270,7 +270,7 @@ if(isset($_GET['import_add_list'])){
 
 	//日志
 	$do = '[END] 导入订单：'.$store.'总单数：'.$count_order.' | 导入数：'.$insert_count.' | 已存在：'.$has_count;
-	oms_log($u_name,$do,'amazon_import','amazon',$store);
+	oms_log($u_name,$do,'amazon_import','amazon',$store,'-');
 
 	echo json_encode($final_res);
 }

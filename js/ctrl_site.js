@@ -49,7 +49,8 @@ app.controller('siteCtrl', ['$rootScope','$scope','$state','$stateParams','$http
 
     $http.get('/fuck/login.php', {params:{u_num:"get"}
     }).success(function(data) {
-        $scope.u_num = data;
+        $scope.u_num = data.u_num;
+        $scope.ucan_send = data.can_send;
         if($scope.u_num < '1001'){  //系统设置权限 is_admin
             $scope.is_admin = true;
         }

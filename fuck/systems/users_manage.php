@@ -106,3 +106,12 @@ if(isset($_GET['get_my_store'])){
 	    echo json_encode($my_store);
     }
 }
+
+// 是否可发货操作
+if(isset($_GET['can_send'])){
+	$u_num = $_GET['can_send'];
+
+	$sql = "UPDATE user_oms SET can_send = (CASE can_send WHEN  '-' THEN '可发货' WHEN '可发货' THEN '-' END) WHERE u_num = '{$u_num}'";
+	$res = $db->execute($sql);
+	echo 'ok';
+}

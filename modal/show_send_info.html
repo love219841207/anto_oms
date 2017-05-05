@@ -80,6 +80,12 @@
                 <i ng-click="aa_goods_code=!aa_goods_code" 
                 class="fa fa-edit fa-fw pointer"
                 ></i>
+                <div ng-show="aa_goods_code" class="input-group">
+                  <input class="form-control input-sm" placeholder="商品代码 更改为..." type="text" id="goods_code">
+                  <span class="input-group-btn">
+                    <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="need_check_send('goods_code',item.goods_code,item.station,item.store_name,item.id,item.oms_id,item.info_id);aa_goods_code=!aa_goods_code">确定</button>
+                </span>
+              </div>
             </td>
           </tr>
           <tr>
@@ -88,14 +94,26 @@
                 <i ng-click="aa_out_num=!aa_out_num" 
                 class="fa fa-edit fa-fw pointer"
                 ></i>
+                <div ng-show="aa_out_num" class="input-group">
+                  <input class="form-control input-sm" placeholder="数量 更改为..." type="number" id="out_num">
+                  <span class="input-group-btn">
+                    <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="need_check_send('out_num',item.out_num,item.station,item.store_name,item.id,item.oms_id,item.info_id);aa_out_num=!aa_out_num">确定</button>
+                </span>
+              </div>
             </td>
           </tr>
-          <tr>
+          <tr ng-show="item.is_cod=='COD'">
             <td class="s_gray">代引金额</td>
             <td class="s_gray">{{item.due_money}}
                 <i ng-click="aa_due_money=!aa_due_money" 
                 class="fa fa-edit fa-fw pointer"
                 ></i>
+                <div ng-show="aa_due_money" class="input-group">
+                  <input class="form-control input-sm" placeholder="代引金额 更改为..." type="number" id="due_money">
+                  <span class="input-group-btn">
+                    <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="need_check_send('due_money',item.due_money,item.station,item.store_name,item.id,item.oms_id,item.info_id);aa_due_money=!aa_due_money">确定</button>
+                </span>
+              </div>
             </td>
           </tr>
         </table>

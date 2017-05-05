@@ -12,7 +12,7 @@ if(isset($_GET['list_orders'])){
 
 	//日志
 	$do = '[START] 同步订单列表：'.$store;
-	oms_log($u_name,$do,'amazon_syn',$station,$store);
+	oms_log($u_name,$do,'amazon_syn',$station,$store,'-');
 
  	$syn_day = date('Y-m-d');	//同步日期
  	//所有oms_has状态变成0
@@ -157,7 +157,7 @@ if(isset($_GET['list_orders'])){
 
 	//日志
 	$do = '[END] 同步订单列表：'.$store;
-	oms_log($u_name,$do,'amazon_syn',$station,$store);
+	oms_log($u_name,$do,'amazon_syn',$station,$store,'-');
 
 	echo json_encode($final_res);
 }
@@ -169,7 +169,7 @@ if(isset($_GET['get_order_info'])){
 
  	//日志
 	$do = '[START] 同步订单详单：'.$store;
-	oms_log($u_name,$do,'amazon_syn',$station,$store);
+	oms_log($u_name,$do,'amazon_syn',$station,$store,'-');
 
  	// 搜索出需要获取详情的订单
  	$sql = "SELECT order_id FROM amazon_response_list WHERE store = '{$store}' AND oms_order_info_status='0'";
@@ -268,7 +268,7 @@ if(isset($_GET['get_order_info'])){
 
  	//日志
 	$do = '[END] 同步订单详单：'.$store;
-	oms_log($u_name,$do,'amazon_syn',$station,$store);
+	oms_log($u_name,$do,'amazon_syn',$station,$store,'-');
 
  	echo json_encode($final_res);
 }
