@@ -166,7 +166,7 @@ if(isset($_GET['sub_repo'])){
 				$res = $rdb->execute($sql);
 
 				//扣掉库存后记录库存系统流水
-				$sql = "INSERT INTO jp_list_out (order_id,goods_code,out_num,oms_id,store_name,holder) VALUES ('{$now_order_id}','{$now_goods_code}','{$goods_num}','{$send_id}','{$store}','{$u_name}')";
+				$sql = "INSERT INTO jp_list_out (order_id,goods_code,out_num,oms_id,store_name,holder,out_day,import_day) VALUES ('{$now_order_id}','{$now_goods_code}','{$goods_num}','{$send_id}','{$store}','{$u_name}','{$today}','{$today}')";
 				$res = $rdb->execute($sql);
 			}
 
@@ -177,8 +177,10 @@ if(isset($_GET['sub_repo'])){
 	}
 	//转入发货表
 	$sql = "INSERT INTO send_table (
+		station,
 		send_id,	#合单发货ID
 		oms_id,	#OMS-ID
+		info_id, #info-ID
 		sku, 	#sku，客人看
 		goods_code,	#商品代码，仓库看
 		out_num,	#商品数量
@@ -194,8 +196,10 @@ if(isset($_GET['sub_repo'])){
 		store_name,	#店铺名
 		holder,		#担当者
 		import_day) SELECT	#导入日期 
+		'{$station}',
 		list.send_id,
 		list.id,
+		info.id,
 		info.sku,
 		info.goods_code,
 		info.goods_num,

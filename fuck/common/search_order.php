@@ -217,9 +217,9 @@ if(isset($_POST['ready_send_data'])){
     $search_key = addslashes($_POST['search_key']);
 
     if($search_field == ''){   //0没有筛选条件
-        $sql = "SELECT * FROM send_table WHERE item_line = 0 ORDER BY id DESC LIMIT {$start},{$page_size}";
+        $sql = "SELECT * FROM send_table WHERE item_line = 0 ORDER BY send_id DESC LIMIT {$start},{$page_size}";
     }else{
-        $sql = "SELECT * FROM send_table WHERE item_line = 0 AND {$search_field} LIKE '%{$search_key}%' ORDER BY id DESC LIMIT {$start},{$page_size}";
+        $sql = "SELECT * FROM send_table WHERE item_line = 0 AND {$search_field} LIKE '%{$search_key}%' ORDER BY send_id DESC LIMIT {$start},{$page_size}";
     }
     $res = $db->getAll($sql);
     echo json_encode($res);

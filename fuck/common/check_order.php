@@ -301,16 +301,15 @@ if(isset($_GET['change_post_addr'])){
 	}else{
 		// 邮编和地址匹配
 		if(strstr($new_address, $post_name) == true){
-
-			// 保存并更新post_ok = 1
-			$sql = "UPDATE $response_list SET post_code = '{$new_post_code}',address = '{$new_address}',post_ok = 1 WHERE order_id = '{$order_id}'";
-		    $res = $db->execute($sql);
-
-		    // 查询原字段值
+			// 查询原字段值
 			$sql = "SELECT post_code,address FROM $response_list WHERE order_id = '{$order_id}'";
 			$res = $db->getOne($sql);
 			$o_post_code = $res['post_code'];
 			$o_address = $res['address'];
+
+			// 保存并更新post_ok = 1
+			$sql = "UPDATE $response_list SET post_code = '{$new_post_code}',address = '{$new_address}',post_ok = 1 WHERE order_id = '{$order_id}'";
+		    $res = $db->execute($sql);
 
 		    // 日志
 			$do = '订单【'.$order_id.'】修改 <邮编/地址>【'.$o_post_code.'/'.$o_address.'】为【'.$new_post_code.'/'.$new_address.'】';

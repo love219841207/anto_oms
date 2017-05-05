@@ -1,6 +1,6 @@
 <div class="container-fluid" ng-controller="readysendCtrl">
-	<button class="btn btn-warning mt10" ng-click="" id="filter_btn" ng-show="send_table"><i class="fa fa-gift fa-fw"></i>打包</button>
-	<div class="btn-group ml10 mt10 pull-right">
+	<button class="btn btn-warning mt10 btn-sm" ng-click="" id="filter_btn" ng-show="send_table"><i class="fa fa-gift fa-fw"></i>打包</button>
+	<div class="btn-group ml10 mt50 pull-right">
 		<div class="btn btn-default btn-sm">
 			<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="search_field" ng-change="change_search_field()">
 				<option value="">字段筛选 ..</option>
@@ -21,7 +21,9 @@
 		<tr class="blue info animate slide-right">
 			<td class="tagc"><i class="fa-sort-numeric-asc fa fa-fw"></i></td>
 			<td>合单发货ID</td>
+			<td>平台 测试用</td>
 			<td>OMS-ID</td>
+			<td>INFO-ID 测试用</td>
 			<td>快递公司</td>
 			<td>配送方式</td>
 			<td>包裹ID</td>
@@ -39,10 +41,12 @@
 			<td class="tagc">担当</td>
 			<td class="tagc">操作</td>
 		</tr>
-		<tr class="animate slide-right" ng-repeat="item in send_table track by $index" ng-class="{'bg_yellow':bg_yellow}" ng-dblclick="bg_yellow=!bg_yellow">
+		<tr class="animate slide-right blue" ng-repeat="item in send_table track by $index" ng-class="{'bg_yellow':bg_yellow}">
 			<td class="tagc">{{$index+1}}</td>
 			<td>{{item.send_id}}</td>
+			<td>{{item.station}}</td>
 			<td>{{item.oms_id}}</td>
+			<td>{{item.info_id}}</td>
 			<td>{{item.express_company}}</td>
 			<td>{{item.send_method}}</td>
 			<td>{{item.pack_id}}</td>
@@ -69,8 +73,8 @@
 			<!-- <td>{{item.need_not_send}}</td> -->
 			<!-- <td>{{item.who_email}}</td> -->
 			<!-- <td>{{item.store_name}}</td> -->
-			<td class="blue tagc">{{item.holder}}</td>
-			<td class="blue tagc"><div class="btn btn-primary btn-xs">操作</div></td>
+			<td class="green tagc">{{item.holder}}</td>
+			<td class="tagc"><div data-animation="am-fade-and-slide-top" data-template-url="/modal/show_send_info.html" bs-modal="modal" ng-click="show_send_info(item.id)" class="btn btn-primary btn-xs">修改</div></td>
 		</tr>
 	</table>
 	<nav>
@@ -106,4 +110,5 @@
 			</li>
 		</ul>
 	</nav>
+	<div class="end_height"></div>
 </div>

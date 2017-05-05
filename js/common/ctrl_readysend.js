@@ -1,29 +1,161 @@
 var app=angular.module('myApp');
 app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','$timeout', function($rootScope,$scope,$state,$http,$log,$timeout){
+	//初始化页面
 	$scope.init_list = function(){
 		$scope.send_table = '';
 	}
-
 	$scope.search_field = '';
 
+    //查询send详情
+    $scope.show_send_info = function(id){
+        $http.get('/fuck/common/ready_send.php', {
+            params:{
+                show_send_info:id
+            }
+        }).success(function(data) {
+            $scope.send_table_info = data;
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:读取show_send_info失败。");
+        });
+    }
+
+    //验证电话号码格式
+    $scope.check_phone = function(){
+        $scope.pass_phone = false;
+        var dom = document.querySelector('#who_tel');
+        var phone = angular.element(dom).val();
+        if(isNaN(phone)){
+            if(phone.indexOf("-") > 0){
+                phone = phone.replace(/-/g, "");
+                angular.element(dom).val(phone);
+                $scope.check_phone();
+            }else{
+                angular.element(dom).val('');
+                $scope.pass_phone = false;
+            }
+        }else{
+            var len = phone.length;
+            if(len == 10){
+                var a1 = phone.slice(0,2);
+                var a2 = phone.slice(2,6);
+                var a3 = phone.slice(6,10);
+                phone = a1+"-"+a2+"-"+a3;
+                angular.element(dom).val(phone);
+                $scope.pass_phone = true;
+            }if(len == 11){
+                var a1 = phone.slice(0,3);
+                var a2 = phone.slice(3,7);
+                var a3 = phone.slice(7,11);
+                phone = a1+"-"+a2+"-"+a3;
+                angular.element(dom).val(phone);
+                $scope.pass_phone = true;
+            }if(len > 11){
+                var a1 = phone.slice(0,3);
+                var a2 = phone.slice(3,7);1
+                var a3 = phone.slice(7,11);
+                phone = a1+"-"+a2+"-"+a3;
+                angular.element(dom).val(phone);
+                $scope.pass_phone = true;
+                $scope.plug_alert('danger','电话长度超过了。','fa fa-ban');
+            }
+        }   
+    }
+
+    // 验证修改的send字段
+    $scope.need_check_send = function(field_name,o_key,station,store,id,oms_id,info_id){
+        var dom = document.querySelector('#'+field_name);
+        var new_key = angular.element(dom).val();
+
+        $http.get('/fuck/common/ready_send.php', {
+            params:{
+                need_check_send:'get',
+                station:station,
+                store:store,
+                field_name:field_name,
+                new_key:new_key,
+                o_key:o_key,
+                id:id,
+                oms_id:oms_id,
+                info_id:info_id
+            }
+        }).success(function(data) {
+            if(data == 'ok'){
+                $scope.change_send_field(o_key,station,store,field_name,new_key,id,oms_id,info_id);
+            }else{
+                $scope.plug_alert('danger',data,'fa fa-ban');
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:验证send字段失败。");
+        });
+    }
+
+    // 修改send字段
+    $scope.change_send_field = function(o_key,station,store,field_name,new_key,id,oms_id,info_id){
+        $http.get('/fuck/common/ready_send.php', {
+            params:{
+                change_send_field:'change',
+                station:station,
+                store:store,
+                field_name:field_name,
+                new_key:new_key,
+                o_key:o_key,
+                id:id,
+                oms_id:oms_id,
+                info_id:info_id
+            }
+        }).success(function(data) {
+            if(data == 'ok'){
+                $scope.to_page($scope.now_page);
+                $scope.show_send_info(id);
+            }else{
+                $scope.plug_alert('danger','修改失败。','fa fa-ban');
+                $log.info(data);
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:修改send字段失败。");
+        });
+    }
+
+    // 验证邮编、地址并修改
+    $scope.change_post_addr = function(station,store,id,oms_id,info_id){
+        var dom = document.querySelector('#new_post_code');
+        var new_post_code = angular.element(dom).val();
+        var dom = document.querySelector('#new_address');
+        var new_address = angular.element(dom).val();
+
+        $http.get('/fuck/common/ready_send.php', {
+            params:{
+                change_post_addr:'change',
+                station:station,
+                store:store,
+                new_post_code:new_post_code,
+                new_address:new_address,
+                id:id,
+                oms_id:oms_id,
+                info_id:info_id
+            }
+        }).success(function(data) {
+            if(data == 'ok'){
+                $scope.to_page($scope.now_page);
+                $scope.show_send_info(id);
+                $scope.plug_alert('success','通过。','fa fa-smile-o');
+            }else{
+                $scope.plug_alert('danger',data,'fa fa-ban');
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:验证send邮编地址失败。");
+        });
+    }
+
+//数据分页查询开始
 	//筛选查询字段改变
     $scope.change_search_field = function(){
         $scope.search_key = '';
     }
-	// 读取ready_send表
-    // $scope.ready_send_info = function(){
-    //     $http.get('/fuck/common/ready_send.php', {
-    //         params:{
-    //             ready_send_info:'get'
-    //         }
-    //     }).success(function(data) {
-    //         $scope.send_table = data;
-    //     }).error(function(data) {
-    //         alert("系统错误，请联系管理员。");
-    //         $log.info("error:读取ready_send表失败。");
-    //     });
-    // }
-    //查询用户分页数
 
 	$http.get('/fuck/common/list_order.php', {
     	params:{
@@ -35,8 +167,6 @@ app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','
         alert("系统错误，请联系管理员。error:PageSize获取失败。");
         $log.info("error:PageSize获取失败。");
     });
-
-    
 
     //查询总数
     $scope.get_count = function(e){     //分页组件
@@ -222,4 +352,6 @@ app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','
         $scope.get_count();     //分配页码
         $scope.to_page('1');   //再次初始化数据
     }
+//数据分页查询结束
+
 }]);

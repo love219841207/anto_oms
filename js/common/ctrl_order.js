@@ -520,7 +520,6 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             }
         }).success(function(data) {
             if(data == 'ok'){
-                $scope.to_page($scope.now_page);
                 $scope.change_list_field(field_name,order_id,new_key);
             }else{
                 $scope.plug_alert('danger',data,'fa fa-ban');

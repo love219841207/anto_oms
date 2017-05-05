@@ -131,6 +131,15 @@ li{
 .bg_yellow td{
 	background: #fdfa9e !important;
 }
+.ready_color td{
+	border-color: #9ccdea !important;
+}
+.close_color td{
+	border-color: #6d6d6d !important;
+}
+.del_color td{
+	border-color: #ff8484 !important;
+}
 .italic{
 	font-style: italic;
 }

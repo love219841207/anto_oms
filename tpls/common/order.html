@@ -299,9 +299,15 @@
 		    </div>
 			<div ng-repeat="item in get_order_list_data track by $index" class="animate slide-left">
 				<table class="table table-condensed table-hover table-bordered f12" >
-					<tr	ng-class="
-							{'danger':item.order_line=='0' || item.post_ok=='2' || item.tel_ok=='2' || item.sku_ok=='2' || item.yfcode_ok=='2','bg_yellow':item.is_click,
-							'success':item.order_line=='1' && item.post_ok=='1' && item.tel_ok=='1' && item.sku_ok=='1' && item.yfcode_ok=='1','warning':item.order_line=='2','info':item.order_line=='3'}">
+					<tr class="white" ng-class="
+							{'danger':item.order_line=='0' || item.post_ok=='2' || item.tel_ok=='2' || item.sku_ok=='2' || item.yfcode_ok=='2',
+							'bg_yellow':item.is_click,
+							'success':item.order_line=='1' && item.post_ok=='1' && item.tel_ok=='1' && item.sku_ok=='1' && item.yfcode_ok=='1',
+							'warning':item.order_line=='2',
+							'info':item.order_line=='3',
+							'ready_color':item.order_line=='5',
+							'close_color':item.order_line=='6',
+							'del_color':item.order_line=='-1'}">
 						<td style="width:8%" class="green pointer" ng-click="item.is_click=!item.is_click;check_items()">
 							<i ng-show="open_check" class="fa red fa-lg fa-fw" ng-class="{'fa-square-o':item.is_click==false,'fa-check-square':item.is_click==true}"></i>
 							<!-- {{item.is_click}} -->
@@ -320,15 +326,19 @@
 							<button data-animation="am-fade-and-slide-top" data-template-url="/modal/note.html" bs-modal="modal" class="btn btn-xs btn-info" ng-click="change_note(item.order_id)">备注</button>
 						</td>
 					</tr>
-					<tr ng-show="info_box" class="white">
-						<td>发货ID：{{item.send_id}}</td>
+					<tr ng-show="info_box" class="white" ng-class="{'ready_color':item.order_line=='5',
+							'close_color':item.order_line=='6',
+							'del_color':item.order_line=='-1'}">
+						<td class="blue">{{item.order_line | order_line}}</td>
 						<td class=""><span class="s_gray">购买人：</span>{{item.buyer_name}}</td>
 						<td class="green"><span class="s_gray">电话：</span>{{item.phone}}</td>
 						<td class="blue"><span class="s_gray">邮箱：</span>{{item.buyer_email}}</td>
 						<td colspan="4"><span class="s_gray">国家/货币：</span>{{item.country}}/{{item.order_total_currency}}</td>	
 					</tr>
-					<tr ng-show="info_box" class="white">
-						<td></td>
+					<tr ng-show="info_box" class="white" ng-class="{'ready_color':item.order_line=='5',
+							'close_color':item.order_line=='6',
+							'del_color':item.order_line=='-1'}">
+						<td>{{item.send_id}}</td>
 						<td class="yellow"><span class="s_gray">收件人：</span>{{item.receive_name}}</td>
 						<td class="blue"><span class="s_gray">邮编：</span>{{item.post_code}}</td>
 						<td class="green"><span class="s_gray">地址：</span>{{item.address}}</td>
