@@ -87,7 +87,7 @@ if(isset($_GET['change_list_field'])){
 
 	// 日志
 	$do = '修改 <'.$ch_field.'>【'.$o_key.'】为【'.$new_key.'】';
-	oms_log($u_name,$do,'amazon_order',$station,$store,$oms_id);
+	oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
 
 	echo 'ok';
 }
@@ -163,7 +163,7 @@ if(isset($_GET['change_info_field'])){
 
 	// 日志
 	$do = '修改 <'.$ch_field.'>【'.$o_key.'】为【'.$new_key.'】';
-	oms_log($u_name,$do,'amazon_order',$station,$store,$oms_id);
+	oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
 	
 }
 
@@ -185,7 +185,7 @@ if(isset($_GET['change_note'])){
 
 	// 日志
 	$do = '备注为【'.$new_key.'】';
-	oms_log($u_name,$do,'amazon_order',$station,$store,$oms_id);
+	oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
 	echo 'ok';
 }
 
@@ -232,7 +232,7 @@ if(isset($_POST['del_items'])){
 
 	//日志
 	$do = ' [删除订单]：【'.$del_log_items.'】';
-	oms_log($u_name,$do,'amazon_order',$station,$store,'-');
+	oms_log($u_name,$do,'change_order',$station,$store,'-');
 
 	echo 'ok';
 }
@@ -253,7 +253,7 @@ if(isset($_POST['return_items'])){
 
 	//日志
 	$do = ' [还原订单]：【'.$res_log_items.'】';
-	oms_log($u_name,$do,'amazon_order',$station,$store,'-');
+	oms_log($u_name,$do,'change_order',$station,$store,'-');
 
 	echo 'ok';
 }
@@ -355,7 +355,7 @@ if(isset($_POST['add_item'])){
 	$res = $db->getOne($sql);
 	$oms_id = $res['id'];
 
-	oms_log($u_name,$do,'amazon_order',$station,$store,$oms_id);
+	oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
 	echo 'ok';
 }
 
@@ -383,7 +383,7 @@ if(isset($_POST['del_item'])){
 
 	$do = '[删除一单]：订单号【'.$res['order_id'].'】商品代码【'.$res['goods_code'].'】数量【'.$res['goods_num'].'】子订单价格【'.$res['item_price'].'】运费代码【'.$res['yfcode'].'】运费金额【'.$res['yf_money'].'】代引金额【'.$res['cod_money'].'】';
 
-	oms_log($u_name,$do,'amazon_order',$station,$store,$oms_id);
+	oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
 	echo 'ok';
 
 }

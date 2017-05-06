@@ -74,7 +74,10 @@
 			<!-- <td>{{item.who_email}}</td> -->
 			<!-- <td>{{item.store_name}}</td> -->
 			<td class="green tagc">{{item.holder}}</td>
-			<td class="tagc"><div data-animation="am-fade-and-slide-top" data-template-url="/modal/show_send_info.html" bs-modal="modal" ng-click="show_send_info(item.id)" class="btn btn-primary btn-xs">修改</div></td>
+			<td class="tagc">
+				<i class="fa fa-edit fa-fw pointer" data-animation="am-fade-and-slide-top" data-template-url="/modal/show_send_info.html" bs-modal="modal" ng-click="show_send_info(item.id)"></i>
+				<i class="fa fa-trash-o fa-fw red pointer" data-animation="am-fade-and-slide-top" data-template-url="/modal/del_send_item.html" bs-modal="modal" ng-click="show_send_info(item.id)"></i>
+			</td>
 		</tr>
 	</table>
 	<nav>

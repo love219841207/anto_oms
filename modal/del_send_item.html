@@ -1,0 +1,46 @@
+<div class="modal op_red" tabindex="-1" role="dialog">
+  <div class="modal-dialog" style="width:500px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <i class="fa fa-close f20 close" ng-click="$hide()"></i>
+        <h4 class="modal-title red"><i class="fa fa-fw fa-exclamation-triangle"></i> 警告&nbsp;&nbsp;<span class="f14">确定删除该单？</span></h4>
+      </div>
+      <div class="modal-body">
+        <table class="table table-bordered table-condensed mt20 dark tagl" ng-repeat="item in send_table_info track by $index">
+          <tr>
+            <td class="danger red">收件人</td>
+            <td class="warning">{{item.who_name}}</td>
+          </tr>
+          <tr>
+            <td class="danger red">邮编</td>
+            <td class="warning">{{item.who_post}}</td>
+          </tr>
+          <tr>
+            <td class="danger red">地址</td>
+            <td class="warning">{{item.who_house}}</td>
+          </tr>
+          <tr>
+            <td class="danger red">电话</td>
+            <td class="warning">{{item.who_tel}}</td>
+          </tr>
+          <tr>
+            <td class="danger red">商品代码</td>
+            <td class="warning">{{item.goods_code}}</td>
+          </tr>
+          <tr>
+            <td class="danger red">数量</td>
+            <td class="warning">{{item.out_num}}</td>
+          </tr>
+          <tr>
+            <td class="danger red">待引金额</td>
+            <td class="warning">{{item.due_money}}</td>
+          </tr>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" ng-click="del_send_item(item.id,item.oms_id,item.info_id,item.station,item.store_name);$hide()"><i class="fa fa-fw fa-trash"></i>删 除</button>
+        <button type="button" class="btn btn-default" ng-click="$hide()">关 闭</button>
+      </div>
+    </div>
+  </div>
+</div>

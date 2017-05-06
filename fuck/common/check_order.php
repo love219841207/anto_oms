@@ -318,7 +318,7 @@ if(isset($_GET['change_post_addr'])){
 
 		    // 日志
 			$do = '订单【'.$order_id.'】修改 <邮编/地址>【'.$o_post_code.'/'.$o_address.'】为【'.$new_post_code.'/'.$new_address.'】';
-			oms_log($u_name,$do,'amazon_order',$station,$store,$oms_id);
+			oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
 
 			echo 'ok';
 		}else{

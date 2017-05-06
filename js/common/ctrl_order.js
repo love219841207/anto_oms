@@ -465,6 +465,8 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
 
     //查看单个详情
     $scope.show_one_info = function(order_id){
+        $scope.b_repo = false;
+        $scope.sku_pass = false;
         $scope.loading_shadow('open'); //打开loading
         $scope.now_post_name = '';	// 初始化参考地域
         $http.get('/fuck/common/change_order.php', {
@@ -765,7 +767,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
     }
 
     // 删除订单
-    $scope.amz_del_items = function(){
+    $scope.del_items = function(){
         $scope.shadow('open','ss_make','正在删除，请稍后。');
 
         var post_data = {del_items:$scope.my_checked_items,station:$scope.now_station,store:$scope.now_store_bar};
@@ -820,9 +822,19 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             }
         }).success(function(data) {
             if(data == 'ok'){
-                
+                $scope.sku_pass = true;
+                $http.get('/fuck/common/ready_send.php', {
+                    params:{
+                        check_repo:add_goods_code
+                    }
+                }).success(function(data) {
+                    $scope.b_repo = data;
+                }).error(function(data) {
+                    alert("系统错误，请联系管理员。");
+                    $log.info("error:查看发货库存数失败。");
+                });
             }else{
-                $log.info(data);
+                $scope.sku_pass = false;
                 angular.element(dom).val('');   //清空
                 $scope.plug_alert('danger','无此商品代码。','fa fa-ban');
             }
@@ -830,6 +842,19 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:商品代码检测失败。");
         });
+    }
+
+    // 检测正数
+    $scope.check_int = function(e){
+        var dom = document.querySelector('#'+e);
+        var num = angular.element(dom).val();
+        if(num < 0 || num == ''){
+            angular.element(dom).val('');
+            $scope.plug_alert('danger','请输入大于 0 的数。','fa fa-ban');
+            $scope[e] = false;
+        }else{
+            $scope[e] = true;
+        }
     }
 
     // 运算代引

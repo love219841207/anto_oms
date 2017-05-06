@@ -8,12 +8,152 @@ app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','
 
     //查询send详情
     $scope.show_send_info = function(id){
+        $scope.b_repo = false;
+        $scope.sku_pass = false;
         $http.get('/fuck/common/ready_send.php', {
             params:{
                 show_send_info:id
             }
         }).success(function(data) {
             $scope.send_table_info = data;
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:读取show_send_info失败。");
+        });
+    }
+
+    // 检测商品代码
+    $scope.check_goods_code = function(){
+        var dom = document.querySelector('#add_goods_code');
+        var add_goods_code = angular.element(dom).val();
+        $http.get('/fuck/common/check_order.php', {
+            params:{
+                check_goods_code:add_goods_code
+            }
+        }).success(function(data) {
+            if(data == 'ok'){
+                $scope.sku_pass = true;
+                $http.get('/fuck/common/ready_send.php', {
+                    params:{
+                        check_repo:add_goods_code
+                    }
+                }).success(function(data) {
+                    $scope.b_repo = data;
+                }).error(function(data) {
+                    alert("系统错误，请联系管理员。");
+                    $log.info("error:查看发货库存数失败。");
+                });
+            }else{
+                $scope.sku_pass = false;
+                angular.element(dom).val('');   //清空
+                $scope.plug_alert('danger','无此商品代码。','fa fa-ban');
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:商品代码检测失败。");
+        });
+    }
+
+    // 检测正数
+    $scope.check_int = function(e){
+        var dom = document.querySelector('#'+e);
+        var num = angular.element(dom).val();
+        if(num < 0 || num == ''){
+            angular.element(dom).val('');
+            $scope.plug_alert('danger','请输入大于 0 的数。','fa fa-ban');
+            $scope[e] = false;
+        }else{
+            $scope[e] = true;
+
+            // 如果是数量，检测是否有库存
+            if(e == 'add_goods_num'){
+                if($scope.sku_pass == false){
+                    $scope.plug_alert('danger','请输入商品代码。','fa fa-ban');
+                }else{
+                    // 检测数量
+                    if(num - $scope.b_repo > 0){
+                        $scope.plug_alert('danger','库存不足。','fa fa-ban');
+                        angular.element(dom).val('');
+                    }
+                }
+            }
+        }
+    }
+
+    // 添加发货item
+    $scope.add_send_item = function(id){
+        var dom = document.querySelector('#add_goods_code');
+        var add_goods_code = angular.element(dom).val();
+        var dom = document.querySelector('#add_goods_num');
+        var add_goods_num = angular.element(dom).val();
+        var dom = document.querySelector('#add_item_price');
+        var add_item_price = angular.element(dom).val();
+        var dom = document.querySelector('#add_yfcode');
+        var add_yfcode = angular.element(dom).val();
+        var dom = document.querySelector('#add_cod_money');
+        var add_cod_money = angular.element(dom).val();
+
+        var post_data = {
+                add_send_item:add_goods_code,
+                id:id,
+                add_goods_num:add_goods_num,
+                add_item_price:add_item_price,
+                add_yfcode:add_yfcode,
+                add_cod_money:add_cod_money
+            };
+
+        $http.post('/fuck/common/ready_send.php', post_data).success(function(data) {
+            if(data.status == 'ok'){
+                $scope.to_cod(data.order_id,data.station,data.store);    //计算COD
+                $scope.to_page($scope.now_page);    //刷新列表
+            }else{
+                $log.info(data);
+                $scope.plug_alert('danger','添加项目失败，请联系管理员。','fa fa-ban');
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:添加item失败。");
+        });
+    }
+
+    // 运算代引
+    $scope.to_cod = function(order_id,station,store){
+        var post_data = {
+                to_cod:order_id,
+                station:station,
+                store:store
+            };
+        $http.post('/fuck/common/change_order.php', post_data).success(function(data) {
+            if(data == 'ok'){
+                
+            }else{
+                $log.info(data+'代引计算错误');
+                $scope.plug_alert('danger','严重！代引计算错误。','fa fa-ban');
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:代引计算错误。");
+        });
+    }
+
+    // 删除发货item
+    $scope.del_send_item = function(id,oms_id,info_id,station,store){
+         $http.get('/fuck/common/ready_send.php', {
+            params:{
+                del_send_item:id,
+                oms_id:oms_id,
+                info_id:info_id,
+                station:station,
+                store:store
+            }
+        }).success(function(data) {
+            if(data.status == 'ok'){
+                $scope.plug_alert('success','删除完成。','fa fa-smile-o');
+                $scope.to_cod(data.order_id,station,store);    //计算COD
+                $scope.to_page($scope.now_page);    //刷新列表
+            }else{
+                $scope.plug_alert('danger',data,'fa fa-ban');
+            }
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
             $log.info("error:读取show_send_info失败。");
