@@ -326,7 +326,7 @@
 							<button data-animation="am-fade-and-slide-top" data-template-url="/modal/note.html" bs-modal="modal" class="btn btn-xs btn-info" ng-click="change_note(item.order_id)">备注</button>
 						</td>
 					</tr>
-					<tr ng-show="info_box" class="white" ng-class="{'ready_color':item.order_line=='5',
+					<tr ng-show="info_box" class="white am-fade-and-slide-right" ng-class="{'ready_color':item.order_line=='5',
 							'close_color':item.order_line=='6',
 							'del_color':item.order_line=='-1'}">
 						<td class="blue">{{item.order_line | order_line}}</td>
@@ -335,7 +335,7 @@
 						<td class="blue"><span class="s_gray">邮箱：</span>{{item.buyer_email}}</td>
 						<td colspan="4"><span class="s_gray">国家/货币：</span>{{item.country}}/{{item.order_total_currency}}</td>	
 					</tr>
-					<tr ng-show="info_box" class="white" ng-class="{'ready_color':item.order_line=='5',
+					<tr ng-show="info_box" class="white am-fade-and-slide-right" ng-class="{'ready_color':item.order_line=='5',
 							'close_color':item.order_line=='6',
 							'del_color':item.order_line=='-1'}">
 						<td>{{item.send_id}}</td>

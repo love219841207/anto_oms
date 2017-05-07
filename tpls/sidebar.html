@@ -1,6 +1,6 @@
 <!--侧边栏-->
-<div id="side_box" ng-class="{'side_bar_1':side_bar_1,'side_bar_2':side_bar_2}">
-	<div id="side_bar" ng-class="{'side_bar_1':side_bar_1,'side_bar_2':side_bar_2}">
+<div id="side_box" ng-class="{'side_bar_1':side_bar_1_open,'side_bar_2':side_bar_2_open}">
+	<div id="side_bar" ng-class="{'side_bar_1':side_bar_1_open,'side_bar_2':side_bar_2_open}">
 		<uib-accordion close-others="oneAtATime" >
 			<!-- 亚马逊平台 -->
 			<div ng-show="now_station=='Amazon' && now_store_bar!=''" uib-accordion-group is-open="status.isopen1" ng-class="{'open_down':status.isopen1}" class="panel-default hover no_store">
@@ -75,6 +75,21 @@
 					<span class="am-fade" ng-show="side_bar_1"> 导入快递单</span>
 				</div>
 			</div>
+			<!-- 表格统计 -->
+			<div uib-accordion-group is-open="status.isopen6" ng-class="{'open_down':status.isopen6}" class="panel-default hover">
+				<uib-accordion-heading>
+	        		<i class="fa fa-fw fa-bar-chart"></i>
+	        		<span class="am-fade" ng-show="side_bar_1"> 表格统计</span><i class="pull-right fa fa-angle-right weight" ng-class="{'scroll_90': status.isopen6,'scroll_0': !status.isopen6}"></i>
+	     	 	</uib-accordion-heading>
+				<div ui-sref="site.pause_table" ui-sref-active="active" class="list-group-item">
+					<i class="fa fa-fw fa-snowflake-o ml5"></i>
+					<span class="am-fade" ng-show="side_bar_1"> 冻结表</span>
+				</div>
+				<!-- <div ui-sref="site.page_size" ui-sref-active="active" class="list-group-item">
+					<i class="fa fa-fw fa-sort-numeric-asc ml5"></i>
+					<span class="am-fade" ng-show="side_bar_1"> 销售额统计</span>
+				</div> -->
+			</div>
 			<!-- 个人设置 -->
 			<div uib-accordion-group is-open="status.isopen5" ng-class="{'open_down':status.isopen5}" class="panel-default hover">
 				<uib-accordion-heading>
@@ -95,10 +110,10 @@
 				</div>
 			</div>
 			<!-- 系统设置 -->
-			<div uib-accordion-group is-open="status.isopen6" ng-class="{'open_down':status.isopen6}" class="panel-default hover" ng-show="is_admin">
+			<div uib-accordion-group is-open="status.isopen7" ng-class="{'open_down':status.isopen7}" class="panel-default hover" ng-show="is_admin">
 				<uib-accordion-heading>
 	        		<i class="fa fa-fw fa-cog"></i>
-	        		<span class="am-fade" ng-show="side_bar_1"> 系统设置</span><i class="pull-right fa fa-angle-right weight" ng-class="{'scroll_90': status.isopen6,'scroll_0': !status.isopen6}"></i>
+	        		<span class="am-fade" ng-show="side_bar_1"> 系统设置</span><i class="pull-right fa fa-angle-right weight" ng-class="{'scroll_90': status.isopen7,'scroll_0': !status.isopen7}"></i>
 	     	 	</uib-accordion-heading>
 	     	 	<div ui-sref="site.users_manage" ui-sref-active="active" class="list-group-item">
 	     	 		<i class="fa fa-fw fa-users ml5"></i>

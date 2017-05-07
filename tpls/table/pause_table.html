@@ -1,0 +1,50 @@
+<div class="container-fluid" ng-controller="tableCtrl">
+	<button class="btn btn-warning mt10 btn-sm" ng-click="" id="filter_btn" ng-show="pause_table"><i class="fa fa-gift fa-fw"></i>下载</button>
+
+	<table ng-show="pause_table" class="table-responsive table table-bordered table-condensed table-hover table-striped mt20 f12">
+		<tr class="blue info animate slide-right">
+			<td class="tagc"><i class="fa-sort-numeric-asc fa fa-fw"></i></td>
+			<td>商品代码</td>
+			<td>冻结数</td>
+		</tr>
+		<tr class="am-fade-and-slide-right blue" ng-repeat="item in pause_table track by $index" ng-class="{'bg_yellow':bg_yellow}">
+			<td class="tagc">{{$index+1}}</td>
+			<td>{{item.send_id}}</td>
+			<td>{{item.station}}</td>
+			<td>{{item.oms_id}}</td>
+			<td>{{item.info_id}}</td>
+			<td>{{item.express_company}}</td>
+			<td>{{item.send_method}}</td>
+			<td>{{item.pack_id}}</td>
+			<!-- <td>{{item.sku}}</td> -->
+			<td ng-class="{'red danger':item.error_info=='no_sku'}">{{item.goods_code}}
+			<i ng-click="aa_goods_code=!aa_goods_code" 
+                class="fa fa-edit fa-fw pointer blue"
+                ng-show="item.error_info=='no_sku'"
+                ></i>
+              	<div ng-show="aa_goods_code" class="input-group">
+                	<input class="form-control input-sm" placeholder="商品代码 更正为..." type="text" id="goods_code{{item.id}}">
+                	<span class="input-group-btn">
+                  		<button class="btn btn-default btn-danger btn-sm" type="button" ng-click="change_format_field('goods_code',item.id,item.goods_code,item.oms_id);aa_goods_code=!aa_goods_code">确定</button>
+               		</span>
+              	</div>
+			</td>
+			<td class="tagr">{{item.out_num}}</td>
+			<!-- <td>{{item.who_tel}}</td> -->
+			<!-- <td>{{item.who_post}}</td> -->
+			<!-- <td>{{item.who_house}}</td> -->
+			<td>{{item.who_name}}</td>
+			<!-- <td>{{item.is_cod}}</td> -->
+			<td class="tagr" ng-class="{'red':item.is_cod=='COD'}">{{item.due_money}}</td>
+			<!-- <td>{{item.need_not_send}}</td> -->
+			<!-- <td>{{item.who_email}}</td> -->
+			<!-- <td>{{item.store_name}}</td> -->
+			<td class="green tagc">{{item.holder}}</td>
+			<td class="tagc">
+				<i class="fa fa-edit fa-fw pointer" data-animation="am-fade-and-slide-top" data-template-url="/modal/show_send_info.html" bs-modal="modal" ng-click="show_send_info(item.id)"></i>
+				<i class="fa fa-trash-o fa-fw red pointer" data-animation="am-fade-and-slide-top" data-template-url="/modal/del_send_item.html" bs-modal="modal" ng-click="show_send_info(item.id)"></i>
+			</td>
+		</tr>
+	</table>
+	<div class="end_height"></div>
+</div>

@@ -86,6 +86,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen4 = false;
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = false;
+                        $scope.status.isopen7 = false;
                     }
                 }
             }
@@ -104,6 +105,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen4 = false;
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = false;
+                        $scope.status.isopen7 = false;
                     }
                 }
             }
@@ -123,6 +125,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen4 = false;
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = false;
+                        $scope.status.isopen7 = false;
                     }
                 }
             }
@@ -141,6 +144,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen4 = false;
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = false;
+                        $scope.status.isopen7 = false;
                     }
                 }
             }
@@ -160,6 +164,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen4 = false;
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = false;
+                        $scope.status.isopen7 = false;
                     }
                 }
             }
@@ -178,6 +183,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen4 = false;
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = false;
+                        $scope.status.isopen7 = false;
                     }
                 }
             }
@@ -197,6 +203,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen4 = true;
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = false;
+                        $scope.status.isopen7 = false;
                     }
                 }
             }
@@ -215,6 +222,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen4 = true;
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = false;
+                        $scope.status.isopen7 = false;
                     }
                 }
             }
@@ -233,6 +241,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen4 = true;
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = false;
+                        $scope.status.isopen7 = false;
                     }
                 }
             }
@@ -251,6 +260,26 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen4 = true;
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = false;
+                        $scope.status.isopen7 = false;
+                    }
+                }
+            }
+        })
+    // 表格统计
+        //冻结表
+        .state('site.pause_table',{
+            url: '/pause_table',
+            views:{
+                'show@site':{
+                    templateUrl: 'tpls/table/pause_table.html',
+                    controller: function($scope){
+                        $scope.status.isopen1 = false;
+                        $scope.status.isopen2 = false;
+                        $scope.status.isopen3 = false;
+                        $scope.status.isopen4 = false;
+                        $scope.status.isopen5 = false;
+                        $scope.status.isopen6 = true;
+                        $scope.status.isopen7 = false;
                     }
                 }
             }
@@ -270,6 +299,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen4 = false;
                         $scope.status.isopen5 = true;
                         $scope.status.isopen6 = false;
+                        $scope.status.isopen7 = false;
                     }
                 }
             }
@@ -288,6 +318,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen4 = false;
                         $scope.status.isopen5 = true;
                         $scope.status.isopen6 = false;
+                        $scope.status.isopen7 = false;
                     }
                 }
             }
@@ -306,6 +337,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen4 = false;
                         $scope.status.isopen5 = true;
                         $scope.status.isopen6 = false;
+                        $scope.status.isopen7 = false;
                     }
                 }
             }
@@ -324,7 +356,8 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen3 = false;
                         $scope.status.isopen4 = false;
                         $scope.status.isopen5 = false;
-                        $scope.status.isopen6 = true;
+                        $scope.status.isopen6 = false;
+                        $scope.status.isopen7 = true;
                     }
                 }
             }
@@ -342,7 +375,8 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen3 = false;
                         $scope.status.isopen4 = false;
                         $scope.status.isopen5 = false;
-                        $scope.status.isopen6 = true;
+                        $scope.status.isopen6 = false;
+                        $scope.status.isopen7 = true;
                     }
                 }
             }
@@ -360,7 +394,8 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen3 = false;
                         $scope.status.isopen4 = false;
                         $scope.status.isopen5 = false;
-                        $scope.status.isopen6 = true;
+                        $scope.status.isopen6 = false;
+                        $scope.status.isopen7 = true;
                     }
                 }
             }
@@ -378,7 +413,8 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen3 = false;
                         $scope.status.isopen4 = false;
                         $scope.status.isopen5 = false;
-                        $scope.status.isopen6 = true;
+                        $scope.status.isopen6 = false;
+                        $scope.status.isopen7 = true;
                     }
                 }
             }
@@ -396,7 +432,8 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen3 = false;
                         $scope.status.isopen4 = false;
                         $scope.status.isopen5 = false;
-                        $scope.status.isopen6 = true;
+                        $scope.status.isopen6 = false;
+                        $scope.status.isopen7 = true;
                     }
                 }
             },

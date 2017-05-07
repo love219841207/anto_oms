@@ -69,10 +69,16 @@ app.controller('siteCtrl', ['$rootScope','$scope','$state','$stateParams','$http
             if(data == '1'){
                 angular.element(dom).addClass('container-show1');  //特效1
                 $scope.side_bar_2 = false;
-                $scope.side_bar_1 = true;
+                $scope.side_bar_2_open = false;
+                $scope.side_bar_1_open = true;
+                $timeout(function(){
+                    $scope.side_bar_1 = true;
+                },200);
             }else if(data == '2'){
                 angular.element(dom).addClass('container-show2');  //特效2
                 $scope.side_bar_1 = false;
+                $scope.side_bar_1_open = false;
+                $scope.side_bar_2_open = true;
                 $scope.side_bar_2 = true;
             }
         }).error(function(data) {

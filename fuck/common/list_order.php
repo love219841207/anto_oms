@@ -130,15 +130,16 @@ if(isset($_GET['sub_repo'])){
 	foreach ($res as $val) {
 		$send_id = $val['send_id'];
 		//查询出每个send_id 对应的 order_id 的SKU
-		$sql = "SELECT list.order_id,info.goods_code as goods_code,info.goods_num as goods_num FROM $response_info info,$response_list list WHERE list.order_id = info.order_id AND list.send_id = '{$send_id}'";
+		$sql = "SELECT list.order_id,info.id as info_id,info.goods_code as goods_code,info.goods_num as goods_num FROM $response_info info,$response_list list WHERE list.order_id = info.order_id AND list.send_id = '{$send_id}'";
 		$res2 = $db->getAll($sql);
+
 		$can_send = 1;
 		//遍历出订单
 		foreach ($res2 as $val2) {
 			 // $val2['order_id'];
 			$now_goods_code = $val2['goods_code'];
 			$goods_num = $val2['goods_num'];
-			$goods_num;
+			$info_id = $val2['info_id'];
 
 			// 查询是否有库存
 			$sql = "SELECT b_repo FROM goods_type WHERE goods_code = '{$now_goods_code}'";
@@ -147,12 +148,18 @@ if(isset($_GET['sub_repo'])){
 			if($goods_num > $res['b_repo']){
 				//无货
 				$can_send = 0;
+				//标记 is_pause
+				$sql = "UPDATE $response_info SET is_pause = '1' WHERE id = '{$info_id}'";
+				$res = $db->execute($sql);
 			}else{
 				//有货
+				//标记 is_pause
+				$sql = "UPDATE $response_info SET is_pause = '0' WHERE id = '{$info_id}'";
+				$res = $db->execute($sql);
 			}
 		}
 		if($can_send == 0){
-			//没有货冻结订单
+			//没有货，冻结订单
 			$sql = "UPDATE $response_list SET order_line = '3' WHERE send_id = '{$send_id}'";
 			$res = $db->execute($sql);
 		}else if($can_send == 1){

@@ -496,7 +496,7 @@ li{
 .container-show1{
 	animation-name: container-one;
     animation-duration: .5s;
-    animation-timing-function: cubic-bezier(0.43, 1.01, 0.47, 1);
+    animation-timing-function: ease-in-out;
 }
 .to_200{
 	padding-left: 200px;
@@ -514,7 +514,7 @@ li{
 .container-show2{
 	animation-name: container-two;
     animation-duration: .5s;
-    animation-timing-function: cubic-bezier(0.43,-0.1, 0.57, 0.06);
+    animation-timing-function: ease-in-out;
 }
 .to_60{
 	padding-left: 60px;
@@ -567,6 +567,7 @@ li{
 	background: #000;
 }
 /* sidebar */
+
 #side_box{
 	background: url('/images/bg1.jpg') no-repeat center center fixed;background-size:cover;
 	position: fixed;
@@ -587,13 +588,13 @@ li{
 	width:200px;
 	animation-name: side-bar-one;
     animation-duration: .5s;
-    animation-timing-function: cubic-bezier(0.43, 1.01, 0.47, 1);
+    animation-timing-function: ease-in-out;
 }
 .side_bar_2{
 	width:60px;
 	animation-name: side-bar-two;
     animation-duration: .5s;
-    animation-timing-function: cubic-bezier(0.43,-0.1, 0.57, 0.06);
+    animation-timing-function: ease-in-out;
 }
 @keyframes side-bar-one{
     0% {width: 60px;}

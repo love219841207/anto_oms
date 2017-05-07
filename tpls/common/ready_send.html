@@ -1,6 +1,6 @@
 <div class="container-fluid" ng-controller="readysendCtrl">
 	<button class="btn btn-warning mt10 btn-sm" ng-click="" id="filter_btn" ng-show="send_table"><i class="fa fa-gift fa-fw"></i>打包</button>
-	<div class="btn-group ml10 mt50 pull-right">
+	<div class="btn-group ml10 mt10 pull-right">
 		<div class="btn btn-default btn-sm">
 			<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="search_field" ng-change="change_search_field()">
 				<option value="">字段筛选 ..</option>
@@ -41,7 +41,7 @@
 			<td class="tagc">担当</td>
 			<td class="tagc">操作</td>
 		</tr>
-		<tr class="animate slide-right blue" ng-repeat="item in send_table track by $index" ng-class="{'bg_yellow':bg_yellow}">
+		<tr class="am-fade-and-slide-right blue" ng-repeat="item in send_table track by $index" ng-class="{'bg_yellow':bg_yellow}">
 			<td class="tagc">{{$index+1}}</td>
 			<td>{{item.send_id}}</td>
 			<td>{{item.station}}</td>
