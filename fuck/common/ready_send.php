@@ -5,6 +5,46 @@ $dir = dirname(__FILE__);
 
 set_time_limit(0);
 
+// 重置express
+if(isset($_GET['reset_express'])){
+	// 重置快递公司
+	$sql = "UPDATE send_table SET express_company =''";
+	$res = $db->execute($sql);
+
+	// 重置配送方式
+	$sql = "UPDATE send_table SET send_method = '宅配便' WHERE send_method = '宅急便'";
+	$res = $db->execute($sql);
+
+	// item_line
+	$sql = "UPDATE send_table SET item_line = '0'";
+	$res = $db->execute($sql);
+
+	echo 'ok';
+}
+
+// 打包
+if(isset($_GET['packing'])){
+	// 如果是 mail便，查询出，遍历进行体积运算，分pack_id(包裹数，oms_id-1,2,x)
+
+	// pack_id
+	$sql = "UPDATE send_table SET pack_id = oms_id WHERE send_method = '宅配便'";
+	$res = $db->execute($sql);
+
+	//先变成左川
+	$sql = "UPDATE send_table SET express_company ='佐川急便' WHERE send_method = '宅配便'";
+	$res = $db->execute($sql);
+
+	//地址分配配送公司，更新黑猫地址	（神奈川県，埼玉県，茨城県，群馬県，山梨県）
+	$sql = "UPDATE send_table SET express_company = 'ヤマト運輸',send_method = '宅急便' WHERE send_method = '宅配便' AND who_house LIKE '%神奈川県%' OR who_house LIKE '%埼玉県%' OR who_house LIKE '%茨城県%' OR who_house LIKE '%群馬県%' OR who_house LIKE '%山梨県%'";
+	$res = $db->execute($sql);
+
+	// item_line
+	$sql = "UPDATE send_table SET item_line = '1'";
+	$res = $db->execute($sql);
+
+	echo 'ok';
+}
+
 // 读取待发货
 if(isset($_GET['show_send_info'])){
 	$id = $_GET['show_send_info'];
@@ -298,12 +338,35 @@ if(isset($_GET['change_send_field'])){
 	if($field_name == 'out_num'){
 		$ch_field = '数量';
 		$list_field = 'goods_num';
-		// 更新INFO
-		$sql = "UPDATE $response_info SET $list_field = '{$new_key}' WHERE id = '{$info_id}'";
-		$res = $db->execute($sql);
-		// 更新 send_table
-		$sql = "UPDATE send_table SET $field_name = '{$new_key}' WHERE id = '{$id}'";
-		$res = $db->execute($sql);
+
+		// 查询goods_code,原out_num
+		$sql = "SELECT goods_code,out_num as o_num FROM send_table WHERE id = '{$id}'";
+		$res = $db->getOne($sql);
+		$goods_code = $res['goods_code'];
+		$o_num = $res['o_num'];
+
+		// 查询库存数
+		$sql = "SELECT b_repo FROM goods_type WHERE goods_code = '{$goods_code}'";
+		$res = $rdb->getOne($sql);
+		$leave_num = $res['b_repo'] + $o_num - $new_key;
+
+
+		if($leave_num < 0){
+			echo '库存不足';die;
+		}else{
+			// 库存同步调整
+			$sql = "UPDATE goods_type SET b_repo = b_repo + $o_num - $new_key WHERE goods_code = '{$goods_code}'";
+			$res = $rdb->execute($sql);
+
+			// 更新INFO
+			$sql = "UPDATE $response_info SET $list_field = '{$new_key}' WHERE id = '{$info_id}'";
+			$res = $db->execute($sql);
+
+			// 更新 send_table
+			$sql = "UPDATE send_table SET $field_name = '{$new_key}' WHERE id = '{$id}'";
+			$res = $db->execute($sql);
+		}
+		
 	}
 	if($field_name == 'due_money'){
 		$ch_field = '代引金额';
@@ -338,6 +401,13 @@ if(isset($_GET['change_post_addr'])){
 	$sql = "SELECT post_name FROM oms_post WHERE post_code = '{$new_post_code}'";
 	$res = $db->getOne($sql);
 	$post_name = $res['post_name'];
+
+	// 去掉括弧里面的地址
+	if(strstr($post_name,'（')==true){
+		$res = explode('（',$post_name);
+		$post_name = $res[0];
+	}
+
 	if($post_name == ''){
 		echo '邮编不存在。';
 	}else{

@@ -11,7 +11,7 @@
 			<td>商品代码</td>
 			<td>冻结数</td>
 		</tr>
-		<tr ng-click="bg_yellow=!bg_yellow" ng-class="{'bg_yellow':bg_yellow}" class="am-fade-and-slide-right" ng-repeat="item in pause_table track by $index">
+		<tr ng-dblclick="bg_yellow=!bg_yellow" ng-class="{'bg_yellow':bg_yellow}" class="am-fade-and-slide-right" ng-repeat="item in pause_table track by $index">
 			<td class="tagc">{{$index+1}}</td>
 			<td>{{item.goods_code}}</td>
 			<td class="tagr">{{item.pause_num}}</td>

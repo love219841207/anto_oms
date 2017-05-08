@@ -5,6 +5,7 @@ app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','
 		$scope.send_table = '';
 	}
 	$scope.search_field = '';
+    $scope.send_table = '';
 
     //查询send详情
     $scope.show_send_info = function(id){
@@ -19,6 +20,47 @@ app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
             $log.info("error:读取show_send_info失败。");
+        });
+    }
+
+    // 重置express
+    $scope.reset_express = function(){
+        $scope.send_table = '';
+        $http.get('/fuck/common/ready_send.php', {
+            params:{
+                reset_express:'reset'
+            }
+        }).success(function(data) {
+            if(data == 'ok'){
+
+            }else{
+                $scope.plug_alert('danger','严重！重置快递失败。','fa fa-ban');
+                $log.info(data);
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:重置快递失败。");
+        });
+    }
+
+    //打包
+    $scope.packing = function(){
+        $scope.send_table = '';
+        $http.get('/fuck/common/ready_send.php', {
+            params:{
+                packing:'pack'
+            }
+        }).success(function(data) {
+            if(data == 'ok'){
+                $scope.plug_alert('success','打包完毕。','fa fa-gift');
+                $scope.to_page($scope.now_page);    //刷新列表
+            }else{
+                $scope.plug_alert('danger','打包失败。','fa fa-ban');
+                $log.info(data);
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:打包失败。");
         });
     }
 
@@ -104,6 +146,7 @@ app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','
 
         $http.post('/fuck/common/ready_send.php', post_data).success(function(data) {
             if(data.status == 'ok'){
+                $scope.reset_express(); //重置快递
                 $scope.to_cod(data.order_id,data.station,data.store);    //计算COD
                 $scope.to_page($scope.now_page);    //刷新列表
             }else{
@@ -247,10 +290,11 @@ app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','
             }
         }).success(function(data) {
             if(data == 'ok'){
+                $scope.reset_express(); //重置快递
                 $scope.to_page($scope.now_page);
                 $scope.show_send_info(id);
             }else{
-                $scope.plug_alert('danger','修改失败。','fa fa-ban');
+                $scope.plug_alert('danger',data,'fa fa-ban');
                 $log.info(data);
             }
         }).error(function(data) {
@@ -279,6 +323,7 @@ app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','
             }
         }).success(function(data) {
             if(data == 'ok'){
+                $scope.reset_express(); //重置快递
                 $scope.to_page($scope.now_page);
                 $scope.show_send_info(id);
                 $scope.plug_alert('success','通过。','fa fa-smile-o');

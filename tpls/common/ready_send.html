@@ -1,5 +1,5 @@
 <div class="container-fluid" ng-controller="readysendCtrl">
-	<button class="btn btn-warning mt10 btn-sm" ng-click="" id="filter_btn" ng-show="send_table"><i class="fa fa-gift fa-fw"></i>打包</button>
+	<button class="btn btn-warning mt10 btn-sm" ng-click="packing()" id="filter_btn" ng-show="send_table!=''"><i class="fa fa-gift fa-fw"></i>打包</button>
 	<div class="btn-group ml10 mt10 pull-right">
 		<div class="btn btn-default btn-sm">
 			<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="search_field" ng-change="change_search_field()">
@@ -40,6 +40,7 @@
 			<!-- <td>店铺</td> -->
 			<td class="tagc">担当</td>
 			<td class="tagc">操作</td>
+			<td>item_line 测试用</td>
 		</tr>
 		<tr class="am-fade-and-slide-right blue" ng-repeat="item in send_table track by $index">
 			<td class="tagc">{{$index+1}}</td>
@@ -78,6 +79,7 @@
 				<i class="fa fa-edit fa-fw pointer" data-animation="am-fade-and-slide-top" data-template-url="/modal/show_send_info.html" bs-modal="modal" ng-click="show_send_info(item.id)"></i>
 				<i class="fa fa-trash-o fa-fw red pointer" data-animation="am-fade-and-slide-top" data-template-url="/modal/del_send_item.html" bs-modal="modal" ng-click="show_send_info(item.id)"></i>
 			</td>
+			<td>{{item.item_line}}</td>
 		</tr>
 	</table>
 	<nav>

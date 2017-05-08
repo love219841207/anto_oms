@@ -295,7 +295,14 @@ if(isset($_GET['change_post_addr'])){
 	// 查询出该 post_code 的对应市区
 	$sql = "SELECT post_name FROM oms_post WHERE post_code = '{$new_post_code}'";
 	$res = $db->getOne($sql);
+	
 	$post_name = $res['post_name'];
+	// 去掉括弧里面的地址
+	if(strstr($post_name,'（')==true){
+		$res = explode('（',$post_name);
+		$post_name = $res[0];
+	}
+	
 	if($post_name == ''){
 		echo '邮编不存在。';
 	}else{

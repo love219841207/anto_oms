@@ -197,7 +197,6 @@ if(isset($_GET['sub_repo'])){
 		who_name,	#收货人
 		is_cod,		#是否代引
 		due_money,	#代引金额，写出全部的item金额，根据cod，更新是否是代引
-		express_company,
 		send_method,
 		who_email,	#邮编
 		store_name,	#店铺名
@@ -216,20 +215,11 @@ if(isset($_GET['sub_repo'])){
 		list.receive_name,
 		list.payment_method,
 		list.pay_money,	#带引金额
-		'佐川急便',	#默认左川
 		info.yfcode,
 		list.buyer_email,
 		'{$store}',
 		'{$u_name}',
 		'{$today}' from $response_list list,$response_info info where list.order_id = info.order_id AND list.order_line = '4' AND list.store = '{$store}'";
-	$res = $db->execute($sql);
-
-	//合单代引金额计算
-	// $sql = "UPDATE send_table aa,send_table bb  SET aa.due_money = sum(aa.due_money) WHERE aa.send_id=bb.send_id";
-	// $res = $db->execute($sql);
-
-	//地址分配配送公司，更新黑猫地址	（神奈川県，埼玉県，茨城県，群馬県，山梨県）
-	$sql = "UPDATE send_table SET express_company = 'ヤマト運輸',send_method = '宅急便' WHERE who_house LIKE '%神奈川県%' OR who_house LIKE '%埼玉県%' OR who_house LIKE '%茨城県%' OR who_house LIKE '%群馬県%' OR who_house LIKE '%山梨県%'";
 	$res = $db->execute($sql);
 
 	// 更新order_line
