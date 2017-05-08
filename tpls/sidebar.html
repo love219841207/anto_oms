@@ -1,139 +1,139 @@
 <!--侧边栏-->
-<div id="side_box" ng-class="{'side_bar_1':side_bar_1_open,'side_bar_2':side_bar_2_open}">
-	<div id="side_bar" ng-class="{'side_bar_1':side_bar_1_open,'side_bar_2':side_bar_2_open}">
+<div id="side_box" ng-class="{'side_bar_1':side_bar_open,'side_bar_2':!side_bar_open}">
+	<div id="side_bar" ng-class="{'side_bar_1':side_bar_open,'side_bar_2':!side_bar_open}">
 		<uib-accordion close-others="oneAtATime" >
 			<!-- 亚马逊平台 -->
 			<div ng-show="now_station=='Amazon' && now_store_bar!=''" uib-accordion-group is-open="status.isopen1" ng-class="{'open_down':status.isopen1}" class="panel-default hover no_store">
 				<uib-accordion-heading>
 				<i class="fa fa-fw fa-amazon"></i>
-				<span class="am-fade" ng-show="side_bar_1"> {{now_store_bar}}</span>
+				<span class="am-fade" ng-show="side_bar"> {{now_store_bar}}</span>
 				<i class="pull-right fa fa-angle-right weight" ng-class="{'scroll_90': status.isopen1,'scroll_0': !status.isopen1}"></i>
 	     	 	</uib-accordion-heading>
 				<div ui-sref="site.amazon_order" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-file-text-o ml5"></i>
-					<span class="am-fade" ng-show="side_bar_1"> 订单操作</span>
+					<span class="am-fade" ng-show="side_bar"> 订单操作</span>
 				</div>
 				<div ui-sref="site.amazon_syn_express" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-cloud-upload ml5"></i>
-					<span class="am-fade" ng-show="side_bar_1"> 上传快递单</span>
+					<span class="am-fade" ng-show="side_bar"> 上传快递单</span>
 				</div>
 				<!-- <div ui-sref="site.amazon_send_one" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-check-circle ml5"></i>
-					<span class="am-fade" ng-show="side_bar_1"> 单品发货</span>
+					<span class="am-fade" ng-show="side_bar"> 单品发货</span>
 				</div> -->
 			</div>
 			<!-- 乐天平台 -->
 			<div ng-show="now_station=='Rakuten' && now_store_bar!=''" uib-accordion-group is-open="status.isopen2" ng-class="{'open_down':status.isopen2}" class="panel-default hover">
 				<uib-accordion-heading>
 	        		<i class="fa fa-fw fa-registered"></i>
-	        		<span class="am-fade" ng-show="side_bar_1"> 乐天</span><i class="pull-right fa fa-angle-right weight" ng-class="{'scroll_90': status.isopen2,'scroll_0': !status.isopen2}"></i>
+	        		<span class="am-fade" ng-show="side_bar"> 乐天</span><i class="pull-right fa fa-angle-right weight" ng-class="{'scroll_90': status.isopen2,'scroll_0': !status.isopen2}"></i>
 	     	 	</uib-accordion-heading>
 	     	 	<div ui-sref="site.rakuten_order" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-file-text-o ml5"></i>
-					<span class="am-fade" ng-show="side_bar_1"> 订单操作</span>
+					<span class="am-fade" ng-show="side_bar"> 订单操作</span>
 				</div>
 				<div ui-sref="site.rakuten_syn_express" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-cloud-upload ml5"></i>
-					<span class="am-fade" ng-show="side_bar_1"> 上传快递单</span>
+					<span class="am-fade" ng-show="side_bar"> 上传快递单</span>
 				</div>
 			</div>
 			<!-- 雅虎平台 -->
 			<div ng-show="now_station=='Yahoo' && now_store_bar!=''" uib-accordion-group is-open="status.isopen3" ng-class="{'open_down':status.isopen3}" class="panel-default hover">
 				<uib-accordion-heading>
 	        		<i class="fa fa-fw fa-yahoo"></i>
-	        		<span class="am-fade" ng-show="side_bar_1"> 雅虎</span><i class="pull-right fa fa-angle-right weight" ng-class="{'scroll_90': status.isopen3,'scroll_0': !status.isopen3}"></i>
+	        		<span class="am-fade" ng-show="side_bar"> 雅虎</span><i class="pull-right fa fa-angle-right weight" ng-class="{'scroll_90': status.isopen3,'scroll_0': !status.isopen3}"></i>
 	     	 	</uib-accordion-heading>
 	     	 	<div ui-sref="site.yahoo_order" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-file-text-o ml5"></i>
-					<span class="am-fade" ng-show="side_bar_1"> 订单操作</span>
+					<span class="am-fade" ng-show="side_bar"> 订单操作</span>
 				</div>
 				<div ui-sref="site.yahoo_syn_express" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-cloud-upload ml5"></i>
-					<span class="am-fade" ng-show="side_bar_1"> 上传快递单</span>
+					<span class="am-fade" ng-show="side_bar"> 上传快递单</span>
 				</div>
 			</div>
 			<!-- 发货模块 -->
 			<div ng-hide="ucan_send=='-'" uib-accordion-group is-open="status.isopen4" ng-class="{'open_down':status.isopen4}" class="panel-default hover">
 				<uib-accordion-heading>
 	        		<i class="fa fa-fw fa-send"></i>
-	        		<span class="am-fade" ng-show="side_bar_1"> 发货操作</span><i class="pull-right fa fa-angle-right weight" ng-class="{'scroll_90': status.isopen4,'scroll_0': !status.isopen4}"></i>
+	        		<span class="am-fade" ng-show="side_bar"> 发货操作</span><i class="pull-right fa fa-angle-right weight" ng-class="{'scroll_90': status.isopen4,'scroll_0': !status.isopen4}"></i>
 	     	 	</uib-accordion-heading>
 	     	 	<div ui-sref="site.ready_send" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-file-text-o ml5"></i>
-					<span class="am-fade" ng-show="side_bar_1"> 待出单</span>
+					<span class="am-fade" ng-show="side_bar"> 待出单</span>
 				</div>
 				<div ui-sref="site.make_send" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-file-text ml5"></i>
-					<span class="am-fade" ng-show="side_bar_1"> 生成发货单</span>
+					<span class="am-fade" ng-show="side_bar"> 生成发货单</span>
 				</div>
 				<div ui-sref="site.close_send" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-plane ml5"></i>
-					<span class="am-fade" ng-show="side_bar_1"> 已出单</span>
+					<span class="am-fade" ng-show="side_bar"> 已出单</span>
 				</div>
 				<div ui-sref="site.import_express" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-plus ml5"></i>
-					<span class="am-fade" ng-show="side_bar_1"> 导入快递单</span>
+					<span class="am-fade" ng-show="side_bar"> 导入快递单</span>
 				</div>
 			</div>
 			<!-- 表格统计 -->
 			<div uib-accordion-group is-open="status.isopen6" ng-class="{'open_down':status.isopen6}" class="panel-default hover">
 				<uib-accordion-heading>
 	        		<i class="fa fa-fw fa-bar-chart"></i>
-	        		<span class="am-fade" ng-show="side_bar_1"> 表格统计</span><i class="pull-right fa fa-angle-right weight" ng-class="{'scroll_90': status.isopen6,'scroll_0': !status.isopen6}"></i>
+	        		<span class="am-fade" ng-show="side_bar"> 表格统计</span><i class="pull-right fa fa-angle-right weight" ng-class="{'scroll_90': status.isopen6,'scroll_0': !status.isopen6}"></i>
 	     	 	</uib-accordion-heading>
 				<div ui-sref="site.pause_table" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-snowflake-o ml5"></i>
-					<span class="am-fade" ng-show="side_bar_1"> 冻结表</span>
+					<span class="am-fade" ng-show="side_bar"> 冻结表</span>
 				</div>
 				<!-- <div ui-sref="site.page_size" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-sort-numeric-asc ml5"></i>
-					<span class="am-fade" ng-show="side_bar_1"> 销售额统计</span>
+					<span class="am-fade" ng-show="side_bar"> 销售额统计</span>
 				</div> -->
 			</div>
 			<!-- 个人设置 -->
 			<div uib-accordion-group is-open="status.isopen5" ng-class="{'open_down':status.isopen5}" class="panel-default hover">
 				<uib-accordion-heading>
 	        		<i class="fa fa-fw fa-user"></i>
-	        		<span class="am-fade" ng-show="side_bar_1"> 个人设置</span><i class="pull-right fa fa-angle-right weight" ng-class="{'scroll_90': status.isopen5,'scroll_0': !status.isopen5}"></i>
+	        		<span class="am-fade" ng-show="side_bar"> 个人设置</span><i class="pull-right fa fa-angle-right weight" ng-class="{'scroll_90': status.isopen5,'scroll_0': !status.isopen5}"></i>
 	     	 	</uib-accordion-heading>
 				<div ui-sref="site.page_size" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-sort-numeric-asc ml5"></i>
-					<span class="am-fade" ng-show="side_bar_1"> 每页条数</span>
+					<span class="am-fade" ng-show="side_bar"> 每页条数</span>
 				</div>
 				<div ui-sref="site.change_pwd" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-unlock-alt ml5"></i>
-					<span class="am-fade" ng-show="side_bar_1"> 密码修改</span>
+					<span class="am-fade" ng-show="side_bar"> 密码修改</span>
 				</div>
 				<div ui-sref="site.my_logs" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-file-code-o ml5"></i>
-					<span class="am-fade" ng-show="side_bar_1"> 我的日志</span>
+					<span class="am-fade" ng-show="side_bar"> 我的日志</span>
 				</div>
 			</div>
 			<!-- 系统设置 -->
 			<div uib-accordion-group is-open="status.isopen7" ng-class="{'open_down':status.isopen7}" class="panel-default hover" ng-show="is_admin">
 				<uib-accordion-heading>
 	        		<i class="fa fa-fw fa-cog"></i>
-	        		<span class="am-fade" ng-show="side_bar_1"> 系统设置</span><i class="pull-right fa fa-angle-right weight" ng-class="{'scroll_90': status.isopen7,'scroll_0': !status.isopen7}"></i>
+	        		<span class="am-fade" ng-show="side_bar"> 系统设置</span><i class="pull-right fa fa-angle-right weight" ng-class="{'scroll_90': status.isopen7,'scroll_0': !status.isopen7}"></i>
 	     	 	</uib-accordion-heading>
 	     	 	<div ui-sref="site.users_manage" ui-sref-active="active" class="list-group-item">
 	     	 		<i class="fa fa-fw fa-users ml5"></i>
-					<span class="am-fade" ng-show="side_bar_1"> 员工管理</span>
+					<span class="am-fade" ng-show="side_bar"> 员工管理</span>
 				</div>
 				<div ui-sref="site.store_manage" ui-sref-active="active" class="list-group-item">
 	     	 		<i class="fa fa-fw fa-cube ml5"></i>
-					<span class="am-fade" ng-show="side_bar_1"> 店铺管理</span>
+					<span class="am-fade" ng-show="side_bar"> 店铺管理</span>
 				</div>
 				<div ui-sref="site.sys_post" ui-sref-active="active" class="list-group-item">
 	     	 		<i class="fa fa-fw fa-asterisk ml5"></i>
-					<span class="am-fade" ng-show="side_bar_1"> 邮编更新</span>
+					<span class="am-fade" ng-show="side_bar"> 邮编更新</span>
 				</div>
 				<div ui-sref="site.sys_logs" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-file-code-o ml5"></i>
-					<span class="am-fade" ng-show="side_bar_1"> 系统日志</span>
+					<span class="am-fade" ng-show="side_bar"> 系统日志</span>
 				</div>
 				<div ui-sref="site.sys_version" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-trademark ml5"></i>
-					<span class="am-fade" ng-show="side_bar_1"> 系统版本</span>
+					<span class="am-fade" ng-show="side_bar"> 系统版本</span>
 				</div>
 				
 			</div>

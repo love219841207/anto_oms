@@ -1,7 +1,7 @@
 <div id="top_box">
 	<div id="top_bar" ng-controller="topCtrl">
 		<div class="pull-left top_bar_left">
-			<i class="fa ml20 f20 mr20 switch_btn pointer fa-toggle-on" ng-class="{'fa-rotate-180':side_bar_1,'fa-rotate-180':side_bar_2}" ng-click='update_side_bar_status()'></i>
+			<i class="fa ml20 f20 mr20 switch_btn pointer fa-toggle-on" ng-class="{'fa-rotate-180':side_bar_open,'fa-rotate-180':!side_bar}" ng-click='update_side_bar_status()'></i>
 			<select class="selecter" ng-change="change_station()" ng-class="{'green':now_store_bar!='','red':now_store_bar==''}" ng-model="now_station">
 				<option value="">平台选择</option>
 				<option>Amazon</option>

@@ -504,11 +504,11 @@ li{
 	margin-right:auto;
 }
 @keyframes container-one{
-    0% {padding-left: 70px; }
+    0% {padding-left: 60px; }
     100% {padding-left: 200px;}
 }
 @-webkit-keyframes container-one{
-	0% {padding-left: 70px; }
+	0% {padding-left: 60px; }
     100% {padding-left: 200px;}
 } 
 .container-show2{
@@ -522,11 +522,11 @@ li{
 	margin-right:auto;
 }
 @keyframes container-two{
-    100% {padding-left: 70px; }
+    100% {padding-left: 60px; }
     0% {padding-left: 200px;}
 }
 @-webkit-keyframes container-two{
-	100% {padding-left: 70px; }
+	100% {padding-left: 60px; }
     0% {padding-left: 200px;}
 } 
 .tools_bar{

@@ -7,10 +7,25 @@ app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','
 	$scope.search_field = '';
     $scope.send_table = '';
 
+    // 检测库存
+    $scope.check_repo = function(goods_code){
+        $http.get('/fuck/common/ready_send.php', {
+            params:{
+                check_repo:goods_code
+            }
+        }).success(function(data) {
+            $scope.b_repo_num = data;
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:库存检测失败。");
+        });
+    }
+
     //查询send详情
     $scope.show_send_info = function(id){
         $scope.b_repo = false;
         $scope.sku_pass = false;
+        $scope.b_repo_num = '';
         $http.get('/fuck/common/ready_send.php', {
             params:{
                 show_send_info:id

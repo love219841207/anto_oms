@@ -53,16 +53,6 @@
 			<td>{{item.pack_id}}</td>
 			<!-- <td>{{item.sku}}</td> -->
 			<td ng-class="{'red danger':item.error_info=='no_sku'}">{{item.goods_code}}
-			<i ng-click="aa_goods_code=!aa_goods_code" 
-                class="fa fa-edit fa-fw pointer blue"
-                ng-show="item.error_info=='no_sku'"
-                ></i>
-              	<div ng-show="aa_goods_code" class="input-group">
-                	<input class="form-control input-sm" placeholder="商品代码 更正为..." type="text" id="goods_code{{item.id}}">
-                	<span class="input-group-btn">
-                  		<button class="btn btn-default btn-danger btn-sm" type="button" ng-click="change_format_field('goods_code',item.id,item.goods_code,item.oms_id);aa_goods_code=!aa_goods_code">确定</button>
-               		</span>
-              	</div>
 			</td>
 			<td class="tagr">{{item.out_num}}</td>
 			<!-- <td>{{item.who_tel}}</td> -->

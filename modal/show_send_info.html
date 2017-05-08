@@ -76,24 +76,16 @@
           </tr>
           <tr>
             <td class="s_gray">商品代码</td>
-            <td class="s_gray">{{item.goods_code}}
-                <i ng-click="aa_goods_code=!aa_goods_code" 
-                class="fa fa-edit fa-fw pointer"
-                ></i>
-                <div ng-show="aa_goods_code" class="input-group">
-                  <input class="form-control input-sm" placeholder="商品代码 更改为..." type="text" id="goods_code">
-                  <span class="input-group-btn">
-                    <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="need_check_send('goods_code',item.goods_code,item.station,item.store_name,item.id,item.oms_id,item.info_id);aa_goods_code=!aa_goods_code">确定</button>
-                </span>
-              </div>
+            <td class="s_gray">{{item.goods_code}} <span class="red">商品锁死不可修改</span>
             </td>
           </tr>
           <tr>
             <td class="s_gray">数量</td>
             <td class="s_gray">{{item.out_num}}
-                <i ng-click="aa_out_num=!aa_out_num" 
+                <i ng-click="aa_out_num=!aa_out_num;check_repo(item.goods_code)" 
                 class="fa fa-edit fa-fw pointer"
                 ></i>
+                <span ng-show="b_repo_num" class="green">日本库存：{{b_repo_num}}</span>
                 <div ng-show="aa_out_num" class="input-group">
                   <input class="form-control input-sm" placeholder="数量 更改为..." type="number" id="out_num">
                   <span class="input-group-btn">
