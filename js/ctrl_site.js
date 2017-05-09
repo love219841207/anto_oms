@@ -71,7 +71,7 @@ app.controller('siteCtrl', ['$rootScope','$scope','$state','$stateParams','$http
                 $scope.side_bar_open = true;
                 $timeout(function(){
                     $scope.side_bar = true;
-                },200);
+                },400);
             }else if(data == '2'){
                 
                 $scope.side_bar = false;

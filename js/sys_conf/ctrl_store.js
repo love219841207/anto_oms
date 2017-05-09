@@ -74,6 +74,7 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log', function($scope,$
                 $scope.mail_port = data.mail_port;
                 $scope.mail_answer_addr = data.mail_answer_addr;
                 $scope.mail_over_send = data.mail_over_send;
+                $scope.use_yfcode = data.use_yfcode;
             }
         }).error(function(data) {
             alert("严重！店铺配置读取失败。");
@@ -98,7 +99,8 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log', function($scope,$
                 mail_smtp:$scope.mail_smtp,
                 mail_port:$scope.mail_port,
                 mail_answer_addr:$scope.mail_answer_addr,
-                mail_over_send:$scope.mail_over_send
+                mail_over_send:$scope.mail_over_send,
+                use_yfcode:$scope.use_yfcode
             }
         }).success(function(data) {
             $log.info(data)

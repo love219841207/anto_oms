@@ -1,4 +1,4 @@
-<div class="modal" tabindex="-1" role="dialog">
+<div class="modal" tabindex="-1" role="dialog" ng-controller="storeCtrl">
   <div class="modal-dialog" style="width:600px;">
     <div class="modal-content">
       <div class="modal-header">
@@ -8,6 +8,27 @@
       <div class="modal-body">
       <!-- 亚马逊模块 -->
         <div ng-show="conf_store_station=='Amazon'">  
+          <div>店铺规则配置</div>
+          <div class="input-group auto mt10 ml20 mr20 ">
+            <span class="input-group-addon" >
+              本店铺是否开启运费代码规则？
+            </span>
+            <input  type="text"
+            placeholder="是填：1，否填：0。" 
+            ng-model="use_yfcode" 
+            class="form-control">
+          </div>
+          <div class="input-group auto mt10 ml20 mr20 ">
+            <span class="input-group-addon" >
+              上传单号后是否发送邮件通知客户（发货通知信）？
+            </span>
+            <input  type="text"
+            placeholder="是填：1，否填：0。" 
+            ng-model="mail_over_send" 
+            class="form-control">
+          </div>
+          <hr>
+          <div>店铺同步参数配置</div>
           <div class="input-group auto mt10 ml20 mr20 ">
             <span class="input-group-addon" >
               AWSACCESSKEYID
@@ -51,6 +72,7 @@
             class="form-control">
           </div>
           <hr>
+          <div>邮箱参数配置</div>
           <div class="input-group auto mt10 ml20 mr20 ">
             <span class="input-group-addon" >
               邮箱昵称
@@ -113,15 +135,6 @@
             ng-model="mail_bcc" 
             class="form-control">
           </div> -->
-          <div class="input-group auto mt10 ml20 mr20 ">
-            <span class="input-group-addon" >
-              上传单号后是否发送邮件通知客户（发货通知信）？
-            </span>
-            <input  type="text"
-            placeholder="是填：1，否填：0。" 
-            ng-model="mail_over_send" 
-            class="form-control">
-          </div>
         </div>
       </div>
       <div class="modal-footer">

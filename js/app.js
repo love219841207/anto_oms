@@ -382,6 +382,25 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
             }
         })
 
+        //运动代码管理
+        .state('site.yf_code',{
+            url: '/yf_code/{data}',
+            views:{
+                'show@site':{
+                    templateUrl: 'tpls/sys_conf/yf_code.html',
+                    controller: function($scope){
+                        $scope.status.isopen1 = false;
+                        $scope.status.isopen2 = false;
+                        $scope.status.isopen3 = false;
+                        $scope.status.isopen4 = false;
+                        $scope.status.isopen5 = false;
+                        $scope.status.isopen6 = false;
+                        $scope.status.isopen7 = true;
+                    }
+                }
+            }
+        })
+
         //邮编管理
         .state('site.sys_post',{
             url: '/sys_post/{data}',

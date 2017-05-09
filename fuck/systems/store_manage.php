@@ -56,9 +56,10 @@ if(isset($_GET['update_conf'])){
 	$mail_port = $_GET['mail_port'];
 	$mail_answer_addr = $_GET['mail_answer_addr'];
 	$mail_over_send = $_GET['mail_over_send'];
+	$use_yfcode = $_GET['use_yfcode'];
 	//判断店铺
 	if($station == 'Amazon'){
-		$sql = "UPDATE conf_Amazon SET awsaccesskeyid = '{$awsaccesskeyid}',sellerid = '{$sellerid}',signatureversion = '{$signatureversion}',secret = '{$secret}',marketplaceid_id_1 = '{$marketplaceid_id_1}',mail_name = '{$mail_name}',mail_id = '{$mail_id}',mail_pwd = '{$mail_pwd}',mail_smtp = '{$mail_smtp}',mail_port = '{$mail_port}',mail_answer_addr = '{$mail_answer_addr}',mail_over_send = '{$mail_over_send}' WHERE store_name = '{$store_name}'";
+		$sql = "UPDATE conf_Amazon SET awsaccesskeyid = '{$awsaccesskeyid}',sellerid = '{$sellerid}',signatureversion = '{$signatureversion}',secret = '{$secret}',marketplaceid_id_1 = '{$marketplaceid_id_1}',mail_name = '{$mail_name}',mail_id = '{$mail_id}',mail_pwd = '{$mail_pwd}',mail_smtp = '{$mail_smtp}',mail_port = '{$mail_port}',mail_answer_addr = '{$mail_answer_addr}',mail_over_send = '{$mail_over_send}',use_yfcode = '{$use_yfcode}' WHERE store_name = '{$store_name}'";
 	}
 	//其他平台！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
     $res = $db->execute($sql);

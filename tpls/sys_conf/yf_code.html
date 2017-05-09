@@ -1,0 +1,67 @@
+<div class="container-fluid mt20" ng-controller="yfcodeCtrl">
+	<div class="panel panel-primary">
+		<div class="panel-heading"><i class="fa fa-fw fa-jpy"></i> 运费代码</div>
+		<div class="panel-body">
+
+			<div class="btn-group ml20">
+				<div class="btn btn-default btn-sm">
+					<input class="key_words" ng-model='yf_code' type="text" placeholder="运费代码">
+				</div>
+				<div class="btn btn-default btn-sm">
+					<input class="key_words" ng-model='level' ng-blur="check_int('level')" type="number" placeholder="优先级">
+				</div>
+				<div class="btn btn-default btn-sm">
+					<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="send_method" ng-change="change_search_field()">
+						<option value="">配送方式 ..</option>
+						<option value="メール便">メール便</option>
+						<option value="宅配便">宅配便</option>
+					</select>
+				</div>
+				<div class="btn btn-default btn-sm">
+					<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="need_cod" ng-change="change_search_field()">
+						<option value="">必须COD ..</option>
+						<option value="1">COD</option>
+						<option value="0">N</option>
+					</select>
+				</div>
+				<div class="btn btn-default btn-sm">
+					<input class="key_words" ng-model='default_yf' ng-blur="check_int('default_yf')" type="number" placeholder="默认基础运费">
+				</div>
+				<div class="btn btn-default btn-sm">
+					<input class="key_words" ng-model='default_one_yf' ng-blur="check_int('default_one_yf')" type="number" placeholder="默认单件运费">
+				</div>
+				<div class="btn btn-success" ng-click="add_yfcode()" ng-disabled="!yf_code || !level || !send_method || !need_cod || !default_yf || !default_one_yf" ><i class="fa fa-plus fa-fw"></i>新 增</div>
+			</div>
+
+			<div class="container-fluid">
+				<table class="table table-hover table-striped table-bordered table-condensed f12 tagc mt20">
+					<tr>
+						<td>运费代码</td>
+						<td>优先级</td>
+						<td>包裹类型</td>
+						<td>必须COD</td>
+						<td>默认基础运费</td>
+						<td>默认单件运费</td>
+						<td>特殊运费</td>
+						<td>状态</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td><div class="btn btn-primary btn-xs">查看</div></td>
+						<td></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div class="panel-footer">
+			进行运费代码管理，点击【查看】进行特殊运费操作。
+		</div>
+	</div>
+
+	<div class="end_height"></div>
+</div>
