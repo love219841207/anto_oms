@@ -111,7 +111,7 @@ if(isset($_GET['get_my_store'])){
 if(isset($_GET['can_send'])){
 	$u_num = $_GET['can_send'];
 
-	$sql = "UPDATE user_oms SET can_send = (CASE can_send WHEN  '-' THEN '可发货' WHEN '可发货' THEN '-' END) WHERE u_num = '{$u_num}'";
+	$sql = "UPDATE user_oms SET can_send = (CASE can_send WHEN  '0' THEN '1' WHEN '1' THEN '0' END) WHERE u_num = '{$u_num}'";
 	$res = $db->execute($sql);
 	echo 'ok';
 }

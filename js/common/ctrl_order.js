@@ -8,7 +8,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
     $scope.tool_3 = false;
 
     //筛选默认值
-    $scope.search_order_line = 'mark';
+    $scope.search_order_line = 'ing';
 
     //初始化数据view层
     $scope.init_list = function(){
@@ -700,8 +700,9 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
     }
 
     //备注按钮点击
-    $scope.change_note = function(order_id){
+    $scope.change_note = function(order_id,index){
         $scope.change_note_order_id = order_id;  //备注传值
+        $scope.change_note_index = index;  //备注传值
         $scope.loading_shadow('open'); //打开loading
         //读取备注
         $http.get('/fuck/common/change_order.php', {
@@ -710,7 +711,8 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
                 station:$scope.now_station
             }
         }).success(function(data) {
-            $scope.change_note_key = data;
+            var dom = document.querySelector('#change_note_key');
+            angular.element(dom).val(data);
             $timeout(function(){$scope.loading_shadow('close');},300); //关闭loading
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
@@ -719,17 +721,21 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
     }
 
     //备注
-    $scope.save_note = function(){
+    $scope.save_note = function(index){
+        var dom = document.querySelector('#change_note_key');
+        var change_note_key = angular.element(dom).val();
+
         $scope.loading_shadow('open'); //打开loading
         $http.get('/fuck/common/change_order.php', {
             params:{
                 change_note:$scope.change_note_order_id,
-                note:$scope.change_note_key,
+                note:change_note_key,
                 station:$scope.now_station,
                 store:$scope.now_store_bar
             }
         }).success(function(data) {
             if(data == 'ok'){
+                $scope.to_page($scope.now_page);
                 $scope.plug_alert('success','已保存。','fa fa-smile-o');
             }else{
                 $scope.plug_alert('danger','保存失败。','fa fa-ban');
@@ -767,10 +773,10 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
     }
 
     // 删除订单
-    $scope.del_items = function(){
+    $scope.del_items = function(method){
         $scope.shadow('open','ss_make','正在删除，请稍后。');
 
-        var post_data = {del_items:$scope.my_checked_items,station:$scope.now_station,store:$scope.now_store_bar};
+        var post_data = {del_items:$scope.my_checked_items,method:method,station:$scope.now_station,store:$scope.now_store_bar};
 
         $http.post('/fuck/common/change_order.php', post_data).success(function(data) {
             if(data == 'ok'){

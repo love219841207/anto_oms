@@ -1,13 +1,14 @@
 var app=angular.module('myApp');
-app.controller('changepwdCtrl', ['$scope','$state','$http','$log', function($scope,$state,$http,$log){
+app.controller('changepwdCtrl', ['$scope','$state','$http','$log','$timeout', function($scope,$state,$http,$log,$timeout){
 	//密码修改
     $scope.change_pwd = function(){
-        $log.info($scope.old_pwd+$scope.new_pwd+$scope.re_new_pwd)
         $http.get('/fuck/user_conf/change_pwd.php', {params:{change_pwd:$scope.old_pwd,new_pwd:$scope.new_pwd,re_new_pwd:$scope.re_new_pwd}
         }).success(function(data) {
             if(data == 'ok') {
                 $scope.plug_alert('success','密码修改完成，请重新登录。','fa fa-smile-o');
-                window.location.href='/fuck/login.php?logout';
+                $timeout(function(){
+                     $state.go('login',{respond:'logout'});  //跳转到首页登录
+                },2000);          
             }else if(data == 'error_re'){
                 $scope.plug_alert('danger','新密码两次输入不一致。','fa fa-ban');
             }else if(data == 'error_old'){

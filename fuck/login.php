@@ -96,7 +96,6 @@ if(isset($_POST['change_pwd'])){
 //退出
 if(isset($_GET['logout'])){
 	session_destroy();
-
 	//日志
 	$do = '[Logout] 登出系统';
 	oms_log($_SESSION['oms_u_name'],$do,'system','-','-','-');

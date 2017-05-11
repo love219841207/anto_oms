@@ -35,7 +35,8 @@
 
 			<div class="container-fluid">
 				<table class="table table-hover table-striped table-bordered table-condensed f12 tagc mt20">
-					<tr>
+					<tr class="warning yellow">
+						<td><i class="fa fa-sort-numeric-asc fa-fw"></i></td>
 						<td>运费代码</td>
 						<td>优先级</td>
 						<td>包裹类型</td>
@@ -44,16 +45,22 @@
 						<td>默认单件运费</td>
 						<td>特殊运费</td>
 						<td>状态</td>
+						<td>操作</td>
 					</tr>
-					<tr>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
+					<tr ng-repeat="item in yfcode_table track by $index">
+						<td>{{$index+1}}</td>
+						<td>{{item.yf_code_name}}</td>
+						<td>{{item.level}}</td>
+						<td>{{item.send_method}}</td>
+						<td ng-class="{'green success':item.need_cod==1,'red danger':item.need_cod==0}">{{item.need_cod | status}} <i class="blue pointer fa fa-hand-pointer-o fa-fw" ng-click="change_status(item.id,'need_cod')"></i></td>
+						<td>{{item.default_yf}}</td>
+						<td>{{item.default_one_yf}}</td>
 						<td><div class="btn btn-primary btn-xs">查看</div></td>
-						<td></td>
+						<td ng-class="{'green success':item.status==1,'red danger':item.status==0}">{{item.status | status}} <i class="blue pointer fa fa-hand-pointer-o fa-fw" ng-click="change_status(item.id,'status')"></i></td>
+						<td>
+							<button class="btn btn-default btn-xs mr5" ng-click="is_del=!is_del"><i class="fa fa-question-circle fa-fw"></i>删 除</button>
+              				<button class="btn btn-danger btn-xs" ng-disabled="!is_del" ng-click="del_yfcode(item.id)"><i class="fa fa-trash-o fa-fw"></i>删 除</button>
+              			</td>
 					</tr>
 				</table>
 			</div>

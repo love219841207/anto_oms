@@ -21,6 +21,7 @@ if(isset($_GET['change_pwd'])){
     if(empty($res)){
         echo "error_old";
     }else{
+    	session_destroy();
     	//修改
     	$sql = "UPDATE user_oms SET u_pwd='{$new_pwd}' WHERE u_num = $user";
     	$res = $db->execute($sql);

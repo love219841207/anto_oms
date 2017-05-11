@@ -122,6 +122,7 @@
 
 					<button class="btn btn_fff btn-sm" ng-show="tool_1">
 						<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="search_order_line" ng-change="change_search_line()">
+							<option value="ing">ing</option>
 							<option ng-hide="now_list_order_count.mark_count==0" value="mark">标记</option>
 							<option ng-hide="now_list_order_count.no_info_count==0" value="0">无详单</option>
 							<option ng-hide="now_list_order_count.no_post_count==0" value="post_ok">卡邮编</option>
@@ -130,7 +131,7 @@
 							<option ng-hide="now_list_order_count.no_yfcode_count==0" value="yfcode_ok">卡运代</option>
 							<option value="2">已合单</option>
 							<option value="3">已冻结</option>
-							<option value="6">close</option>
+							<!-- <option value="6">close</option> -->
 							<option value="all">所有单</option>
 							<option value="-1">回收站</option>
 						</select>
@@ -293,7 +294,10 @@
 		      	<button ng-show="search_order_line=='-1'" ng-disabled="my_checked==''" ng-click="amz_return()" class="btn btn-success btn-sm">
 		      		<i class="fa fa-undo fa-fw"></i>还原
 		      	</button>
-		      	<button ng-hide="search_order_line=='-1'" ng-disabled="my_checked==''" type="button" ng-click="check_items()" data-animation="am-fade-and-slide-top" data-template-url="/modal/del_item.html" bs-modal="modal" class="btn btn-default btn-sm red">
+		      	<button ng-show="search_order_line=='-1'" ng-disabled="my_checked==''" ng-click="check_items();del_true='true'" data-animation="am-fade-and-slide-top" data-template-url="/modal/del_item.html" bs-modal="modal" class="btn btn-danger btn-sm">
+		      		<i class="fa fa-trash-o fa-fw"></i>彻底删除
+		      	</button>
+		      	<button ng-hide="search_order_line=='-1'" ng-disabled="my_checked==''" type="button" ng-click="check_items();del_true='false'" data-animation="am-fade-and-slide-top" data-template-url="/modal/del_item.html" bs-modal="modal" class="btn btn-default btn-sm red">
 		      		<i class="fa fa-trash-o fa-fw"></i>删除
 		      	</button>
 		    </div>
@@ -316,14 +320,14 @@
 						</td>
 						<td style="width:17%" class="blue"><span class="s_gray">订单号：</span>{{item.order_id}}</td>
 						<td style="width:15%" class="green"><span class="s_gray">同步日期：</span>{{item.syn_day}}</td>
-						<td style="width:30%"><span class="s_gray">购买时间：</span>{{item.purchase_date}}</td>
+						<td style="width:30%"><span class="s_gray">生命周期：</span>{{item.purchase_date}}<span ng-show="item.latest_ship_date">至{{item.latest_ship_date}}</span></td>
 						<td style="width:11%" class="green"><span class="s_gray">总金额：</span>{{item.order_total_money}}</td>
 						<td style="width:11%" class="yellow">
 							<span ng-hide="!item.payment_method"><span class="s_gray">代引金额：</span>
 						{{item.pay_money}}</span></td>
 						<td style="width:8%" class="tagc">
 							<button data-animation="am-fade-and-slide-top" data-template-url="/modal/show_one_info.html" bs-modal="modal" class="btn btn-xs btn-primary mr5" ng-click="show_one_info(item.order_id)">详单</button>
-							<button data-animation="am-fade-and-slide-top" data-template-url="/modal/note.html" bs-modal="modal" class="btn btn-xs btn-info" ng-click="change_note(item.order_id)">备注</button>
+							<button data-animation="am-fade-and-slide-top" data-template-url="/modal/note.html" bs-modal="modal" class="btn btn-xs btn-info" ng-click="change_note(item.order_id,$index)">备注</button>
 						</td>
 					</tr>
 					<tr ng-show="info_box" class="white am-fade-and-slide-right" ng-class="{'ready_color':item.order_line=='5',
@@ -342,7 +346,7 @@
 						<td class="yellow"><span class="s_gray">收件人：</span>{{item.receive_name}}</td>
 						<td class="blue"><span class="s_gray">邮编：</span>{{item.post_code}}</td>
 						<td class="green"><span class="s_gray">地址：</span>{{item.address}}</td>
-						<td colspan="4"><span class="s_gray" ng-show="item.latest_ship_date">最后发货时间：</span>{{item.latest_ship_date}}</td>
+						<td colspan="4" class="red"><span class="s_gray">备注：</span>{{item.order_note}}</td>
 					</tr>
 				</table>
 			</div>	

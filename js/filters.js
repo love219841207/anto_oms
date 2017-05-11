@@ -6,6 +6,17 @@ myFilters.filter('replace_symbol', function(){
     }
 });
 
+myFilters.filter('status', function(){
+    return function(item){
+        if(item == 0){
+            return '已关闭';
+        }
+        if(item == 1){
+            return '已开启';
+        }
+    }
+})
+
 myFilters.filter('order_line', function(){
     return function(item){
     	if(item == 0){

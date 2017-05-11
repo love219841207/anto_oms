@@ -219,22 +219,40 @@ if(isset($_GET['mark_orders'])){
 // 删除订单，实则修改order_id=-1
 if(isset($_POST['del_items'])){
 	$del_items = $_POST['del_items'];
+	$method = $_POST['method'];
 	$del_items = '('.$del_items.')';
 	$del_log_items = addslashes($_POST['del_items']);
 	$station = strtolower($_POST['station']);
 	$store = $_POST['store'];
 
 	$response_list = $station.'_response_list';
+	$response_info = $station.'_response_info';
 
-	// 删除response_list，取消标记
-	$sql = "UPDATE $response_list SET order_line = '-1',is_mark='0' WHERE order_id IN $del_items";
-	$res = $db->execute($sql);
+	// 判断是否彻底删除
+	if($method == 'delete'){
+		// 删除response_list
+		$sql = "DELETE FROM $response_list WHERE order_id IN $del_items";
+		$res = $db->execute($sql);
+		// 删除response_info
+		$sql = "DELETE FROM $response_info WHERE order_id IN $del_items";
+		$res = $db->execute($sql);
 
-	//日志
-	$do = ' [删除订单]：【'.$del_log_items.'】';
-	oms_log($u_name,$do,'change_order',$station,$store,'-');
+		//日志
+		$do = ' [彻底删除订单]：【'.$del_log_items.'】';
+		oms_log($u_name,$do,'change_order',$station,$store,'-');
 
-	echo 'ok';
+		echo 'ok';
+	}else if($method == 'trash'){
+		// 删除response_list，取消标记
+		$sql = "UPDATE $response_list SET order_line = '-1',is_mark='0' WHERE order_id IN $del_items";
+		$res = $db->execute($sql);
+
+		//日志
+		$do = ' [删除订单]：【'.$del_log_items.'】';
+		oms_log($u_name,$do,'change_order',$station,$store,'-');
+
+		echo 'ok';
+	}
 }
 
 // 还原订单，实则修改order_id=1 返回到订单验证前，同步后状态

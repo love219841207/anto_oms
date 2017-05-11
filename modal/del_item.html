@@ -13,7 +13,8 @@
         </table>
       </div>
       <div class="modal-footer">
-        <button type="button" ng-disabled="my_checked==''" class="btn btn-danger" ng-click="del_items();$hide()"><i class="fa fa-fw fa-trash"></i>删 除</button>
+        <button type="button" ng-show="del_true=='true'" ng-disabled="my_checked==''" class="btn btn-danger" ng-click="del_items('delete');$hide()"><i class="fa fa-fw fa-trash"></i>彻底删除</button>
+        <button type="button" ng-show="del_true=='false'" ng-disabled="my_checked==''" class="btn btn-danger" ng-click="del_items('trash');$hide()"><i class="fa fa-fw fa-trash"></i>删 除</button>
         <button type="button" class="btn btn-default" ng-click="$hide()">关 闭</button>
       </div>
     </div>

@@ -183,6 +183,7 @@ app.controller('topCtrl', ['$rootScope','$scope','$state','$stateParams','$http'
     $scope.logout = function(){
         $http.get('/fuck/login.php', {params:{logout:"bye"}
         }).success(function(data) {
+            $log.info(data)
             if(data == 'bye'){
                 $state.go('login',{respond:'logout'});  //跳转到首页登录
             }
@@ -278,7 +279,7 @@ app.controller('FileController', ['$rootScope','$scope','$state', 'Upload' , '$t
                     $timeout(function(){$scope.shadow('close');},1000);
                     // 刷新
                     var time=new Date().getTime();
-                    $state.go('site.order',{data:time});
+                    $state.go('site.amazon_order',{data:time});
                 }
             }).error(function(data) {
                 alert("系统错误，请联系管理员。");

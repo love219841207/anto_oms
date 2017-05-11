@@ -84,11 +84,17 @@ if(isset($_POST['items_count'])){
     		//是否是全部订单
     		if($search_order_line == 'all'){  //所有单不包括回收站的
     			if($start_date =='' or $end_date ==''){  
-		            $sql = "SELECT count(1) as cc FROM $response_list WHERE store = '{$store}' AND order_line>0";
+		            $sql = "SELECT count(1) as cc FROM $response_list WHERE store = '{$store}'";
 		        }else{
-		            $sql = "SELECT count(1) as cc FROM $response_list WHERE store = '{$store}' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}' AND order_line>0";
+		            $sql = "SELECT count(1) as cc FROM $response_list WHERE store = '{$store}' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}'";
 		        }
-    		}else{
+    		}else if($search_order_line == 'ing'){
+                if($start_date =='' or $end_date ==''){  
+                    $sql = "SELECT count(1) as cc FROM $response_list WHERE store = '{$store}' AND order_line<4 AND order_line>0";
+                }else{
+                    $sql = "SELECT count(1) as cc FROM $response_list WHERE store = '{$store}' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}' AND order_line<4 AND order_line>0";
+                }
+            }else{
     			if($start_date =='' or $end_date ==''){
 		            $sql = "SELECT count(1) as cc FROM $response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}'";
 		        }else{
@@ -99,11 +105,17 @@ if(isset($_POST['items_count'])){
 	    	//是否是全部订单
     		if($search_order_line == 'all'){  //所有单不包括回收站的
     			if($start_date =='' or $end_date ==''){
-		            $sql = "SELECT count(1) as cc FROM $response_list WHERE store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' AND order_line>0";
+		            $sql = "SELECT count(1) as cc FROM $response_list WHERE store = '{$store}' AND {$search_field} LIKE '%{$search_key}%'";
 		        }else{
-		            $sql = "SELECT count(1) as cc FROM $response_list WHERE store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}' AND order_line>0";
+		            $sql = "SELECT count(1) as cc FROM $response_list WHERE store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}'";
 		        }
-    		}else{
+    		}else if($search_order_line == 'ing'){
+                if($start_date =='' or $end_date ==''){
+                    $sql = "SELECT count(1) as cc FROM $response_list WHERE store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' AND order_line<4 AND order_line>0";
+                }else{
+                    $sql = "SELECT count(1) as cc FROM $response_list WHERE store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}' AND order_line<4 AND order_line>0";
+                }
+            }else{
     			if($start_date =='' or $end_date ==''){
 		            $sql = "SELECT count(1) as cc FROM $response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' AND {$search_field} LIKE '%{$search_key}%'";
 		        }else{
@@ -155,11 +167,17 @@ if(isset($_POST['get_order_list'])){
     		//是否是全部订单
     		if($search_order_line == 'all'){
     			if($start_date =='' or $end_date ==''){
-		            $sql = "SELECT * FROM $response_list WHERE store = '{$store}' AND order_line>0 ORDER BY id DESC limit {$start},{$page_size}";
+		            $sql = "SELECT * FROM $response_list WHERE store = '{$store}' ORDER BY id DESC limit {$start},{$page_size}";
 		        }else{
-		            $sql = "SELECT * FROM $response_list WHERE store = '{$store}' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}'  AND order_line>0 ORDER BY id DESC limit {$start},{$page_size}";
+		            $sql = "SELECT * FROM $response_list WHERE store = '{$store}' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}'  ORDER BY id DESC limit {$start},{$page_size}";
 		        }
-    		}else{
+    		}else if($search_order_line == 'ing'){
+                if($start_date =='' or $end_date ==''){
+                    $sql = "SELECT * FROM $response_list WHERE store = '{$store}' AND order_line>0 AND order_line<4 ORDER BY id DESC limit {$start},{$page_size}";
+                }else{
+                    $sql = "SELECT * FROM $response_list WHERE store = '{$store}' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}'  AND order_line>0 AND order_line<4 ORDER BY id DESC limit {$start},{$page_size}";
+                }
+            }else{
     			if($start_date =='' or $end_date ==''){
 		            $sql = "SELECT * FROM $response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' ORDER BY id DESC limit {$start},{$page_size}";
 		        }else{
@@ -170,11 +188,17 @@ if(isset($_POST['get_order_list'])){
 	    	//是否是全部订单
     		if($search_order_line == 'all'){
     			if($start_date =='' or $end_date ==''){
-		            $sql = "SELECT * FROM $response_list WHERE store = '{$store}' AND {$search_field} LIKE '%{$search_key}%'  AND order_line>0 ORDER BY id DESC limit {$start},{$page_size}";
+		            $sql = "SELECT * FROM $response_list WHERE store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' ORDER BY id DESC limit {$start},{$page_size}";
 		        }else{
-		            $sql = "SELECT * FROM $response_list WHERE store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}'  AND order_line>0 ORDER BY id DESC limit {$start},{$page_size}";
+		            $sql = "SELECT * FROM $response_list WHERE store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}' ORDER BY id DESC limit {$start},{$page_size}";
 		        }
-    		}else{
+    		}else if($search_order_line == 'ing'){
+                if($start_date =='' or $end_date ==''){
+                    $sql = "SELECT * FROM $response_list WHERE store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' AND order_line<4 AND order_line>0 ORDER BY id DESC limit {$start},{$page_size}";
+                }else{
+                    $sql = "SELECT * FROM $response_list WHERE store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}'  AND order_line>0 ORDER BY id DESC limit {$start},{$page_size}";
+                }
+            }else{
     			if($start_date =='' or $end_date ==''){
 		            $sql = "SELECT * FROM $response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' ORDER BY id DESC limit {$start},{$page_size}";
 		        }else{

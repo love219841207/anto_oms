@@ -1,4 +1,4 @@
-<div class="modal" tabindex="-1" role="dialog" ng-controller="orderCtrl">
+<div class="modal" tabindex="-1" role="dialog">
   <div class="modal-dialog" style="width:500px;">
     <div class="modal-content">
       <div class="modal-header">
@@ -6,10 +6,10 @@
         <h4 class="modal-title blue"><i class="fa fa-fw fa-book"></i> 订单备注 <span class="red">{{change_note_order_id}}</span></h4>
       </div>
       <div class="modal-body">
-        <textarea style="resize: none;" rows="3" class="form-control" placeholder="备注 .." ng-model="change_note_key"> </textarea>
+        <textarea style="resize: none;" rows="3" class="form-control" placeholder="备注 .." id="change_note_key"> </textarea>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-info" ng-click="save_note();$hide()"><i class='fa fa-save fa-fw'></i> 保存</button>
+        <button type="button" class="btn btn-info" ng-click="save_note(change_note_index);$hide()"><i class='fa fa-save fa-fw'></i> 保存</button>
         <button type="button" class="btn btn-default" ng-click="$hide()">关闭</button>
       </div>
     </div>
