@@ -111,6 +111,25 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
             }
         })
 
+        // 邮件模板
+        .state('site.mail_tpl',{
+            url: '/mail_tpl/{data}',
+            views:{
+                'show@site':{
+                    templateUrl: 'tpls/common/mail_tpl.html',
+                    controller: function($scope){
+                        $scope.status.isopen1 = true;
+                        $scope.status.isopen2 = false;
+                        $scope.status.isopen3 = false;
+                        $scope.status.isopen4 = false;
+                        $scope.status.isopen5 = false;
+                        $scope.status.isopen6 = false;
+                        $scope.status.isopen7 = false;
+                    }
+                }
+            }
+        })
+
     // 乐天
         // 乐天订单操作
         .state('site.rakuten_order',{

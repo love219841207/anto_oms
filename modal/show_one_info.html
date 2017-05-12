@@ -20,6 +20,14 @@
             <td class="s_gray">{{item.buyer_name}}</td>
           </tr>
           <tr>
+            <td class="s_gray">注文时间</td>
+            <td class="s_gray">{{item.purchase_date}}</td>
+          </tr>
+          <tr ng-show="item.latest_ship_date">
+            <td class="s_gray">最后发货时间</td>
+            <td class="s_gray">{{item.latest_ship_date}}</td>
+          </tr>
+          <tr>
             <td class="s_gray">邮箱</td>
             <td class="s_gray">{{item.buyer_email}}
               <i ng-click="aa_email=!aa_email" 
@@ -80,11 +88,19 @@
             <td class="s_gray" ng-class="{'danger red':item.post_ok==2}">{{item.address}}</td>
           </tr>
           <tr ng-show="aa_post_addr">
-            <td><input type="text" id="new_post_code" style="width:80px;padding-left: 4px;" placeholder=".. 新的邮编"></td>
+            <td><input type="text" id="new_post_code" style="width:80px;padding-left: 4px;" placeholder=".. 新的邮编">
+                <i class="fa fa-lightbulb-o fa-fw pointer blue" ng-hide="item.order_line>3" ng-click="read_oms_post2(item.post_code)"></i>
+            </td>
             <td><input type="text" id="new_address" style="width:400px;padding-left: 4px;" placeholder=".. 新的地址"></td>
           </tr>
           <tr ng-show="aa_post_addr">
             <td colspan="2"><div class="btn btn-warning btn-xs f14 pull-right" ng-click="change_post_addr(item.order_id)">&nbsp;&nbsp;&nbsp;&nbsp;修&nbsp;&nbsp;&nbsp;正&nbsp;&nbsp;&nbsp;</div></td>
+          </tr>
+          <tr ng-show="item.order_note">
+            <td class="s_gray">备注</td>
+            <td>
+              <textarea style="resize: vertical;" readonly class="form-control f12 dark">{{item.order_note}}</textarea>
+            </td>
           </tr>
         </table>
         <table class="tagl table table-hover table-condensed table-bordered" ng-repeat="item2 in one_res_info track by $index">
@@ -140,6 +156,7 @@
             <td class="blue">{{item2.goods_num}}
               <i ng-click="aa_goods_num=!aa_goods_num" 
                 class="fa fa-edit fa-fw pointer"
+                ng-hide="item.order_line>3"
                 ></i>
               <div ng-show="aa_goods_num" class="input-group">
                 <input class="form-control input-sm" placeholder="数量 更改为..." type="number" id="goods_num_{{$index}}">

@@ -436,6 +436,21 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         });
     }
 
+    // 读取邮编地址2
+    $scope.read_oms_post2 = function(){
+        var dom = document.querySelector('#new_post_code');
+        var post_code = angular.element(dom).val();
+        $http.get('/fuck/common/check_order.php', {
+            params:{
+                read_oms_post:post_code}
+        }).success(function(data) {
+            $scope.now_post_name = data;
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:读取邮编地址失败。");
+        });
+    }
+
     // --- 搜索邮编查询开始 ---
     $scope.search_oms_post = function(){
         $scope.search_post_addr = ''; //清空另一个
@@ -747,6 +762,34 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         });
     }
 
+    //批量备注
+    $scope.multi_note = function(){
+        var dom = document.querySelector('#multi_note_key');
+        var multi_note_key = angular.element(dom).val();
+        $scope.loading_shadow('open'); //打开loading
+        $http.get('/fuck/common/change_order.php', {
+            params:{
+                change_multi_note:'multi',
+                note_orders:$scope.my_checked_items,
+                note:multi_note_key,
+                station:$scope.now_station,
+                store:$scope.now_store_bar
+            }
+        }).success(function(data) {
+            if(data == 'ok'){
+                $scope.to_page($scope.now_page);
+                $scope.plug_alert('success','已批量保存。','fa fa-smile-o');
+            }else{
+                $log.info(data);
+                $scope.plug_alert('danger','保存失败。','fa fa-ban');
+            }
+            $timeout(function(){$scope.loading_shadow('close');},300); //关闭loading
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:备注保存失败。");
+        });
+    }
+
     // 标记订单
     $scope.mark_orders = function(e){
         $scope.check_items();   // 选择项
@@ -1022,7 +1065,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
 
     //扣库存
     $scope.sub_repo = function(){
-    	 $scope.shadow('open','ss_write','正在扣库存，请稍后。');
+    	$scope.shadow('open','ss_write','正在扣库存，请稍后。');
     	$scope.init_list(); //初始化列表数据
     	$http.get('/fuck/common/list_order.php', {
             params:{

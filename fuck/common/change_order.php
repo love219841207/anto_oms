@@ -126,7 +126,7 @@ if(isset($_GET['change_info_field'])){
 		$sql = "SELECT * FROM goods_type WHERE goods_code ='{$new_key}'";
 		$res = $rdb->getOne($sql);
 		if(empty($res)){
-			echo '无此商品代码。';
+			echo '无此商品代码。';die;
 		}else{
 			$sql = "UPDATE $response_info SET $field_name = '{$new_key}',sku_ok='1' WHERE id = '{$id}'";
 			$res = $db->execute($sql);
@@ -186,6 +186,32 @@ if(isset($_GET['change_note'])){
 	// 日志
 	$do = '备注为【'.$new_key.'】';
 	oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
+	echo 'ok';
+}
+
+//批量修改订单备注
+if(isset($_GET['change_multi_note'])){
+	$new_key = addslashes($_GET['note']);
+	$station = strtolower($_GET['station']);
+	$store = $_GET['store'];
+	$response_list = $station.'_response_list';
+
+	$note_orders = $_GET['note_orders'];
+	$note_orders = '('.$note_orders.')';
+
+	$sql = "UPDATE $response_list SET order_note = '{$new_key}' WHERE order_id IN $note_orders";
+	$res = $db->execute($sql);
+
+	//查询OMS-ID
+	$sql = "SELECT id FROM $response_list WHERE order_id in $note_orders";
+	$res = $db->getAll($sql);
+	foreach ($res as $value) {
+		$oms_id = $value['id'];
+		// 日志
+		$do = '备注为【'.$new_key.'】';
+		oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
+	}
+
 	echo 'ok';
 }
 

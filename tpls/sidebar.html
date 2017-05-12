@@ -17,10 +17,10 @@
 					<i class="fa fa-fw fa-cloud-upload ml5"></i>
 					<span class="am-fade" ng-show="side_bar"> 上传快递单</span>
 				</div>
-				<!-- <div ui-sref="site.amazon_send_one" ui-sref-active="active" class="list-group-item">
-					<i class="fa fa-fw fa-check-circle ml5"></i>
-					<span class="am-fade" ng-show="side_bar"> 单品发货</span>
-				</div> -->
+				<div ui-sref="site.mail_tpl" ui-sref-active="active" class="list-group-item">
+					<i class="fa fa-fw fa-envelope-o ml5"></i>
+					<span class="am-fade" ng-show="side_bar"> 邮件模板</span>
+				</div>
 			</div>
 			<!-- 乐天平台 -->
 			<div ng-show="now_station=='Rakuten' && now_store_bar!=''" uib-accordion-group is-open="status.isopen2" ng-class="{'open_down':status.isopen2}" class="panel-default hover">

@@ -35,7 +35,7 @@
 							is_active('active_tools','2')
 						">
 						<!-- 说明：点击清空数据层，初始化上传init_upload，加载上传组件，tool_bar工具条关闭，页码关闭 -->
-						<i class="fa fa-arrow-up fa-fw s_gray"></i> 上传
+						<i class="fa fa-arrow-up fa-fw s_gray"></i> 导入
 					</button>
 					<button 
 						type="button" 
@@ -279,14 +279,17 @@
 		      	<button type="button" class="btn btn-default btn-sm" ng-click="check_back_item();back_icon=!back_icon">
 		      		<i class="fa fa-adjust fa-fw s_gray" ng-class="{'fa-flip-horizontal':back_icon}"></i>反选
 		      	</button>
-		      	<button type="button" data-animation="am-fade-and-slide-top" data-template-url="/modal/post_addr.html" bs-modal="modal" class="btn btn-default btn-sm blue">
-		      		<i class="fa fa-truck fa-fw"></i>邮编查询
-		      	</button>
 		      	<button type="button" ng-hide="search_order_line=='-1'" ng-disabled="my_checked==''" ng-click="mark_orders('1')" class="btn btn-default btn-sm">
 		      		<i class="fa fa-star fa-fw yellow"></i>标记
 		      	</button>
 		      	<button type="button" ng-hide="search_order_line=='-1'" ng-disabled="my_checked==''" ng-click="mark_orders('0')" class="btn btn-default btn-sm">
 		      		<i class="fa fa-star-o fa-fw yellow"></i>不标记
+		      	</button>
+		      	<button type="button" ng-hide="search_order_line=='-1'" ng-disabled="my_checked==''" data-animation="am-fade-and-slide-top" data-template-url="/modal/multi_note.html" bs-modal="modal" class="btn btn-default btn-sm blue">
+		      		<i class="fa fa-book fa-fw"></i>批量备注
+		      	</button>
+		      	<button type="button" data-animation="am-fade-and-slide-top" data-template-url="/modal/post_addr.html" bs-modal="modal" class="btn btn-default btn-sm blue">
+		      		<i class="fa fa-truck fa-fw"></i>邮编查询
 		      	</button>
 		      	<button type="button" ng-click="check_items();get_mail_tpl()" ng-hide="search_order_line=='-1'" ng-disabled="my_checked==''" data-animation="am-fade-and-slide-top" data-template-url="/modal/send_mail.html" bs-modal="modal" class="btn btn-default btn-sm blue">
 		      		<i class="fa fa-envelope-o fa-fw"></i>发信
@@ -320,7 +323,7 @@
 						</td>
 						<td style="width:17%" class="blue"><span class="s_gray">订单号：</span>{{item.order_id}}</td>
 						<td style="width:15%" class="green"><span class="s_gray">同步日期：</span>{{item.syn_day}}</td>
-						<td style="width:30%"><span class="s_gray">生命周期：</span>{{item.purchase_date}}<span ng-show="item.latest_ship_date">至{{item.latest_ship_date}}</span></td>
+						<td style="width:30%"><span class="s_gray">注文时间：</span>{{item.purchase_date}}</td>
 						<td style="width:11%" class="green"><span class="s_gray">总金额：</span>{{item.order_total_money}}</td>
 						<td style="width:11%" class="yellow">
 							<span ng-hide="!item.payment_method"><span class="s_gray">代引金额：</span>
@@ -346,7 +349,7 @@
 						<td class="yellow"><span class="s_gray">收件人：</span>{{item.receive_name}}</td>
 						<td class="blue"><span class="s_gray">邮编：</span>{{item.post_code}}</td>
 						<td class="green"><span class="s_gray">地址：</span>{{item.address}}</td>
-						<td colspan="4" class="red"><span class="s_gray">备注：</span>{{item.order_note}}</td>
+						<td colspan="4"><textarea ng-show="item.order_note" style=" width: 100%; border: none; background: none; resize: vertical;" readonly class="f12 red">备注：{{item.order_note}}</textarea></td>
 					</tr>
 				</table>
 			</div>	
