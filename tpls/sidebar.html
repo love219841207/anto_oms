@@ -58,6 +58,10 @@
 	        		<i class="fa fa-fw fa-send"></i>
 	        		<span class="am-fade" ng-show="side_bar"> 发货操作</span><i class="pull-right fa fa-angle-right weight" ng-class="{'scroll_90': status.isopen4,'scroll_0': !status.isopen4}"></i>
 	     	 	</uib-accordion-heading>
+	     	 	<div ui-sref="site.pause_orders" ui-sref-active="active" class="list-group-item">
+					<i class="fa fa-fw fa-snowflake-o ml5"></i>
+					<span class="am-fade" ng-show="side_bar"> 已冻结</span>
+				</div>
 	     	 	<div ui-sref="site.ready_send" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-file-text-o ml5"></i>
 					<span class="am-fade" ng-show="side_bar"> 待出单</span>

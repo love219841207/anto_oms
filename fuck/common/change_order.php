@@ -47,10 +47,11 @@ if(isset($_GET['check_repo'])){
     $response_info = $station.'_response_info';
 	$goods_code = $_GET['check_repo'];
 
-	$sql = "SELECT b_repo FROM goods_type WHERE goods_code = '{$goods_code}'";
+	$sql = "SELECT a_repo,b_repo FROM goods_type WHERE goods_code = '{$goods_code}'";
 	$res = $rdb->getOne($sql);
+	$a_repo = $res['a_repo'];
 	$b_repo = $res['b_repo'];
-	$sql = "UPDATE $response_info SET b_repo_num = '{$b_repo}' WHERE id='{$id}'";
+	$sql = "UPDATE $response_info SET a_repo_num = '{$a_repo}',b_repo_num = '{$b_repo}' WHERE id='{$id}'";
 	$res = $db->execute($sql);
 	echo 'ok';
 }

@@ -12,6 +12,7 @@ if(isset($_GET['get_store'])){
 if(isset($_GET['new_store'])){
 	$new_store = addslashes($_GET['new_store']);
 	$station = addslashes($_GET['station']);
+	$conf = 'conf_'.$station;
 	$sql = "SELECT * FROM oms_store WHERE store_name = '{$new_store}'";
     $res = $db->getOne($sql);
 	if(empty($res)){
@@ -19,11 +20,8 @@ if(isset($_GET['new_store'])){
 		$sql = "INSERT INTO oms_store (station,store_name) VALUES ('{$station}','{$new_store}')";
 		$res = $db->execute($sql);
 		//新建店铺配置
-		if($station == 'Amazon'){
-			$sql = "INSERT INTO conf_Amazon (store_name) VALUES ('{$new_store}')";
-			$res = $db->execute($sql);
-		}
-		//其他平台！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+		$sql = "INSERT INTO $conf (store_name) VALUES ('{$new_store}')";
+		$res = $db->execute($sql);
 		echo 'ok';
 	}else{
 		echo 'has';
@@ -44,24 +42,30 @@ if(isset($_GET['get_conf'])){
 if(isset($_GET['update_conf'])){
 	$station = $_GET['update_conf'];
 	$store_name = $_GET['store_name'];
-	$awsaccesskeyid = $_GET['awsaccesskeyid'];
-	$sellerid = $_GET['sellerid'];
-	$signatureversion = $_GET['signatureversion'];
-	$secret = $_GET['secret'];
-	$marketplaceid_id_1 = $_GET['marketplaceid_id_1'];
-	$mail_name = $_GET['mail_name'];
-	$mail_id = $_GET['mail_id'];
-	$mail_pwd = $_GET['mail_pwd'];
-	$mail_smtp = $_GET['mail_smtp'];
-	$mail_port = $_GET['mail_port'];
-	$mail_answer_addr = $_GET['mail_answer_addr'];
+	
 	$mail_over_send = $_GET['mail_over_send'];
 	$use_yfcode = $_GET['use_yfcode'];
 	//判断店铺
 	if($station == 'Amazon'){
+		$awsaccesskeyid = $_GET['awsaccesskeyid'];
+		$sellerid = $_GET['sellerid'];
+		$signatureversion = $_GET['signatureversion'];
+		$secret = $_GET['secret'];
+		$marketplaceid_id_1 = $_GET['marketplaceid_id_1'];
+		$mail_name = $_GET['mail_name'];
+		$mail_id = $_GET['mail_id'];
+		$mail_pwd = $_GET['mail_pwd'];
+		$mail_smtp = $_GET['mail_smtp'];
+		$mail_port = $_GET['mail_port'];
+		$mail_answer_addr = $_GET['mail_answer_addr'];
 		$sql = "UPDATE conf_Amazon SET awsaccesskeyid = '{$awsaccesskeyid}',sellerid = '{$sellerid}',signatureversion = '{$signatureversion}',secret = '{$secret}',marketplaceid_id_1 = '{$marketplaceid_id_1}',mail_name = '{$mail_name}',mail_id = '{$mail_id}',mail_pwd = '{$mail_pwd}',mail_smtp = '{$mail_smtp}',mail_port = '{$mail_port}',mail_answer_addr = '{$mail_answer_addr}',mail_over_send = '{$mail_over_send}',use_yfcode = '{$use_yfcode}' WHERE store_name = '{$store_name}'";
 	}
-	//其他平台！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+	if($station == 'Yahoo'){
+		$sql = "UPDATE conf_Yahoo SET mail_over_send = '{$mail_over_send}',use_yfcode = '{$use_yfcode}' WHERE store_name = '{$store_name}'";
+	}
+	if($station == 'Rakuten'){
+		$sql = "UPDATE conf_Rakuten SET mail_over_send = '{$mail_over_send}',use_yfcode = '{$use_yfcode}' WHERE store_name = '{$store_name}'";
+	}
     $res = $db->execute($sql);
     echo 'ok';
 }

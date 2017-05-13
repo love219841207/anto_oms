@@ -134,11 +134,11 @@
           <tr>
             <td class="s_gray">商品代码</td>
             <td class="green" ng-class="{'danger red':item2.sku_ok==2}">{{item2.goods_code}}
-              <i ng-click="check_repo(item2.goods_code,item2.id,item2.order_id)" 
+              <i ng-click="check_repo(item2.goods_code,item2.id,item2.order_id);open_repo='1'" 
                 class="fa fa-cubes fa-fw pointer"
                 ng-hide="item.order_line>3"
                 ></i>
-                <span class="red">{{item2.b_repo_num}}</span>
+                <span class="blue" ng-show="open_repo=='1'">({{item2.a_repo_num}}+{{item2.b_repo_num}}) </span>
               <i ng-click="aa_goods_code=!aa_goods_code" 
                 class="fa fa-edit fa-fw pointer"
                 ng-hide="item.order_line>3"

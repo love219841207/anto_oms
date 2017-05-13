@@ -480,7 +480,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
 
     //查看单个详情
     $scope.show_one_info = function(order_id){
-        $scope.b_repo = false;
+        $scope.open_repo = '0';
         $scope.sku_pass = false;
         $scope.loading_shadow('open'); //打开loading
         $scope.now_post_name = '';	// 初始化参考地域

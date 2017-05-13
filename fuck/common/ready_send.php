@@ -58,9 +58,12 @@ if(isset($_GET['show_send_info'])){
 if(isset($_GET['check_repo'])){
 	$goods_code = $_GET['check_repo'];
 
-	$sql = "SELECT b_repo FROM goods_type WHERE goods_code = '{$goods_code}'";
+	$sql = "SELECT a_repo,b_repo,a_repo+b_repo AS repo FROM goods_type WHERE goods_code = '{$goods_code}'";
 	$res = $rdb->getOne($sql);
-	echo $res['b_repo'];
+	$final_res['repo'] = $res['repo'];
+	$final_res['a_repo'] = $res['a_repo'];
+	$final_res['b_repo'] = $res['b_repo'];
+	echo json_encode($final_res);
 }
 
 // 添加待发货item
@@ -346,9 +349,9 @@ if(isset($_GET['change_send_field'])){
 		$o_num = $res['o_num'];
 
 		// 查询库存数
-		$sql = "SELECT b_repo FROM goods_type WHERE goods_code = '{$goods_code}'";
+		$sql = "SELECT a_repo+b_repo AS repo FROM goods_type WHERE goods_code = '{$goods_code}'";
 		$res = $rdb->getOne($sql);
-		$leave_num = $res['b_repo'] + $o_num - $new_key;
+		$leave_num = $res['repo'] + $o_num - $new_key;
 
 
 		if($leave_num < 0){

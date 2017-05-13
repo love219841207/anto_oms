@@ -1,5 +1,5 @@
 <div class="container-fluid" ng-controller="readysendCtrl">
-	<button class="btn btn-warning mt10 btn-sm" ng-click="packing()" id="filter_btn" ng-show="send_table!=''"><i class="fa fa-gift fa-fw"></i>打包</button>
+	<button class="btn btn-warning mt10 btn-sm" ng-click="packing()" ng-show="send_table!=''"><i class="fa fa-gift fa-fw"></i>打包</button>
 	<div class="btn-group ml10 mt10 pull-right">
 		<div class="btn btn-default btn-sm">
 			<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="search_field" ng-change="change_search_field()">
@@ -13,7 +13,7 @@
 				<input class="key_words blue" ng-model="search_key" type="text" placeholder="关键词 ..">
 			</span>
 		</div>
-		<button class="btn btn-primary" ng-click="filter_bar_submit()" id="filter_btn"><i class="fa fa-search fa-fw"></i></button>
+		<button class="btn btn-primary" ng-click="filter_bar_submit()"><i class="fa fa-search fa-fw"></i></button>
 	</div>
 	<div class="clearfix"></div>
 

@@ -76,13 +76,21 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log', function($scope,$
                 $scope.mail_over_send = data.mail_over_send;
                 $scope.use_yfcode = data.use_yfcode;
             }
+            if(station == 'Yahoo'){
+                $scope.mail_over_send = data.mail_over_send;
+                $scope.use_yfcode = data.use_yfcode;
+            }
+            if(station == 'Rakuten'){
+                $scope.mail_over_send = data.mail_over_send;
+                $scope.use_yfcode = data.use_yfcode;
+            }
         }).error(function(data) {
             alert("严重！店铺配置读取失败。");
             $log.info(data);
         });
     }
 
-    //保存店铺配置
+    //保存亚马逊店铺配置
     $scope.save_amazone_conf = function(){
         $http.get('/fuck/systems/store_manage.php', {
             params:{
@@ -99,6 +107,65 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log', function($scope,$
                 mail_smtp:$scope.mail_smtp,
                 mail_port:$scope.mail_port,
                 mail_answer_addr:$scope.mail_answer_addr,
+                mail_over_send:$scope.mail_over_send,
+                use_yfcode:$scope.use_yfcode
+            }
+        }).success(function(data) {
+            if(data == 'ok'){}else{
+                $scope.plug_alert('danger','保存失败。','fa fa-ban');
+                $log.info(data);
+            }
+            // $log.info(data)
+        }).error(function(data) {
+            alert("严重！保存店铺配置失败。");
+            $log.info(data);
+        });
+    }
+
+    // 保存雅虎店铺配置
+    $scope.save_yahoo_conf = function(){
+        $http.get('/fuck/systems/store_manage.php', {
+            params:{
+                update_conf:$scope.conf_store_station,
+                store_name:$scope.conf_store_modal_title,
+                // awsaccesskeyid:$scope.awsaccesskeyid,
+                // sellerid:$scope.sellerid,
+                // signatureversion:$scope.signatureversion,
+                // secret:$scope.secret,
+                // marketplaceid_id_1:$scope.marketplaceid_id_1,
+                // mail_name:$scope.mail_name,
+                // mail_id:$scope.mail_id,
+                // mail_pwd:$scope.mail_pwd,
+                // mail_smtp:$scope.mail_smtp,
+                // mail_port:$scope.mail_port,
+                // mail_answer_addr:$scope.mail_answer_addr,
+                mail_over_send:$scope.mail_over_send,
+                use_yfcode:$scope.use_yfcode
+            }
+        }).success(function(data) {
+            $log.info(data)
+        }).error(function(data) {
+            alert("严重！保存店铺配置失败。");
+            $log.info(data);
+        });
+    }
+    // 保存乐天店铺配置
+    $scope.save_rakuten_conf = function(){
+        $http.get('/fuck/systems/store_manage.php', {
+            params:{
+                update_conf:$scope.conf_store_station,
+                store_name:$scope.conf_store_modal_title,
+                // awsaccesskeyid:$scope.awsaccesskeyid,
+                // sellerid:$scope.sellerid,
+                // signatureversion:$scope.signatureversion,
+                // secret:$scope.secret,
+                // marketplaceid_id_1:$scope.marketplaceid_id_1,
+                // mail_name:$scope.mail_name,
+                // mail_id:$scope.mail_id,
+                // mail_pwd:$scope.mail_pwd,
+                // mail_smtp:$scope.mail_smtp,
+                // mail_port:$scope.mail_port,
+                // mail_answer_addr:$scope.mail_answer_addr,
                 mail_over_send:$scope.mail_over_send,
                 use_yfcode:$scope.use_yfcode
             }

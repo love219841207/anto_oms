@@ -24,7 +24,7 @@ if(isset($_GET['down_pause'])){
     //PHPExcel
     $objPHPExcel = new PHPExcel();
     $objSheet = $objPHPExcel->getActiveSheet();
-    $objSheet->setTitle('ANTO-OMS冻结表@'.$now_time);//表名
+    $objSheet->setTitle('统计冻结表@'.$now_time);//表名
     $objSheet->setCellValue("A1","商品代码")
             ->setCellValue("B1","冻结数");    //表头值
     $objSheet->getDefaultStyle()->getFont()->setName("微软雅黑")->setSize(12);  //默认字体

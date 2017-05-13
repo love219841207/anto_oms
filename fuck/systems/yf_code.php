@@ -38,3 +38,12 @@ if(isset($_GET['change_status'])){
 	$res = $db->execute($sql);
 	echo 'ok';
 }
+
+// 删除运费代码
+if(isset($_GET['del_yfcode'])){
+	$id = $_GET['del_yfcode'];
+
+	$sql = "DELETE FROM yf_code WHERE id = '{$id}'";
+	$res = $db->execute($sql);
+	echo 'ok';
+}

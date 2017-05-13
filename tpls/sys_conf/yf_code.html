@@ -20,7 +20,7 @@
 				<div class="btn btn-default btn-sm">
 					<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="need_cod" ng-change="change_search_field()">
 						<option value="">必须COD ..</option>
-						<option value="1">COD</option>
+						<option value="1">Y</option>
 						<option value="0">N</option>
 					</select>
 				</div>
@@ -55,7 +55,7 @@
 						<td ng-class="{'green success':item.need_cod==1,'red danger':item.need_cod==0}">{{item.need_cod | status}} <i class="blue pointer fa fa-hand-pointer-o fa-fw" ng-click="change_status(item.id,'need_cod')"></i></td>
 						<td>{{item.default_yf}}</td>
 						<td>{{item.default_one_yf}}</td>
-						<td><div class="btn btn-primary btn-xs">查看</div></td>
+						<td><div class="btn btn-primary btn-xs" data-animation="am-fade-and-slide-top" data-template-url="/modal/yf_code.html" bs-modal="modal">查看</div></td>
 						<td ng-class="{'green success':item.status==1,'red danger':item.status==0}">{{item.status | status}} <i class="blue pointer fa fa-hand-pointer-o fa-fw" ng-click="change_status(item.id,'status')"></i></td>
 						<td>
 							<button class="btn btn-default btn-xs mr5" ng-click="is_del=!is_del"><i class="fa fa-question-circle fa-fw"></i>删 除</button>

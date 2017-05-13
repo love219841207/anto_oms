@@ -85,7 +85,7 @@
                 <i ng-click="aa_out_num=!aa_out_num;check_repo(item.goods_code)" 
                 class="fa fa-edit fa-fw pointer"
                 ></i>
-                <span ng-show="b_repo_num" class="green">日本库存：{{b_repo_num}}</span>
+                <span ng-show="repo_num" class="blue">库存：{{repo_num}} ({{a_repo_num}}+{{b_repo_num}})</span>
                 <div ng-show="aa_out_num" class="input-group">
                   <input class="form-control input-sm" placeholder="数量 更改为..." type="number" id="out_num">
                   <span class="input-group-btn">

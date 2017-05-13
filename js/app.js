@@ -209,6 +209,25 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
         })
 
     //发货操作
+        // 已冻结
+        .state('site.pause_orders',{
+            url: '/pause_orders/{data}',
+            views:{
+                'show@site':{
+                    templateUrl: 'tpls/common/pause_orders.html',
+                    controller: function($scope){
+                        $scope.status.isopen1 = false;
+                        $scope.status.isopen2 = false;
+                        $scope.status.isopen3 = false;
+                        $scope.status.isopen4 = true;
+                        $scope.status.isopen5 = false;
+                        $scope.status.isopen6 = false;
+                        $scope.status.isopen7 = false;
+                    }
+                }
+            }
+        })
+
         // 待出单
         .state('site.ready_send',{
             url: '/ready_send/{data}',

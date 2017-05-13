@@ -14,7 +14,9 @@ app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','
                 check_repo:goods_code
             }
         }).success(function(data) {
-            $scope.b_repo_num = data;
+            $scope.repo_num = data.repo;
+            $scope.a_repo_num = data.a_repo;
+            $scope.b_repo_num = data.b_repo;
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
             $log.info("error:库存检测失败。");
@@ -23,9 +25,8 @@ app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','
 
     //查询send详情
     $scope.show_send_info = function(id){
-        $scope.b_repo = false;
         $scope.sku_pass = false;
-        $scope.b_repo_num = '';
+        $scope.repo_num = '';
         $http.get('/fuck/common/ready_send.php', {
             params:{
                 show_send_info:id

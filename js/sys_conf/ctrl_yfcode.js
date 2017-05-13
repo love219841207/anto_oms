@@ -81,4 +81,24 @@ app.controller('yfcodeCtrl', ['$scope','$state','$http','$log','$timeout', funct
             alert("系统错误，请联系管理员。");
         });
     }
+
+    // 删除运费代码
+    $scope.del_yfcode = function(id){
+    	$scope.loading_shadow('open'); //打开loading
+    	$http.get('/fuck/systems/yf_code.php', {
+        	params:{
+        		del_yfcode:id
+        	}
+        }).success(function(data) {
+        	if(data == 'ok'){
+        		$scope.get_table();
+        	}else{
+        		$scope.plug_alert('danger',data,'fa fa-ban');
+        	}
+ 			$timeout(function(){$scope.loading_shadow('close');},300); //关闭loading
+            // $log.info(data);
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+        });
+    }
 }])

@@ -3,15 +3,13 @@
     <div class="modal-content">
       <div class="modal-header">
       	<i class="fa fa-close f20 close" ng-click="$hide()"></i>
-        <h4 class="modal-title blue"><i class="fa fa-fw fa-book"></i> 订单批量备注</h4>
+        <h4 class="modal-title blue"><i class="fa fa-fw fa-book"></i> 运费代码 <span class="red">{{change_note_order_id}}</span></h4>
       </div>
       <div class="modal-body">
-      	<div class="red">注意：原有备注的订单将会被覆盖！</div>
-      	<hr>
-        <textarea style="resize:vertical;" class="form-control" id="multi_note_key"> </textarea>
+        <textarea style="resize: vertical;" class="form-control" placeholder="备注 .." id="change_note_key"> </textarea>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-info" ng-click="multi_note();$hide()"><i class='fa fa-save fa-fw'></i> 保存</button>
+        <button type="button" class="btn btn-info" ng-click="save_note(change_note_index);$hide()"><i class='fa fa-save fa-fw'></i> 保存</button>
         <button type="button" class="btn btn-default" ng-click="$hide()">关闭</button>
       </div>
     </div>
