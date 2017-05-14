@@ -125,62 +125,125 @@ if(isset($_GET['sub_repo'])){
 	$station = strtolower($_GET['station']);
 	$response_list = $station.'_response_list';
 	$response_info = $station.'_response_info';
-	$sql = "SELECT send_id FROM $response_list WHERE order_line = '2' GROUP BY send_id";
+
+	// 按照 send_id 扣库存
+	$sql = "SELECT send_id FROM $response_list WHERE order_line = '2' AND store = '{$store}' GROUP BY send_id";
 	$res = $db->getAll($sql);
 	foreach ($res as $val) {
 		$send_id = $val['send_id'];
-		//查询出每个send_id 对应的 order_id 的SKU
-		$sql = "SELECT list.order_id,info.id as info_id,info.goods_code as goods_code,info.goods_num as goods_num FROM $response_info info,$response_list list WHERE list.order_id = info.order_id AND list.send_id = '{$send_id}'";
+
+		// 查询出每个 send_id 对应的 order_id 的 商品代码
+		$sql = "SELECT info.order_id as order_id,info.id as info_id,info.goods_code as goods_code,info.goods_num as goods_num FROM $response_info info,$response_list list WHERE list.order_id = info.order_id AND list.send_id = '{$send_id}'";
 		$res2 = $db->getAll($sql);
 
+		// 默认可发货
 		$can_send = 1;
+		$order_ids = '';
 		//遍历出订单
 		foreach ($res2 as $val2) {
-			 // $val2['order_id'];
+			$now_order_id = $val2['order_id'];
 			$now_goods_code = $val2['goods_code'];
 			$goods_num = $val2['goods_num'];
 			$info_id = $val2['info_id'];
 
-			// 查询是否有库存
+			$order_ids = '\''.$now_order_id.'\','.$order_ids;	# 拼接总订单号集合
+
+			// 查询日本库存
 			$sql = "SELECT b_repo FROM goods_type WHERE goods_code = '{$now_goods_code}'";
 			$res = $rdb->getOne($sql);
+			$b_repo = $res['b_repo'];
 
-			if($goods_num > $res['b_repo']){
-				//无货
-				$can_send = 0;
-				//标记 is_pause
-				$sql = "UPDATE $response_info SET is_pause = '1' WHERE id = '{$info_id}'";
+			// 数量大于日本
+			if($goods_num > $b_repo){
+				// 消耗掉日本库存
+				$sql = "UPDATE goods_type SET b_repo = 0 WHERE goods_code = '{$now_goods_code}'";
+				$res = $rdb->execute($sql);
+
+				// 押日本
+				$sql = "UPDATE $response_info SET pause_jp = $b_repo WHERE id = '{$info_id}'";
 				$res = $db->execute($sql);
+
+				// 查询中国库存
+				$sql = "SELECT a_repo FROM goods_type WHERE goods_code = '{$now_goods_code}'";
+				$res = $rdb->getOne($sql);
+				$a_repo = $res['a_repo'];
+
+				$need_num = $goods_num - $b_repo;
+				// 数量大于中国
+				if($need_num > $a_repo){
+					// 消耗掉中国库存
+					$sql = "UPDATE goods_type SET a_repo = 0 WHERE goods_code = '{$now_goods_code}'";
+					$res = $rdb->execute($sql);
+
+					// 押中国
+					$sql = "UPDATE $response_info SET pause_ch = $a_repo WHERE id = '{$info_id}'";
+					$res = $db->execute($sql);
+				}else{
+					// 数量小于等于中国
+					$sql = "UPDATE goods_type SET a_repo = a_repo - $need_num WHERE goods_code = '{$now_goods_code}'";
+					$res = $rdb->execute($sql);
+
+					// 押中国
+					$sql = "UPDATE $response_info SET pause_ch = $need_num WHERE id = '{$info_id}'";
+					$res = $db->execute($sql);
+				}	
 			}else{
-				//有货
-				//标记 is_pause
-				$sql = "UPDATE $response_info SET is_pause = '0' WHERE id = '{$info_id}'";
-				$res = $db->execute($sql);
-			}
-		}
-		if($can_send == 0){
-			//没有货，冻结订单
-			$sql = "UPDATE $response_list SET order_line = '3' WHERE send_id = '{$send_id}'";
-			$res = $db->execute($sql);
-		}else if($can_send == 1){
-			//有货发出
-			foreach ($res2 as $val2) {
-				//扣库存
-			 	$now_order_id = $val2['order_id'];
-				$now_goods_code = $val2['goods_code'];
-				$goods_num = $val2['goods_num'];
+				// 数量小于等于日本，消耗日本库存
 				$sql = "UPDATE goods_type SET b_repo = b_repo - $goods_num WHERE goods_code = '{$now_goods_code}'";
 				$res = $rdb->execute($sql);
 
-				//扣掉库存后记录库存系统流水
-				$sql = "INSERT INTO jp_list_out (order_id,goods_code,out_num,oms_id,store_name,holder,out_day,import_day) VALUES ('{$now_order_id}','{$now_goods_code}','{$goods_num}','{$send_id}','{$store}','{$u_name}','{$today}','{$today}')";
-				$res = $rdb->execute($sql);
+				// 押日本
+				$sql = "UPDATE $response_info SET pause_jp = $goods_num WHERE id = '{$info_id}'";
+				$res = $db->execute($sql);
 			}
 
+			// 对比数量与（押日本+押中国）
+			$sql = "SELECT pause_ch+pause_jp AS pause_num FROM $response_info WHERE id = '{$info_id}'";
+			$res = $db->getOne($sql);
+			$pause_num = $res['pause_num'];
+			if($goods_num == $pause_num){
+				// 可发货
+
+			}else{
+				// 不可发货
+				$can_send = 0;
+			}
+		}
+
+		if($can_send == 0){
+			// 没有货，冻结订单
+			$sql = "UPDATE $response_list SET order_line = '3' WHERE send_id = '{$send_id}'";
+			$res = $db->execute($sql);
+		}else if($can_send == 1){
 			// 更新order_line
 			$sql = "UPDATE $response_list SET order_line = '4' WHERE send_id = '{$send_id}'";
 			$res = $db->execute($sql);
 		}	
+
+		$order_ids = rtrim($order_ids,",");
+		$order_ids = '('.$order_ids.')';
+		$sql = "SELECT sum(pause_ch) AS sum_ch,sum(pause_jp) AS sum_jp FROM $response_info WHERE order_id IN $order_ids";
+		$res = $db->getOne($sql);
+		$sum_ch = $res['sum_ch'];
+		$sum_jp = $res['sum_jp'];
+
+		$repo_status = '';
+		if($sum_jp > 0){
+			if($sum_ch > 0){
+				$repo_status = '中+日';	#中+日
+			}else if($sum_ch == 0){
+				$repo_status = '日';	#日
+			}
+		}else{
+			if($sum_ch > 0){
+				$repo_status = '中';	#中
+			}else if($sum_ch == 0){
+				$repo_status = '缺货';	#无
+			}
+		}
+
+		$sql = "UPDATE $response_list SET repo_status = '{$repo_status}' WHERE send_id = '{$send_id}'";
+		$res = $db->execute($sql);
 	}
 	//转入发货表
 	$sql = "INSERT INTO send_table (
@@ -191,6 +254,9 @@ if(isset($_GET['sub_repo'])){
 		sku, 	#sku，客人看
 		goods_code,	#商品代码，仓库看
 		out_num,	#商品数量
+		pause_jp,	#押日本
+		pause_ch,	#押中国
+		repo_status,    #出仓方式
 		who_tel,	#配送电话
 		who_post,	#邮编
 		who_house,	#地址
@@ -209,6 +275,9 @@ if(isset($_GET['sub_repo'])){
 		info.sku,
 		info.goods_code,
 		info.goods_num,
+		info.pause_jp,
+		info.pause_ch,
+		list.repo_status,
 		list.phone,
 		list.post_code,
 		list.address,

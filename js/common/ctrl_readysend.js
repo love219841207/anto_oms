@@ -2,10 +2,24 @@ var app=angular.module('myApp');
 app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','$timeout', function($rootScope,$scope,$state,$http,$log,$timeout){
 	//初始化页面
 	$scope.init_list = function(){
-		$scope.send_table = '';
+		// $scope.send_table = '';
 	}
 	$scope.search_field = '';
     $scope.send_table = '';
+
+    //计算发货单
+    $scope.repo_status = function(){
+        $http.get('/fuck/common/ready_send.php', {
+            params:{
+                repo_status:'go'
+            }
+        }).success(function(data) {
+            $scope.to_page($scope.now_page);
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:计算发货单。");
+        });
+    }
 
     // 检测库存
     $scope.check_repo = function(goods_code){
@@ -32,6 +46,7 @@ app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','
                 show_send_info:id
             }
         }).success(function(data) {
+            // $log.info(data)
             $scope.send_table_info = data;
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
@@ -96,7 +111,9 @@ app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','
                         check_repo:add_goods_code
                     }
                 }).success(function(data) {
-                    $scope.b_repo = data;
+                    $scope.add_repo = data['repo'];
+                    $scope.add_a_repo = data['a_repo'];
+                    $scope.add_b_repo = data['b_repo'];
                 }).error(function(data) {
                     alert("系统错误，请联系管理员。");
                     $log.info("error:查看发货库存数失败。");
@@ -129,7 +146,7 @@ app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','
                     $scope.plug_alert('danger','请输入商品代码。','fa fa-ban');
                 }else{
                     // 检测数量
-                    if(num - $scope.b_repo > 0){
+                    if(num - $scope.add_repo > 0){
                         $scope.plug_alert('danger','库存不足。','fa fa-ban');
                         angular.element(dom).val('');
                     }
@@ -164,7 +181,7 @@ app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','
             if(data.status == 'ok'){
                 $scope.reset_express(); //重置快递
                 $scope.to_cod(data.order_id,data.station,data.store);    //计算COD
-                $scope.to_page($scope.now_page);    //刷新列表
+                $scope.repo_status();   //计算发货单
             }else{
                 $log.info(data);
                 $scope.plug_alert('danger','添加项目失败，请联系管理员。','fa fa-ban');
@@ -209,7 +226,7 @@ app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','
             if(data.status == 'ok'){
                 $scope.plug_alert('success','删除完成。','fa fa-smile-o');
                 $scope.to_cod(data.order_id,station,store);    //计算COD
-                $scope.to_page($scope.now_page);    //刷新列表
+                $scope.repo_status();   //计算发货单
             }else{
                 $scope.plug_alert('danger',data,'fa fa-ban');
             }
@@ -307,8 +324,8 @@ app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','
         }).success(function(data) {
             if(data == 'ok'){
                 $scope.reset_express(); //重置快递
-                $scope.to_page($scope.now_page);
                 $scope.show_send_info(id);
+                $scope.repo_status();   //计算发货单
             }else{
                 $scope.plug_alert('danger',data,'fa fa-ban');
                 $log.info(data);

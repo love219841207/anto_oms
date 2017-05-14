@@ -18,18 +18,21 @@
 	<div class="clearfix"></div>
 
 	<table ng-show="send_table" class="table-responsive table table-bordered table-condensed table-hover table-striped mt20 f12">
-		<tr class="blue info animate slide-right">
+		<tr class="success green animate slide-right">
 			<td class="tagc"><i class="fa-sort-numeric-asc fa fa-fw"></i></td>
 			<td>合单发货ID</td>
-			<td>平台 测试用</td>
+			<td>店铺</td>
 			<td>OMS-ID</td>
-			<td>INFO-ID 测试用</td>
+			<td>INFO-ID</td>
 			<td>快递公司</td>
 			<td>配送方式</td>
 			<td>包裹ID</td>
 			<!-- <td>SKU（出品SKU，客人看）</td> -->
 			<td>商品代码</td>
 			<td>数量</td>
+			<td>扣日本</td>
+			<td>扣中国</td>
+			<td>发货单</td>
 			<!-- <td>电话</td> -->
 			<!-- <td>邮编</td> -->
 			<!-- <td>地址</td> -->
@@ -40,12 +43,12 @@
 			<!-- <td>店铺</td> -->
 			<td class="tagc">担当</td>
 			<td class="tagc">操作</td>
-			<td>item_line 测试用</td>
+			<td>item_line</td>
 		</tr>
 		<tr class="am-fade-and-slide-right blue" ng-repeat="item in send_table track by $index">
 			<td class="tagc">{{$index+1}}</td>
 			<td>{{item.send_id}}</td>
-			<td>{{item.station}}</td>
+			<td>{{item.store_name}}</td>
 			<td>{{item.oms_id}}</td>
 			<td>{{item.info_id}}</td>
 			<td>{{item.express_company}}</td>
@@ -55,6 +58,9 @@
 			<td ng-class="{'red danger':item.error_info=='no_sku'}">{{item.goods_code}}
 			</td>
 			<td class="tagr">{{item.out_num}}</td>
+			<td class="tagr">{{item.pause_jp}}</td>
+			<td class="tagr">{{item.pause_ch}}</td>
+			<td class="tagc">{{item.repo_status}}</td>
 			<!-- <td>{{item.who_tel}}</td> -->
 			<!-- <td>{{item.who_post}}</td> -->
 			<!-- <td>{{item.who_house}}</td> -->

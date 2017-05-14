@@ -69,8 +69,8 @@ if(isset($_GET['check_repo'])){
 // 添加待发货item
 if(isset($_POST['add_send_item'])){
 	$today = date('y-m-d',time()); //获取日期
-	$add_goods_code = trim(addslashes($_POST['add_send_item']));
-	$add_goods_num = $_POST['add_goods_num'];
+	$goods_code = trim(addslashes($_POST['add_send_item']));
+	$goods_num = $_POST['add_goods_num'];
 	$add_item_price = $_POST['add_item_price'];
 	$add_yfcode = $_POST['add_yfcode'];
 	$add_cod_money = $_POST['add_cod_money'];
@@ -109,98 +109,138 @@ if(isset($_POST['add_send_item'])){
 	$res = $db->getOne($sql);
 	$order_id = $res['order_id'];
 
-	// 插入 resoponse_info
-	$sql = "INSERT INTO $response_info (
-		store,
-		order_id,
-		holder,
-		goods_title,
-		sku_ok,
-		yfcode_ok,
-		yfcode,
-		yf_money,
-		sku,
-		goods_code,
-		goods_num,
-		item_price,
-		cod_money) VALUES(
-		'{$store}',
-		'{$order_id}',
-		'{$u_name}',
-		concat('{$u_name}','添加'),
-		'1',
-		'1',
-		'{$add_yfcode}',
-		'{$add_yf_money}',
-		'{$add_goods_code}',
-		'{$add_goods_code}',
-		'{$add_goods_num}',
-		'{$add_item_price}',
-		'{$add_cod_money}'
-		) ";
-	$res = $db->execute($sql);
+	// 查询库存数
+	$sql = "SELECT a_repo+b_repo AS repo FROM goods_type WHERE goods_code = '{$goods_code}'";
+	$res = $rdb->getOne($sql);
+	$leave_num = $res['repo'] - $goods_num;
 
-	// 查询 info_id
-	$sql = "SELECT max(id) as info_id FROM $response_info WHERE order_id = '{$order_id}'";
-	$res = $db->getOne($sql);
-	$info_id = $res['info_id'];
+	if($leave_num < 0){
+		echo '库存不足';die;
+	}else{
+		// 查询库存数
+		$sql = "SELECT a_repo,b_repo FROM goods_type WHERE goods_code = '{$goods_code}'";
+		$res = $rdb->getOne($sql);
+		$a_repo = $res['a_repo'];
+		$b_repo = $res['b_repo'];
 
-	// 扣库存
-	$sql = "UPDATE goods_type SET b_repo = b_repo - $add_goods_num WHERE goods_code = '{$add_goods_code}'";
-	$res = $rdb->execute($sql);
+		$pause_jp = 0;
+		$pause_ch = 0;
+		// 扣库存
+		if($goods_num > $b_repo){
+			// 消耗掉日本库存
+			$sql = "UPDATE goods_type SET b_repo = 0 WHERE goods_code = '{$goods_code}'";
+			$res = $rdb->execute($sql);
 
-	// 扣掉库存后记录库存系统流水
-	$sql = "INSERT INTO jp_list_out (order_id,goods_code,out_num,oms_id,store_name,holder,out_day,import_day) VALUES ('{$order_id}','{$add_goods_code}','{$add_goods_num}','{$send_id}','{$store}','{$u_name}','{$today}','{$today}')";
-	$res = $rdb->execute($sql);
+			$pause_jp = $b_repo;
 
-	// 插入send_table
-	$sql = "INSERT INTO send_table (
-		station,
-		send_id,	#合单发货ID
-		oms_id,	#OMS-ID
-		info_id, #info-ID
-		sku, 	#sku，客人看
-		goods_code,	#商品代码，仓库看
-		out_num,	#商品数量
-		who_tel,	#配送电话
-		who_post,	#邮编
-		who_house,	#地址
-		who_name,	#收货人
-		is_cod,		#是否代引
-		due_money,	#代引金额，写出全部的item金额，根据cod，更新是否是代引
-		send_method,
-		who_email,	#邮编
-		store_name,	#店铺名
-		holder,		#担当者
-		import_day) VALUES (
-		'{$station}',
-		'{$send_id}',
-		'{$oms_id}',
-		'{$info_id}',
-		'{$add_goods_code}',
-		'{$add_goods_code}',
-		'{$add_goods_num}',
-		'{$who_tel}',
-		'{$who_post}',
-		'{$who_house}',
-		'{$who_name}',
-		'{$is_cod}',
-		'{$due_money}',
-		'{$send_method}',
-		'{$who_email}',
-		'{$store}',
-		'{$u_name}',
-		'{$today}')";
-	$res = $db->execute($sql);
+			$need_num = $goods_num - $b_repo;
+
+			//消耗中国库存
+			$sql = "UPDATE goods_type SET a_repo = a_repo - $need_num WHERE goods_code = '{$goods_code}'";
+			$res = $rdb->execute($sql);
+
+			$pause_ch = $need_num;
+		}else{
+			// 数量小于等于日本，消耗日本库存
+			$sql = "UPDATE goods_type SET b_repo = b_repo - $goods_num WHERE goods_code = '{$goods_code}'";
+			$res = $rdb->execute($sql);
+
+			$pause_jp = $goods_num;
+		}
+
+		// 插入 resoponse_info
+		$sql = "INSERT INTO $response_info (
+			store,
+			order_id,
+			holder,
+			goods_title,
+			sku_ok,
+			yfcode_ok,
+			yfcode,
+			yf_money,
+			sku,
+			goods_code,
+			goods_num,
+			pause_ch,
+			pause_jp,
+			item_price,
+			cod_money) VALUES(
+			'{$store}',
+			'{$order_id}',
+			'{$u_name}',
+			concat('{$u_name}','添加'),
+			'1',
+			'1',
+			'{$add_yfcode}',
+			'{$add_yf_money}',
+			'{$goods_code}',
+			'{$goods_code}',
+			'{$goods_num}',
+			'{$pause_ch}',
+			'{$pause_jp}',
+			'{$add_item_price}',
+			'{$add_cod_money}'
+			) ";
+		$res = $db->execute($sql);
+
+		// 查询 info_id
+		$sql = "SELECT max(id) as info_id FROM $response_info WHERE order_id = '{$order_id}'";
+		$res = $db->getOne($sql);
+		$info_id = $res['info_id'];
+
+		// 插入send_table
+		$sql = "INSERT INTO send_table (
+			station,
+			send_id,	#合单发货ID
+			oms_id,	#OMS-ID
+			info_id, #info-ID
+			sku, 	#sku，客人看
+			goods_code,	#商品代码，仓库看
+			out_num,	#商品数量
+			pause_ch,
+			pause_jp,
+			who_tel,	#配送电话
+			who_post,	#邮编
+			who_house,	#地址
+			who_name,	#收货人
+			is_cod,		#是否代引
+			due_money,	#代引金额，写出全部的item金额，根据cod，更新是否是代引
+			send_method,
+			who_email,	#邮编
+			store_name,	#店铺名
+			holder,		#担当者
+			import_day) VALUES (
+			'{$station}',
+			'{$send_id}',
+			'{$oms_id}',
+			'{$info_id}',
+			'{$goods_code}',
+			'{$goods_code}',
+			'{$goods_num}',
+			'{$pause_ch}',
+			'{$pause_jp}',
+			'{$who_tel}',
+			'{$who_post}',
+			'{$who_house}',
+			'{$who_name}',
+			'{$is_cod}',
+			'{$due_money}',
+			'{$send_method}',
+			'{$who_email}',
+			'{$store}',
+			'{$u_name}',
+			'{$today}')";
+		$res = $db->execute($sql);
+	}
 
 	// 如果COD_money大于0，则为代引
 	if($add_cod_money > 0){
 		//日志
-		$do = ' [新增一单]：订单号【'.$order_id.'】商品代码【'.$add_goods_code.'】数量【'.$add_goods_num.'】子订单价格【'.$add_item_price.'】运费代码【'.$add_yfcode.'】运费金额【'.$add_yf_money.'】代引金额【'.$add_cod_money.'】';
+		$do = ' [新增一单]：订单号【'.$order_id.'】商品代码【'.$goods_code.'】数量【'.$goods_num.'】子订单价格【'.$add_item_price.'】运费代码【'.$add_yfcode.'】运费金额【'.$add_yf_money.'】代引金额【'.$add_cod_money.'】';
 
 	}else{
 		//日志
-		$do = ' [新增一单]：订单号【'.$order_id.'】商品代码【'.$add_goods_code.'】数量【'.$add_goods_num.'】子订单价格【'.$add_item_price.'】运费代码【'.$add_yfcode.'】运费金额【'.$add_yf_money.'】';
+		$do = ' [新增一单]：订单号【'.$order_id.'】商品代码【'.$goods_code.'】数量【'.$goods_num.'】子订单价格【'.$add_item_price.'】运费代码【'.$add_yfcode.'】运费金额【'.$add_yf_money.'】';
 	}
 
 	oms_log($u_name,$do,'ready_send',$station,$store,$oms_id);
@@ -221,14 +261,16 @@ if(isset($_GET['del_send_item'])){
 	$response_list = $station.'_response_list';
 	$response_info = $station.'_response_info';
 
-	// 查 out_num 和 goods_code
-	$sql = "SELECT goods_code,out_num FROM send_table WHERE id = '{$id}'";
+	// 查 pause_ch,pause_jp 和 goods_code
+	$sql = "SELECT goods_code,pause_jp,pause_ch,send_id FROM send_table WHERE id = '{$id}'";
 	$res = $db->getOne($sql);
 	$goods_code = $res['goods_code'];
-	$out_num = $res['out_num'];
+	$pause_jp = $res['pause_jp'];
+	$pause_ch = $res['pause_ch'];
+	$send_id = $res['send_id'];
 
 	// 还库存
-	$sql = "UPDATE goods_type SET b_repo = b_repo + $out_num WHERE goods_code = '{$goods_code}'";
+	$sql = "UPDATE goods_type SET a_repo = a_repo + $pause_ch,b_repo = b_repo + $pause_jp WHERE goods_code = '{$goods_code}'";
 	$res = $rdb->execute($sql);
 
 	// 删除 send_table
@@ -286,6 +328,7 @@ if(isset($_GET['need_check_send'])){
 
 //修改send字段
 if(isset($_GET['change_send_field'])){
+	$today = date('y-m-d',time()); //获取日期
 	$store = $_GET['store'];
     $station = strtolower($_GET['station']);
 	$id = $_GET['id'];	//send_table 的 ID
@@ -353,13 +396,75 @@ if(isset($_GET['change_send_field'])){
 		$res = $rdb->getOne($sql);
 		$leave_num = $res['repo'] + $o_num - $new_key;
 
-
 		if($leave_num < 0){
 			echo '库存不足';die;
 		}else{
-			// 库存同步调整
-			$sql = "UPDATE goods_type SET b_repo = b_repo + $o_num - $new_key WHERE goods_code = '{$goods_code}'";
+			// 查 pause_ch,pause_jp 和 goods_code
+			$sql = "SELECT * FROM send_table WHERE id = '{$id}'";
+			$res = $db->getOne($sql);
+			$goods_code = $res['goods_code'];
+			$pause_jp = $res['pause_jp'];
+			$pause_ch = $res['pause_ch'];
+			$send_id = $res['send_id'];
+
+			// 还库存
+			$sql = "UPDATE goods_type SET a_repo = a_repo + $pause_ch,b_repo = b_repo + $pause_jp WHERE goods_code = '{$goods_code}'";
 			$res = $rdb->execute($sql);
+
+			// info & send_table pause_ch,pause_jp
+			$sql = "UPDATE send_table SET pause_ch = 0,pause_jp = 0 WHERE id = '{$id}'";
+			$res = $db->execute($sql);
+			$sql = "UPDATE $response_info SET pause_ch = 0,pause_jp = 0 WHERE id = '{$info_id}'";
+			$res = $db->execute($sql);
+
+			// 查询库存数
+			$sql = "SELECT a_repo,b_repo FROM goods_type WHERE goods_code = '{$goods_code}'";
+			$res = $rdb->getOne($sql);
+			$a_repo = $res['a_repo'];
+			$b_repo = $res['b_repo'];
+
+			$goods_num = $new_key;
+
+			// 扣库存
+			if($goods_num > $b_repo){
+				// 消耗掉日本库存
+				$sql = "UPDATE goods_type SET b_repo = 0 WHERE goods_code = '{$goods_code}'";
+				$res = $rdb->execute($sql);
+
+				// info pause_jp
+				$sql = "UPDATE $response_info SET pause_jp = $b_repo WHERE id = '{$info_id}'";
+				$res = $db->execute($sql);
+
+				// send_table pause_jp
+				$sql = "UPDATE send_table SET pause_jp = $b_repo WHERE id = '{$id}'";
+				$$res = $db->execute($sql);
+
+				$need_num = $goods_num - $b_repo;
+
+				//消耗中国库存
+				$sql = "UPDATE goods_type SET a_repo = a_repo - $need_num WHERE goods_code = '{$goods_code}'";
+				$res = $rdb->execute($sql);
+
+				// info pause_ch
+				$sql = "UPDATE $response_info SET pause_ch = $need_num WHERE id = '{$info_id}'";
+				$res = $db->execute($sql);
+
+				// send_table pause_ch
+				$sql = "UPDATE send_table SET pause_ch = $need_num WHERE id = '{$id}'";
+				$res = $db->execute($sql);
+			}else{
+				// 数量小于等于日本，消耗日本库存
+				$sql = "UPDATE goods_type SET b_repo = b_repo - $goods_num WHERE goods_code = '{$goods_code}'";
+				$res = $rdb->execute($sql);
+
+				// info pause_jp
+				$sql = "UPDATE $response_info SET pause_jp = $goods_num WHERE id = '{$info_id}'";
+				$res = $db->execute($sql);
+
+				// send_table pause_jp
+				$sql = "UPDATE send_table SET pause_jp = $goods_num WHERE id = '{$id}'";
+				$$res = $db->execute($sql);
+			}
 
 			// 更新INFO
 			$sql = "UPDATE $response_info SET $list_field = '{$new_key}' WHERE id = '{$info_id}'";
@@ -439,4 +544,41 @@ if(isset($_GET['change_post_addr'])){
 			echo '邮编、地址不匹配。';
 		}
 	}
+}
+
+// 计算发货单
+if(isset($_GET['repo_status'])){
+	$sql = "SELECT station,send_id FROM send_table";
+	$res = $db->getAll($sql);
+	foreach ($res as $value) {
+		$station = $value['station'];
+		$response_list = $station.'_response_list';
+		$send_id = $value['send_id'];
+		$sql = "SELECT sum(pause_ch) AS sum_ch,sum(pause_jp) AS sum_jp FROM send_table WHERE send_id = '{$send_id}'";
+		$res = $db->getOne($sql);
+		$sum_ch = $res['sum_ch'];
+		$sum_jp = $res['sum_jp'];
+
+		$repo_status = '';
+		if($sum_jp > 0){
+			if($sum_ch > 0){
+				$repo_status = '中+日';	#中+日
+			}else if($sum_ch == 0){
+				$repo_status = '日';	#日
+			}
+		}else{
+			if($sum_ch > 0){
+				$repo_status = '中';	#中
+			}else if($sum_ch == 0){
+				$repo_status = '缺货';	#无
+			}
+		}
+		// 更新发货单
+		$sql = "UPDATE send_table SET repo_status = '{$repo_status}' WHERE send_id = '{$send_id}'";
+		$res = $db->execute($sql);
+
+		// 同步回LIST
+		$sql = "UPDATE $response_list list,send_table st SET list.repo_status = st.repo_status WHERE list.id = st.oms_id";
+		$res = $db->execute($sql);
+	}	
 }
