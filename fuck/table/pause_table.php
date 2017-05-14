@@ -8,7 +8,7 @@ ini_set("memory_limit", "1024M");
 
 // 读取冻结表
 if(isset($_GET['look_pause'])){
-	$sql = "SELECT goods_code,sum(goods_num) AS pause_num FROM amazon_response_info WHERE is_pause = '1' group by goods_code";
+	$sql = "SELECT goods_code,sum(goods_num)-sum(pause_ch)-sum(pause_jp) AS pause_num FROM amazon_response_info WHERE is_pause = 'pause' group by goods_code";
 	$res = $db->getAll($sql);
 	echo json_encode($res);
 }
@@ -39,7 +39,7 @@ if(isset($_GET['down_pause'])){
     $objPHPExcel->getActiveSheet()->getStyle('A')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);//左对齐
 
     //SQL
-    $sql = "SELECT goods_code,sum(goods_num) AS pause_num FROM amazon_response_info WHERE is_pause = '1' group by goods_code";
+    $sql = "SELECT goods_code,sum(goods_num)-sum(pause_ch)-sum(pause_jp) AS pause_num FROM amazon_response_info WHERE is_pause = 'pause' group by goods_code";
     $res = $db->getAll($sql);
     $j=2;
     foreach ($res as $key => $value) {

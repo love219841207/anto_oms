@@ -10,7 +10,7 @@ ini_set("memory_limit", "1024M");
 if(isset($_GET['pause_order'])){
 	$id = $_GET['pause_order'];
 	//	获取所有平台 ********************
-	$sql = "SELECT * FROM amazon_response_info WHERE is_pause = '1' ORDER BY ID DESC";
+	$sql = "SELECT * FROM amazon_response_info WHERE is_pause = 'pause' ORDER BY ID DESC";
 	$res = $db->getAll($sql);
 
 	echo json_encode($res);
@@ -50,7 +50,7 @@ if(isset($_GET['down_pause_orders_table'])){
     $objPHPExcel->getActiveSheet()->getStyle('A')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);//左对齐
 
     //SQL
-    $sql = "SELECT * FROM amazon_response_info WHERE is_pause = '1' ORDER BY ID DESC";
+    $sql = "SELECT * FROM amazon_response_info WHERE is_pause = 'pause' ORDER BY ID DESC";
 	$res = $db->getAll($sql);
     $j=2;
     foreach ($res as $key => $value) {

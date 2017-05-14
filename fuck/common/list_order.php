@@ -203,10 +203,13 @@ if(isset($_GET['sub_repo'])){
 			$pause_num = $res['pause_num'];
 			if($goods_num == $pause_num){
 				// 可发货
-
+				$sql = "UPDATE $response_info SET is_pause = 'pass' WHERE id = '{$info_id}'";
+				$res = $db->execute($sql);
 			}else{
 				// 不可发货
 				$can_send = 0;
+				$sql = "UPDATE $response_info SET is_pause = 'pause' WHERE id = '{$info_id}'";
+				$res = $db->execute($sql);
 			}
 		}
 

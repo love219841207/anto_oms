@@ -10,6 +10,7 @@ app.controller('tableCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             }
         }).success(function(data) {
             $scope.pause_table = data;
+            // $log.info(data)
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
             $log.info("error:读取冻结表失败。");
