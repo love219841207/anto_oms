@@ -1,0 +1,105 @@
+<div class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" style="width:600px;">
+    <div class="modal-content">
+      <div class="modal-header modal-drag">
+        <i class="fa fa-close f20 close" ng-click="$hide()"></i>
+        <h4 class="modal-title blue"><i class="fa fa-fw fa-info-circle"></i> OMS-ID <span class="red">{{item.oms_id}}</span> </h4>
+      </div>
+      <div class="modal-body">
+        <table class="tagl table table-hover table-bordered table-condensed" ng-repeat="item in pause_modal_data track by $index">
+          <tr class="info blue">
+            <td style="width:20%;">订单号</td>
+            <td>{{item.order_id}}</td>
+          </tr>
+          <tr>
+            <td class="s_gray">商品代码</td>
+            <td class="s_gray">{{item.goods_code}}
+            </td>
+          </tr>
+          <tr>
+            <td class="s_gray">数量</td>
+            <td class="s_gray">{{item.goods_num}}
+                <i ng-click="aa_out_num=!aa_out_num;check_repo(item.goods_code)" 
+                class="fa fa-edit fa-fw pointer"
+                ></i>
+                <span ng-show="repo_num" class="blue">库存：{{repo_num}} (日{{b_repo_num}}+中{{a_repo_num}})</span>
+                <div ng-show="aa_out_num" class="input-group">
+                  <input class="form-control input-sm" placeholder="数量 更改为..." type="number" id="out_num">
+                  <span class="input-group-btn">
+                    <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="need_check_send('out_num',item.out_num,item.station,item.store_name,item.id,item.oms_id,item.info_id);aa_out_num=!aa_out_num">确定</button>
+                </span>
+              </div>
+            </td>
+          </tr>
+          <tr ng-show="item.is_cod=='COD'">
+            <td class="s_gray">代引金额</td>
+            <td class="s_gray">{{item.cod_money}}
+                <i ng-click="aa_due_money=!aa_due_money" 
+                class="fa fa-edit fa-fw pointer"
+                ></i>
+                <div ng-show="aa_due_money" class="input-group">
+                  <input class="form-control input-sm" placeholder="代引金额 更改为..." type="number" id="due_money">
+                  <span class="input-group-btn">
+                    <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="need_check_send('due_money',item.due_money,item.station,item.store_name,item.id,item.oms_id,item.info_id);aa_due_money=!aa_due_money">确定</button>
+                </span>
+              </div>
+            </td>
+          </tr>
+        </table>
+        <div class="clearfix"></div>
+
+        <div class="btn btn-xs pull-right" ng-class="{'btn-success':!add_btn,'btn-danger':add_btn}" ng-click="add_btn = !add_btn"><i class="fa fa-fw" ng-class="{'fa-plus':!add_btn,'fa-close':add_btn}"></i></div>
+        <div class="clearfix"></div>
+
+        <div class="col-lg-8 col-lg-offset-2 animate slide-down" ng-show="add_btn">
+          <table class="table table-responsive mt20 tagl">
+            <tr>
+              <td class="s_gray">合单发货ID</td>
+              <td><input type="text" id="add_send_id" value="{{item.send_id}}" readonly="readonly" class="form-control input-sm"></td>
+            </tr>
+            <tr>
+              <td class="s_gray">商品代码</td>
+              <td>
+                <input type="text" ng-blur="check_goods_code()" id="add_goods_code" class="form-control input-sm">
+              </td>
+            </tr>
+            <tr ng-show="add_repo">
+              <td class="s_gray">库存数</td>
+              <td>{{add_repo}} (日{{add_b_repo}}+中{{add_a_repo}})</td>
+            </tr>
+            <tr>
+              <td class="s_gray">数 量</td>
+              <td><input type="number" id="add_goods_num" ng-blur="check_int('add_goods_num')" class="form-control input-sm"></td>
+            </tr>
+            <tr>
+              <td class="s_gray">子订单价格</td>
+              <td><input type="number" id="add_item_price" ng-blur="check_int('add_item_price')" class="form-control input-sm"></td>
+            </tr>
+            <tr>
+              <td class="s_gray">运费代码</td>
+              <td><input type="text" id="add_yfcode" class="form-control input-sm"></td>
+            </tr>
+            <tr>
+              <td class="s_gray">运费金额</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="s_gray">COD Money</td>
+              <td><input type="number" id="add_cod_money" ng-blur="check_int('add_cod_money')" class="form-control input-sm"></td>
+            </tr>
+            <tr>
+              <td colspan="2" class="red">注：非代引订单填写 COD Money 为 0。</td>
+            </tr>
+            <tr>
+              <td colspan="2"><div ng-disabled="sku_pass!=true || add_goods_num!=true || add_item_price!=true || add_cod_money!=true" class="btn btn-success btn-xs col-lg-6 col-lg-offset-3" ng-click="add_send_item(item.id);add_btn=!add_btn"><i class="fa fa-plus fa-fw"></i> 新 增</div></td>
+            </tr>
+          </table>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="$hide()">关 闭</button>
+      </div>
+    </div>
+  </div>
+</div>

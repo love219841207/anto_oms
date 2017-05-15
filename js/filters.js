@@ -17,6 +17,23 @@ myFilters.filter('status', function(){
     }
 })
 
+myFilters.filter('is_pause', function(){
+    return function(item){
+        if(item == 0){
+            return '未开始 >>';
+        }
+        if(item == 'pass'){
+            return '已扣完。';
+        }
+        if(item == 'pause'){
+            return '.. 正在冻结并押货';
+        }
+        if(item == 'back'){
+            return '已退押。';
+        }
+    }
+})
+
 myFilters.filter('order_line', function(){
     return function(item){
     	if(item == 0){

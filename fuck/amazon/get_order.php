@@ -239,6 +239,9 @@ if(isset($_GET['get_order_info'])){
 		$response = curl_exec($ch);
 		$info = curl_getinfo($ch);
 		curl_close($ch);
+
+		// 当前时间戳
+		$now_time = time();
 		
 		$xml = simplexml_load_string($response);
 		$xxx =	$xml ->ListOrderItemsResult->OrderItems;
@@ -255,7 +258,7 @@ if(isset($_GET['get_order_info'])){
 			$item_tax = $child->ItemTax->Amount;
 			$shipping_discount = $child->ShippingDiscount->Amount;
 			@$cod_money = $child->CODFee->Amount;
-			$sql = "INSERT INTO amazon_response_info(store,order_id,goods_num,goods_title,promotion_discount,sku,shipping_tax,gift_tax,shipping_price,gift_price,item_price,item_tax,shipping_discount,cod_money) VALUES('{$store}','{$arr_order_id[$i]}','{$goods_num}','{$goods_title}','{$promotion_discount}','{$sku}','{$shipping_tax}','{$gift_tax}','{$shipping_price}','{$gift_price}','{$item_price}','{$item_tax}','{$shipping_discount}','{$cod_money}')";
+			$sql = "INSERT INTO amazon_response_info(store,order_id,goods_num,goods_title,promotion_discount,sku,shipping_tax,gift_tax,shipping_price,gift_price,item_price,item_tax,shipping_discount,cod_money,import_time) VALUES('{$store}','{$arr_order_id[$i]}','{$goods_num}','{$goods_title}','{$promotion_discount}','{$sku}','{$shipping_tax}','{$gift_tax}','{$shipping_price}','{$gift_price}','{$item_price}','{$item_tax}','{$shipping_discount}','{$cod_money}',{$now_time})";
 			$res = $db->execute($sql);
 			// usleep(50000);
 	    }

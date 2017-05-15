@@ -232,6 +232,9 @@ if(isset($_GET['import_add_list'])){
 	$sql = "UPDATE amazon_response_list SET send_id = concat('amz',id) WHERE send_id = 'ready'";
 	$res = $db->execute($sql);
 
+	// 当前时间戳
+	$now_time = time();
+
 	//插入详情
 	$sql = "INSERT INTO amazon_response_info (
 		store,
@@ -245,7 +248,8 @@ if(isset($_GET['import_add_list'])){
 		item_tax,
 		promotion_discount,
 		shipping_discount,
-		cod_money
+		cod_money,
+		import_time
 	) SELECT
 		store,
 		order_id,
@@ -258,7 +262,8 @@ if(isset($_GET['import_add_list'])){
 		item_tax,
 		item_promotion_discount,
 		ship_promotion_discount,
-		cod_money
+		cod_money,
+		{$now_time}
 	FROM amazon_import_list";
 	$res = $db->execute($sql);
 

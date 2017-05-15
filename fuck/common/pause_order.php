@@ -8,12 +8,115 @@ ini_set("memory_limit", "1024M");
 
 // 读取所有冻结订单info表
 if(isset($_GET['pause_order'])){
-	$id = $_GET['pause_order'];
-	//	获取所有平台 ********************
+	//	获取所有平台 ******************** select * (select * from t1 union all select * from t2) tmp order by tmp.createDate时间戳
 	$sql = "SELECT * FROM amazon_response_info WHERE is_pause = 'pause' ORDER BY ID DESC";
 	$res = $db->getAll($sql);
 
 	echo json_encode($res);
+}
+
+// 读取所有冻结退押订单info表
+if(isset($_GET['back_order'])){
+    //  获取所有平台 ******************** select * (select * from t1 union all select * from t2) tmp order by tmp.createDate时间戳
+    $sql = "SELECT * FROM amazon_response_info WHERE is_pause = 'back' ORDER BY ID DESC";
+    $res = $db->getAll($sql);
+
+    echo json_encode($res);
+}
+
+// 读取一个info
+if(isset($_GET['one_pause'])){
+    $store = $_GET['store'];
+    $info_id = $_GET['one_pause'];
+    // 查询平台
+    $sql = "SELECT station FROM oms_store WHERE store_name = '{$store}'";
+    $res = $db->getOne($sql);
+    $station = strtolower($res['station']);
+    $response_info = $station.'_response_info';
+
+    $sql = "SELECT * FROM amazon_response_info WHERE id = '{$info_id}'";
+    $res = $db->getAll($sql);
+
+    echo json_encode($res);
+}
+
+// 退押
+if(isset($_GET['back_pause'])){
+    $store = $_GET['store'];
+    $info_id = $_GET['back_pause'];
+
+    // 查询平台
+    $sql = "SELECT station FROM oms_store WHERE store_name = '{$store}'";
+    $res = $db->getOne($sql);
+    $station = strtolower($res['station']);
+    $response_info = $station.'_response_info';
+
+    // 查询该 info_id 所押的中国和日本数及goods_code
+    $sql = "SELECT pause_ch,pause_jp,goods_code FROM $response_info WHERE id = '{$info_id}'";
+    $res = $db->getOne($sql);
+    $pause_ch = $res['pause_ch'];
+    $pause_jp = $res['pause_jp'];
+    $goods_code = $res['goods_code'];
+
+    // 还库存
+    $sql = "UPDATE goods_type SET a_repo = a_repo + $pause_ch,b_repo = b_repo + $pause_jp WHERE goods_code = '{$goods_code}'";
+    $res = $rdb->execute($sql);
+
+    // 对押的数目清零及is_pause 状态修改
+    $sql = "UPDATE $response_info SET pause_jp = 0,pause_ch = 0,is_pause = 'back' WHERE id = '{$info_id}'";
+    $res = $db->execute($sql);
+
+    echo 'ok';
+}
+
+// 还原
+if(isset($_GET['to_pause'])){
+    $store = $_GET['store'];
+    $info_id = $_GET['to_pause'];
+
+    // 查询平台
+    $sql = "SELECT station FROM oms_store WHERE store_name = '{$store}'";
+    $res = $db->getOne($sql);
+    $station = strtolower($res['station']);
+    $response_info = $station.'_response_info';
+
+    // 对押的数目清零及is_pause 状态修改
+    $sql = "UPDATE $response_info SET is_pause = 'pause' WHERE id = '{$info_id}'";
+    $res = $db->execute($sql);
+
+    echo "ok";
+}
+
+// 删除
+if(isset($_GET['del_pause'])){
+    $store = $_GET['store'];
+    $info_id = $_GET['del_pause'];
+
+    // 查询平台
+    $sql = "SELECT station FROM oms_store WHERE store_name = '{$store}'";
+    $res = $db->getOne($sql);
+    $station = strtolower($res['station']);
+    $response_info = $station.'_response_info';
+    $response_list = $station.'_response_list';
+
+    // 查询删除的item
+    $sql = "SELECT * FROM $response_info WHERE id = '{$info_id}'";
+    $res = $db->getOne($sql);
+    $order_id = $res['order_id'];
+
+    // 删除
+    $sql1 = "DELETE FROM $response_info WHERE id = '{$info_id}'";
+    $res1 = $db->execute($sql1);
+
+    //查询OMS-ID
+    $sql = "SELECT id FROM $response_list WHERE order_id = '{$order_id}'";
+    $res2 = $db->getOne($sql);
+    $oms_id = $res2['id'];
+
+    $do = '[删除一单]：订单号【'.$res['order_id'].'】商品代码【'.$res['goods_code'].'】数量【'.$res['goods_num'].'】子订单价格【'.$res['item_price'].'】运费代码【'.$res['yfcode'].'】运费金额【'.$res['yf_money'].'】代引金额【'.$res['cod_money'].'】';
+
+    oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
+    echo 'ok';
 }
 
 // 下载冻结订单表

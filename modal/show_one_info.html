@@ -32,7 +32,7 @@
             <td class="s_gray">{{item.buyer_email}}
               <i ng-click="aa_email=!aa_email" 
                 class="fa fa-edit fa-fw pointer"
-                ng-hide="item.order_line>2"
+                ng-hide="item.order_line>3"
                 ></i>
               <div ng-show="aa_email" class="input-group">
                 <input class="form-control input-sm" placeholder="邮箱 更改为..." type="text" id="buyer_email">
@@ -46,7 +46,7 @@
             <td class="s_gray">{{item.receive_name}}
               <i ng-click="aa_receive_name=!aa_receive_name" 
                 class="fa fa-edit fa-fw pointer"
-                ng-hide="item.order_line>2"
+                ng-hide="item.order_line>3"
                 ></i>
               <div ng-show="aa_receive_name" class="input-group">
                 <input class="form-control input-sm" placeholder="收件人 更改为..." type="text" id="receive_name">
@@ -60,7 +60,7 @@
             <td class="s_gray" ng-class="{'danger red':item.tel_ok==2}">{{item.phone}}
               <i ng-click="aa_phone=!aa_phone" 
                 class="fa fa-edit fa-fw pointer"
-                ng-hide="item.order_line>2"
+                ng-hide="item.order_line>3"
                 ></i>
               <div ng-show="aa_phone" class="input-group">
                 <input class="form-control input-sm" placeholder="电话 更改为..." type="text" ng-keyup="check_phone()" id="phone">
@@ -75,9 +75,9 @@
             <td class="s_gray" ng-class="{'danger red':item.post_ok==2}">{{item.post_code}}
                 <i ng-click="aa_post_addr=!aa_post_addr" 
                 class="fa fa-edit fa-fw pointer"
-                ng-hide="item.order_line>2"
+                ng-hide="item.order_line>3"
                 ></i>
-                <i class="fa fa-lightbulb-o fa-fw pointer blue" ng-hide="item.order_line>2" ng-click="read_oms_post(item.post_code)"></i></td>
+                <i class="fa fa-lightbulb-o fa-fw pointer blue" ng-hide="item.order_line>3" ng-click="read_oms_post(item.post_code)"></i></td>
           </tr>
           <tr class="blue warning" ng-repeat="item in now_post_name track by $index" ng-show="now_post_name">
             <td>参考地域</td>
@@ -89,7 +89,7 @@
           </tr>
           <tr ng-show="aa_post_addr">
             <td><input type="text" id="new_post_code" style="width:80px;padding-left: 4px;" placeholder=".. 新的邮编">
-                <i class="fa fa-lightbulb-o fa-fw pointer blue" ng-hide="item.order_line>2" ng-click="read_oms_post2(item.post_code)"></i>
+                <i class="fa fa-lightbulb-o fa-fw pointer blue" ng-hide="item.order_line>3" ng-click="read_oms_post2(item.post_code)"></i>
             </td>
             <td><input type="text" id="new_address" style="width:400px;padding-left: 4px;" placeholder=".. 新的地址"></td>
           </tr>
@@ -177,6 +177,10 @@
           <tr>
             <td class="s_gray">已扣中国</td>
             <td class="red">{{item2.pause_ch}}</td>
+          </tr>
+          <tr>
+            <td class="s_gray">扣货状态</td>
+            <td class="red">{{item2.is_pause | is_pause}}</td>
           </tr>
           <tr>
             <td class="s_gray">子订单价格</td>
