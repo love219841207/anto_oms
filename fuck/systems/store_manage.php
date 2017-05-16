@@ -8,6 +8,14 @@ if(isset($_GET['get_store'])){
     echo json_encode($res);
 }
 
+// 查询平台
+if(isset($_GET['get_station'])){
+	$store = $_GET['get_station'];
+	$sql = "SELECT station FROM oms_store WHERE store_name = '{$store}'";
+    $res = $db->getOne($sql);
+    echo $res['station'];
+}
+
 //添加店铺
 if(isset($_GET['new_store'])){
 	$new_store = addslashes($_GET['new_store']);

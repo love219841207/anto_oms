@@ -3,11 +3,34 @@
         <div class="btn btn-primary btn-sm mt10" ng-click="show_pause_info()" ng-model="radioModel" uib-btn-radio="'Left'">冻结表</div>
         <div class="btn btn-primary btn-sm mt10" ng-click="show_back_info()" ng-model="radioModel" uib-btn-radio="'Right'">退押表</div>
     </div>
+    <div ng-show="radioModel=='Left'" class="pull-left ml20">
+    	<button class="btn btn-default green mt10 btn-sm" ng-click="add_order=!add_order"><i ng-class="{'fa-spin':add_order}" class="fa fa-plus-circle fa-fw"></i> 新建一单</button>
+    </div>
 	<div ng-show="all_pause_orders!='' && radioModel=='Left'" class="btn-group pull-right">
 		<button class="btn btn-default mt10 btn-sm" ng-click="sss()"><i class="fa fa-cubes fa-fw"></i> 扣库存</button>
 		<button class="btn btn-default mt10 btn-sm green" ng-click="down_pauseorders()"><i class="fa fa-download fa-fw"></i> 下载冻结表</button>
 	</div>
 	<div class="clearfix"></div>
+
+	<div ng-show="add_order && radioModel=='Left'" class="btn-group mt20 am-fade-and-slide-top">
+		<div class="btn btn-default btn-sm">
+			<input ng-model='new_store' ng-blur="check_store()" type="text" placeholder="店铺名">
+
+			<input style="width:200px;" ng-show="new_store" ng-model='new_order_id' ng-blur="check_order_id()" type="text" placeholder="订单号">
+
+			<input style="width:200px;" ng-show="new_order_id" ng-model='new_goods_code' ng-blur="check_goods_code()" type="text" placeholder="商品代码">
+	
+			<input ng-show="new_goods_code" ng-model='new_goods_num' id="new_goods_num" ng-blur="check_int('new_goods_num')" type="number" placeholder="数量">
+		
+			<input ng-show="new_goods_num" ng-model='new_unit_price' id="new_unit_price" ng-blur="check_int('new_unit_price')" type="number" placeholder="单价">
+		
+			<input ng-show="new_unit_price" ng-model='new_yf_code' type="text" placeholder="运费代码">
+		
+			<input ng-show="new_yf_code" ng-model='new_cod_money' id="new_cod_money" ng-blur="check_int('new_cod_money')" type="number" placeholder="COD Money">
+		</div>
+		<div class="btn btn-success" ng-click="add_yfcode()" ng-disabled="!new_order_id || !new_goods_code || !new_goods_num || !new_unit_price || !new_yf_code || !new_cod_money" ><i class="fa fa-plus fa-fw"></i>新 增</div>
+		<span class="red ml10" style="line-height: 34px;">{{error_info}}</span>
+	</div>
 
 	<table ng-show="all_pause_orders" class="table-responsive table table-bordered table-condensed table-hover table-striped mt20 f12">
 		<tr class="blue info animate slide-right">
@@ -15,11 +38,11 @@
 			<td>店铺</td>
 			<td>订单号</td>
 			<td>商品代码</td>
-			<td>数量</td>
-			<td>押中国</td>
-			<td>押日本</td>
-			<td>子订单价</td>
-			<td>代引金额</td>
+			<td class="tagr">数量</td>
+			<td class="tagr">押中国</td>
+			<td class="tagr">押日本</td>
+			<td class="tagr">单价 × 数量 = 子订单价格</td>
+			<td class="tagr">代引金额</td>
 			<td class="tagc">操作</td>
 		</tr>
 		<tr class="am-fade-and-slide-right blue" ng-repeat="item in all_pause_orders track by $index">
@@ -30,11 +53,11 @@
 			<td class="tagr">{{item.goods_num}}</td>
 			<td class="tagr" ng-class="{'red':item.pause_ch>'0'}">{{item.pause_ch}}</td>
 			<td class="tagr" ng-class="{'red':item.pause_jp>'0'}">{{item.pause_jp}}</td>
-			<td class="tagr">{{item.item_price}}</td>
+			<td class="tagr">{{item.unit_price}} × {{item.goods_num}} = {{item.item_price}}</td>
 			<td class="tagr">{{item.cod_money}}</td>
 			<td class="tagc" ng-show="radioModel=='Left'"><div ng-click="back_pause(item.id,item.store)" class="btn btn-xs btn-primary">退押</div></td>
 			<td class="tagc" ng-show="radioModel=='Right'">
-				<div class="btn btn-xs btn-primary mr5" data-animation="am-fade-and-slide-top" data-template-url="/modal/edit_pause_item.html" bs-modal="modal" ng-click="pause_modal(item.id,item.store)">
+				<div class="btn btn-xs btn-primary mr5" data-animation="am-fade-and-slide-top" data-template-url="/modal/edit_pause_item.html" bs-modal="modal" ng-click="pause_modal(item.id,item.store);get_station(item.store)">
 					<i class="fa fa-edit fa-fw"></i>编辑
 				</div>
 				<div class="btn btn-xs btn-success mr5" ng-click="to_pause(item.id,item.store)">

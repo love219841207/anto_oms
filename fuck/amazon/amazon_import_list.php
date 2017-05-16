@@ -54,7 +54,7 @@ if(isset($_GET['import_add_list'])){
 			$goods_title = $new_arr[8];	#商品名
 			$goods_num = $new_arr[9];	#购买数量
 			$currency = $new_arr[10];	#货币种类
-			$item_price = $new_arr[11];	#金额
+			$unit_price = $new_arr[11];	#金额
 			$item_tax = $new_arr[12];	#税
 			$shipping_price = $new_arr[13];	#运费
 			$shipping_tax = $new_arr[14];	#运费税
@@ -107,7 +107,7 @@ if(isset($_GET['import_add_list'])){
 					goods_title,
 					goods_num,
 					currency,
-					item_price,
+					unit_price,
 					item_tax,
 					shipping_price,
 					shipping_tax,
@@ -132,7 +132,7 @@ if(isset($_GET['import_add_list'])){
 					'{$goods_title}',
 					'{$goods_num}',
 					'{$currency}',
-					'{$item_price}',
+					'{$unit_price}',
 					'{$item_tax}',
 					'{$shipping_price}',
 					'{$shipping_tax}',
@@ -166,7 +166,7 @@ if(isset($_GET['import_add_list'])){
 
     }
     //计算单品总金额
-    $sql = "UPDATE amazon_import_list SET item_total_money = item_price * goods_num + item_tax + shipping_price + shipping_tax - item_promotion_discount - ship_promotion_discount";
+    $sql = "UPDATE amazon_import_list SET item_total_money = unit_price * goods_num + item_tax + shipping_price + shipping_tax - item_promotion_discount - ship_promotion_discount";
     $res = $db->execute($sql);
     usleep(50000);
     //清空缓存
@@ -245,6 +245,7 @@ if(isset($_GET['import_add_list'])){
 		shipping_price,
 		shipping_tax,
 		item_price,
+		unit_price,
 		item_tax,
 		promotion_discount,
 		shipping_discount,
@@ -259,6 +260,7 @@ if(isset($_GET['import_add_list'])){
 		shipping_price,
 		shipping_tax,
 		item_total_money,-- 这里是计算后所得结果
+		unit_price,
 		item_tax,
 		item_promotion_discount,
 		ship_promotion_discount,

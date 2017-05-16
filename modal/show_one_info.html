@@ -163,7 +163,7 @@
                 ng-hide="item.order_line>2"
                 ></i>
               <div ng-show="aa_goods_num" class="input-group">
-                <input class="form-control input-sm" placeholder="数量 更改为..." type="number" id="goods_num_{{$index}}">
+                <input ng-blur="check_int('goods_num_'+$index)" class="form-control input-sm" placeholder="数量 更改为..." type="number" id="goods_num_{{$index}}">
                 <span class="input-group-btn">
                   <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="change_info_field(item2.id,'goods_num',$index,item2.order_id);aa_goods_num=!aa_goods_num">确定</button>
                 </span>
@@ -183,18 +183,23 @@
             <td class="red">{{item2.is_pause | is_pause}}</td>
           </tr>
           <tr>
+            <td class="s_gray">单价</td>
+            <td class="yellow">{{item2.unit_price}}
+              <i ng-click="aa_unit_price=!aa_unit_price" 
+                class="fa fa-edit fa-fw pointer"
+                ng-hide="item.order_line>3"
+                ></i>
+              <div ng-show="aa_unit_price" class="input-group">
+                <input ng-blur="check_int('unit_price_'+$index)" class="form-control input-sm" placeholder="单价 更改为..." type="number" id="unit_price_{{$index}}">
+                <span class="input-group-btn">
+                  <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="change_info_field(item2.id,'unit_price',$index,item2.order_id);aa_unit_price=!aa_unit_price">确定</button>
+                </span>
+              </div>
+            </td>
+          </tr>
+          <tr>
             <td class="s_gray">子订单价格</td>
-            <td class="yellow">{{item2.item_price}}
-              <!-- <i ng-click="aa_item_price=!aa_item_price" 
-                  class="fa fa-edit fa-fw pointer"
-                  ></i>
-                <div ng-show="aa_item_price" class="input-group">
-                  <input class="form-control input-sm" placeholder="子订单价格 更改为..." type="number" id="item_price_{{$index}}">
-                  <span class="input-group-btn">
-                    <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="change_info_field(item.id,'item_price',$index,item.order_id);aa_item_price=!aa_item_price">确定</button>
-                  </span>
-                </div> -->
-              </td>
+            <td class="yellow">{{item2.item_price}}</td>
           </tr>
           <tr>
             <td class="s_gray">运费金额</td>
@@ -214,17 +219,17 @@
               <td class="s_gray">商品代码</td>
               <td><input type="text" ng-blur="check_goods_code()" id="add_goods_code" class="form-control input-sm"></td>
             </tr>
-            <tr ng-show="b_repo">
+            <tr ng-show="info_repo">
               <td class="s_gray">库存数</td>
-              <td>{{b_repo}}</td>
+              <td>{{info_repo.repo}} ({{info_repo.b_repo}}+{{info_repo.a_repo}})</td>
             </tr>
             <tr>
               <td class="s_gray">数 量</td>
               <td><input type="number" id="add_goods_num" ng-blur="check_int('add_goods_num')" class="form-control input-sm"></td>
             </tr>
             <tr>
-              <td class="s_gray">子订单价格</td>
-              <td><input type="number" id="add_item_price" ng-blur="check_int('add_item_price')" class="form-control input-sm"></td>
+              <td class="s_gray">单 价</td>
+              <td><input type="number" id="add_unit_price" ng-blur="check_int('add_item_price')" class="form-control input-sm"></td>
             </tr>
             <tr>
               <td class="s_gray">运费代码</td>

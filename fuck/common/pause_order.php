@@ -173,3 +173,15 @@ if(isset($_GET['down_pause_orders_table'])){
     $objWriter->save($dir."/../../down/pause_orders_table.xlsx");   //保存在服务器
     echo "ok";
 }
+
+// 检测订单号
+if(isset($_GET['check_order_id'])){
+    $order_id = $_GET['check_order_id'];
+    $station = strtolower($_GET['station']);
+    $store = $_GET['store'];
+    $response_list = $station.'_response_list';
+    
+    $sql = "SELECT count(1) AS count FROM $response_list WHERE order_id = '{$order_id}'";
+    $res = $db->getOne($sql);
+    echo $res['count'];
+}

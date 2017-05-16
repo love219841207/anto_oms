@@ -601,6 +601,27 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         });
     }
 
+    // 价格计算
+    $scope.play_price = function(order_id){
+        $http.get('/fuck/common/change_order.php', {
+            params:{
+                play_price:'play',
+                station:$scope.now_station,
+                order_id:order_id
+            }
+        }).success(function(data) {
+            if(data == 'ok'){
+                $scope.to_page($scope.now_page);
+                $scope.show_one_info(order_id);
+            }else{
+                $scope.plug_alert('danger',data,'fa fa-ban');
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:订单价格计算失败。");
+        });
+    }
+
     //修改info字段
     $scope.change_info_field = function(id,field_name,index,order_id){
         var dom = document.querySelector('#'+field_name+'_'+index);
@@ -617,6 +638,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             }
         }).success(function(data) {
             if(data == 'ok'){
+                $scope.play_price(order_id);    // 价格计算
                 $scope.to_page($scope.now_page);
                 $scope.show_one_info(order_id);
             }else{
@@ -877,7 +899,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
                         check_repo:add_goods_code
                     }
                 }).success(function(data) {
-                    $scope.b_repo = data;
+                    $scope.info_repo = data;
                 }).error(function(data) {
                     alert("系统错误，请联系管理员。");
                     $log.info("error:查看发货库存数失败。");
@@ -906,36 +928,14 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         }
     }
 
-    // 运算代引
-    $scope.to_cod = function(order_id){
-        var post_data = {
-                to_cod:order_id,
-                station:$scope.now_station,
-                store:$scope.now_store_bar
-            };
-        $http.post('/fuck/common/change_order.php', post_data).success(function(data) {
-            if(data == 'ok'){
-                $scope.get_count();
-                $scope.to_page($scope.now_page);
-                $scope.show_one_info(order_id);
-            }else{
-                $log.info(data+'代引计算错误');
-                $scope.plug_alert('danger','严重！代引计算错误。','fa fa-ban');
-            }
-        }).error(function(data) {
-            alert("系统错误，请联系管理员。");
-            $log.info("error:代引计算错误。");
-        });
-    }
-
     // 添加item
     $scope.add_item = function(order_id){
         var dom = document.querySelector('#add_goods_code');
         var add_goods_code = angular.element(dom).val();
         var dom = document.querySelector('#add_goods_num');
         var add_goods_num = angular.element(dom).val();
-        var dom = document.querySelector('#add_item_price');
-        var add_item_price = angular.element(dom).val();
+        var dom = document.querySelector('#add_unit_price');
+        var add_unit_price = angular.element(dom).val();
         var dom = document.querySelector('#add_yfcode');
         var add_yfcode = angular.element(dom).val();
         var dom = document.querySelector('#add_cod_money');
@@ -944,7 +944,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         var post_data = {
                 add_item:add_goods_code,
                 add_goods_num:add_goods_num,
-                add_item_price:add_item_price,
+                add_unit_price:add_unit_price,
                 add_yfcode:add_yfcode,
                 add_cod_money:add_cod_money,
                 order_id:order_id,
@@ -953,7 +953,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
 
         $http.post('/fuck/common/change_order.php', post_data).success(function(data) {
             if(data == 'ok'){
-                $scope.to_cod(order_id);    //计算COD
+                $scope.play_price(order_id);    // 价格计算
             }else{
                 $log.info(data);
                 $scope.plug_alert('danger','添加项目失败，请联系管理员。','fa fa-ban');
@@ -973,7 +973,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
 
         $http.post('/fuck/common/change_order.php', post_data).success(function(data) {
             if(data == 'ok'){
-                $scope.to_cod(order_id);    //计算COD
+                $scope.play_price(order_id);    // 价格计算
             }else{
                 $log.info(data);
                 $scope.plug_alert('danger','删除项目失败，请联系管理员。','fa fa-ban');

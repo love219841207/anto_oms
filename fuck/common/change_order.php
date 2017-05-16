@@ -5,6 +5,44 @@ $dir = dirname(__FILE__);
 
 set_time_limit(0);
 
+// 计算价格
+if(isset($_GET['play_price'])){
+	$station = strtolower($_GET['station']);
+	$response_list = $station.'_response_list';
+	$response_info = $station.'_response_info';
+	$order_id = $_GET['order_id'];
+
+	//查询该订单是否是COD订单
+	$sql = "SELECT payment_method FROM $response_list WHERE order_id = '{$order_id}'";
+	$res = $db->getOne($sql);
+	$payment_method = $res['payment_method'];
+	
+	//子订单价格 = 数量 * 单价
+	$sql = "UPDATE $response_info SET item_price = unit_price * goods_num WHERE order_id = '{$order_id}'";
+	$res = $db->execute($sql);
+
+	if($payment_method == 'COD'){
+
+		//如果是COD订单，计算金额
+		$sql = "SELECT sum(cod_money+item_price+yf_money) as pay_money FROM $response_info WHERE order_id='{$order_id}'";
+		$res = $db->getOne($sql);
+		$pay_money = $res['pay_money'];
+		//更新
+		$sql = "UPDATE $response_list SET order_total_money = '{$pay_money}',pay_money = '{$pay_money}'  WHERE order_id='{$order_id}'";
+		$res = $db->execute($sql);
+	}else{
+		//查询出订单额，计算金额
+		$sql = "SELECT sum(item_price+yf_money) as total_money FROM $response_info WHERE order_id='{$order_id}'";
+		$res = $db->getOne($sql);
+		$total_money = $res['total_money'];
+
+		//更新total_money
+		$sql = "UPDATE $response_list SET order_total_money = '{$total_money}'  WHERE order_id='{$order_id}'";
+		$res = $db->execute($sql);
+	}
+	echo 'ok';
+}
+
 //查看订单详单
 if(isset($_GET['show_one_info'])){
 	$store = $_GET['store'];
@@ -113,8 +151,8 @@ if(isset($_GET['change_info_field'])){
 	if($field_name == 'goods_num'){
 		$ch_field = '数量';
 	}
-	if($field_name == 'item_price'){
-		$ch_field = '子订单价格';
+	if($field_name == 'unit_price'){
+		$ch_field = '单价';
 	}
 
 	//查询原字段值
@@ -303,44 +341,11 @@ if(isset($_POST['return_items'])){
 	echo 'ok';
 }
 
-// 运算COD
-if(isset($_POST['to_cod'])){
-	$order_id = $_POST['to_cod'];
-	$station = strtolower($_POST['station']);
-	$store = $_POST['store'];
-	$response_list = $station.'_response_list';
-	$response_info = $station.'_response_info';
-
-	//查询该订单是否是COD订单
-	$sql = "SELECT payment_method FROM $response_list WHERE order_id = '{$order_id}'";
-	$res = $db->getOne($sql);
-	
-	if($res['payment_method']=='COD'){
-		//如果是COD订单，计算金额
-		$sql = "SELECT sum(cod_money+item_price+yf_money) as pay_money FROM $response_info WHERE order_id='{$order_id}'";
-		$res = $db->getOne($sql);
-		$pay_money = $res['pay_money'];
-		//更新
-		$sql = "UPDATE $response_list SET order_total_money = '{$pay_money}',pay_money = '{$pay_money}'  WHERE order_id='{$order_id}'";
-		$res = $db->execute($sql);
-		echo 'ok';
-	}else{
-		//查询出订单额，计算金额
-		$sql = "SELECT sum(item_price+yf_money) as total_money FROM $response_info WHERE order_id='{$order_id}'";
-		$res = $db->getOne($sql);
-		$total_money = $res['total_money'];
-		//更新total_money
-		$sql = "UPDATE $response_list SET order_total_money = '{$total_money}'  WHERE order_id='{$order_id}'";
-		$res = $db->execute($sql);
-		echo 'ok';
-	}
-}
-
 // 添加item
 if(isset($_POST['add_item'])){
 	$add_item = trim(addslashes($_POST['add_item']));
 	$add_goods_num = $_POST['add_goods_num'];
-	$add_item_price = $_POST['add_item_price'];
+	$add_unit_price = $_POST['add_unit_price'];
 	$add_yfcode = $_POST['add_yfcode'];
 	$add_cod_money = $_POST['add_cod_money'];
 
@@ -367,7 +372,7 @@ if(isset($_POST['add_item'])){
 		sku,
 		goods_code,
 		goods_num,
-		item_price,
+		unit_price,
 		cod_money) VALUES(
 		'{$store}',
 		'{$order_id}',
@@ -380,7 +385,7 @@ if(isset($_POST['add_item'])){
 		'{$add_item}',
 		'{$add_item}',
 		'{$add_goods_num}',
-		'{$add_item_price}',
+		'{$add_unit_price}',
 		'{$add_cod_money}'
 		) ";
 	$res = $db->execute($sql);
@@ -388,11 +393,11 @@ if(isset($_POST['add_item'])){
 	// 如果COD_money大于0，则为代引
 	if($add_cod_money > 0){
 		//日志
-		$do = ' [新增一单]：订单号【'.$order_id.'】商品代码【'.$add_item.'】数量【'.$add_goods_num.'】子订单价格【'.$add_item_price.'】运费代码【'.$add_yfcode.'】运费金额【'.$add_yf_money.'】代引金额【'.$add_cod_money.'】';
+		$do = ' [新增一单]：订单号【'.$order_id.'】商品代码【'.$add_item.'】数量【'.$add_goods_num.'】单价【'.$add_unit_price.'】运费代码【'.$add_yfcode.'】运费金额【'.$add_yf_money.'】代引金额【'.$add_cod_money.'】';
 
 	}else{
 		//日志
-		$do = ' [新增一单]：订单号【'.$order_id.'】商品代码【'.$add_item.'】数量【'.$add_goods_num.'】子订单价格【'.$add_item_price.'】运费代码【'.$add_yfcode.'】运费金额【'.$add_yf_money.'】';
+		$do = ' [新增一单]：订单号【'.$order_id.'】商品代码【'.$add_item.'】数量【'.$add_goods_num.'】单价【'.$add_unit_price.'】运费代码【'.$add_yfcode.'】运费金额【'.$add_yf_money.'】';
 	}
 
 	//查询OMS-ID
@@ -426,7 +431,7 @@ if(isset($_POST['del_item'])){
 	$res2 = $db->getOne($sql);
 	$oms_id = $res2['id'];
 
-	$do = '[删除一单]：订单号【'.$res['order_id'].'】商品代码【'.$res['goods_code'].'】数量【'.$res['goods_num'].'】子订单价格【'.$res['item_price'].'】运费代码【'.$res['yfcode'].'】运费金额【'.$res['yf_money'].'】代引金额【'.$res['cod_money'].'】';
+	$do = '[删除一单]：订单号【'.$res['order_id'].'】商品代码【'.$res['goods_code'].'】数量【'.$res['goods_num'].'】单价【'.$res['unit_price'].'】运费代码【'.$res['yfcode'].'】运费金额【'.$res['yf_money'].'】代引金额【'.$res['cod_money'].'】';
 
 	oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
 	echo 'ok';

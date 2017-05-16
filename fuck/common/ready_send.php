@@ -148,6 +148,9 @@ if(isset($_POST['add_send_item'])){
 			$pause_jp = $goods_num;
 		}
 
+		// 当前时间戳
+		$now_time = time();
+
 		// 插入 resoponse_info
 		$sql = "INSERT INTO $response_info (
 			store,
@@ -164,7 +167,8 @@ if(isset($_POST['add_send_item'])){
 			pause_ch,
 			pause_jp,
 			item_price,
-			cod_money) VALUES(
+			cod_money,
+			import_time) VALUES(
 			'{$store}',
 			'{$order_id}',
 			'{$u_name}',
@@ -179,7 +183,8 @@ if(isset($_POST['add_send_item'])){
 			'{$pause_ch}',
 			'{$pause_jp}',
 			'{$add_item_price}',
-			'{$add_cod_money}'
+			'{$add_cod_money}',
+			{$now_time}
 			) ";
 		$res = $db->execute($sql);
 

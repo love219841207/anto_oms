@@ -180,7 +180,7 @@ app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','
         $http.post('/fuck/common/ready_send.php', post_data).success(function(data) {
             if(data.status == 'ok'){
                 $scope.reset_express(); //重置快递
-                $scope.to_cod(data.order_id,data.station,data.store);    //计算COD
+                $scope.play_price();    // 价格计算
                 $scope.repo_status();   //计算发货单
             }else{
                 $log.info(data);
@@ -189,26 +189,6 @@ app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
             $log.info("error:添加item失败。");
-        });
-    }
-
-    // 运算代引
-    $scope.to_cod = function(order_id,station,store){
-        var post_data = {
-                to_cod:order_id,
-                station:station,
-                store:store
-            };
-        $http.post('/fuck/common/change_order.php', post_data).success(function(data) {
-            if(data == 'ok'){
-                
-            }else{
-                $log.info(data+'代引计算错误');
-                $scope.plug_alert('danger','严重！代引计算错误。','fa fa-ban');
-            }
-        }).error(function(data) {
-            alert("系统错误，请联系管理员。");
-            $log.info("error:代引计算错误。");
         });
     }
 
@@ -225,7 +205,7 @@ app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','
         }).success(function(data) {
             if(data.status == 'ok'){
                 $scope.plug_alert('success','删除完成。','fa fa-smile-o');
-                $scope.to_cod(data.order_id,station,store);    //计算COD
+                $scope.play_price();    // 价格计算
                 $scope.repo_status();   //计算发货单
             }else{
                 $scope.plug_alert('danger',data,'fa fa-ban');
