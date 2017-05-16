@@ -359,6 +359,9 @@ if(isset($_POST['add_item'])){
 	//运费金额计算 ###############
 	$add_yf_money = '0';	//暂时为0
 
+	// 当前时间戳
+	$now_time = time();
+
 	// 添加
 	$sql = "INSERT INTO $response_info (
 		store,
@@ -373,7 +376,8 @@ if(isset($_POST['add_item'])){
 		goods_code,
 		goods_num,
 		unit_price,
-		cod_money) VALUES(
+		cod_money,
+		import_time) VALUES(
 		'{$store}',
 		'{$order_id}',
 		'{$u_name}',
@@ -386,7 +390,8 @@ if(isset($_POST['add_item'])){
 		'{$add_item}',
 		'{$add_goods_num}',
 		'{$add_unit_price}',
-		'{$add_cod_money}'
+		'{$add_cod_money}',
+		{$now_time}
 		) ";
 	$res = $db->execute($sql);
 

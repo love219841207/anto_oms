@@ -119,6 +119,80 @@ if(isset($_GET['del_pause'])){
     echo 'ok';
 }
 
+// 新建一单
+if(isset($_GET['new_pause_order'])){
+    $order_id = $_GET['new_pause_order'];
+    $store = $_GET['store'];
+    $station = strtolower($_GET['station']);
+    $new_goods_code = $_GET['new_goods_code'];
+    $new_goods_num = $_GET['new_goods_num'];
+    $new_unit_price = $_GET['new_unit_price'];
+    $new_yfcode = $_GET['new_yfcode'];
+    $new_cod_money = $_GET['new_cod_money'];
+
+    $response_info = $station.'_response_info';
+    $response_list = $station.'_response_list';
+
+    //运费金额计算 ###############
+    $new_yf_money = '0';    //暂时为0
+
+    // 当前时间戳
+    $now_time = time();
+
+    // 添加
+    $sql = "INSERT INTO $response_info (
+        store,
+        order_id,
+        holder,
+        goods_title,
+        sku_ok,
+        yfcode_ok,
+        yfcode,
+        yf_money,
+        sku,
+        goods_code,
+        goods_num,
+        is_pause,
+        unit_price,
+        cod_money,
+        import_time) VALUES(
+        '{$store}',
+        '{$order_id}',
+        '{$u_name}',
+        concat('{$u_name}','添加'),
+        '1',
+        '1',
+        '{$new_yfcode}',
+        '{$new_yf_money}',
+        '{$new_goods_code}',
+        '{$new_goods_code}',
+        '{$new_goods_num}',
+        'pause',
+        '{$new_unit_price}',
+        '{$new_cod_money}',
+        {$now_time}
+        ) ";
+    $res = $db->execute($sql);
+
+    // 如果COD_money大于0，则为代引
+    if($new_cod_money > 0){
+        //日志
+        $do = ' [新增一单]：订单号【'.$order_id.'】商品代码【'.$new_goods_code.'】数量【'.$new_goods_num.'】单价【'.$new_unit_price.'】运费代码【'.$new_yfcode.'】运费金额【'.$new_yf_money.'】代引金额【'.$new_cod_money.'】';
+
+    }else{
+        //日志
+        $do = ' [新增一单]：订单号【'.$order_id.'】商品代码【'.$new_goods_code.'】数量【'.$new_goods_num.'】单价【'.$new_unit_price.'】运费代码【'.$new_yfcode.'】运费金额【'.$new_yf_money.'】';
+    }
+    //查询OMS-ID
+    $sql = "SELECT id FROM $response_list WHERE order_id = '{$order_id}'";
+    $res = $db->getOne($sql);
+    $oms_id = $res['id'];
+
+    oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
+    echo 'ok';
+
+}
+
 // 下载冻结订单表
 if(isset($_GET['down_pause_orders_table'])){
     require_once($dir."/../PHPExcel/PHPExcel.php");//引入PHPExcel

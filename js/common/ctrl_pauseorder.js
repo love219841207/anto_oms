@@ -284,4 +284,31 @@ app.controller('pauseorderCtrl', ['$rootScope','$scope','$state','$http','$log',
             $log.info("error:商品代码检测失败。");
         });
     }
+
+    // 新建一单
+    $scope.new_pause_order = function(){
+        $http.get('/fuck/common/pause_order.php', {
+            params:{
+                new_pause_order:$scope.new_order_id,
+                station:$scope.this_station,
+                store:$scope.new_store,
+                new_goods_code:$scope.new_goods_code,
+                new_goods_num:$scope.new_goods_num,
+                new_unit_price:$scope.new_unit_price,
+                new_yfcode:$scope.new_yfcode,
+                new_cod_money:$scope.new_cod_money
+            }
+        }).success(function(data) {
+            if(data == 'ok'){
+                $scope.play_price($scope.new_order_id);    // 价格计算
+                $scope.show_pause_info();
+            }else{
+                $scope.plug_alert('danger',data,'fa fa-ban');
+            }
+            
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:订单号检测失败。");
+        });
+    }
 }]);
