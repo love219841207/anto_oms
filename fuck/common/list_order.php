@@ -123,11 +123,20 @@ if(isset($_GET['sub_repo'])){
 	$today = date('y-m-d',time()); //获取日期
 	$store = $_GET['store'];
 	$station = strtolower($_GET['station']);
+
+	if($station == 'All_station'){
+		// 如果是所有平台扣库存，即冻结表
+		// 按照 time 排序三个平台的send_id和平台名
+		$sql = "SELECT send_id, FROM $response_list WHERE order_line = $order_line AND store = '{$store}' GROUP BY send_id";
+		$res = $db->getAll($sql);
+	}
+
 	$response_list = $station.'_response_list';
 	$response_info = $station.'_response_info';
+	$order_line = $_GET['order_line'];
 
 	// 按照 send_id 扣库存
-	$sql = "SELECT send_id FROM $response_list WHERE order_line = '2' AND store = '{$store}' GROUP BY send_id";
+	$sql = "SELECT send_id FROM $response_list WHERE order_line = $order_line AND store = '{$store}' GROUP BY send_id";
 	$res = $db->getAll($sql);
 	foreach ($res as $val) {
 		$send_id = $val['send_id'];

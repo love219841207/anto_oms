@@ -53,10 +53,11 @@ app.controller('pauseorderCtrl', ['$rootScope','$scope','$state','$http','$log',
 	}
 
     // 退押
-    $scope.back_pause = function(id,store){
+    $scope.back_pause = function(id,store,station){
         $http.get('/fuck/common/pause_order.php', {
             params:{
                 store:store,
+                station:station,
                 back_pause:id
             }
         }).success(function(data) {
@@ -73,10 +74,11 @@ app.controller('pauseorderCtrl', ['$rootScope','$scope','$state','$http','$log',
     }
 
     // 还原
-    $scope.to_pause = function(id,store){
+    $scope.to_pause = function(id,store,station){
         $http.get('/fuck/common/pause_order.php', {
             params:{
                 store:store,
+                station:station,
                 to_pause:id
             }
         }).success(function(data) {
@@ -93,12 +95,13 @@ app.controller('pauseorderCtrl', ['$rootScope','$scope','$state','$http','$log',
     }
 
     // pause_modal
-    $scope.pause_modal = function(id,store){
+    $scope.pause_modal = function(id,store,station){
         $scope.repo_num = '';
         // 查询单个详情
         $http.get('/fuck/common/pause_order.php', {
             params:{
                 store:store,
+                station:station,
                 one_pause:id
             }
         }).success(function(data) {
@@ -111,10 +114,11 @@ app.controller('pauseorderCtrl', ['$rootScope','$scope','$state','$http','$log',
     }
 
     // 删除
-    $scope.del_pause = function(id,store){
+    $scope.del_pause = function(id,store,station){
         $http.get('/fuck/common/pause_order.php', {
             params:{
                 store:store,
+                station:station,
                 del_pause:id
             }
         }).success(function(data) {
@@ -310,5 +314,31 @@ app.controller('pauseorderCtrl', ['$rootScope','$scope','$state','$http','$log',
             alert("系统错误，请联系管理员。");
             $log.info("error:订单号检测失败。");
         });
+    }
+
+    //扣库存
+    $scope.sub_repo = function(){
+        alert('正在纠结')
+        // $scope.shadow('open','ss_write','正在扣库存，请稍后。');
+        // $scope.init_list(); //初始化列表数据
+        // $http.get('/fuck/common/list_order.php', {
+        //     params:{
+        //         sub_repo:'get',
+        //         station:$scope.now_station,
+        //         store:$scope.now_store_bar,
+        //         order_line:'3'
+        //     }
+        // }).success(function(data) {
+        //     $log.info(data)
+        //     if(data == 'ok'){
+        //         $scope.plug_alert('success','扣库完成。','fa fa-smile-o');
+        //     }else{
+        //         $scope.plug_alert('danger','扣库失败。','fa fa-ban');
+        //     }
+        //     $timeout(function(){$scope.shadow('close');},500); //关闭shadow
+        // }).error(function(data) {
+        //     alert("系统错误，请联系管理员。");
+        //     $log.info("error:扣库存失败。");
+        // });
     }
 }]);

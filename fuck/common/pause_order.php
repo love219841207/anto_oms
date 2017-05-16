@@ -27,11 +27,9 @@ if(isset($_GET['back_order'])){
 // 读取一个info
 if(isset($_GET['one_pause'])){
     $store = $_GET['store'];
+    $station = strtolower($_GET['station']);
     $info_id = $_GET['one_pause'];
-    // 查询平台
-    $sql = "SELECT station FROM oms_store WHERE store_name = '{$store}'";
-    $res = $db->getOne($sql);
-    $station = strtolower($res['station']);
+
     $response_info = $station.'_response_info';
 
     $sql = "SELECT * FROM amazon_response_info WHERE id = '{$info_id}'";
@@ -43,12 +41,9 @@ if(isset($_GET['one_pause'])){
 // 退押
 if(isset($_GET['back_pause'])){
     $store = $_GET['store'];
+    $station = strtolower($_GET['station']);
     $info_id = $_GET['back_pause'];
 
-    // 查询平台
-    $sql = "SELECT station FROM oms_store WHERE store_name = '{$store}'";
-    $res = $db->getOne($sql);
-    $station = strtolower($res['station']);
     $response_info = $station.'_response_info';
 
     // 查询该 info_id 所押的中国和日本数及goods_code
@@ -73,11 +68,8 @@ if(isset($_GET['back_pause'])){
 if(isset($_GET['to_pause'])){
     $store = $_GET['store'];
     $info_id = $_GET['to_pause'];
+    $station = strtolower($_GET['station']);
 
-    // 查询平台
-    $sql = "SELECT station FROM oms_store WHERE store_name = '{$store}'";
-    $res = $db->getOne($sql);
-    $station = strtolower($res['station']);
     $response_info = $station.'_response_info';
 
     // 对押的数目清零及is_pause 状态修改
@@ -91,11 +83,8 @@ if(isset($_GET['to_pause'])){
 if(isset($_GET['del_pause'])){
     $store = $_GET['store'];
     $info_id = $_GET['del_pause'];
+    $station = strtolower($_GET['station']);
 
-    // 查询平台
-    $sql = "SELECT station FROM oms_store WHERE store_name = '{$store}'";
-    $res = $db->getOne($sql);
-    $station = strtolower($res['station']);
     $response_info = $station.'_response_info';
     $response_list = $station.'_response_list';
 

@@ -7,7 +7,7 @@
     	<button class="btn btn-default green mt10 btn-sm" ng-click="add_order=!add_order"><i ng-class="{'fa-spin':add_order}" class="fa fa-plus-circle fa-fw"></i> 新建一单</button>
     </div>
 	<div ng-show="all_pause_orders!='' && radioModel=='Left'" class="btn-group pull-right">
-		<button class="btn btn-default mt10 btn-sm" ng-click="sss()"><i class="fa fa-cubes fa-fw"></i> 扣库存</button>
+		<button class="btn btn-default mt10 btn-sm" ng-click="sub_repo()"><i class="fa fa-cubes fa-fw"></i> 扣库存</button>
 		<button class="btn btn-default mt10 btn-sm green" ng-click="down_pauseorders()"><i class="fa fa-download fa-fw"></i> 下载冻结表</button>
 	</div>
 	<div class="clearfix"></div>
@@ -55,15 +55,15 @@
 			<td class="tagr" ng-class="{'red':item.pause_jp>'0'}">{{item.pause_jp}}</td>
 			<td class="tagr">{{item.unit_price}} × {{item.goods_num}} = {{item.item_price}}</td>
 			<td class="tagr">{{item.cod_money}}</td>
-			<td class="tagc" ng-show="radioModel=='Left'"><div ng-click="back_pause(item.id,item.store)" class="btn btn-xs btn-primary">退押</div></td>
+			<td class="tagc" ng-show="radioModel=='Left'"><div ng-click="back_pause(item.id,item.store,item.station)" class="btn btn-xs btn-primary">退押</div></td>
 			<td class="tagc" ng-show="radioModel=='Right'">
-				<div class="btn btn-xs btn-primary mr5" data-animation="am-fade-and-slide-top" data-template-url="/modal/edit_pause_item.html" bs-modal="modal" ng-click="pause_modal(item.id,item.store);get_station(item.store)">
+				<div class="btn btn-xs btn-primary mr5" data-animation="am-fade-and-slide-top" data-template-url="/modal/edit_pause_item.html" bs-modal="modal" ng-click="pause_modal(item.id,item.store,item.station);get_station(item.store)">
 					<i class="fa fa-edit fa-fw"></i>编辑
 				</div>
-				<div class="btn btn-xs btn-success mr5" ng-click="to_pause(item.id,item.store)">
+				<div class="btn btn-xs btn-success mr5" ng-click="to_pause(item.id,item.store,item.station)">
 					<i class="fa fa-undo fa-fw"></i>还原
 				</div>
-				<div class="btn btn-xs btn-danger" data-animation="am-fade-and-slide-top" data-template-url="/modal/del_pause_item.html" bs-modal="modal" ng-click="pause_modal(item.id,item.store)">
+				<div class="btn btn-xs btn-danger" data-animation="am-fade-and-slide-top" data-template-url="/modal/del_pause_item.html" bs-modal="modal" ng-click="pause_modal(item.id,item.store,item.station)">
 					<i class="fa fa-trash-o fa-fw"></i>删除
 				</div>
 			</td>
