@@ -121,28 +121,31 @@ if(isset($_GET['break_common_order'])){
 //扣库存
 if(isset($_GET['sub_repo'])){
 	$today = date('y-m-d',time()); //获取日期
-	$store = $_GET['store'];
-	$station = strtolower($_GET['station']);
+	
+	$now_station = strtolower($_GET['station']);
 
-	if($station == 'All_station'){
+	if($now_station == 'all_station'){
 		// 如果是所有平台扣库存，即冻结表
-		// 按照 time 排序三个平台的send_id和平台名
-		$sql = "SELECT send_id, FROM $response_list WHERE order_line = $order_line AND store = '{$store}' GROUP BY send_id";
-		$res = $db->getAll($sql);
+		$sql = "SELECT id,station,send_id FROM amazon_response_list WHERE order_line = 3 UNION SELECT id,station,send_id FROM yahoo_response_list WHERE order_line = 3 GROUP BY send_id ORDER BY id";
+
+	}else{
+		// 单个平台正常店铺发货
+		$store = $_GET['store'];
+		$now_response_list = $now_station.'_response_list';
+
+		$sql = "SELECT station,send_id FROM $now_response_list WHERE order_line = 2 AND store = '{$store}' GROUP BY send_id";
 	}
 
-	$response_list = $station.'_response_list';
-	$response_info = $station.'_response_info';
-	$order_line = $_GET['order_line'];
-
-	// 按照 send_id 扣库存
-	$sql = "SELECT send_id FROM $response_list WHERE order_line = $order_line AND store = '{$store}' GROUP BY send_id";
+	// 按照 send_id 扣库存	
 	$res = $db->getAll($sql);
 	foreach ($res as $val) {
+		$station = $val['station'];
+		$response_list = $val['station'].'_response_list';
+		$response_info = $val['station'].'_response_info';
 		$send_id = $val['send_id'];
 
 		// 查询出每个 send_id 对应的 order_id 的 商品代码
-		$sql = "SELECT info.order_id as order_id,info.id as info_id,info.goods_code as goods_code,info.goods_num as goods_num FROM $response_info info,$response_list list WHERE list.order_id = info.order_id AND list.send_id = '{$send_id}'";
+		$sql = "SELECT info.order_id as order_id,info.id as info_id,info.goods_code as goods_code,info.pause_ch as pause_ch,info.pause_jp as pause_jp,info.goods_num as goods_num FROM $response_info info,$response_list list WHERE list.order_id = info.order_id AND list.send_id = '{$send_id}'";
 		$res2 = $db->getAll($sql);
 
 		// 默认可发货
@@ -152,7 +155,11 @@ if(isset($_GET['sub_repo'])){
 		foreach ($res2 as $val2) {
 			$now_order_id = $val2['order_id'];
 			$now_goods_code = $val2['goods_code'];
-			$goods_num = $val2['goods_num'];
+			$u_goods_num = $val2['goods_num'];
+			$pause_ch = $val2['pause_ch'];
+			$pause_jp = $val2['pause_jp'];
+
+			$goods_num = $u_goods_num - $pause_ch - $pause_jp;	//实际需要库存数 = 购买数 - 押中国 - 押日本
 			$info_id = $val2['info_id'];
 
 			$order_ids = '\''.$now_order_id.'\','.$order_ids;	# 拼接总订单号集合
@@ -169,7 +176,7 @@ if(isset($_GET['sub_repo'])){
 				$res = $rdb->execute($sql);
 
 				// 押日本
-				$sql = "UPDATE $response_info SET pause_jp = $b_repo WHERE id = '{$info_id}'";
+				$sql = "UPDATE $response_info SET pause_jp = pause_jp + $b_repo WHERE id = '{$info_id}'";
 				$res = $db->execute($sql);
 
 				// 查询中国库存
@@ -185,7 +192,7 @@ if(isset($_GET['sub_repo'])){
 					$res = $rdb->execute($sql);
 
 					// 押中国
-					$sql = "UPDATE $response_info SET pause_ch = $a_repo WHERE id = '{$info_id}'";
+					$sql = "UPDATE $response_info SET pause_ch = pause_ch + $a_repo WHERE id = '{$info_id}'";
 					$res = $db->execute($sql);
 				}else{
 					// 数量小于等于中国
@@ -193,7 +200,7 @@ if(isset($_GET['sub_repo'])){
 					$res = $rdb->execute($sql);
 
 					// 押中国
-					$sql = "UPDATE $response_info SET pause_ch = $need_num WHERE id = '{$info_id}'";
+					$sql = "UPDATE $response_info SET pause_ch = pause_ch + $need_num WHERE id = '{$info_id}'";
 					$res = $db->execute($sql);
 				}	
 			}else{
@@ -202,7 +209,7 @@ if(isset($_GET['sub_repo'])){
 				$res = $rdb->execute($sql);
 
 				// 押日本
-				$sql = "UPDATE $response_info SET pause_jp = $goods_num WHERE id = '{$info_id}'";
+				$sql = "UPDATE $response_info SET pause_jp = pause_jp + $goods_num WHERE id = '{$info_id}'";
 				$res = $db->execute($sql);
 			}
 
@@ -210,15 +217,20 @@ if(isset($_GET['sub_repo'])){
 			$sql = "SELECT pause_ch+pause_jp AS pause_num FROM $response_info WHERE id = '{$info_id}'";
 			$res = $db->getOne($sql);
 			$pause_num = $res['pause_num'];
-			if($goods_num == $pause_num){
+			if($u_goods_num == $pause_num){
 				// 可发货
 				$sql = "UPDATE $response_info SET is_pause = 'pass' WHERE id = '{$info_id}'";
 				$res = $db->execute($sql);
+
 			}else{
 				// 不可发货
 				$can_send = 0;
-				$sql = "UPDATE $response_info SET is_pause = 'pause' WHERE id = '{$info_id}'";
-				$res = $db->execute($sql);
+				if($now_station == 'all_station'){
+
+				}else{
+					$sql = "UPDATE $response_info SET is_pause = 'pause' WHERE id = '{$info_id}'";
+					$res = $db->execute($sql);
+				}
 			}
 		}
 
@@ -257,7 +269,8 @@ if(isset($_GET['sub_repo'])){
 		$sql = "UPDATE $response_list SET repo_status = '{$repo_status}' WHERE send_id = '{$send_id}'";
 		$res = $db->execute($sql);
 	}
-	//转入发货表
+
+	// 亚马逊转入发货表
 	$sql = "INSERT INTO send_table (
 		station,
 		send_id,	#合单发货ID
@@ -298,14 +311,21 @@ if(isset($_GET['sub_repo'])){
 		list.pay_money,	#带引金额
 		info.yfcode,
 		list.buyer_email,
-		'{$store}',
+		list.store,
 		'{$u_name}',
-		'{$today}' from $response_list list,$response_info info where list.order_id = info.order_id AND list.order_line = '4' AND list.store = '{$store}'";
+		'{$today}' from amazon_response_list list,amazon_response_info info where list.order_id = info.order_id AND list.order_line = '4'";
 	$res = $db->execute($sql);
 
+	// 雅虎转入发货表
+	// 乐天转入发货表
+
 	// 更新order_line
-	$sql = "UPDATE $response_list SET order_line = '5' WHERE order_line = '4' AND store = '{$store}'";
+	$sql = "UPDATE amazon_response_list SET order_line = '5' WHERE order_line = '4'";
 	$res = $db->execute($sql);
+	// $sql = "UPDATE yahoo_response_list SET order_line = '5' WHERE order_line = '4'";
+	// $res = $db->execute($sql);
+	// $sql = "UPDATE rakuten_response_list SET order_line = '5' WHERE order_line = '4'";
+	// $res = $db->execute($sql);
 	echo 'ok';
 
 }

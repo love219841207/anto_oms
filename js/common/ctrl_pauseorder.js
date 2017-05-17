@@ -318,27 +318,24 @@ app.controller('pauseorderCtrl', ['$rootScope','$scope','$state','$http','$log',
 
     //扣库存
     $scope.sub_repo = function(){
-        alert('正在纠结')
-        // $scope.shadow('open','ss_write','正在扣库存，请稍后。');
-        // $scope.init_list(); //初始化列表数据
-        // $http.get('/fuck/common/list_order.php', {
-        //     params:{
-        //         sub_repo:'get',
-        //         station:$scope.now_station,
-        //         store:$scope.now_store_bar,
-        //         order_line:'3'
-        //     }
-        // }).success(function(data) {
-        //     $log.info(data)
-        //     if(data == 'ok'){
-        //         $scope.plug_alert('success','扣库完成。','fa fa-smile-o');
-        //     }else{
-        //         $scope.plug_alert('danger','扣库失败。','fa fa-ban');
-        //     }
-        //     $timeout(function(){$scope.shadow('close');},500); //关闭shadow
-        // }).error(function(data) {
-        //     alert("系统错误，请联系管理员。");
-        //     $log.info("error:扣库存失败。");
-        // });
+        $scope.shadow('open','ss_write','正在扣库存，请稍后。');
+        $http.get('/fuck/common/list_order.php', {
+            params:{
+                sub_repo:'get',
+                station:'all_station'
+            }
+        }).success(function(data) {
+            if(data == 'ok'){
+                $scope.show_pause_info();
+                $scope.plug_alert('success','扣库完成。','fa fa-smile-o');
+            }else{
+                $log.info(data)
+                $scope.plug_alert('danger','扣库失败。','fa fa-ban');
+            }
+            $timeout(function(){$scope.shadow('close');},500); //关闭shadow
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:扣库存失败。");
+        });
     }
 }]);

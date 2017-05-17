@@ -1071,8 +1071,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             params:{
                 sub_repo:'get',
                 station:$scope.now_station,
-                store:$scope.now_store_bar,
-                order_line:'2'
+                store:$scope.now_store_bar
             }
         }).success(function(data) {
         	$log.info(data)

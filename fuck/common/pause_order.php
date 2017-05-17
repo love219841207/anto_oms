@@ -9,7 +9,7 @@ ini_set("memory_limit", "1024M");
 // 读取所有冻结订单info表
 if(isset($_GET['pause_order'])){
 	//	获取所有平台 ******************** select * (select * from t1 union all select * from t2) tmp order by tmp.createDate时间戳
-	$sql = "SELECT * FROM amazon_response_info WHERE is_pause = 'pause' ORDER BY ID DESC";
+	$sql = "SELECT * FROM amazon_response_info WHERE is_pause = 'pause' ORDER BY order_id,ID DESC";
 	$res = $db->getAll($sql);
 
 	echo json_encode($res);
@@ -18,7 +18,7 @@ if(isset($_GET['pause_order'])){
 // 读取所有冻结退押订单info表
 if(isset($_GET['back_order'])){
     //  获取所有平台 ******************** select * (select * from t1 union all select * from t2) tmp order by tmp.createDate时间戳
-    $sql = "SELECT * FROM amazon_response_info WHERE is_pause = 'back' ORDER BY ID DESC";
+    $sql = "SELECT * FROM amazon_response_info WHERE is_pause = 'back' ORDER BY order_id,ID DESC";
     $res = $db->getAll($sql);
 
     echo json_encode($res);
@@ -45,13 +45,19 @@ if(isset($_GET['back_pause'])){
     $info_id = $_GET['back_pause'];
 
     $response_info = $station.'_response_info';
+    $response_list = $station.'_response_list';
 
-    // 查询该 info_id 所押的中国和日本数及goods_code
-    $sql = "SELECT pause_ch,pause_jp,goods_code FROM $response_info WHERE id = '{$info_id}'";
+    // 查询该 info_id 订单号、所押的中国和日本数及goods_code
+    $sql = "SELECT order_id,pause_ch,pause_jp,goods_code FROM $response_info WHERE id = '{$info_id}'";
     $res = $db->getOne($sql);
+    $order_id = $res['order_id'];
     $pause_ch = $res['pause_ch'];
     $pause_jp = $res['pause_jp'];
     $goods_code = $res['goods_code'];
+
+    // 更改 order_line 为退押状态
+    $sql = "UPDATE $response_list SET order_line = '-3' WHERE order_id = '{$order_id}'";
+    $res = $db->execute($sql);
 
     // 还库存
     $sql = "UPDATE goods_type SET a_repo = a_repo + $pause_ch,b_repo = b_repo + $pause_jp WHERE goods_code = '{$goods_code}'";
@@ -71,10 +77,31 @@ if(isset($_GET['to_pause'])){
     $station = strtolower($_GET['station']);
 
     $response_info = $station.'_response_info';
+    $response_list = $station.'_response_list';
 
-    // 对押的数目清零及is_pause 状态修改
+    // 查询该 info_id 订单号
+    $sql = "SELECT order_id FROM $response_info WHERE id = '{$info_id}'";
+    $res = $db->getOne($sql);
+    $order_id = $res['order_id'];
+
+    // 对押的商品 is_pause 状态修改
     $sql = "UPDATE $response_info SET is_pause = 'pause' WHERE id = '{$info_id}'";
     $res = $db->execute($sql);
+
+    // 查询是否有其他退押
+    $sql = "SELECT is_pause FROM $response_info WHERE order_id = '{$order_id}'";
+    $res = $db->getAll($sql);
+    $can_back = 1;
+    foreach ($res as $value) {
+        if($value['is_pause'] == 'back'){
+            $can_back = 0;
+        }
+    }
+    if($can_back == 1){
+        // 更改 order_line 为退押状态
+        $sql = "UPDATE $response_list SET order_line = '3' WHERE order_id = '{$order_id}'";
+        $res = $db->execute($sql);
+    }
 
     echo "ok";
 }
