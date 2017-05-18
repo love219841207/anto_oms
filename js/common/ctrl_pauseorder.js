@@ -114,15 +114,17 @@ app.controller('pauseorderCtrl', ['$rootScope','$scope','$state','$http','$log',
     }
 
     // 删除
-    $scope.del_pause = function(id,store,station){
+    $scope.del_pause = function(id,store,station,order_id){
         $http.get('/fuck/common/pause_order.php', {
             params:{
                 store:store,
                 station:station,
-                del_pause:id
+                del_pause:id,
+                order_id:order_id
             }
         }).success(function(data) {
             if(data == 'ok'){
+                $scope.play_price(order_id);    // 价格计算
                 $scope.show_back_info();
             }else{
                 $log.info(data);

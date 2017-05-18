@@ -28,7 +28,7 @@
 		
 			<input class="key_words" ng-show="new_yfcode" ng-model='new_cod_money' id="new_cod_money" ng-blur="check_int('new_cod_money')" type="number" placeholder="COD Money">
 		</div>
-		<div class="btn btn-success" ng-click="new_pause_order()" ng-disabled="!new_order_id || !new_goods_code || !new_goods_num || !new_unit_price || !new_yfcode || !new_cod_money" ><i class="fa fa-plus fa-fw"></i></div>
+		<div class="btn btn-success" ng-click="new_pause_order()" ng-show="new_cod_money" ><i class="fa fa-plus fa-fw"></i></div>
 		<span class="red ml10" style="line-height: 34px;">{{error_info}}</span>
 	</div>
 
@@ -63,7 +63,7 @@
 				<div class="btn btn-xs btn-success mr5" ng-click="to_pause(item.id,item.store,item.station)">
 					<i class="fa fa-undo fa-fw"></i>还原
 				</div>
-				<div class="btn btn-xs btn-danger" data-animation="am-fade-and-slide-top" data-template-url="/modal/del_pause_item.html" bs-modal="modal" ng-click="pause_modal(item.id,item.store,item.station)">
+				<div class="btn btn-xs btn-danger" data-animation="am-fade-and-slide-top" data-template-url="/modal/del_pause_item.html" bs-modal="modal" ng-click="pause_modal(item.id,item.store,item.station);get_station(item.store)">
 					<i class="fa fa-trash-o fa-fw"></i>删除
 				</div>
 			</td>

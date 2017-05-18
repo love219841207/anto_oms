@@ -110,6 +110,7 @@ if(isset($_GET['to_pause'])){
 if(isset($_GET['del_pause'])){
     $store = $_GET['store'];
     $info_id = $_GET['del_pause'];
+    $order_id = $_GET['order_id'];
     $station = strtolower($_GET['station']);
 
     $response_info = $station.'_response_info';
@@ -123,6 +124,21 @@ if(isset($_GET['del_pause'])){
     // 删除
     $sql1 = "DELETE FROM $response_info WHERE id = '{$info_id}'";
     $res1 = $db->execute($sql1);
+
+    // 查询是否有其他退押
+    $sql = "SELECT is_pause FROM $response_info WHERE order_id = '{$order_id}'";
+    $res = $db->getAll($sql);
+    $can_back = 1;
+    foreach ($res as $value) {
+        if($value['is_pause'] == 'back'){
+            $can_back = 0;
+        }
+    }
+    if($can_back == 1){
+        // 更改 order_line 为退押状态
+        $sql = "UPDATE $response_list SET order_line = '3' WHERE order_id = '{$order_id}'";
+        $res = $db->execute($sql);
+    }
 
     //查询OMS-ID
     $sql = "SELECT id FROM $response_list WHERE order_id = '{$order_id}'";
@@ -271,7 +287,7 @@ if(isset($_GET['check_order_id'])){
     $store = $_GET['store'];
     $response_list = $station.'_response_list';
     
-    $sql = "SELECT count(1) AS count FROM $response_list WHERE order_id = '{$order_id}'";
+    $sql = "SELECT count(1) AS count FROM $response_list WHERE order_id = '{$order_id}' AND store = '{$store}'";
     $res = $db->getOne($sql);
     echo $res['count'];
 }
