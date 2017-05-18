@@ -8,6 +8,10 @@
       <div class="modal-body">
         <table class="table table-bordered table-condensed mt20 dark tagl" ng-repeat="item in send_table_info track by $index">
           <tr>
+            <td class="danger red">订单号</td>
+            <td class="warning blue">{{item.order_id}}</td>
+          </tr>
+          <tr>
             <td class="danger red">收件人</td>
             <td class="warning">{{item.who_name}}</td>
           </tr>
@@ -29,7 +33,7 @@
           </tr>
           <tr>
             <td class="danger red">数量</td>
-            <td class="warning">{{item.out_num}}</td>
+            <td class="warning yellow">{{item.out_num}}</td>
           </tr>
           <tr>
             <td class="danger red">待引金额</td>
@@ -38,7 +42,7 @@
         </table>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-danger" ng-click="del_send_item(item.id,item.oms_id,item.info_id,item.station,item.store_name);$hide()"><i class="fa fa-fw fa-trash"></i>删 除</button>
+        <button type="button" class="btn btn-danger" ng-click="del_send_item(item.id,item.oms_id,item.info_id,item.station,item.store_name,item.order_id);$hide()"><i class="fa fa-fw fa-trash"></i>删 除</button>
         <button type="button" class="btn btn-default" ng-click="$hide()">关 闭</button>
       </div>
     </div>

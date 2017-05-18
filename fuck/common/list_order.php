@@ -273,6 +273,7 @@ if(isset($_GET['sub_repo'])){
 	// 亚马逊转入发货表
 	$sql = "INSERT INTO send_table (
 		station,
+		order_id,
 		send_id,	#合单发货ID
 		oms_id,	#OMS-ID
 		info_id, #info-ID
@@ -294,6 +295,7 @@ if(isset($_GET['sub_repo'])){
 		holder,		#担当者
 		import_day) SELECT	#导入日期 
 		'{$station}',
+		list.order_id,
 		list.send_id,
 		list.id,
 		info.id,

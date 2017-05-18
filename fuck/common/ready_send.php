@@ -70,8 +70,9 @@ if(isset($_GET['check_repo'])){
 if(isset($_POST['add_send_item'])){
 	$today = date('y-m-d',time()); //获取日期
 	$goods_code = trim(addslashes($_POST['add_send_item']));
+	$order_id = $_POST['order_id'];
 	$goods_num = $_POST['add_goods_num'];
-	$add_item_price = $_POST['add_item_price'];
+	$add_unit_price = $_POST['add_unit_price'];
 	$add_yfcode = $_POST['add_yfcode'];
 	$add_cod_money = $_POST['add_cod_money'];
 	$id = $_POST['id']; 	//复制该条信息的ID
@@ -98,16 +99,11 @@ if(isset($_POST['add_send_item'])){
 
 	// 金额计算
 	if($is_cod == 'COD'){
-		$due_money = $add_item_price + $add_cod_money + $add_yf_money;
+		$due_money = $add_unit_price * $goods_num + $add_cod_money + $add_yf_money;
 	}else{
 		$due_money = 0;
 		$add_cod_money = 0;
 	}
-
-	// 通过 oms_id 查询订单号
-	$sql = "SELECT order_id FROM $response_list WHERE id = '{$oms_id}'";
-	$res = $db->getOne($sql);
-	$order_id = $res['order_id'];
 
 	// 查询库存数
 	$sql = "SELECT a_repo+b_repo AS repo FROM goods_type WHERE goods_code = '{$goods_code}'";
@@ -167,7 +163,7 @@ if(isset($_POST['add_send_item'])){
 			is_pause,
 			pause_ch,
 			pause_jp,
-			item_price,
+			unit_price,
 			cod_money,
 			import_time) VALUES(
 			'{$store}',
@@ -184,7 +180,7 @@ if(isset($_POST['add_send_item'])){
 			'pass',
 			'{$pause_ch}',
 			'{$pause_jp}',
-			'{$add_item_price}',
+			'{$add_unit_price}',
 			'{$add_cod_money}',
 			{$now_time}
 			) ";
@@ -198,6 +194,7 @@ if(isset($_POST['add_send_item'])){
 		// 插入send_table
 		$sql = "INSERT INTO send_table (
 			station,
+			order_id,
 			send_id,	#合单发货ID
 			oms_id,	#OMS-ID
 			info_id, #info-ID
@@ -218,6 +215,7 @@ if(isset($_POST['add_send_item'])){
 			holder,		#担当者
 			import_day) VALUES (
 			'{$station}',
+			'{$order_id}',
 			'{$send_id}',
 			'{$oms_id}',
 			'{$info_id}',
@@ -243,11 +241,11 @@ if(isset($_POST['add_send_item'])){
 	// 如果COD_money大于0，则为代引
 	if($add_cod_money > 0){
 		//日志
-		$do = ' [新增一单]：订单号【'.$order_id.'】商品代码【'.$goods_code.'】数量【'.$goods_num.'】子订单价格【'.$add_item_price.'】运费代码【'.$add_yfcode.'】运费金额【'.$add_yf_money.'】代引金额【'.$add_cod_money.'】';
+		$do = ' [新增一单]：订单号【'.$order_id.'】商品代码【'.$goods_code.'】数量【'.$goods_num.'】单价【'.$add_unit_price.'】运费代码【'.$add_yfcode.'】运费金额【'.$add_yf_money.'】代引金额【'.$add_cod_money.'】';
 
 	}else{
 		//日志
-		$do = ' [新增一单]：订单号【'.$order_id.'】商品代码【'.$goods_code.'】数量【'.$goods_num.'】子订单价格【'.$add_item_price.'】运费代码【'.$add_yfcode.'】运费金额【'.$add_yf_money.'】';
+		$do = ' [新增一单]：订单号【'.$order_id.'】商品代码【'.$goods_code.'】数量【'.$goods_num.'】单价【'.$add_unit_price.'】运费代码【'.$add_yfcode.'】运费金额【'.$add_yf_money.'】';
 	}
 
 	oms_log($u_name,$do,'ready_send',$station,$store,$oms_id);

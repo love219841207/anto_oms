@@ -221,7 +221,7 @@
             </tr>
             <tr ng-show="info_repo">
               <td class="s_gray">库存数</td>
-              <td>{{info_repo.repo}} ({{info_repo.b_repo}}+{{info_repo.a_repo}})</td>
+              <td>{{info_repo.repo}} (日{{info_repo.b_repo}}+中{{info_repo.a_repo}})</td>
             </tr>
             <tr>
               <td class="s_gray">数 量</td>
@@ -229,7 +229,7 @@
             </tr>
             <tr>
               <td class="s_gray">单 价</td>
-              <td><input type="number" id="add_unit_price" ng-blur="check_int('add_item_price')" class="form-control input-sm"></td>
+              <td><input type="number" id="add_unit_price" ng-blur="check_int('add_unit_price')" class="form-control input-sm"></td>
             </tr>
             <tr>
               <td class="s_gray">运费代码</td>

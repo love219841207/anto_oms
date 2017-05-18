@@ -156,13 +156,13 @@ app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','
     }
 
     // 添加发货item
-    $scope.add_send_item = function(id){
+    $scope.add_send_item = function(id,order_id,station){
         var dom = document.querySelector('#add_goods_code');
         var add_goods_code = angular.element(dom).val();
         var dom = document.querySelector('#add_goods_num');
         var add_goods_num = angular.element(dom).val();
-        var dom = document.querySelector('#add_item_price');
-        var add_item_price = angular.element(dom).val();
+        var dom = document.querySelector('#add_unit_price');
+        var add_unit_price = angular.element(dom).val();
         var dom = document.querySelector('#add_yfcode');
         var add_yfcode = angular.element(dom).val();
         var dom = document.querySelector('#add_cod_money');
@@ -171,8 +171,9 @@ app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','
         var post_data = {
                 add_send_item:add_goods_code,
                 id:id,
+                order_id,order_id,
                 add_goods_num:add_goods_num,
-                add_item_price:add_item_price,
+                add_unit_price:add_unit_price,
                 add_yfcode:add_yfcode,
                 add_cod_money:add_cod_money
             };
@@ -180,7 +181,7 @@ app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','
         $http.post('/fuck/common/ready_send.php', post_data).success(function(data) {
             if(data.status == 'ok'){
                 $scope.reset_express(); //重置快递
-                $scope.play_price();    // 价格计算
+                $scope.play_price(id,order_id,station);    // 价格计算
                 $scope.repo_status();   //计算发货单
             }else{
                 $log.info(data);
@@ -192,8 +193,29 @@ app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','
         });
     }
 
+    // 价格计算
+    $scope.play_price = function(id,order_id,station){
+        $http.get('/fuck/common/change_order.php', {
+            params:{
+                play_price:'play',
+                station:station,
+                order_id:order_id
+            }
+        }).success(function(data) {
+            if(data == 'ok'){
+                $scope.to_page($scope.now_page);
+                $scope.show_send_info(id);
+            }else{
+                $scope.plug_alert('danger',data,'fa fa-ban');
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:订单价格计算失败。");
+        });
+    }
+
     // 删除发货item
-    $scope.del_send_item = function(id,oms_id,info_id,station,store){
+    $scope.del_send_item = function(id,oms_id,info_id,station,store,order_id){
          $http.get('/fuck/common/ready_send.php', {
             params:{
                 del_send_item:id,
@@ -205,7 +227,7 @@ app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','
         }).success(function(data) {
             if(data.status == 'ok'){
                 $scope.plug_alert('success','删除完成。','fa fa-smile-o');
-                $scope.play_price();    // 价格计算
+                $scope.play_price(id,order_id,station);    // 价格计算
                 $scope.repo_status();   //计算发货单
             }else{
                 $scope.plug_alert('danger',data,'fa fa-ban');
@@ -259,7 +281,7 @@ app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','
     }
 
     // 验证修改的send字段
-    $scope.need_check_send = function(field_name,o_key,station,store,id,oms_id,info_id){
+    $scope.need_check_send = function(field_name,o_key,station,store,id,oms_id,info_id,order_id){
         var dom = document.querySelector('#'+field_name);
         var new_key = angular.element(dom).val();
 
@@ -268,6 +290,7 @@ app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','
                 need_check_send:'get',
                 station:station,
                 store:store,
+                order_id,order_id,
                 field_name:field_name,
                 new_key:new_key,
                 o_key:o_key,
@@ -277,7 +300,8 @@ app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','
             }
         }).success(function(data) {
             if(data == 'ok'){
-                $scope.change_send_field(o_key,station,store,field_name,new_key,id,oms_id,info_id);
+
+                $scope.change_send_field(o_key,station,store,field_name,new_key,id,oms_id,info_id,order_id);
             }else{
                 $scope.plug_alert('danger',data,'fa fa-ban');
             }
@@ -288,7 +312,7 @@ app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','
     }
 
     // 修改send字段
-    $scope.change_send_field = function(o_key,station,store,field_name,new_key,id,oms_id,info_id){
+    $scope.change_send_field = function(o_key,station,store,field_name,new_key,id,oms_id,info_id,order_id){
         $http.get('/fuck/common/ready_send.php', {
             params:{
                 change_send_field:'change',
@@ -304,8 +328,9 @@ app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','
         }).success(function(data) {
             if(data == 'ok'){
                 $scope.reset_express(); //重置快递
-                $scope.show_send_info(id);
                 $scope.repo_status();   //计算发货单
+                $scope.play_price(id,order_id,station);    // 价格计算
+                $scope.show_send_info(id);
             }else{
                 $scope.plug_alert('danger',data,'fa fa-ban');
                 $log.info(data);
