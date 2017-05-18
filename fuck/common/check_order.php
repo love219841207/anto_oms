@@ -133,13 +133,16 @@ if(isset($_GET['check_all_field'])){
 	foreach ($res as $value){
 		$now_id = $value['id'];	#正在检测id
 		$now_goods = $value['sku'];	#福袋名/别名、商品代码
+		$new_name = $now_goods;
 
 		//格式化短横线
-	 	$count_line = substr_count($now_goods,'-');
+	 	$count_line = substr_count($new_name,'-');
 		$replace_line = '--';
 		for($i=0;$i<$count_line;$i++){
-			$new_name = str_replace($replace_line,"-",$now_goods);
+			$new_name = str_replace($replace_line,"-",$new_name);
 		}
+		
+		// echo $new_name;
 		if($new_name != $now_goods){
 			$sql = "UPDATE $response_info SET goods_code = '{$new_name}' WHERE id = '{$now_id}'";
 		}else{
@@ -210,7 +213,7 @@ if(isset($_GET['check_all_field'])){
 	    	$sql = "DELETE FROM $response_info WHERE id = '{$now_id}'";
 	    	$res = $db->execute($sql);
 	    }else{	//如果不是福袋，则检测 商品代码 是否存在
-	    	$sql = "SELECT 1 FROM goods_type WHERE goods_code='{$now_goods}' limit 1";
+	    	$sql = "SELECT 1 FROM goods_type WHERE goods_code='{$new_name}' limit 1";
 	        $res = $rdb->getOne($sql);
 	        if(empty($res)){
 	        	//验证不通过	sku_ok = 2

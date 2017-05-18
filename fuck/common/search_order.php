@@ -224,11 +224,11 @@ if(isset($_POST['ready_send_count'])){
     $search_key = addslashes($_POST['search_key']);
 
     if($search_field == ''){   //0没有筛选条件  
-        $sql = "SELECT count(1) as cc FROM send_table WHERE item_line = 0";
+        $sql = "SELECT count(1) as cc FROM send_table";
     }else{
-        $sql = "SELECT count(1) as cc FROM send_table WHERE item_line = 0 AND {$search_field} LIKE '%{$search_key}%'";
+        $sql = "SELECT count(1) as cc FROM send_table WHERE {$search_field} LIKE '%{$search_key}%'";
     }
-    
+  
     $res = $db->getOne($sql);
     echo $res['cc'];
 }

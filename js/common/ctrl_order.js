@@ -995,6 +995,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
                 station:$scope.now_station
             }
         }).success(function(data) {
+            $log.info(data)
             $scope.common_order_data = data;
             $timeout(function(){$scope.shadow('close');},500); //关闭shadow
         }).error(function(data) {

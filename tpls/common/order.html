@@ -312,7 +312,7 @@
 							'bg_yellow':item.is_click,
 							'success':item.order_line=='1' && item.post_ok=='1' && item.tel_ok=='1' && item.sku_ok=='1' && item.yfcode_ok=='1',
 							'warning':item.order_line=='2',
-							'info':item.order_line=='3',
+							'info':item.order_line=='3' || item.order_line=='-3',
 							'ready_color':item.order_line=='5',
 							'close_color':item.order_line=='6',
 							'del_color':item.order_line=='-1'}">
@@ -324,11 +324,11 @@
 						</td>
 						<td style="width:17%" class="blue"><span class="s_gray">订单号：</span>{{item.order_id}}</td>
 						<td style="width:15%" class="green"><span class="s_gray">同步日期：</span>{{item.syn_day}}</td>
-						<td style="width:30%"><span class="s_gray">注文时间：</span>{{item.purchase_date}}</td>
-						<td style="width:11%" class="green"><span class="s_gray">总金额：</span>{{item.order_total_money}}</td>
+						<td style="width:30%"><span class="s_gray">注文时间：</span>{{item.purchase_date}} &nbsp; <span class="red" ng-hide="!item.payment_method"><span class="s_gray">| &nbsp;</span>代引金额：{{item.pay_money}}</span></td>
+						<td style="width:11%" class="green"><span class="s_gray">订单金额：</span>{{item.order_total_money}}</td>
 						<td style="width:11%" class="yellow">
-							<span ng-hide="!item.payment_method"><span class="s_gray">代引金额：</span>
-						{{item.pay_money}}</span></td>
+							<span class="s_gray">合单金额：</span>
+						{{item.all_total_money}}</td>
 						<td style="width:8%" class="tagc">
 							<button data-animation="am-fade-and-slide-top" data-template-url="/modal/show_one_info.html" bs-modal="modal" class="btn btn-xs btn-primary mr5" ng-click="show_one_info(item.order_id)">详单</button>
 							<button data-animation="am-fade-and-slide-top" data-template-url="/modal/note.html" bs-modal="modal" class="btn btn-xs btn-info" ng-click="change_note(item.order_id,$index)">备注</button>

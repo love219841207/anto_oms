@@ -20,11 +20,11 @@
 	<table ng-show="send_table" class="table-responsive table table-bordered table-condensed table-hover table-striped mt20 f12">
 		<tr class="success green animate slide-right">
 			<td class="tagc"><i class="fa-sort-numeric-asc fa fa-fw"></i></td>
-			<td>合单发货ID</td>
+			<td>合单ID</td>
 			<td>店铺</td>
 			<td>订单号</td>
 			<!-- <td>OMS-ID</td> -->
-			<td>INFO-ID</td>
+			<!-- <td>INFO-ID</td> -->
 			<td>快递公司</td>
 			<td>配送方式</td>
 			<td>包裹ID</td>
@@ -44,7 +44,7 @@
 			<!-- <td>店铺</td> -->
 			<td class="tagc">担当</td>
 			<td class="tagc">操作</td>
-			<td>item_line</td>
+			<!-- <td>item_line</td> -->
 		</tr>
 		<tr class="am-fade-and-slide-right blue" ng-repeat="item in send_table track by $index">
 			<td class="tagc">{{$index+1}}</td>
@@ -52,7 +52,7 @@
 			<td>{{item.store_name}}</td>
 			<td>{{item.order_id}}</td>
 			<!-- <td>{{item.oms_id}}</td> -->
-			<td>{{item.info_id}}</td>
+			<!-- <td>{{item.info_id}}</td> -->
 			<td>{{item.express_company}}</td>
 			<td>{{item.send_method}}</td>
 			<td>{{item.pack_id}}</td>
@@ -77,7 +77,7 @@
 				<i class="fa fa-edit fa-fw pointer" data-animation="am-fade-and-slide-top" data-template-url="/modal/show_send_info.html" bs-modal="modal" ng-click="show_send_info(item.id)"></i>
 				<i class="fa fa-trash-o fa-fw red pointer" data-animation="am-fade-and-slide-top" data-template-url="/modal/del_send_item.html" bs-modal="modal" ng-click="show_send_info(item.id)"></i>
 			</td>
-			<td>{{item.item_line}}</td>
+			<!-- <td>{{item.item_line}}</td> -->
 		</tr>
 	</table>
 	<nav>

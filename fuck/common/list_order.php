@@ -29,6 +29,8 @@ if(isset($_GET['onekey_common_order'])){
 	$store = $_GET['onekey_common_order'];
 	$station = strtolower($_GET['station']);
 	$response_list = $station.'_response_list';
+	$response_info = $station.'_response_info';
+
 	$sql = "
 		UPDATE $response_list a,
 		(SELECT a.id FROM $response_list a,
@@ -57,13 +59,43 @@ if(isset($_GET['onekey_common_order'])){
 	$sql = "UPDATE $response_list SET order_line = '2' WHERE order_line = '1' AND store = '{$store}' AND post_ok = '1' AND tel_ok = '1' AND sku_ok = '1' AND yfcode_ok='1'";
 	$res = $db->execute($sql);
 
+	// 暂时更新合单金额 = 订单金额
+	$sql = "UPDATE $response_list SET all_total_money = order_total_money WHERE order_line = '2' AND store = '{$store}'";
+	$res = $db->execute($sql);
+
 	//查询所有合单号
 	$sql = "SELECT send_id FROM $response_list WHERE store='{$store}' AND order_line = '2' AND send_id LIKE 'H%' GROUP BY send_id";
-	$res = $db->getAll($sql);
+	$res3 = $db->getAll($sql);
 
 	$all_one = '';
-	foreach ($res as $value) {
+	foreach ($res3 as $value) {
 		$all_one = $all_one.'['.$value['send_id'].']';
+		$send_id = $value['send_id'];
+
+		// 合单金额计算 = 合单金额计算 - 订单数 * COD费用 + COD费用 （以后涉及运费代码问题）
+		$sql = "SELECT count(order_id) as count_order_id FROM $response_list WHERE send_id = '{$send_id}'";
+		$res = $db->getOne($sql);
+		$count_order_id = $res['count_order_id'];
+
+		// 查询一个订单号
+		$sql = "SELECT order_id FROM $response_list WHERE send_id = '{$send_id}'";
+		$res = $db->getOne($sql);
+		$order_id = $res['order_id'];
+
+		// 查询该订单号下的COD费用
+		$sql = "SELECT cod_money FROM $response_info WHERE order_id = '{$order_id}'";
+		$res = $db->getOne($sql);
+		$cod_money = $res['cod_money'];
+
+		$fee = $count_order_id * $cod_money;
+
+		$sql = "SELECT sum(all_total_money) as sum FROM amazon_response_list WHERE send_id = '{$send_id}'";
+		$res = $db->getOne($sql);
+		$sum_total_money = $res['sum'];
+		$fee = $sum_total_money - $fee + $cod_money;
+
+		$sql = "UPDATE $response_list SET all_total_money = $fee WHERE send_id = '{$send_id}'";
+		$res = $db->execute($sql);
 	}
 
 	// 日志
@@ -75,7 +107,7 @@ if(isset($_GET['onekey_common_order'])){
 	$play = $station.'_order';
 	oms_log($u_name,$do,$play,$station,$store,'-');
 
-	echo json_encode($res);
+	echo json_encode($res3);
 }
 
 //查询合单列表
@@ -107,8 +139,8 @@ if(isset($_GET['break_common_order'])){
 	$store = $_GET['store'];
 	$station = strtolower($_GET['station']);
 	$response_list = $station.'_response_list';
-
-	$sql = "UPDATE $response_list SET send_id = concat('amz',id) WHERE send_id = '{$send_id}'";
+	// 合单金额 = 订单金额 ,单号回执
+	$sql = "UPDATE $response_list SET all_total_money = order_total_money,send_id = concat('amz',id) WHERE send_id = '{$send_id}'";
 	$res = $db->execute($sql);
 
 	//日志
