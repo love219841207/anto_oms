@@ -94,7 +94,7 @@ if(isset($_GET['onekey_common_order'])){
 		$sum_total_money = $res['sum'];
 		$fee = $sum_total_money - $fee + $cod_money;
 
-		$sql = "UPDATE $response_list SET all_total_money = $fee WHERE send_id = '{$send_id}'";
+		$sql = "UPDATE $response_list SET all_total_money = $fee,pay_money = $fee WHERE send_id = '{$send_id}'";
 		$res = $db->execute($sql);
 	}
 

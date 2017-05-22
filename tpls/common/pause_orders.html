@@ -16,19 +16,20 @@
 		<div class="btn btn-default btn-sm">
 			<input class="key_words" ng-model='new_store' ng-blur="check_store()" type="text" placeholder="店铺名">
 
-			<input class="key_words" style="width:200px;" ng-show="new_store" ng-model='new_order_id' ng-blur="check_order_id()" type="text" placeholder="订单号">
+			<input class="key_words" style="width:200px;" ng-model='new_order_id' ng-blur="check_order_id()" type="text" placeholder="订单号">
 
-			<input class="key_words" style="width:200px;" ng-show="new_order_id" ng-model='new_goods_code' ng-blur="check_goods_code()" type="text" placeholder="商品代码">
+			<input class="key_words" style="width:200px;" ng-model='new_goods_code' ng-blur="check_goods_code()" type="text" placeholder="商品代码">
 	
-			<input class="key_words" ng-show="new_goods_code" ng-model='new_goods_num' id="new_goods_num" ng-blur="check_int('new_goods_num')" type="number" placeholder="数量">
+			<input class="key_words" ng-model='new_goods_num' id="new_goods_num" ng-blur="check_int('new_goods_num')" type="number" placeholder="数量">
 		
-			<input class="key_words" ng-show="new_goods_num" ng-model='new_unit_price' id="new_unit_price" ng-blur="check_int('new_unit_price')" type="number" placeholder="单价">
+			<input class="key_words" ng-model='new_unit_price' id="new_unit_price" ng-blur="check_int('new_unit_price')" type="number" placeholder="单价">
 		
-			<input class="key_words" ng-show="new_unit_price" ng-model='new_yfcode' type="text" placeholder="运费代码">
+			<input class="key_words" ng-model='new_yfcode' type="text" placeholder="运费代码">
 		
-			<input class="key_words" ng-show="new_yfcode" ng-model='new_cod_money' id="new_cod_money" ng-blur="check_int('new_cod_money')" type="number" placeholder="COD Money">
+			<input class="key_words" ng-model='new_cod_money' id="new_cod_money" ng-blur="check_int('new_cod_money')" type="number" placeholder="COD Money">
 		</div>
-		<div class="btn btn-success" ng-click="new_pause_order()" ng-show="new_cod_money" ><i class="fa fa-plus fa-fw"></i></div>
+		<button class="btn btn-success" ng-click="new_pause_order()" ng-disabled="!new_store || !new_order_id || 
+		!new_goods_code || !new_goods_num || !new_unit_price || !new_yfcode || !new_cod_money" ><i class="fa fa-plus fa-fw"></i></button>
 		<span class="red ml10" style="line-height: 34px;">{{error_info}}</span>
 	</div>
 

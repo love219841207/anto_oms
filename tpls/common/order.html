@@ -324,9 +324,9 @@
 						</td>
 						<td style="width:17%" class="blue"><span class="s_gray">订单号：</span>{{item.order_id}}</td>
 						<td style="width:15%" class="green"><span class="s_gray">同步日期：</span>{{item.syn_day}}</td>
-						<td style="width:30%"><span class="s_gray">注文时间：</span>{{item.purchase_date}} &nbsp; <span class="red" ng-hide="!item.payment_method"><span class="s_gray">| &nbsp;</span>代引金额：{{item.pay_money}}</span></td>
+						<td style="width:30%"><span class="s_gray">注文时间：</span>{{item.purchase_date}} &nbsp; <span class="yellow" ng-hide="!item.payment_method"><span class="s_gray">| &nbsp;</span>代引金额：{{item.pay_money}}</span></td>
 						<td style="width:11%" class="green"><span class="s_gray">订单金额：</span>{{item.order_total_money}}</td>
-						<td style="width:11%" class="yellow">
+						<td style="width:11%" class="red">
 							<span class="s_gray">合单金额：</span>
 						{{item.all_total_money}}</td>
 						<td style="width:8%" class="tagc">

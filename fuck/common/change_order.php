@@ -13,23 +13,36 @@ if(isset($_GET['play_price'])){
 	$order_id = $_GET['order_id'];
 
 	//查询该订单是否是COD订单
-	$sql = "SELECT payment_method FROM $response_list WHERE order_id = '{$order_id}'";
+	$sql = "SELECT payment_method,send_id,order_line FROM $response_list WHERE order_id = '{$order_id}'";
 	$res = $db->getOne($sql);
 	$payment_method = $res['payment_method'];
+	$send_id = $res['send_id'];
+	$order_line = $res['order_line'];
 	
 	//子订单价格 = 数量 * 单价
 	$sql = "UPDATE $response_info SET item_price = unit_price * goods_num WHERE order_id = '{$order_id}'";
 	$res = $db->execute($sql);
 
 	if($payment_method == 'COD'){
-
 		//如果是COD订单，计算金额
-		$sql = "SELECT sum(cod_money+item_price+yf_money) as pay_money FROM $response_info WHERE order_id='{$order_id}'";
+		$sql = "SELECT sum(item_price+yf_money) as pay_money FROM $response_info WHERE order_id='{$order_id}'";
 		$res = $db->getOne($sql);
 		$pay_money = $res['pay_money'];
+
+		$sql = "SELECT cod_money FROM $response_info WHERE order_id='{$order_id}'";
+		$res = $db->getOne($sql);
+		$cod_money = $res['cod_money'];
+
+		$pay_money = $pay_money+$cod_money;
 		//更新
-		$sql = "UPDATE $response_list SET order_total_money = '{$pay_money}',pay_money = '{$pay_money}'  WHERE order_id='{$order_id}'";
+		$sql = "UPDATE $response_list SET all_total_money = '{$pay_money}',order_total_money = '{$pay_money}',pay_money = '{$pay_money}'  WHERE order_id='{$order_id}'";
 		$res = $db->execute($sql);
+
+		// 是否已经到发货区
+		if($order_line > 4){
+			$sql = "UPDATE send_table SET due_money = '{$pay_money}' WHERE send_id='{$send_id}'";
+			$res = $db->execute($sql);
+		}
 	}else{
 		//查询出订单额，计算金额
 		$sql = "SELECT sum(item_price+yf_money) as total_money FROM $response_info WHERE order_id='{$order_id}'";
@@ -37,9 +50,48 @@ if(isset($_GET['play_price'])){
 		$total_money = $res['total_money'];
 
 		//更新total_money
-		$sql = "UPDATE $response_list SET order_total_money = '{$total_money}'  WHERE order_id='{$order_id}'";
+		$sql = "UPDATE $response_list SET all_total_money = '{$total_money}',order_total_money = '{$total_money}'  WHERE order_id='{$order_id}'";
 		$res = $db->execute($sql);
+
+		// 是否已经到发货区
+		if($order_line > 4){
+			$sql = "UPDATE send_table SET due_money = '{$total_money}' WHERE send_id='{$send_id}'";
+			$res = $db->execute($sql);
+		}
 	}
+
+	// // 查询是否是合单
+	if(strstr($send_id, 'H') == true){
+		// 合单金额计算 = 合单金额计算 - 订单数 * COD费用 + COD费用 （以后涉及运费代码问题）
+		$sql = "SELECT count(order_id) as count_order_id FROM $response_list WHERE send_id = '{$send_id}'";
+		$res = $db->getOne($sql);
+		$count_order_id = $res['count_order_id'];
+
+		$sql = "SELECT cod_money FROM $response_info WHERE order_id = '{$order_id}'";
+		$res = $db->getOne($sql);
+		$cod_money = $res['cod_money'];
+
+		$fee = $count_order_id * $cod_money;
+
+		$sql = "SELECT sum(order_total_money) as sum FROM $response_list WHERE send_id = '{$send_id}'";
+		$res = $db->getOne($sql);
+		$sum_total_money = $res['sum'];
+		$fee = $sum_total_money - $fee + $cod_money;
+
+		$sql = "UPDATE $response_list SET all_total_money = $fee WHERE send_id='{$send_id}'";
+		$res = $db->execute($sql);
+		//	合单并代引
+		if($payment_method == 'COD'){
+			$sql = "UPDATE $response_list SET pay_money = $fee WHERE send_id='{$send_id}'";
+			$res = $db->execute($sql);
+		}
+		// 是否已经到发货区
+		if($order_line > 4){
+			$sql = "UPDATE send_table SET due_money = $fee WHERE send_id='{$send_id}'";
+			$res = $db->execute($sql);
+		}
+	}
+
 	echo 'ok';
 }
 

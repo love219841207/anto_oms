@@ -97,7 +97,7 @@
           <tr ng-show="item.is_cod=='COD'">
             <td class="s_gray">代引金额</td>
             <td class="s_gray">{{item.due_money}}
-                <i ng-click="aa_due_money=!aa_due_money" 
+                <!-- <i ng-click="aa_due_money=!aa_due_money" 
                 class="fa fa-edit fa-fw pointer"
                 ></i>
                 <div ng-show="aa_due_money" class="input-group">
@@ -105,7 +105,7 @@
                   <span class="input-group-btn">
                     <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="need_check_send('due_money',item.due_money,item.station,item.store_name,item.id,item.oms_id,item.info_id,item.order_id);aa_due_money=!aa_due_money">确定</button>
                 </span>
-              </div>
+              </div> -->
             </td>
           </tr>
         </table>
@@ -158,7 +158,7 @@
               <td colspan="2" class="red">注：非代引订单填写 COD Money 为 0。</td>
             </tr>
             <tr>
-              <td colspan="2"><div class="btn btn-success btn-xs col-lg-6 col-lg-offset-3" ng-click="add_send_item(item.id,item.order_id,item.station);add_btn=!add_btn"><i class="fa fa-plus fa-fw"></i> 新 增</div></td>
+              <td colspan="2"><button class="btn btn-success btn-xs col-lg-6 col-lg-offset-3" ng-click="add_send_item(item.id,item.order_id,item.station);add_btn=!add_btn"><i class="fa fa-plus fa-fw"></i> 新 增</button></td>
             </tr>
           </table>
         </div>

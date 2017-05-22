@@ -816,3 +816,8 @@ li{
   background-color: white;
   color: #36a38b;
 }
+.isToday {
+	font-size: 18px !important;
+    color: #36a38b !important;
+    text-decoration: underline;
+}

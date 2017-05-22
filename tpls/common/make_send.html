@@ -1,1 +1,34 @@
-make_send.html
+<div class="container-fluid mt20" ng-controller="sendCtrl">
+	<div class="row">
+		<div class="col-lg-9 col-md-9 col-sm-10">
+			<div class="panel panel-primary">
+				<div class="panel-heading"><i class="fa fa-fw fa-file-text"></i> 生成发货单</div>
+				<div class="panel-body">
+					<div class="btn-group mt10">
+						<button type="button" class="btn btn_fff btn-sm">
+							<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="select_company">
+								<option value="">类型选择 ..</option>
+								<option value="heimao">黑猫</option>
+								<option value="zuochuan">佐川宅配便</option>
+							</select>
+							<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="select_repo">
+								<option value="">仓库选择 ..</option>
+								<option value="ch">中国仓</option>
+								<option value="jp">日本仓</option>
+								<option value="ch_jp">中+日</option>
+							</select>
+							<span>
+								<input placeholder="开始日期" class="date_icon blue" readonly="readonly" type="text" name="s_date" ng-flat-datepicker datepicker-config="datepickerConfig" ng-model="s_date"> - <input placeholder="结束日期" class="date_icon blue" readonly="readonly" type="text" name="e_date" ng-flat-datepicker datepicker-config="datepickerConfig" ng-model="e_date">
+							</span>
+						</button>
+						<button ng-click="send_table('new')" class="btn btn-success" ng-disabled="!select_company || !select_repo || !s_date || !e_date">最新</button>
+						<button ng-click="send_table('down')" class="btn btn-success" ng-disabled="!select_company || !select_repo || !s_date || !e_date">下载</button>
+					</div>
+				</div>
+				<div class="mt20"></div>
+				<div class="panel-footer">选择日期区间生成对应仓库的发货单。</div>
+			</div>
+		</div>
+	</div>
+	<div class="end_height"></div>
+</div>
