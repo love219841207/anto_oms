@@ -53,11 +53,11 @@ if(isset($_GET['play_price'])){
 		$sql = "UPDATE $response_list SET all_total_money = '{$total_money}',order_total_money = '{$total_money}'  WHERE order_id='{$order_id}'";
 		$res = $db->execute($sql);
 
-		// 是否已经到发货区
-		if($order_line > 4){
-			$sql = "UPDATE send_table SET due_money = '{$total_money}' WHERE send_id='{$send_id}'";
-			$res = $db->execute($sql);
-		}
+		// 是否已经到发货区 不是COD不需要更新
+		// if($order_line > 4){
+		// 	$sql = "UPDATE send_table SET due_money = '{$total_money}' WHERE send_id='{$send_id}'";
+		// 	$res = $db->execute($sql);
+		// }
 	}
 
 	// // 查询是否是合单

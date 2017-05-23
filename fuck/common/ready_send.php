@@ -7,8 +7,8 @@ set_time_limit(0);
 
 // 重置express
 if(isset($_GET['reset_express'])){
-	// 重置快递公司
-	$sql = "UPDATE send_table SET express_company =''";
+	// 重置快递公司 和包裹
+	$sql = "UPDATE send_table SET express_company ='',pack_id = ''";
 	$res = $db->execute($sql);
 
 	// 重置配送方式
@@ -30,7 +30,29 @@ if(isset($_GET['packing'])){
 	$sql = "UPDATE send_table SET pack_id = oms_id WHERE send_method = '宅配便'";
 	$res = $db->execute($sql);
 
-	//先变成左川
+	// 如果是合单
+	$sql = "SELECT send_id FROM send_table WHERE item_line = '0' AND send_id LIKE 'H%' GROUP BY send_id";
+	$res = $db->getAll($sql);
+	foreach ($res as $value) {
+		// 更新为一个pack_id
+		$now_send_id = $value['send_id'];
+		// 查询出第一个OMS-ID
+		$sql = "SELECT oms_id FROM send_table WHERE send_id = '{$now_send_id}' LIMIT 1";
+		$res = $db->getOne($sql);
+		$h_oms_id = $res['oms_id'];
+		$sql = "UPDATE send_table SET pack_id = '{$h_oms_id}' WHERE send_id = '{$now_send_id}'";
+		$res = $db->execute($sql);
+	}
+
+	// 包裹ID分平台
+	$sql = "UPDATE send_table SET pack_id = concat('11',pack_id) WHERE station = 'amazon'";
+	$res = $db->execute($sql);
+	$sql = "UPDATE send_table SET pack_id = concat('22',pack_id) WHERE station = 'yahoo'";
+	$res = $db->execute($sql);
+	$sql = "UPDATE send_table SET pack_id = concat('33',pack_id) WHERE station = 'rakuten'";
+	$res = $db->execute($sql);
+
+	//先变成佐川
 	$sql = "UPDATE send_table SET express_company ='佐川急便' WHERE send_method = '宅配便'";
 	$res = $db->execute($sql);
 

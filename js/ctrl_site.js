@@ -231,6 +231,9 @@ app.controller('FileController', ['$rootScope','$scope','$state', 'Upload' , '$t
                     if(station == 'amazon'){
                         $timeout(function(){$scope.amazon_import_file(file_name)},1000);    
                     }
+                    if(station == 'express'){
+                        $timeout(function(){$scope.express_import_file(file_name)},1000);
+                    }
                 },1000);
             }
         }).error(function (data, status, headers, config) {
@@ -285,8 +288,23 @@ app.controller('FileController', ['$rootScope','$scope','$state', 'Upload' , '$t
                 alert("系统错误，请联系管理员。");
                 $log.info(file_name+" 日本邮编导入失败");
             });
-        }
-        
+        }  
+    }
+
+    //快递单文件导入
+    $scope.express_import_file = function(file_name){
+        $http.get('/fuck/common/import_express.php', {params:{import_express:file_name}
+        }).success(function(data) {
+            console.log(data)
+            $scope.e_import = data;
+            if($scope.e_import.status=='ok'){
+                $timeout(function(){$scope.shadow('close');},1000);
+                $scope.plug_alert('success','数据导入完成。','fa fa-smile-o');
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info(file_name+" 快递单导入失败");
+        });
     }
 }]);
 
