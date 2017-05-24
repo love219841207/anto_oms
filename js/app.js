@@ -304,12 +304,12 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
             }
         })
 
-        //导入快递单
-        .state('site.import_express',{
-            url: '/import_express/{data}',
+        //更新快递单
+        .state('site.refresh_express',{
+            url: '/refresh_express/{data}',
             views:{
                 'show@site':{
-                    templateUrl: 'tpls/common/import_express.html',
+                    templateUrl: 'tpls/common/refresh_express.html',
                     controller: function($scope){
                         $scope.status.isopen1 = false;
                         $scope.status.isopen2 = false;

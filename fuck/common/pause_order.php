@@ -243,7 +243,7 @@ if(isset($_GET['down_pause_orders_table'])){
     		->setCellValue("D1","数量")
     		->setCellValue("E1","押中国")
     		->setCellValue("F1","押日本")
-    		->setCellValue("G1","子订单价")
+    		->setCellValue("G1","子订单价格")
             ->setCellValue("H1","代引金额");    //表头值
     $objSheet->getDefaultStyle()->getFont()->setName("微软雅黑")->setSize(12);  //默认字体
     $objPHPExcel->getActiveSheet()->getStyle('A1:H1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中

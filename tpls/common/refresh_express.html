@@ -1,0 +1,50 @@
+<div class="container-fluid mt20" ng-controller="sendCtrl">
+	<div class="row">
+		<div class="col-lg-9 col-md-9 col-sm-10">
+			<div class="panel panel-primary">
+				<div class="panel-heading"><i class="fa fa-fw fa-refresh fa-spin"></i> 更新快递单</div>
+				<div class="panel-body">
+					<div class="container-fluid">
+						<div class="btn btn-success btn-sm mt10" ng-click="look_express()"><i class="fa fa-feed fa-fw"></i>检 测</div>
+						<div ng-show="express_response" class="well mt20">
+							<div class="row">
+								<div class="col-lg-6">
+									<button class="btn btn-info btn-xs"><i class="fa fa-refresh fa-fw"></i>更 新</button>
+									<button class="btn btn-warning btn-xs" ng-click="truncate_btn=!truncate_btn"><i class="fa fa-trash-o fa-fw"></i>清空?</button>
+									<button class="btn btn-danger btn-xs" ng-show="truncate_btn">是的清空</button>
+								</div>
+								<div class="col-lg-6 tagr"><i class="fa fa-fw fa-inbox green"></i>已导入：<span class="green">{{express_response.insert_num}}</span> 条</div>
+								
+							</div>
+							<table class="table table-bordered mt20 table-condensed f12">
+								<tr class="success green">
+									<td><i class="fa fa-fw fa-sort-numeric-asc"></i></td>
+									<td>包裹ID</td>
+									<td>快递单号</td>
+									<td>快递公司</td>
+									<td>配送方式</td>
+									<td>发货日期</td>
+								</tr>
+								<tr ng-repeat="item in express_response.look_data track by $index" class="s_gray">
+									<td>{{$index+1}}</td>
+									<td>{{item.pack_id}}</td>
+									<td>{{item.express_num}}</td>
+									<td>{{item.express_name}}</td>
+									<td>{{item.express_method}}</td>
+									<td>{{item.express_date}}</td>
+								</tr>
+							</table> 
+						</div>
+					</div>
+
+				</div>
+				<div class="panel-footer">
+					点击【检测】查看上传单号；<br>
+					点击【清空】清空未完成的更新单号；<br>
+					点击【更新】更新单号到订单并close。
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="end_height"></div>
+</div>
