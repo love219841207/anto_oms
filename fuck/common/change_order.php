@@ -62,7 +62,7 @@ if(isset($_GET['play_price'])){
 
 	// // 查询是否是合单
 	if(strstr($send_id, 'H') == true){
-		// 合单金额计算 = 合单金额计算 - 订单数 * COD费用 + COD费用 （以后涉及运费代码问题）
+		// 总合单金额计算 = 合单金额计算 - 订单数 * COD费用 + COD费用 （以后涉及运费代码问题）
 		$sql = "SELECT count(order_id) as count_order_id FROM $response_list WHERE send_id = '{$send_id}'";
 		$res = $db->getOne($sql);
 		$count_order_id = $res['count_order_id'];
@@ -84,12 +84,19 @@ if(isset($_GET['play_price'])){
 		if($payment_method == 'COD'){
 			$sql = "UPDATE $response_list SET pay_money = $fee WHERE send_id='{$send_id}'";
 			$res = $db->execute($sql);
+			// 是否已经到发货区
+			if($order_line > 4){
+				$sql = "UPDATE send_table SET due_money = $fee WHERE send_id='{$send_id}'";
+				$res = $db->execute($sql);
+			}
+		}else{
+			// 是否已经到发货区
+			if($order_line > 4){
+				$sql = "UPDATE send_table SET due_money = '0' WHERE send_id='{$send_id}'";
+				$res = $db->execute($sql);
+			}
 		}
-		// 是否已经到发货区
-		if($order_line > 4){
-			$sql = "UPDATE send_table SET due_money = $fee WHERE send_id='{$send_id}'";
-			$res = $db->execute($sql);
-		}
+		
 	}
 
 	echo 'ok';

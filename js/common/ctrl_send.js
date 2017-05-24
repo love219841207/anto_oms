@@ -1,8 +1,11 @@
 var app=angular.module('myApp');
 app.controller('sendCtrl', ['$rootScope','$scope','$state','$http','$log','$timeout','$compile', function($rootScope,$scope,$state,$http,$log,$timeout,$compile){
+    $scope.init_express = function(){
+        $scope.express_response = false;
+    }
 
     $scope.send_table = function(type){
-
+        $scope.shadow('open','ss_make','正在生成发货单');
         $http.get('/fuck/common/make_send.php', {
             params:{
                 send_table:'down',
@@ -15,6 +18,7 @@ app.controller('sendCtrl', ['$rootScope','$scope','$state','$http','$log','$time
         }).success(function(data) {
             $log.info(data);
             window.location="/down/"+data;
+            $timeout(function(){$scope.shadow('close');},1000);
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
             $log.info("error:下载通信失败。");

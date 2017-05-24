@@ -6,35 +6,53 @@
 				<div class="panel-body">
 					<div class="container-fluid">
 						<form name="fileForm" ng-controller="FileController">
-							<div class="row">
-								<div class="">文件类型： sagawa.csv</div>
-							</div>
-							<div class="row mt10">
-								<button ng-click="chose_file()" class="btn btn-default" ngf-select="" ngf-pattern="'.csv'" name="file" ng-model="upload_file" ngf-multiple="false" required="1">选择文件</button> 
-								<i ng-show="fileForm.file.$error.required" class="fa fa-fw fa-star red"></i>
-								<span class="green">{{upload_file.name}}</span>
-							</div>
-							<div class="row mt10">
-								<button class="btn btn-primary btn-sm mr10" ng-disabled="!fileForm.$valid" ng-click="submit('sagawa','csv','express')"><i class="fa fa-upload fa-fw"></i> 导 入</button>
-								<button class="btn btn-success btn-sm" ng-click="look_express()"><i class="fa fa-feed fa-fw"></i> 检 测</button>
-							</div>
-							<div class="row mt10">
-								<div class="col-lg-11">
-									<div class="progress" ng-show="progress_bar >=0">
-										<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{progress_bar}}" aria-valuemin="0" aria-valuemax="100" style="width:{{progress_bar}}%">
-										{{progress_bar}}%
+							<div class="btn-group">
+						        <div class="btn btn-default btn-sm mt10 ng-untouched ng-valid ng-not-empty ng-dirty" ng-model="radioModel" uib-btn-radio="1" ng-click="init_express()">佐 川</div>
+						        <div class="btn btn-default btn-sm mt10 ng-untouched ng-valid ng-not-empty ng-dirty"  ng-model="radioModel" uib-btn-radio="2" ng-click="init_express()">黑 猫</div>
+						        <div class="btn btn-default btn-sm mt10 ng-untouched ng-valid ng-not-empty ng-dirty"  ng-model="radioModel" uib-btn-radio="3" ng-click="look_express()"><i class="fa fa-feed fa-fw"></i>检 测</div>
+						    </div>
+						    <div class="mt20"></div>
+							<div ng-show="radioModel=='1'" class="ml20">
+								<div class="row">
+									<div class="">文件类型： sagawa.csv</div>
+								</div>
+								<div class="row mt10">
+									<button ng-click="chose_file()" class="btn btn-default" ngf-select="" ngf-pattern="'.csv'" name="file" ng-model="upload_file" ngf-multiple="false" required="1">选择文件</button> 
+									<i ng-show="fileForm.file.$error.required" class="fa fa-fw fa-star red"></i>
+									<span class="green">{{upload_file.name}}</span>
+								</div>
+								<div class="row mt10">
+									<button class="btn btn-primary btn-sm mr10" ng-disabled="!fileForm.$valid" ng-click="submit('sagawa','csv','express')"><i class="fa fa-upload fa-fw"></i> 导 入</button>
+								</div>
+								<div class="row mt10">
+									<div class="col-lg-11">
+										<div class="progress" ng-show="progress_bar >=0">
+											<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{progress_bar}}" aria-valuemin="0" aria-valuemax="100" style="width:{{progress_bar}}%">
+											{{progress_bar}}%
+											</div>
 										</div>
 									</div>
+									<div class="col-lg-1 green fa fa-fw fa-check" ng-show="upload_ok"></div>
 								</div>
-								<div class="col-lg-1 green fa fa-fw fa-check" ng-show="upload_ok"></div>
+								<div ng-show="e_import">
+									已导入：<span class="green">{{e_import.insert_num}}</span> 条 <br>
+									已存在：<span class="red">{{e_import.has_num}}</span> 条
+								</div>
 							</div>
-							<div ng-show="e_import">
-								已导入：<span class="green">{{e_import.insert_num}}</span> 条 <br>
-								已存在：<span class="red">{{e_import.has_num}}</span> 条
+							<div ng-show="radioModel=='2'" class="ml20">
+								黑猫
 							</div>
+							
 						</form>
 						<div ng-show="express_response" class="well mt20">
-							<i class="fa fa-fw fa-inbox green"></i>已导入：<span class="green">{{express_response.insert_num}}</span> 条
+							<div class="row">
+								<div class="col-lg-6"><i class="fa fa-fw fa-inbox green"></i>已导入：<span class="green">{{express_response.insert_num}}</span> 条</div>
+								<div class="col-lg-6 tagr">
+									<button class="btn btn-info btn-xs"><i class="fa fa-refresh fa-fw"></i>更 新</button>
+									<button class="btn btn-danger btn-xs" ng-click="truncate_btn=!truncate_btn"><i class="fa fa-trash-o fa-fw"></i>清空?</button>
+									<button class="btn btn-danger btn-xs" ng-show="truncate_btn">是的清空</button>
+								</div>
+							</div>
 							<table class="table table-bordered mt20 table-condensed f12">
 								<tr class="success green">
 									<td><i class="fa fa-fw fa-sort-numeric-asc"></i></td>

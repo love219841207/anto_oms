@@ -92,13 +92,20 @@ if(isset($_GET['send_table'])){
 			}else{
 				
 			}
+			//代引如果为0则为空
+			$due_money = $value['due_money'];
+			if($due_money == "0"){
+				$due_money = "";
+			}else{
+				
+			}
 			//如果着払い，则元着区分=1
 			if($value['express_company']=='佐川急便' and $value['send_method']=='着払い'){
 				$yuan='1';
 			}else{
 				$yuan='';
 			}
-			$objSheet->setCellValue("B".$j,$value['who_tel'])->setCellValue("C".$j,$value['who_post'])->setCellValue("D".$j,$value['who_house'])->setCellValue("G".$j,$value['who_name'])->setCellValue("I".$j,$value['pack_id'])->setCellValue("S".$j,$value['other_1'])->setCellValue("AB".$j,$value['send_day'])->setCellValueExplicit("AC".$j,$value['send_time'],PHPExcel_Cell_DataType::TYPE_STRING)->setCellValue("AE".$j,$value['due_money'])->setCellValue("T".$j,$new_0)->setCellValue("U".$j,$new_1)->setCellValue("V".$j,$new_2)->setCellValue("W".$j,$new_3)->setCellValue("X".$j,$new_4)->setCellValue("AK".$j,$value['need_not_send'])->setCellValue("AM".$j,$yuan);
+			$objSheet->setCellValue("B".$j,$value['who_tel'])->setCellValue("C".$j,$value['who_post'])->setCellValue("D".$j,$value['who_house'])->setCellValue("G".$j,$value['who_name'])->setCellValue("I".$j,$value['pack_id'])->setCellValue("S".$j,$value['other_1'])->setCellValue("AB".$j,$value['send_day'])->setCellValueExplicit("AC".$j,$value['send_time'],PHPExcel_Cell_DataType::TYPE_STRING)->setCellValue("AE".$j,$due_money)->setCellValue("T".$j,$new_0)->setCellValue("U".$j,$new_1)->setCellValue("V".$j,$new_2)->setCellValue("W".$j,$new_3)->setCellValue("X".$j,$new_4)->setCellValue("AK".$j,$value['need_not_send'])->setCellValue("AM".$j,$yuan);
 			$j++;
 		}
 		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
@@ -302,6 +309,10 @@ if(isset($_GET['send_table'])){
 			$CI="";
 			if($value['B']=='7'){
 				$CI=$value['order_method'];
+			};
+			// 代引如果是0则为空
+			if($value['AH'] == '0'){
+				$value['AH'] = '';
 			};
 			//写入表格
 			$objSheet->

@@ -59,7 +59,7 @@ if(isset($_GET['onekey_common_order'])){
 	$sql = "UPDATE $response_list SET order_line = '2' WHERE order_line = '1' AND store = '{$store}' AND post_ok = '1' AND tel_ok = '1' AND sku_ok = '1' AND yfcode_ok='1'";
 	$res = $db->execute($sql);
 
-	// 暂时更新合单金额 = 订单金额
+	// 暂时更新总合单金额 = 订单金额
 	$sql = "UPDATE $response_list SET all_total_money = order_total_money WHERE order_line = '2' AND store = '{$store}'";
 	$res = $db->execute($sql);
 
@@ -139,7 +139,7 @@ if(isset($_GET['break_common_order'])){
 	$store = $_GET['store'];
 	$station = strtolower($_GET['station']);
 	$response_list = $station.'_response_list';
-	// 合单金额 = 订单金额 ,单号回执
+	// 总合单金额 = 订单金额 ,单号回执
 	$sql = "UPDATE $response_list SET all_total_money = order_total_money,send_id = concat('amz',id) WHERE send_id = '{$send_id}'";
 	$res = $db->execute($sql);
 

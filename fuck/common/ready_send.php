@@ -27,7 +27,7 @@ if(isset($_GET['packing'])){
 	// 如果是 mail便，查询出，遍历进行体积运算，分pack_id(包裹数，oms_id-1,2,x)
 
 	// pack_id
-	$sql = "UPDATE send_table SET pack_id = oms_id WHERE send_method = '宅配便'";
+	$sql = "UPDATE send_table SET pack_id = oms_id";
 	$res = $db->execute($sql);
 
 	// 如果是合单

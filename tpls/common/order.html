@@ -327,7 +327,7 @@
 						<td style="width:30%"><span class="s_gray">注文时间：</span>{{item.purchase_date}} &nbsp; <span class="yellow" ng-hide="!item.payment_method"><span class="s_gray">| &nbsp;</span>代引金额：{{item.pay_money}}</span></td>
 						<td style="width:11%" class="green"><span class="s_gray">订单金额：</span>{{item.order_total_money}}</td>
 						<td style="width:11%" class="red">
-							<span class="s_gray">合单金额：</span>
+							<span class="s_gray">总金额：</span>
 						{{item.all_total_money}}</td>
 						<td style="width:8%" class="tagc">
 							<button data-animation="am-fade-and-slide-top" data-template-url="/modal/show_one_info.html" bs-modal="modal" class="btn btn-xs btn-primary mr5" ng-click="show_one_info(item.order_id)">详单</button>
