@@ -22,7 +22,7 @@
 									<span class="green">{{upload_file.name}}</span>
 								</div>
 								<div class="row mt10">
-									<button class="btn btn-primary btn-sm mr10" ng-disabled="!fileForm.$valid" ng-click="submit('sagawa','csv','express')"><i class="fa fa-upload fa-fw"></i> 导 入</button>
+									<button class="btn btn-primary btn-sm mr10" ng-disabled="!upload_file" ng-click="submit('sagawa','csv','express')"><i class="fa fa-upload fa-fw"></i> 导 入</button>
 								</div>
 								<div class="row mt10">
 									<div class="col-lg-11">
@@ -40,7 +40,31 @@
 								</div>
 							</div>
 							<div ng-show="radioModel=='2'" class="ml20">
-								黑猫
+								<div class="row">
+									<div class="">文件类型： mail-dh.xls</div>
+								</div>
+								<div class="row mt10">
+									<button ng-click="chose_file()" class="btn btn-default" ngf-select="" ngf-pattern="'.xls'" name="file" ng-model="upload_file2" ngf-multiple="false" required="1">选择文件</button> 
+									<i ng-show="fileForm.file.$error.required" class="fa fa-fw fa-star red"></i>
+									<span class="green">{{upload_file2.name}}</span>
+								</div>
+								<div class="row mt10">
+									<button class="btn btn-primary btn-sm mr10" ng-disabled="!upload_file2" ng-click="submit('mail-dh','xls','express')"><i class="fa fa-upload fa-fw"></i> 导 入</button>
+								</div>
+								<div class="row mt10">
+									<div class="col-lg-11">
+										<div class="progress" ng-show="progress_bar >=0">
+											<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{progress_bar}}" aria-valuemin="0" aria-valuemax="100" style="width:{{progress_bar}}%">
+											{{progress_bar}}%
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-1 green fa fa-fw fa-check" ng-show="upload_ok"></div>
+								</div>
+								<div ng-show="e_import">
+									已导入：<span class="green">{{e_import.insert_num}}</span> 条 <br>
+									已存在：<span class="red">{{e_import.has_num}}</span> 条
+								</div>
 							</div>
 							
 						</form>

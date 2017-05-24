@@ -1,8 +1,8 @@
 <div class="container-fluid mt20" ng-controller="sendCtrl">
 	<div class="row">
 		<div class="col-lg-9 col-md-9 col-sm-10">
-			<div class="panel panel-success">
-				<div class="panel-heading"><i class="fa fa-fw fa-hand-o-left"></i> 佐川发货单</div>
+			<div class="panel panel-danger">
+				<div class="panel-heading"><i class="fa fa-fw fa-github-alt"></i> 黑猫发货单</div>
 				<div class="panel-body">
 					<div class="btn-group mt10">
 						<button type="button" class="btn btn_fff btn-sm">
@@ -16,8 +16,8 @@
 								<input placeholder="开始日期" class="date_icon blue" readonly="readonly" type="text" name="s_date" ng-flat-datepicker datepicker-config="datepickerConfig" ng-model="s_date"> - <input placeholder="结束日期" class="date_icon blue" readonly="readonly" type="text" name="e_date" ng-flat-datepicker datepicker-config="datepickerConfig" ng-model="e_date">
 							</span>
 						</button>
-						<button ng-click="send_table('new','zuochuan')" class="btn btn-info" ng-disabled="!select_repo || !s_date || !e_date">最新</button>
-						<button ng-click="send_table('down','zuochuan')" class="btn btn-success" ng-disabled="!select_repo || !s_date || !e_date">下载</button>
+						<button ng-click="send_table('new','heimao')" class="btn btn-info" ng-disabled="!select_repo || !s_date || !e_date">最新</button>
+						<button ng-click="send_table('down','heimao')" class="btn btn-success" ng-disabled="!select_repo || !s_date || !e_date">下载</button>
 					</div>
 				</div>
 				<div class="mt20"></div>

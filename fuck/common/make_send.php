@@ -55,9 +55,9 @@ if(isset($_GET['send_table'])){
 		$objSheet->getColumnDimension('W')->setWidth(26);//单元格宽
 		// 如果是最新
 		if($down_type == 'new'){
-			$sql = "SELECT who_tel,who_post,who_house,who_name,pack_id,send_day,send_time,due_money,back_status,group_concat(goods_code,'*',out_num separator '#') as aaa,express_company,send_method,need_not_send,other_1 from send_table where item_line = 1 and repo_status = '{$select_repo}' and express_company='佐川急便' and send_method in('着払い','宅配便') and back_status = '0' and table_status='0' and import_day between '{$start}' and '{$end}' group by send_id order by id;";	//根据电话号码进行多重验证
+			$sql = "SELECT who_tel,who_post,who_house,who_name,pack_id,send_day,send_time,due_money,back_status,group_concat(goods_code,'*',out_num separator '#') as aaa,express_company,send_method,need_not_send,other_1 from send_table where repo_status = '{$select_repo}' and express_company='佐川急便' and send_method in('着払い','宅配便') and back_status = '0' and table_status = '0' and import_day between '{$start}' and '{$end}' group by send_id order by id;";	
 		}else{	
-			$sql = "SELECT who_tel,who_post,who_house,who_name,pack_id,send_day,send_time,due_money,back_status,group_concat(goods_code,'*',out_num separator '#') as aaa,express_company,send_method,need_not_send,other_1 from send_table where item_line = 1 and repo_status = '{$select_repo}' and express_company='佐川急便' and send_method in('着払い','宅配便') and back_status = '0' and import_day between '{$start}' and '{$end}' group by send_id order by id;";
+			$sql = "SELECT who_tel,who_post,who_house,who_name,pack_id,send_day,send_time,due_money,back_status,group_concat(goods_code,'*',out_num separator '#') as aaa,express_company,send_method,need_not_send,other_1 from send_table where repo_status = '{$select_repo}' and express_company='佐川急便' and send_method in('着払い','宅配便') and back_status = '0' and import_day between '{$start}' and '{$end}' group by send_id order by id;";
 		}
 		$res = $db->getAll($sql);
 		$j=2;
@@ -359,7 +359,7 @@ if(isset($_GET['send_table'])){
 		$objWriter->save($dir."/../../down/".$select_repo."_黑猫.xlsx");	//保存在服务器
 		if($down_type=='new'){
 			// 标注已经下载过1
-			$sql = "UPDATE send_table set table_status='1' where express_company='ヤマト運輸' and back_status ='0' and out_day between '{$start}' and '{$end}';";
+			$sql = "UPDATE send_table set table_status = '1' where express_company='ヤマト運輸' and back_status ='0' and import_day between '{$start}' and '{$end}';";
 			$res = $db->execute($sql);
 		}
 		echo $select_repo.'_黑猫.xlsx';

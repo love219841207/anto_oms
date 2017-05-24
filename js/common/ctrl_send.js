@@ -1,16 +1,22 @@
 var app=angular.module('myApp');
 app.controller('sendCtrl', ['$rootScope','$scope','$state','$http','$log','$timeout','$compile', function($rootScope,$scope,$state,$http,$log,$timeout,$compile){
+    //赋入库日期
+    var myDate = new Date();
+    var today = myDate.toLocaleDateString().replace("/","-");
+    today = today.replace("/","-");
+    $scope.s_date = today;
+    $scope.e_date = today;
     $scope.init_express = function(){
         $scope.express_response = false;
     }
 
-    $scope.send_table = function(type){
+    $scope.send_table = function(type,company){
         $scope.shadow('open','ss_make','正在生成发货单');
         $http.get('/fuck/common/make_send.php', {
             params:{
                 send_table:'down',
                 type:type,
-                select_company:$scope.select_company,
+                select_company:company,
                 select_repo:$scope.select_repo,
                 s_date:$scope.s_date,
                 e_date:$scope.e_date

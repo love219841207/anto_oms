@@ -199,7 +199,7 @@ app.controller('pauseorderCtrl', ['$rootScope','$scope','$state','$http','$log',
     }
 
     //修改 pause 字段
-    $scope.change_pause_field = function(id,field_name,order_id,store){
+    $scope.change_pause_field = function(id,field_name,order_id,store,station){
         var dom = document.querySelector('#'+field_name);
         var new_key = angular.element(dom).val();
         var station = $scope.this_station;
@@ -217,7 +217,7 @@ app.controller('pauseorderCtrl', ['$rootScope','$scope','$state','$http','$log',
             if(data == 'ok'){
                 $scope.play_price(order_id);    // 价格计算
                 $scope.show_back_info();
-                $scope.pause_modal(id,store);
+                $scope.pause_modal(id,store,station);
             }else{
                 $scope.plug_alert('danger',data,'fa fa-ban');
             }
