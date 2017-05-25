@@ -31,6 +31,7 @@ app.controller('sendCtrl', ['$rootScope','$scope','$state','$http','$log','$time
         });
     }
 
+    // 读取快递单
     $scope.look_express = function(){
         $scope.shadow('open','ss_read','正在读取数据');
         $http.get('/fuck/common/import_express.php', {params:{look_express:'look'}
@@ -44,5 +45,20 @@ app.controller('sendCtrl', ['$rootScope','$scope','$state','$http','$log','$time
         });
     }
 
+    // 清空快递单
+    $scope.truncate_yes = function(){
+        $scope.shadow('open','ss_make','..正在清空');
+        $http.get('/fuck/common/import_express.php', {params:{truncate_yes:'truncate'}
+        }).success(function(data) {
+            if(data == 'ok'){
+                $scope.look_express();
+                $scope.truncate_btn = false;
+                $timeout(function(){$scope.shadow('close');},1000);
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("快递单清空失败");
+        });
+    }
 
 }])

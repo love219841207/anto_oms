@@ -11,7 +11,7 @@
 								<div class="col-lg-6">
 									<button class="btn btn-info btn-xs"><i class="fa fa-refresh fa-fw"></i>更 新</button>
 									<button class="btn btn-warning btn-xs" ng-click="truncate_btn=!truncate_btn"><i class="fa fa-trash-o fa-fw"></i>清空?</button>
-									<button class="btn btn-danger btn-xs" ng-show="truncate_btn">是的清空</button>
+									<button class="btn btn-danger btn-xs" ng-click="truncate_yes()" ng-show="truncate_btn">是的清空</button>
 								</div>
 								<div class="col-lg-6 tagr"><i class="fa fa-fw fa-inbox green"></i>已导入：<span class="green">{{express_response.insert_num}}</span> 条</div>
 								
@@ -22,7 +22,7 @@
 									<td>包裹ID</td>
 									<td>快递单号</td>
 									<td>快递公司</td>
-									<td>配送方式</td>
+									<td>快递公司URL</td>
 									<td>发货日期</td>
 								</tr>
 								<tr ng-repeat="item in express_response.look_data track by $index" class="s_gray">
@@ -30,7 +30,7 @@
 									<td>{{item.pack_id}}</td>
 									<td>{{item.express_num}}</td>
 									<td>{{item.express_name}}</td>
-									<td>{{item.express_method}}</td>
+									<td>{{item.express_url}}</td>
 									<td>{{item.express_date}}</td>
 								</tr>
 							</table> 
