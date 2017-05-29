@@ -995,6 +995,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
                 station:$scope.now_station
             }
         }).success(function(data) {
+            $scope.cc_com_order();  //cc收件人地址
             $log.info(data)
             $scope.common_order_data = data;
             $timeout(function(){$scope.shadow('close');},500); //关闭shadow
@@ -1032,11 +1033,27 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
                 station:$scope.now_station
             }
         }).success(function(data) {
+            $scope.cc_com_order();  //cc收件人地址
             $scope.common_order_data = data;
             $timeout(function(){$scope.loading_shadow('close');},300); //关闭loading
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
             $log.info("error:获取合单列表失败。");
+        });
+    }
+
+    // 合单收件人地址再核对
+    $scope.cc_com_order = function(send_id){
+        $http.get('/fuck/common/list_order.php', {
+            params:{
+                cc_com_order:'cc',
+                station:$scope.now_station
+            }
+        }).success(function(data) {
+            $scope.com_error_addr = data.addr;
+            $scope.com_error_name = data.name;
+        }).error(function(data) {
+            alert("系统错误，请联系管理员核对。");
         });
     }
 

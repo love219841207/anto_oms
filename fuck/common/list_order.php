@@ -24,27 +24,81 @@ if(isset($_GET['has_orders'])){
 	echo json_encode($res);
 }
 
-//一键合单
+// 合单收件人地址再核对
+if(isset($_GET['cc_com_order'])){
+	$station = strtolower($_GET['station']);
+	$response_list = $station.'_response_list';
+
+	# 清空错误表
+	$sql = "TRUNCATE com_addr_error";
+	$res = $db->execute($sql);
+	$sql = "TRUNCATE com_name_error";
+	$res = $db->execute($sql);
+
+	#查询插入错误地址
+	$sql = "INSERT INTO com_addr_error SELECT id,send_id,address from $response_list where order_line in(1,2) and send_id LIKE 'H%' group by address";
+	$res = $db->execute($sql);
+
+	#删除不是错的
+	$sql = "SELECT send_id,count(send_id) as c_num FROM com_addr_error GROUP BY send_id";
+	$res = $db->getAll($sql);
+	foreach ($res as $val) {
+		$send_id = $val['send_id'];
+		if($val['c_num'] == 1){
+			$sql = "DELETE FROM com_addr_error WHERE send_id = '{$send_id}'";
+			$res = $db->execute($sql);
+		}
+	}
+	
+	#查询插入错误人名
+	$sql = "INSERT INTO com_name_error SELECT id,send_id,receive_name from $response_list where order_line in(1,2) and send_id LIKE 'H%' group by receive_name";
+	$res = $db->execute($sql);
+
+	#删除不是错的人名
+	$sql = "SELECT send_id,count(send_id) as c_num FROM com_name_error GROUP BY send_id";
+	$res = $db->getAll($sql);
+	foreach ($res as $val) {
+		$send_id = $val['send_id'];
+		if($val['c_num'] == 1){
+			$sql = "DELETE FROM com_name_error WHERE send_id = '{$send_id}'";
+			$res = $db->execute($sql);
+		}
+	}
+
+	$sql = "SELECT * FROM com_addr_error";
+	$res1 = $db->getAll($sql);
+	$sql = "SELECT * FROM com_name_error";
+	$res2 = $db->getAll($sql);
+	$final_res['addr'] = $res1;
+	$final_res['name'] = $res2;
+	echo json_encode($final_res);
+}
+
+// 一键合单
 if(isset($_GET['onekey_common_order'])){
 	$store = $_GET['onekey_common_order'];
 	$station = strtolower($_GET['station']);
 	$response_list = $station.'_response_list';
 	$response_info = $station.'_response_info';
 
+	//	重置单号
+	$sql = "UPDATE $response_list SET all_total_money = order_total_money,send_id = concat('amz',id) WHERE order_line in (1,2)";
+	$res = $db->execute($sql);
+
 	$sql = "
 		UPDATE $response_list a,
 		(SELECT a.id FROM $response_list a,
-		(SELECT receive_name,count(id) as num
-		FROM $response_list WHERE store='{$store}' AND post_ok = '1' AND tel_ok = '1' AND sku_ok = '1' AND yfcode_ok='1' AND order_line = '1'
+		(SELECT phone,post_code,count(id) as num
+		FROM $response_list WHERE store='{$store}' AND post_ok = '1' AND tel_ok = '1' AND sku_ok = '1' AND yfcode_ok='1' AND order_line in (1,2)
 		group by phone,post_code
 		having num>1) b
-		WHERE a.receive_name = b.receive_name) b
+		WHERE a.phone = b.phone and a.post_code = b.post_code) b
 		SET a.send_id = concat('H',a.phone)
 		WHERE a.id = b.id";
 	$res = $db->execute($sql);
 
 	//修正合单号
-	$sql = "SELECT send_id FROM $response_list WHERE store='{$store}' AND order_line = '1' AND send_id LIKE 'H%' GROUP BY send_id";
+	$sql = "SELECT send_id FROM $response_list WHERE store='{$store}' AND order_line in (1,2) AND send_id LIKE 'H%' GROUP BY send_id";
 	$res = $db->getAll($sql);
 	foreach ($res as $value) {
 		$now_send_id = $value['send_id'];
@@ -63,7 +117,7 @@ if(isset($_GET['onekey_common_order'])){
 	$sql = "UPDATE $response_list SET all_total_money = order_total_money WHERE order_line = '2' AND store = '{$store}'";
 	$res = $db->execute($sql);
 
-	//查询所有合单号
+	// 查询所有合单号
 	$sql = "SELECT send_id FROM $response_list WHERE store='{$store}' AND order_line = '2' AND send_id LIKE 'H%' GROUP BY send_id";
 	$res3 = $db->getAll($sql);
 
