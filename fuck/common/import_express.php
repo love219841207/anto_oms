@@ -5,10 +5,105 @@ require_once("../log.php");
 $dir = dirname(__FILE__);
 
 set_time_limit(0);
+// 更新快递单号
+if(isset($_GET['up_express_order'])){
+	// 更新单号和快递日期到 send_table，并且table_status = 2,express_status = 1
+	$sql = "UPDATE send_table send,import_express import SET send.oms_order_express_num = import.express_num,send.express_day = import.express_date,send.table_status = '2',import.express_status = '1' WHERE import.pack_id = send.pack_id AND import.express_status = '0'";
+	$res = $db->execute($sql);
+
+	// 更新单号和快递日期到list表 三个平台次更新 order_line = 6
+	$sql = "UPDATE amazon_response_list list,send_table send SET list.oms_order_express_num = send.oms_order_express_num,list.express_day = send.express_day,list.order_line = '6' WHERE list.order_id = send.order_id AND send.table_status = '2'";
+	$res = $db->execute($sql);
+
+	// 移动 table_status = 2 到已出单
+	$sql = "INSERT INTO history_send (
+				station,
+				order_id,
+				send_id,
+				repo_status,
+				oms_id,
+				info_id,
+				pack_id,
+				sku,
+				goods_code,
+				out_num,
+				pause_ch,
+				pause_jp,
+				who_tel,
+				who_post,
+				who_house,
+				who_name,
+				send_day,
+				send_time,
+				is_cod,
+				due_money,
+				express_company,
+				send_method,
+				order_method,
+				need_not_send,
+				who_email,
+				store_name,
+				holder,
+				item_line,
+				import_day,
+				oms_order_express_num,
+				express_day,
+				back_status,
+				table_status,
+				other_1)
+			SELECT
+				station,
+				order_id,
+				send_id,
+				repo_status,
+				oms_id,
+				info_id,
+				pack_id,
+				sku,
+				goods_code,
+				out_num,
+				pause_ch,
+				pause_jp,
+				who_tel,
+				who_post,
+				who_house,
+				who_name,
+				send_day,
+				send_time,
+				is_cod,
+				due_money,
+				express_company,
+				send_method,
+				order_method,
+				need_not_send,
+				who_email,
+				store_name,
+				holder,
+				item_line,
+				import_day,
+				oms_order_express_num,
+				express_day,
+				back_status,
+				table_status,
+				other_1 
+			FROM send_table WHERE table_status = 2";
+	$res = $db->execute($sql);
+
+	// 删除 table_status = 2 的订单
+	$sql = "DELETE FROM send_table WHERE table_status = 2";
+	$res = $db->execute($sql);
+
+	// 删除 express_status = 1 的订单
+	$sql = "DELETE FROM import_express WHERE express_status = 1";
+	$res = $db->execute($sql);
+
+	echo 'ok';
+}
+
 // 清空快递单号
 if(isset($_GET['truncate_yes'])){
 	$sql = "DELETE FROM import_express WHERE express_status = '0'";
-	$db->execute($sql);
+	$res = $db->execute($sql);
 	echo 'ok';
 }
 
@@ -38,9 +133,6 @@ function look_express(){
 
 if(isset($_GET['import_express'])){
 	$file_name = $_GET['import_express'];
-		// //日志
-	// $do = '[START] 导入快递单：'.$import_file;
-	// oms_log($u_name,$do,'import_file');
 
 	//佐川
 	if($file_name == 'sagawa'){
@@ -66,6 +158,11 @@ if(isset($_GET['import_express'])){
 	        $str=mb_convert_encoding($str,'utf8','auto');//根据自己编码修改
 	        $strs = explode("|*|",$str);
 
+	        $yy = substr ($strs[1],0,4);
+	        $mm = substr ($strs[1],4,2);
+	        $dd = substr ($strs[1],6,2);
+	        $express_day = $yy.'-'.$mm.'-'.$dd;
+
 			if($strs[0]==""){
 	        	//如果没有填入数目，则跳过
 	        }else{
@@ -78,7 +175,7 @@ if(isset($_GET['import_express'])){
 	            	continue;
 	            }else{
 	            	//插入
-			 		$sql = "INSERT INTO import_express (pack_id,express_name,express_url,express_num,express_date) VALUES('{$strs[12]}','佐川急便','http://k2k.sagawa-exp.co.jp/p/sagawa/web/okurijoinput.jsp','{$strs[0]}','{$strs[1]}')";
+			 		$sql = "INSERT INTO import_express (pack_id,express_name,express_url,express_num,express_date) VALUES('{$strs[12]}','佐川急便','http://k2k.sagawa-exp.co.jp/p/sagawa/web/okurijoinput.jsp','{$strs[0]}','{$express_day}')";
 			 		$res = $db->execute($sql);
 			 		$insert_num = $insert_num + 1;	
 	            }
@@ -98,7 +195,7 @@ if(isset($_GET['import_express'])){
 		$insert_num = "0";
 		//初始化已存在数
 		$has_num = "0";
-		for($j=2;$j<=$highestRow;$j++){    //从第2行开始读取数据
+		for($j=1;$j<=$highestRow;$j++){    //从第1行开始读取数据
 	    	$str="";
 	        for($k='A';$k<=$highestColumn;$k++)    //从A列读取数据
 			{ 
@@ -106,6 +203,8 @@ if(isset($_GET['import_express'])){
 			} 
 	        $str=mb_convert_encoding($str,'utf8','auto');//根据自己编码修改
 	        $strs = explode("|*|",$str);
+
+	        $express_date = str_replace('/', '-', $strs[4]);
 
 			if($strs[0]==""){
 	        	//如果没有填入数目，则跳过
@@ -119,16 +218,13 @@ if(isset($_GET['import_express'])){
 	            	continue;
 	            }else{
 	            	//插入
-			 		$sql = "INSERT INTO import_express (pack_id,express_name,express_url,express_num,express_date) VALUES('{$strs[0]}','ヤマト運輸','http://toi.kuronekoyamato.co.jp/cgi-bin/tneko','{$strs[3]}','{$strs[4]}')";
+			 		$sql = "INSERT INTO import_express (pack_id,express_name,express_url,express_num,express_date) VALUES('{$strs[0]}','ヤマト運輸','http://toi.kuronekoyamato.co.jp/cgi-bin/tneko','{$strs[3]}','{$express_date}')";
 			 		$res = $db->execute($sql);
 			 		$insert_num = $insert_num + 1;	
 	            }
 	        } 
 		}
 	}
-	//日志
-	// $do = '[END] 导入快递单：'.$import_file;
-	// oms_log($u_name,$do,'import_file');
 
 	//final_res
 	$final_res['status'] = 'ok';

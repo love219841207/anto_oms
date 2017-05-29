@@ -106,6 +106,14 @@
             <td class="s_gray">发货单</td>
             <td class="red">{{item.repo_status}}</td>
           </tr>
+          <tr>
+            <td class="s_gray">快递单</td>
+            <td class="red">{{item.oms_order_express_num}}</td>
+          </tr>
+          <tr>
+            <td class="s_gray">快递日期</td>
+            <td class="red">{{item.express_day}}</td>
+          </tr>
         </table>
         <table class="tagl table table-hover table-condensed table-bordered" ng-repeat="item2 in one_res_info track by $index">
           <tr class="bg-info blue">

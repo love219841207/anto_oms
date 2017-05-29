@@ -10,6 +10,7 @@ app.controller('sendCtrl', ['$rootScope','$scope','$state','$http','$log','$time
         $scope.express_response = false;
     }
 
+    // 下载发货单
     $scope.send_table = function(type,company){
         $scope.shadow('open','ss_make','正在生成发货单');
         $http.get('/fuck/common/make_send.php', {
@@ -58,6 +59,22 @@ app.controller('sendCtrl', ['$rootScope','$scope','$state','$http','$log','$time
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
             $log.info("快递单清空失败");
+        });
+    }
+
+    // 更新快递单
+    $scope.up_express_order = function(){
+        $scope.shadow('open','ss_make','..正在更新');
+        $http.get('/fuck/common/import_express.php', {params:{up_express_order:'update'}
+        }).success(function(data) {
+            if(data == 'ok'){
+                $scope.look_express();
+            }else{
+                $log.info(data)
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("更新快递单失败");
         });
     }
 

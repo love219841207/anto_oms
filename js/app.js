@@ -285,12 +285,12 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
             }
         })
 
-        //已出单
-        .state('site.close_send',{
-            url: '/close_send/{data}',
+        //已出单+转售后
+        .state('site.history',{
+            url: '/history/{data}',
             views:{
                 'show@site':{
-                    templateUrl: 'tpls/common/close_send.html',
+                    templateUrl: 'tpls/common/history.html',
                     controller: function($scope){
                         $scope.status.isopen1 = false;
                         $scope.status.isopen2 = false;
@@ -310,6 +310,25 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
             views:{
                 'show@site':{
                     templateUrl: 'tpls/common/refresh_express.html',
+                    controller: function($scope){
+                        $scope.status.isopen1 = false;
+                        $scope.status.isopen2 = false;
+                        $scope.status.isopen3 = false;
+                        $scope.status.isopen4 = true;
+                        $scope.status.isopen5 = false;
+                        $scope.status.isopen6 = false;
+                        $scope.status.isopen7 = false;
+                    }
+                }
+            }
+        })
+
+        // 退单
+        .state('site.back',{
+            url: '/back/{data}',
+            views:{
+                'show@site':{
+                    templateUrl: 'tpls/common/back.html',
                     controller: function($scope){
                         $scope.status.isopen1 = false;
                         $scope.status.isopen2 = false;

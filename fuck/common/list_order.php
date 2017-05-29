@@ -36,7 +36,7 @@ if(isset($_GET['onekey_common_order'])){
 		(SELECT a.id FROM $response_list a,
 		(SELECT receive_name,count(id) as num
 		FROM $response_list WHERE store='{$store}' AND post_ok = '1' AND tel_ok = '1' AND sku_ok = '1' AND yfcode_ok='1' AND order_line = '1'
-		group by receive_name,phone,post_code,buyer_email,address
+		group by phone,post_code
 		having num>1) b
 		WHERE a.receive_name = b.receive_name) b
 		SET a.send_id = concat('H',a.phone)

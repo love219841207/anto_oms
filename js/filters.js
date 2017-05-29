@@ -57,5 +57,8 @@ myFilters.filter('order_line', function(){
         if(item == '-1'){
             return '回收站';
         }
+        if(item == '-4'){
+            return '已退单';
+        }
     }
 });

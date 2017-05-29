@@ -1,9 +1,9 @@
-<div class="" ng-controller="readysendCtrl">
-	<button class="btn btn-warning mt10 btn-sm ml20" ng-click="packing()" ng-show="send_table!=''"><i class="fa fa-gift fa-fw"></i>打包</button>
-	<div class="btn-group ml10 mt10 pull-right mr20">
+<div class="container-fluid" ng-controller="historyCtrl">
+	<button class="btn btn-default mt10 btn-sm" style="background: #666;color:#FFF;" ng-click="packing()" ng-show="send_table!=''"><i class="fa fa-mouse-pointer fa-fw" style="color:#CF0"></i> 一键转入售后系统</button>
+	<div class="btn-group ml10 mt10 pull-right">
 		<div class="btn btn-default btn-sm">
 			<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="search_field" ng-change="change_search_field()">
-				<option value="">所有待出单 ..</option>
+				<option value="">所有已出单 ..</option>
 				<option value="order_id">订单号</option>
 				<option value="send_id">合单发货ID</option>
 				<option value="goods_code">商品代码</option>
@@ -18,17 +18,17 @@
 	<div class="clearfix"></div>
 
 	<table ng-show="send_table" class="table-responsive table table-bordered table-condensed table-hover table-striped mt20 f12">
-		<tr class="success green animate slide-right">
+		<tr style="background: #666;color:#CF0;" class="animate slide-right">
 			<td class="tagc"><i class="fa-sort-numeric-asc fa fa-fw"></i></td>
 			<td>合单ID</td>
 			<td>店铺</td>
 			<td>导入日期</td>
 			<td>订单号</td>
 			<!-- <td>OMS-ID</td> -->
-			<td>INFO-ID</td>
+			<!-- <td>INFO-ID</td> -->
 			<td>快递公司</td>
 			<td>配送方式</td>
-			<td>包裹ID</td>
+			<!-- <td>包裹ID</td> -->
 			<!-- <td>SKU（出品SKU，客人看）</td> -->
 			<td>商品代码</td>
 			<td>数</td>
@@ -39,26 +39,27 @@
 			<!-- <td>邮编</td> -->
 			<!-- <td>地址</td> -->
 			<td>收件人</td>
-			<td>代引</td>
+			<td>代引金额</td>
 			<!-- <td>是否自提</td> -->
 			<!-- <td>email</td> -->
 			<!-- <td>店铺</td> -->
 			<td class="tagc">担当</td>
-			<td class="tagc">操作</td>
+			<td class="tagc">快递单</td>
+			<td class="tagc">快递日期</td>
 			<!-- <td>item_line</td> -->
+			
 		</tr>
-		<tr class="am-fade-and-slide-right s_gray" ng-repeat="item in send_table track by $index">
-
+		<tr class="am-fade-and-slide-right s_gray" ng-class="{'warning':item.table_status == '2'}" ng-repeat="item in send_table track by $index">
 			<td class="tagc">{{$index+1}}</td>
 			<td>{{item.send_id}}</td>
 			<td>{{item.store_name}}</td>
 			<td class="yellow">{{item.import_day}}</td>
-			<td ng-class="{'green':item.table_status=='1'}">{{item.order_id}}</td>
+			<td>{{item.order_id}}</td>
 			<!-- <td>{{item.oms_id}}</td> -->
-			<td>{{item.info_id}}</td>
+			<!-- <td>{{item.info_id}}</td> -->
 			<td>{{item.express_company}}</td>
 			<td>{{item.send_method}}</td>
-			<td>{{item.pack_id}}</td>
+			<!-- <td>{{item.pack_id}}</td> -->
 			<!-- <td>{{item.sku}}</td> -->
 			<td ng-class="{'red danger':item.error_info=='no_sku'}">{{item.goods_code}}
 			</td>
@@ -76,11 +77,10 @@
 			<!-- <td>{{item.who_email}}</td> -->
 			<!-- <td>{{item.store_name}}</td> -->
 			<td class="green tagc">{{item.holder}}</td>
-			<td class="tagc">
-				<i class="fa fa-edit fa-fw pointer" data-animation="am-fade-and-slide-top" data-template-url="/modal/show_send_info.html" bs-modal="modal" ng-click="show_send_info(item.id)"></i>
-				<i class="fa fa-trash-o fa-fw red pointer" data-animation="am-fade-and-slide-top" data-template-url="/modal/del_send_item.html" bs-modal="modal" ng-click="show_send_info(item.id)"></i>
-			</td>
+			<td class="green tagc">{{item.oms_order_express_num}}</td>
+			<td class="green tagc">{{item.express_day}}</td>
 			<!-- <td>{{item.item_line}}</td> -->
+			<!-- <td>{{item.table_status}}</td> -->
 		</tr>
 	</table>
 	<nav>
