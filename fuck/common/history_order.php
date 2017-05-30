@@ -1,6 +1,66 @@
 <?php
 require_once("../header.php");
 require_once("../log.php");
+require_once("../../pdo/repair.PdoMySQL.class.php");//REPAIR_PDO
+$shdb = new RepairPdoMySQL();
+
+//	一键转入售后
+if(isset($_GET['onekey_repair'])){
+	$sql = "SELECT 
+			who_email,
+			order_id,
+			goods_id,
+			store_name,
+			who_id,
+			who_phone,
+			who_code,
+			who_house,
+			who_house1,
+			who_house2,
+			who_name,
+			group_concat(goods_code,'*',out_num) as goods,
+			receive_phone,
+			receive_code,
+			receive_house,
+			receive_house1,
+			receive_house2,
+			receive_name,
+			total_money,
+			ems_money,
+			bill,
+			point,
+			cheap,
+			tax,
+			buy_money,
+			buy_method,
+			to_method 
+		 FROM history_send WHERE table_status = '3' GROUP BY receive_phone";
+	$res = $db->getAll($sql);
+	foreach ($res as $val) {
+		$who_email = $val['who_email'];
+		$order_id = $val['order_id'];
+		$goods_id = $val['goods_id'];
+		$store_name = $val['store_name'];
+		$who_email = $val['who_email'];
+		$who_email = $val['who_email'];
+		$who_email = $val['who_email'];
+		$who_email = $val['who_email'];
+		$who_email = $val['who_email'];
+		$who_email = $val['who_email'];
+		$who_email = $val['who_email'];
+		$who_email = $val['who_email'];
+		$who_email = $val['who_email'];
+		$who_email = $val['who_email'];
+		$sql = "INSERT INTO";
+		$res = $shdb->getOne($sql);
+	}
+	
+	// 更新 table_status 3 为 4
+	$sql = "UPDATE history_send SET table_status = '4' WHERE table_status = '3'";
+	$res = $db->execute($sql);
+	echo 'ok';
+}
+
 // 退单查询
 if(isset($_GET['search_back_order'])){
 	$order_id = $_GET['search_back_order'];

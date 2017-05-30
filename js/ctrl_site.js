@@ -127,11 +127,33 @@ app.controller('topCtrl', ['$rootScope','$scope','$state','$stateParams','$http'
             },10000);
             
         }).error(function(data) {
-            alert("系统错误，请联系管理员。");
-            $log.info("连接repo失败。");
+            alert("连接库存系统失败。");
         });
     }
     $scope.ping_repo();
+
+    // 连接售后系统
+    $scope.ping_repair = function(){
+        $http.get('/fuck/ping_repair.php', {params:{ping_repair:"ping"}
+        }).success(function(data) {
+            if(data == 1){
+                $timeout(function(){
+                    $scope.repair_status = true;
+                },300);
+            }else{
+                $scope.repair_status = false;
+            }
+            
+            $timeout(function(){
+                $scope.repair_status = false;
+                $scope.ping_repair();
+            },15000);
+            
+        }).error(function(data) {
+            alert("连接售后系统失败。");
+        });
+    }
+    $scope.ping_repair();
 
     //平台切换
     $scope.change_station = function(){

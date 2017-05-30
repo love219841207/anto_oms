@@ -1,5 +1,5 @@
 <div class="container-fluid" ng-controller="historyCtrl">
-	<button class="btn btn-default mt10 btn-sm" style="background: #666;color:#FFF;" ng-click="packing()" ng-show="send_table!=''"><i class="fa fa-mouse-pointer fa-fw" style="color:#CF0"></i> 一键转入售后系统</button>
+	<button ng-show="send_table" class="btn btn-default mt10 btn-sm" style="background: #666;color:#FFF;" ng-click="onekey_repair()" ng-show="send_table!=''"><i class="fa fa-mouse-pointer fa-fw" style="color:#CF0"></i> 一键转入售后系统</button>
 	<div class="btn-group ml10 mt10 pull-right">
 		<div class="btn btn-default btn-sm">
 			<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="search_field" ng-change="change_search_field()">
@@ -47,9 +47,9 @@
 			<td class="tagc">快递单</td>
 			<td class="tagc">快递日期</td>
 			<!-- <td>item_line</td> -->
-			
+			<td>退单状态</td>
 		</tr>
-		<tr class="am-fade-and-slide-right s_gray" ng-class="{'warning':item.table_status == '2'}" ng-repeat="item in send_table track by $index">
+		<tr class="am-fade-and-slide-right s_gray" ng-class="{'warning':item.table_status == '3'}" ng-repeat="item in send_table track by $index">
 			<td class="tagc">{{$index+1}}</td>
 			<td>{{item.send_id}}</td>
 			<td>{{item.store_name}}</td>
@@ -81,6 +81,7 @@
 			<td class="green tagc">{{item.express_day}}</td>
 			<!-- <td>{{item.item_line}}</td> -->
 			<!-- <td>{{item.table_status}}</td> -->
+			<td ng-class="{'red':item.back_status=='已退单'}">{{item.back_status}}</td>
 		</tr>
 	</table>
 	<nav>

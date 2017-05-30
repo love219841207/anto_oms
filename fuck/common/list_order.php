@@ -126,10 +126,10 @@ if(isset($_GET['onekey_common_order'])){
 		$all_one = $all_one.'['.$value['send_id'].']';
 		$send_id = $value['send_id'];
 
-		// 合单金额计算 = 合单金额计算 - 订单数 * COD费用 + COD费用 （以后涉及运费代码问题）
-		$sql = "SELECT count(order_id) as count_order_id FROM $response_list WHERE send_id = '{$send_id}'";
+		// 合单金额计算 = 合单金额计算 - 代引订单数 * COD费用 + COD费用 （以后涉及运费代码问题）
+		$sql = "SELECT count(order_id) as count_cod FROM $response_list WHERE send_id = '{$send_id}' AND payment_method = 'COD'";
 		$res = $db->getOne($sql);
-		$count_order_id = $res['count_order_id'];
+		$count_cod = $res['count_cod'];
 
 		// 查询一个订单号
 		$sql = "SELECT order_id FROM $response_list WHERE send_id = '{$send_id}'";
@@ -141,14 +141,21 @@ if(isset($_GET['onekey_common_order'])){
 		$res = $db->getOne($sql);
 		$cod_money = $res['cod_money'];
 
-		$fee = $count_order_id * $cod_money;
+		$fee = $count_cod * $cod_money;
 
 		$sql = "SELECT sum(all_total_money) as sum FROM amazon_response_list WHERE send_id = '{$send_id}'";
 		$res = $db->getOne($sql);
 		$sum_total_money = $res['sum'];
 		$fee = $sum_total_money - $fee + $cod_money;
+		
+		// 算出非代引总价
+		$sql = "SELECT sum(all_total_money) as normal_sum FROM amazon_response_list WHERE send_id = '{$send_id}' AND payment_method <> 'COD'";
+		$res = $db->getOne($sql);
 
-		$sql = "UPDATE $response_list SET all_total_money = $fee,pay_money = $fee WHERE send_id = '{$send_id}'";
+		$normal_sum = $res['normal_sum'];
+		$fee_pay = $fee - $normal_sum;
+
+		$sql = "UPDATE $response_list SET all_total_money = $fee,pay_money = $fee_pay WHERE send_id = '{$send_id}'";
 		$res = $db->execute($sql);
 	}
 

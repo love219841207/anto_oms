@@ -16,8 +16,11 @@
 		</div>
 		<ol class="breadcrumb bdr_no pull-right">
 			<li>
-				<span class="ml10 fa" ng-class="{'green_light fa-wifi':repo_status,'yellow_light fa-spinner fa-pulse':!repo_status}"></span> 
-				<span ng-class="{'green_light':repo_status,'yellow_light':!repo_status}">Repo</span></li>
+				<span class="ml10 fa" ng-class="{'green_light fa-wifi':repo_status,'yellow_light fa-spinner fa-pulse':!repo_status}"></span>
+				<span ng-class="{'green_light':repo_status,'yellow_light':!repo_status}">库存</span>
+				<span class="ml10 fa" ng-class="{'green_light fa-wifi':repair_status,'yellow_light fa-spinner fa-pulse':!repair_status}"></span>
+				<span ng-class="{'green_light':repair_status,'yellow_light':!repair_status}">售后</span>
+			</li>
 			<li class="green_light"> <i class="fa fa-fw fa-hdd-o"></i>
 				System v{{sys_version}}
 			</li>

@@ -62,31 +62,40 @@ if(isset($_GET['play_price'])){
 
 	// // 查询是否是合单
 	if(strstr($send_id, 'H') == true){
-		// 总合单金额计算 = 合单金额计算 - 订单数 * COD费用 + COD费用 （以后涉及运费代码问题）
-		$sql = "SELECT count(order_id) as count_order_id FROM $response_list WHERE send_id = '{$send_id}'";
+		// 总合单金额计算 = 合单金额计算 - COD订单数 * COD费用 + 一个COD费用 （以后涉及运费代码问题）
+		$sql = "SELECT count(order_id) as count_cod FROM $response_list WHERE send_id = '{$send_id}' AND payment_method = 'COD'";
 		$res = $db->getOne($sql);
-		$count_order_id = $res['count_order_id'];
+		$count_cod = $res['count_cod'];
 
 		$sql = "SELECT cod_money FROM $response_info WHERE order_id = '{$order_id}'";
 		$res = $db->getOne($sql);
 		$cod_money = $res['cod_money'];
 
-		$fee = $count_order_id * $cod_money;
+		$fee = $count_cod * $cod_money;
 
+		// 查出总价
 		$sql = "SELECT sum(order_total_money) as sum FROM $response_list WHERE send_id = '{$send_id}'";
 		$res = $db->getOne($sql);
 		$sum_total_money = $res['sum'];
+
 		$fee = $sum_total_money - $fee + $cod_money;
 
 		$sql = "UPDATE $response_list SET all_total_money = $fee WHERE send_id='{$send_id}'";
 		$res = $db->execute($sql);
 		//	合单并代引
 		if($payment_method == 'COD'){
-			$sql = "UPDATE $response_list SET pay_money = $fee WHERE send_id='{$send_id}'";
+			// 算出非代引总价
+			$sql = "SELECT sum(order_total_money) as normal_sum FROM amazon_response_list WHERE send_id = '{$send_id}' AND payment_method <> 'COD'";
+			$res = $db->getOne($sql);
+
+			$normal_sum = $res['normal_sum'];
+			$fee_pay = $fee - $normal_sum;
+
+			$sql = "UPDATE $response_list SET pay_money = $fee_pay WHERE send_id='{$send_id}'";
 			$res = $db->execute($sql);
 			// 是否已经到发货区
 			if($order_line > 4){
-				$sql = "UPDATE send_table SET due_money = $fee WHERE send_id='{$send_id}'";
+				$sql = "UPDATE send_table SET due_money = $fee_pay WHERE send_id='{$send_id}'";
 				$res = $db->execute($sql);
 			}
 		}else{

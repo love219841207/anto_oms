@@ -2,9 +2,11 @@
 require_once("../header.php");
 require_once("../PHPExcel/PHPExcel.php");//引入PHPExcel
 require_once("../log.php");
+
 $dir = dirname(__FILE__);
 
 set_time_limit(0);
+
 // 更新快递单号
 if(isset($_GET['up_express_order'])){
 	// 更新单号和快递日期到 send_table，并且table_status = 2,express_status = 1
@@ -29,45 +31,12 @@ if(isset($_GET['up_express_order'])){
 				out_num,
 				pause_ch,
 				pause_jp,
-				who_tel,
-				who_post,
-				who_house,
-				who_name,
-				send_day,
-				send_time,
-				is_cod,
-				due_money,
-				express_company,
-				send_method,
-				order_method,
-				need_not_send,
-				who_email,
-				store_name,
-				holder,
-				item_line,
-				import_day,
-				oms_order_express_num,
-				express_day,
-				back_status,
-				table_status,
-				other_1)
-			SELECT
-				station,
-				order_id,
-				send_id,
-				repo_status,
-				oms_id,
-				info_id,
-				pack_id,
-				sku,
-				goods_code,
-				out_num,
-				pause_ch,
-				pause_jp,
-				who_tel,
-				who_post,
-				who_house,
-				who_name,
+				receive_phone,
+				receive_code,
+				receive_house,
+				receive_house1,
+				receive_house2,
+				receive_name,
 				send_day,
 				send_time,
 				is_cod,
@@ -86,6 +55,44 @@ if(isset($_GET['up_express_order'])){
 				back_status,
 				table_status,
 				other_1 
+				)
+			SELECT
+				station,
+				order_id,
+				send_id,
+				repo_status,
+				oms_id,
+				info_id,
+				pack_id,
+				sku,
+				goods_code,
+				out_num,
+				pause_ch,
+				pause_jp,
+				who_tel,
+				who_post,
+				who_house,
+				who_house1,
+				who_house2,
+				who_name,
+				send_day,
+				send_time,
+				is_cod,
+				due_money,
+				express_company,
+				send_method,
+				order_method,
+				need_not_send,
+				who_email,
+				store_name,
+				holder,
+				item_line,
+				import_day,
+				oms_order_express_num,
+				express_day,
+				back_status,
+				table_status,
+				other_1
 			FROM send_table WHERE table_status = 2";
 	$res = $db->execute($sql);
 
@@ -95,6 +102,15 @@ if(isset($_GET['up_express_order'])){
 
 	// 删除 express_status = 1 的订单
 	$sql = "DELETE FROM import_express WHERE express_status = 1";
+	$res = $db->execute($sql);
+
+	// table_status = 2 的订单进行原信息匹配
+		// 亚马逊匹配
+		$sql = "UPDATE history_send history,amazon_response_list list SET history.who_name = list.buyer_name,history.total_money = list.all_total_money WHERE history.order_id = list.order_id AND history.table_status = '2'";
+		$res = $db->execute($sql);
+		// 雅虎匹配
+		// 乐天匹配
+	$sql = "UPDATE history_send SET table_status = '3' WHERE table_status = '2'";
 	$res = $db->execute($sql);
 
 	echo 'ok';

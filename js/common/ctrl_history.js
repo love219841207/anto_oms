@@ -1,6 +1,25 @@
 var app=angular.module('myApp');
 app.controller('historyCtrl', ['$rootScope','$scope','$state','$http','$log','$timeout', function($rootScope,$scope,$state,$http,$log,$timeout){
     $scope.search_field = '';
+// 一键转入售后
+    $scope.onekey_repair = function(){
+        $http.get('/fuck/common/history_order.php', {
+            params:{
+                onekey_repair:'go'
+            }
+        }).success(function(data) {
+            if(data=='ok'){
+                $scope.to_page(1);
+            }else{
+                $log.info(data);
+                $scope.plug_alert('danger','转入失败。','fa fa-ban');
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("退单查询失败");
+        });
+    }
+
 // 退单查询
     $scope.search_back_order = function(){
         $http.get('/fuck/common/history_order.php', {
@@ -15,6 +34,7 @@ app.controller('historyCtrl', ['$rootScope','$scope','$state','$http','$log','$t
             $log.info("退单查询失败");
         });
     }
+
 // 可退单查询 按钮
     $scope.can_back = function(){
         $http.get('/fuck/common/history_order.php', {
