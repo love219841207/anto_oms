@@ -42,7 +42,9 @@
                           ng-model="u_num" 
                           name="u_num" 
                           required   
+                          autofocus
                           maxlength="4" 
+                          ng-enter="save()"
                           ng-maxlength="4"
                           ng-class="{'error':loginForm.u_num.$invalid && loginForm.u_num.$touched}"
                           class="form-control login_input">   
@@ -55,6 +57,7 @@
                           placeholder="密码"
                           ng-model="u_pwd"
                           name="u_pwd" 
+                          ng-enter="save()"
                           required
                           ng-class="{'error':loginForm.u_pwd.$invalid && loginForm.u_pwd.$touched}"
                           class="form-control login_input"></div>

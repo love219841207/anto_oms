@@ -1,23 +1,24 @@
 <!--侧边栏-->
-<div id="side_box" ng-class="{'side_bar_1':side_bar_open,'side_bar_2':!side_bar_open}">
+<div id="side_hover_info" class="slide-left" ng-show="side_hover_info">{{side_info_txt}}</div>
+<div id="side_box" ng-mouseleave="leave_info()" ng-class="{'side_bar_1':side_bar_open,'side_bar_2':!side_bar_open}">
 	<div id="side_bar" ng-class="{'side_bar_1':side_bar_open,'side_bar_2':!side_bar_open}">
 		<uib-accordion close-others="oneAtATime" >
 			<!-- 亚马逊平台 -->
-			<div ng-show="now_station=='Amazon' && now_store_bar!=''" uib-accordion-group is-open="status.isopen1" ng-class="{'open_down':status.isopen1}" class="panel-default hover no_store">
+			<div ng-mouseenter="side_info(now_store_bar)" ng-show="now_station=='Amazon' && now_store_bar!=''" uib-accordion-group is-open="status.isopen1" ng-class="{'open_down':status.isopen1}" class="panel-default hover no_store">
 				<uib-accordion-heading>
 				<i class="fa fa-fw fa-amazon"></i>
 				<span class="am-fade" ng-show="side_bar"> {{now_store_bar}}</span>
 				<i class="pull-right fa fa-angle-right weight" ng-class="{'scroll_90': status.isopen1,'scroll_0': !status.isopen1}"></i>
 	     	 	</uib-accordion-heading>
-				<div ui-sref="site.amazon_order" ui-sref-active="active" class="list-group-item">
+				<div ng-mouseenter="side_info('订单操作')" ui-sref="site.amazon_order" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-file-text-o ml5"></i>
 					<span class="am-fade" ng-show="side_bar"> 订单操作</span>
 				</div>
-				<div ui-sref="site.amazon_syn_express" ui-sref-active="active" class="list-group-item">
+				<div ng-mouseenter="side_info('上传快递单')" ui-sref="site.amazon_syn_express" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-cloud-upload ml5"></i>
 					<span class="am-fade" ng-show="side_bar"> 上传快递单</span>
 				</div>
-				<div ui-sref="site.mail_tpl" ui-sref-active="active" class="list-group-item">
+				<div ng-mouseenter="side_info('邮件模板')" ui-sref="site.mail_tpl" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-envelope-o ml5"></i>
 					<span class="am-fade" ng-show="side_bar"> 邮件模板</span>
 				</div>
@@ -53,47 +54,47 @@
 				</div>
 			</div>
 			<!-- 发货模块 -->
-			<div ng-hide="ucan_send=='0'" uib-accordion-group is-open="status.isopen4" ng-class="{'open_down':status.isopen4}" class="panel-default hover">
+			<div ng-mouseenter="side_info('发货操作')" ng-hide="ucan_send=='0'" uib-accordion-group is-open="status.isopen4" ng-class="{'open_down':status.isopen4}" class="panel-default hover">
 				<uib-accordion-heading>
 	        		<i class="fa fa-fw fa-send"></i>
 	        		<span class="am-fade" ng-show="side_bar"> 发货操作</span><i class="pull-right fa fa-angle-right weight" ng-class="{'scroll_90': status.isopen4,'scroll_0': !status.isopen4}"></i>
 	     	 	</uib-accordion-heading>
-	     	 	<div ui-sref="site.pause_orders" ui-sref-active="active" class="list-group-item">
+	     	 	<div id="sh1" ng-mouseenter="side_info('已冻结')" ui-sref="site.pause_orders" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-snowflake-o ml5"></i>
 					<span class="am-fade" ng-show="side_bar"> 已冻结</span>
 				</div>
-	     	 	<div ui-sref="site.ready_send" ui-sref-active="active" class="list-group-item">
+	     	 	<div ng-mouseenter="side_info('待出单')" ui-sref="site.ready_send" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-file-text-o ml5"></i>
 					<span class="am-fade" ng-show="side_bar"> 待出单</span>
 				</div>
-				<div ui-sref="site.make_send" ui-sref-active="active" class="list-group-item">
+				<div ng-mouseenter="side_info('佐川发货单')" ui-sref="site.make_send" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-hand-o-left ml5"></i>
 					<span class="am-fade" ng-show="side_bar"> 佐川发货单</span>
 				</div>
-				<div ui-sref="site.make_send2" ui-sref-active="active" class="list-group-item">
+				<div ng-mouseenter="side_info('黑猫发货单')" ui-sref="site.make_send2" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-github-alt ml5"></i>
 					<span class="am-fade" ng-show="side_bar"> 黑猫发货单</span>
 				</div>
-				<div ui-sref="site.refresh_express" ui-sref-active="active" class="list-group-item">
+				<div ng-mouseenter="side_info('更新快递单')" ui-sref="site.refresh_express" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-refresh ml5"></i>
 					<span class="am-fade" ng-show="side_bar"> 更新快递单</span>
 				</div>
-				<div ui-sref="site.history" ui-sref-active="active" class="list-group-item">
+				<div ng-mouseenter="side_info('已出单+转售后')" ui-sref="site.history" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-plane ml5"></i>
 					<span class="am-fade" ng-show="side_bar"> 已出单+转售后</span>
 				</div>
-				<div ui-sref="site.back" ui-sref-active="active" class="list-group-item">
+				<div ng-mouseenter="side_info('退单')" ui-sref="site.back" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-long-arrow-left ml5"></i>
 					<span class="am-fade" ng-show="side_bar"> 退单</span>
 				</div>
 			</div>
 			<!-- 表格统计 -->
-			<div uib-accordion-group is-open="status.isopen6" ng-class="{'open_down':status.isopen6}" class="panel-default hover">
+			<div ng-mouseenter="side_info('表格统计')" uib-accordion-group is-open="status.isopen6" ng-class="{'open_down':status.isopen6}" class="panel-default hover">
 				<uib-accordion-heading>
 	        		<i class="fa fa-fw fa-bar-chart"></i>
 	        		<span class="am-fade" ng-show="side_bar"> 表格统计</span><i class="pull-right fa fa-angle-right weight" ng-class="{'scroll_90': status.isopen6,'scroll_0': !status.isopen6}"></i>
 	     	 	</uib-accordion-heading>
-				<div ui-sref="site.pause_table" ui-sref-active="active" class="list-group-item">
+				<div ng-mouseenter="side_info('冻结表')" ui-sref="site.pause_table" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-snowflake-o ml5"></i>
 					<span class="am-fade" ng-show="side_bar"> 冻结表</span>
 				</div>
@@ -101,57 +102,57 @@
 					<i class="fa fa-fw fa-sort-numeric-asc ml5"></i>
 					<span class="am-fade" ng-show="side_bar"> 销售额统计</span>
 				</div> -->
-				<div ui-sref="site.pause_table" ui-sref-active="active" class="list-group-item">
+				<div ng-mouseenter="side_info('出库统计')" ui-sref="site.pause_table" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-snowflake-o ml5"></i>
 					<span class="am-fade" ng-show="side_bar"> 出库统计</span>
 				</div>
 			</div>
 			<!-- 个人设置 -->
-			<div uib-accordion-group is-open="status.isopen5" ng-class="{'open_down':status.isopen5}" class="panel-default hover">
+			<div ng-mouseenter="side_info('个人设置')" uib-accordion-group is-open="status.isopen5" ng-class="{'open_down':status.isopen5}" class="panel-default hover">
 				<uib-accordion-heading>
 	        		<i class="fa fa-fw fa-user"></i>
 	        		<span class="am-fade" ng-show="side_bar"> 个人设置</span><i class="pull-right fa fa-angle-right weight" ng-class="{'scroll_90': status.isopen5,'scroll_0': !status.isopen5}"></i>
 	     	 	</uib-accordion-heading>
-				<div ui-sref="site.page_size" ui-sref-active="active" class="list-group-item">
+				<div ng-mouseenter="side_info('每页条数')" ui-sref="site.page_size" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-sort-numeric-asc ml5"></i>
 					<span class="am-fade" ng-show="side_bar"> 每页条数</span>
 				</div>
-				<div ui-sref="site.change_pwd" ui-sref-active="active" class="list-group-item">
+				<div ng-mouseenter="side_info('密码修改')" ui-sref="site.change_pwd" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-unlock-alt ml5"></i>
 					<span class="am-fade" ng-show="side_bar"> 密码修改</span>
 				</div>
-				<div ui-sref="site.my_logs" ui-sref-active="active" class="list-group-item">
+				<div ng-mouseenter="side_info('我的日志')" ui-sref="site.my_logs" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-file-code-o ml5"></i>
 					<span class="am-fade" ng-show="side_bar"> 我的日志</span>
 				</div>
 			</div>
 			<!-- 系统设置 -->
-			<div uib-accordion-group is-open="status.isopen7" ng-class="{'open_down':status.isopen7}" class="panel-default hover" ng-show="is_admin">
+			<div ng-mouseenter="side_info('系统设置')" uib-accordion-group is-open="status.isopen7" ng-class="{'open_down':status.isopen7}" class="panel-default hover" ng-show="is_admin">
 				<uib-accordion-heading>
 	        		<i class="fa fa-fw fa-cog"></i>
 	        		<span class="am-fade" ng-show="side_bar"> 系统设置</span><i class="pull-right fa fa-angle-right weight" ng-class="{'scroll_90': status.isopen7,'scroll_0': !status.isopen7}"></i>
 	     	 	</uib-accordion-heading>
-	     	 	<div ui-sref="site.users_manage" ui-sref-active="active" class="list-group-item">
+	     	 	<div ng-mouseenter="side_info('员工管理')" ui-sref="site.users_manage" ui-sref-active="active" class="list-group-item">
 	     	 		<i class="fa fa-fw fa-users ml5"></i>
 					<span class="am-fade" ng-show="side_bar"> 员工管理</span>
 				</div>
-				<div ui-sref="site.store_manage" ui-sref-active="active" class="list-group-item">
+				<div ng-mouseenter="side_info('店铺管理')" ui-sref="site.store_manage" ui-sref-active="active" class="list-group-item">
 	     	 		<i class="fa fa-fw fa-cube ml5"></i>
 					<span class="am-fade" ng-show="side_bar"> 店铺管理</span>
 				</div>
-				<div ui-sref="site.yf_code" ui-sref-active="active" class="list-group-item">
+				<div ng-mouseenter="side_info('运费代码')" ui-sref="site.yf_code" ui-sref-active="active" class="list-group-item">
 	     	 		<i class="fa fa-fw fa-jpy ml5"></i>
 					<span class="am-fade" ng-show="side_bar"> 运费代码</span>
 				</div>
-				<div ui-sref="site.sys_post" ui-sref-active="active" class="list-group-item">
+				<div ng-mouseenter="side_info('邮编更新')" ui-sref="site.sys_post" ui-sref-active="active" class="list-group-item">
 	     	 		<i class="fa fa-fw fa-asterisk ml5"></i>
 					<span class="am-fade" ng-show="side_bar"> 邮编更新</span>
 				</div>
-				<div ui-sref="site.sys_logs" ui-sref-active="active" class="list-group-item">
+				<div ng-mouseenter="side_info('系统日志')" ui-sref="site.sys_logs" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-file-code-o ml5"></i>
 					<span class="am-fade" ng-show="side_bar"> 系统日志</span>
 				</div>
-				<div ui-sref="site.sys_version" ui-sref-active="active" class="list-group-item">
+				<div ng-mouseenter="side_info('系统版本')" ui-sref="site.sys_version" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-trademark ml5"></i>
 					<span class="am-fade" ng-show="side_bar"> 系统版本</span>
 				</div>

@@ -103,6 +103,29 @@ app.controller('siteCtrl', ['$rootScope','$scope','$state','$stateParams','$http
         });
     }
 
+    // 侧栏提示
+    $scope.side_info = function(name){
+        $scope.side_info_txt = name;
+        $scope.side_hover_info = 1;
+        var xx = getMousePos().x;
+        var yy = getMousePos().y;
+        var num = parseInt((yy-50)/38);
+        final_yy = num * 38+51;
+        
+        var dom = document.querySelector('#side_hover_info');
+        angular.element(dom).css({'top':final_yy});
+    }
+
+    $scope.leave_info = function(){
+        $scope.side_hover_info = 0;
+    }
+
+    // 获取鼠标位置
+    function getMousePos(event) {             
+        var e = event || window.event;      
+        return {'x':e.clientX,'y':e.clientY};
+    }
+
 }])
 
 app.controller('topCtrl', ['$rootScope','$scope','$state','$stateParams','$http','$log','$timeout', function($rootScope,$scope,$state,$stateParams,$http,$log,$timeout){

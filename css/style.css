@@ -254,7 +254,7 @@ li{
 	height: 120px;
 	left:50%;
 	top:30%;
-	margin-left: -200px;
+	margin-left: -180px;
 }
 .spinner svg {
       width: 80% !important;
@@ -499,17 +499,17 @@ li{
     animation-timing-function: ease-in-out;
 }
 .to_200{
-	padding-left: 200px;
+	padding-left: 180px;
 	margin-left:auto;
 	margin-right:auto;
 }
 @keyframes container-one{
     0% {padding-left: 60px; }
-    100% {padding-left: 200px;}
+    100% {padding-left: 180px;}
 }
 @-webkit-keyframes container-one{
 	0% {padding-left: 60px; }
-    100% {padding-left: 200px;}
+    100% {padding-left: 180px;}
 } 
 .container-show2{
 	animation-name: container-two;
@@ -523,11 +523,11 @@ li{
 }
 @keyframes container-two{
     100% {padding-left: 60px; }
-    0% {padding-left: 200px;}
+    0% {padding-left: 180px;}
 }
 @-webkit-keyframes container-two{
 	100% {padding-left: 60px; }
-    0% {padding-left: 200px;}
+    0% {padding-left: 180px;}
 } 
 .tools_bar{
 	background: #5daf9d;}
@@ -567,6 +567,18 @@ li{
 	background: #000;
 }
 /* sidebar */
+#side_hover_info{
+	height: 38px;
+    line-height: 36px;
+    padding: 0 10px 0 10px;
+    position: fixed;
+    color: #2a2a2a;
+    left: 58px;
+    background: #fcf8e3;
+    border: 1px solid #a5a5a5;
+    border-radius: 0 4px 4px 0;
+    z-index: 3;
+}
 
 #side_box{
 	background: url('/images/bg1.jpg') no-repeat center center fixed;background-size:cover;
@@ -585,7 +597,7 @@ li{
     border-left: none;
 }
 .side_bar_1{
-	width:200px;
+	width:180px;
 	animation-name: side-bar-one;
     animation-duration: .5s;
     animation-timing-function: ease-in-out;
@@ -598,18 +610,18 @@ li{
 }
 @keyframes side-bar-one{
     0% {width: 60px;}
-    100% {width: 200px;}
+    100% {width: 180px;}
 }
 @-webkit-keyframes side-bar-one{
 	0% {width: 60px; }
-    100% {width: 200px;}
+    100% {width: 180px;}
 } 
 @keyframes side-bar-two{
-    0% {width: 200px; }
+    0% {width: 180px; }
     100% {width: 60px;}
 }
 @-webkit-keyframes side-bar-two{
-	0% {width: 200px; }
+	0% {width: 180px; }
     100% {width: 60px;}
 } 
 
@@ -626,15 +638,16 @@ li{
     overflow-y:auto;
     overflow-x: hidden;
 }
+
 #side_bar .list-group-item{
-	font-size: 13px;
+	font-size: 12px;
 	padding-left: 16px;
 	background: #FFF;
 	border:none;
 	margin-bottom: 1px;
 	margin-top:0px;
 	border-radius: 0 !important;
-	height: 40px;
+	height: 37px;
 }
 #side_bar .list-group-item:last-child{
 	margin-bottom: 0px;
@@ -680,7 +693,7 @@ li{
 }
 #side_bar a{
 	color:#439885;
-	font-size: 14px;
+	font-size: 13px;
 	text-decoration: none;
 }
 #side_bar .text-muted{
