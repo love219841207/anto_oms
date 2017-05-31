@@ -110,7 +110,7 @@ app.controller('siteCtrl', ['$rootScope','$scope','$state','$stateParams','$http
         var xx = getMousePos().x;
         var yy = getMousePos().y;
         var num = parseInt((yy-50)/38);
-        final_yy = num * 38+51;
+        final_yy = num * 38+54;
         
         var dom = document.querySelector('#side_hover_info');
         angular.element(dom).css({'top':final_yy});
