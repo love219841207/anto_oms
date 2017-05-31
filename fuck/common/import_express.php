@@ -106,7 +106,17 @@ if(isset($_GET['up_express_order'])){
 
 	// table_status = 2 的订单进行原信息匹配
 		// 亚马逊匹配
-		$sql = "UPDATE history_send history,amazon_response_list list SET history.who_name = list.buyer_name,history.total_money = list.all_total_money WHERE history.order_id = list.order_id AND history.table_status = '2'";
+		$sql = "UPDATE history_send history,amazon_response_list list SET history.buy_method = list.payment_method,history.who_name = list.buyer_name,history.total_money = list.all_total_money,history.buy_money = list.all_total_money WHERE history.order_id = list.order_id AND history.table_status = '2'";
+		$res = $db->execute($sql);
+
+		// 亚马逊匹配 bill
+		$sql = "UPDATE history_send history,amazon_response_info info SET history.bill = info.cod_money WHERE history.info_id = info.id AND history.table_status = '2'";
+		$res = $db->execute($sql);
+		
+		// 更新亚马逊 buy_method
+		$sql = "UPDATE history_send SET buy_method = '商品代引' WHERE station = 'amazon' AND buy_method = 'COD' AND table_status = '2'";
+		$res = $db->execute($sql);
+		$sql = "UPDATE history_send SET buy_method = 'Amazon決済（前払い）' WHERE station = 'amazon' AND is_cod <> 'COD' AND table_status = '2'";
 		$res = $db->execute($sql);
 		// 雅虎匹配
 		// 乐天匹配

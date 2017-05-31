@@ -555,7 +555,7 @@ li{
 	position: fixed;
 	top:40px;
 	background: rgba(219, 230, 225, 0.71);
-	z-index: 100;
+	z-index: 3;
 	width:100%;
 	padding:10px 0;
 	border-bottom:1px solid #dedede;
@@ -577,7 +577,7 @@ li{
     background: #36a38b;
     border: 1px solid #36a38b;
     border-radius: 3px;
-    z-index: 3;
+    z-index: 4;
     font-size: 14px;
     font-weight: 200;
 }

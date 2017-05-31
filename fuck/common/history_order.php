@@ -33,7 +33,9 @@ if(isset($_GET['onekey_repair'])){
 			tax,
 			buy_money,
 			buy_method,
-			to_method 
+			send_method,
+			oms_order_express_num,
+			express_day
 		 FROM history_send WHERE table_status = '3' GROUP BY receive_phone";
 	$res = $db->getAll($sql);
 	foreach ($res as $val) {
@@ -41,18 +43,93 @@ if(isset($_GET['onekey_repair'])){
 		$order_id = $val['order_id'];
 		$goods_id = $val['goods_id'];
 		$store_name = $val['store_name'];
-		$who_email = $val['who_email'];
-		$who_email = $val['who_email'];
-		$who_email = $val['who_email'];
-		$who_email = $val['who_email'];
-		$who_email = $val['who_email'];
-		$who_email = $val['who_email'];
-		$who_email = $val['who_email'];
-		$who_email = $val['who_email'];
-		$who_email = $val['who_email'];
-		$who_email = $val['who_email'];
-		$sql = "INSERT INTO";
-		$res = $shdb->getOne($sql);
+		$who_id = $val['who_id'];
+		$who_phone = $val['who_phone'];
+		$who_code = $val['who_code'];
+		$who_house = $val['who_house'];
+		$who_house1 = $val['who_house1'];
+		$who_house2 = $val['who_house2'];
+		$who_name = $val['who_name'];
+		$goods = $val['goods'];
+		$receive_phone = $val['receive_phone'];
+		$receive_code = $val['receive_code'];
+		$receive_house = $val['receive_house'];
+		$receive_house1 = $val['receive_house1'];
+		$receive_house2 = $val['receive_house2'];
+		$receive_name = $val['receive_name'];
+		$total_money = $val['total_money'];
+		$ems_money = $val['ems_money'];
+		$bill = $val['bill'];
+		$point = $val['point'];
+		$cheap = $val['cheap'];
+		$tax = $val['tax'];
+		$buy_money = $val['buy_money'];
+		$buy_method = $val['buy_method'];
+		$to_method = $val['send_method'];
+		$send_num = $val['oms_order_express_num'];
+		$send_day = $val['express_day'];
+		$sql = "INSERT INTO repair_list (
+			email,
+			order_id,
+			good_id,
+			store,
+			who_id,
+			who_phone,
+			who_code,
+			who_house,
+			who_house1,
+			who_house2,
+			who_name,
+			goods,
+			receive_phone,
+			receive_code,
+			receive_house,
+			receive_house1,
+			receive_house2,
+			receive_name,
+			total_money,
+			ems_money,
+			bill,
+			point,
+			cheap,
+			tax,
+			buy_money,
+			buy_method,
+			to_method,
+			send_num,
+			send_day
+		)VALUES(
+			'{$who_email}',
+			'{$order_id}',
+			'{$goods_id}',
+			'{$store_name}',
+			'{$who_id}',
+			'{$who_phone}',
+			'{$who_code}',
+			'{$who_house}',
+			'{$who_house1}',
+			'{$who_house2}',
+			'{$who_name}',
+			'{$goods}',
+			'{$receive_phone}',
+			'{$receive_code}',
+			'{$receive_house}',
+			'{$receive_house1}',
+			'{$receive_house2}',
+			'{$receive_name}',
+			'{$total_money}',
+			'{$ems_money}',
+			'{$bill}',
+			'{$point}',
+			'{$cheap}',
+			'{$tax}',
+			'{$buy_money}',
+			'{$buy_method}',
+			'{$to_method}',
+			'{$send_num}',
+			'{$send_day}'
+		)";
+		$res = $shdb->execute($sql);
 	}
 	
 	// 更新 table_status 3 为 4
