@@ -360,6 +360,24 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
         })        
+        //出库统计表
+        .state('site.out_table',{
+            url: '/out_table',
+            views:{
+                'show@site':{
+                    templateUrl: 'tpls/table/out_table.html',
+                    controller: function($scope){
+                        $scope.status.isopen1 = false;
+                        $scope.status.isopen2 = false;
+                        $scope.status.isopen3 = false;
+                        $scope.status.isopen4 = false;
+                        $scope.status.isopen5 = false;
+                        $scope.status.isopen6 = true;
+                        $scope.status.isopen7 = false;
+                    }
+                }
+            }
+        })        
 
     //账号管理
         //PageSize

@@ -35,4 +35,35 @@ app.controller('tableCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             $log.info("error:下载冻结表失败。");
         });
 	}
+
+    // 单品统计
+    $scope.oue_table = function(){
+        $scope.table_type;
+        $scope.s_date;
+        $scope.e_date;
+        $scope.goods_code;
+    }
+
+    // 商品代码检测
+    $scope.tip_goods_code = function(){
+        
+        $http.get('/fuck/common/check_order.php', {
+            params:{
+                tip_goods_code:$scope.goods_code
+            }
+        }).success(function(data) {
+            $scope.goods_codes = data;
+            // $log.info(data)
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:商品代码检测失败。");
+        });
+    }
+
+    // 选中商品代码
+    $scope.click_code = function(e){
+        $scope.goods_code = e;
+        $scope.goods_codes = false;
+    }
+
 }])

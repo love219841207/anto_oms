@@ -48,6 +48,14 @@ if(isset($_GET['check_goods_code'])){
     }
 }
 
+//商品代码提示
+if(isset($_GET['tip_goods_code'])){
+	$tip_goods_code = addslashes($_GET['tip_goods_code']);
+	$sql = "SELECT goods_code FROM goods_type WHERE goods_code LIKE '%{$tip_goods_code}%' limit 10";
+    $res = $rdb->getAll($sql);
+    echo json_encode($res);
+}
+
 // AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 总体验证开始 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 if(isset($_GET['check_all_field'])){
 	$store = $_GET['check_all_field'];
