@@ -191,7 +191,7 @@ if(isset($_POST['add_send_item'])){
 			'{$store}',
 			'{$order_id}',
 			'{$u_name}',
-			concat('{$u_name}','添加'),
+			'',
 			'1',
 			'1',
 			'{$add_yfcode}',

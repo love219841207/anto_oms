@@ -151,6 +151,9 @@ app.controller('topCtrl', ['$rootScope','$scope','$state','$stateParams','$http'
             
         }).error(function(data) {
             alert("连接库存系统失败。");
+            $timeout(function(){
+                $scope.ping_repo();
+            },1000);
         });
     }
     $scope.ping_repo();
@@ -174,6 +177,9 @@ app.controller('topCtrl', ['$rootScope','$scope','$state','$stateParams','$http'
             
         }).error(function(data) {
             alert("连接售后系统失败。");
+            $timeout(function(){
+                $scope.ping_repair();
+            },1000);
         });
     }
     $scope.ping_repair();

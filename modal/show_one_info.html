@@ -77,7 +77,10 @@
                 class="fa fa-edit fa-fw pointer"
                 ng-hide="item.order_line>3"
                 ></i>
-                <i class="fa fa-lightbulb-o fa-fw pointer blue" ng-hide="item.order_line>3" ng-click="read_oms_post(item.post_code)"></i></td>
+                <i class="fa fa-lightbulb-o fa-fw pointer blue" ng-hide="item.order_line>3" ng-click="read_oms_post(item.post_code)"></i>
+                <input ng-show="aa_post_addr" type="text" id="new_post_code" style="width:80px;padding-left: 4px;" placeholder=".. 新的邮编" value="{{item.post_code}}">
+                <i ng-show="aa_post_addr" class="fa fa-lightbulb-o fa-fw pointer blue" ng-click="read_oms_post2(item.post_code)"></i>
+            </td>
           </tr>
           <tr class="blue warning" ng-repeat="item in now_post_name track by $index" ng-show="now_post_name">
             <td>参考地域</td>
@@ -85,14 +88,11 @@
           </tr>
           <tr>
             <td class="s_gray">地址</td>
-            <td class="s_gray" ng-class="{'danger red':item.post_ok==2}">{{item.address}}</td>
-          </tr>
-          <tr ng-show="aa_post_addr">
-            <td><input type="text" id="new_post_code" style="width:80px;padding-left: 4px;" placeholder=".. 新的邮编">
-                <i class="fa fa-lightbulb-o fa-fw pointer blue" ng-hide="item.order_line>3" ng-click="read_oms_post2(item.post_code)"></i>
+            <td class="s_gray" ng-class="{'danger red':item.post_ok==2}">{{item.address}}
+            <input ng-show="aa_post_addr" class="form-control" type="text" id="new_address" style="width:400px;padding-left: 4px;" placeholder=".. 新的地址" value="{{item.address}}">
             </td>
-            <td><input type="text" id="new_address" style="width:400px;padding-left: 4px;" placeholder=".. 新的地址"></td>
           </tr>
+
           <tr ng-show="aa_post_addr">
             <td colspan="2"><div class="btn btn-warning btn-xs f14 pull-right" ng-click="change_post_addr(item.order_id)">&nbsp;&nbsp;&nbsp;&nbsp;修&nbsp;&nbsp;&nbsp;正&nbsp;&nbsp;&nbsp;</div></td>
           </tr>

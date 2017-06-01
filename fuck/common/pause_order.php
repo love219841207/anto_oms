@@ -191,7 +191,7 @@ if(isset($_GET['new_pause_order'])){
         '{$store}',
         '{$order_id}',
         '{$u_name}',
-        concat('{$u_name}','添加'),
+        '',
         '1',
         '1',
         '{$new_yfcode}',

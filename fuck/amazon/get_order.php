@@ -129,7 +129,8 @@ if(isset($_GET['list_orders'])){
 			@$address0 = $arr2['Order'][$i]['ShippingAddress']['StateOrRegion'];
 			@$address1 = $arr2['Order'][$i]['ShippingAddress']['AddressLine1'];
 			@$address2 = $arr2['Order'][$i]['ShippingAddress']['AddressLine2'];
-			@$address = $address0.$address1.$address2;
+			@$address3 = $arr2['Order'][$i]['ShippingAddress']['AddressLine3'];
+			@$address = $address0.$address1.$address2.$address3;
 
 			//sql
 			$sql = "INSERT INTO amazon_response_list(store,syn_day,latest_ship_date,order_type,purchase_date,payment_method,pay_money,buyer_email,order_id,buyer_name,order_total_currency,order_total_money,phone,receive_name,country,post_code,address,send_id,order_line,express_company,send_method) VALUES ('{$store}','{$syn_day}','{$latest_ship_date}','{$order_type}','{$purchase_date}','{$payment_method}','{$pay_money}','{$buyer_email}','{$order_id}','{$buyer_name}','{$order_total_currency}','{$order_total_money}','{$phone}','{$receive_name}','{$country}','{$post_code}','{$address}','ready','0','','')";

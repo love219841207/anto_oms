@@ -3,6 +3,34 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log', function($scope,$
     //调用下拉
     $scope.plug_dropdown();
 
+    //发货通知信开关
+    $scope.toggle_send = function(station,store){
+        $http.get('/fuck/systems/store_manage.php', {params:{toggle_send:store,station:station}
+        }).success(function(data) {
+            if(data == 'ok'){
+                $scope.over_send(station,store);
+            }else{
+                $scope.plug_alert('danger','操作失败！','fa fa-ban');
+                $log.info(data);
+            }
+        }).error(function(data) {
+            alert("发货通知信开关失败。");
+            $log.info(data);
+        });
+    }
+
+    // 获取发货通知信
+    $scope.over_send = function(station,store){
+        $http.get('/fuck/systems/store_manage.php', {params:{over_send:store,station:station}
+        }).success(function(data) {
+            $scope.toggle_btn = data;
+        }).error(function(data) {
+            alert("获取发货通知信失败。");
+            $log.info(data);
+        });
+    }
+    $scope.over_send($scope.now_station,$scope.now_store_bar)
+
     //查询所有店铺
     $scope.get_store = function(){
         $http.get('/fuck/systems/store_manage.php', {params:{get_store:'all'}

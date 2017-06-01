@@ -1,1 +1,41 @@
-amazon_syn_express.html
+<div class="container-fluid mt20" ng-controller="amazonCtrl">
+	<div class="row">
+		<div class="col-lg-10">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<i class="fa fa-fw fa-cloud-upload"></i>上传快递单
+				</div>
+				<div class="panel-body">
+					<div class="btn-group">
+						<div class="btn btn-default btn-sm blue" ng-click="get_express_list()"><i class="fa fa-eye fa-fw"></i> 查看</div>
+						<div class="btn btn-default btn-sm yellow" ng-click="send_express()"><i class="fa fa-fw fa-cloud-upload"></i> 上传</div>
+						<div class="btn btn-default btn-sm green" ng-click="down_express_csv()"><i class="fa fa-fw fa-table"></i> CSV</div>
+					</div>
+					<table class="mt10 f12 table table-condensed table-bordered table-hover table-striped">
+						<tr class="info blue">
+							<td class="tagc">序 列</td>
+							<td>亚马逊订单号</td>
+							<td>快递商家</td>
+							<td>快递方式</td>
+							<td>快递单号</td>
+							<td>是否带引</td>
+						</tr>
+						<tr class="blue" ng-repeat="item in express_list track by $index">
+							<td class="tagc">{{$index+1}}</td>
+							<td>{{item.order_id}}</td>
+							<td>{{item.express_name}}</td>
+							<td>{{item.express_method}}</td>
+							<td>{{item.express_num}}</td>
+							<td ng-class="{'red':item.is_money=='DirectPayment'}">{{item.is_money}}</td>
+						</tr>
+					</table>
+				</div>
+				<div class="panel-footer">
+					点击【查看】列出待发货的订单。<br>
+					点击【发货】进行亚马逊单号上传、发货操作。
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="end_height"></div>
+</div>

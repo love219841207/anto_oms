@@ -22,12 +22,14 @@ app.controller('historyCtrl', ['$rootScope','$scope','$state','$http','$log','$t
 
 // 退单查询
     $scope.search_back_order = function(){
+        $scope.loading_shadow('open'); //打开loading
         $http.get('/fuck/common/history_order.php', {
             params:{
                 search_back_order:$scope.search_key
             }
         }).success(function(data) {
             $scope.send_table = data;
+            $timeout(function(){$scope.loading_shadow('close');},300); //关闭loading
             $scope.can_back();  // 查询是否可退单
         }).error(function(data) {
             alert("系统错误，请联系管理员。");

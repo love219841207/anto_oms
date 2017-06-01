@@ -1,5 +1,22 @@
 <?php
 require_once("../header.php");
+// 开关发货通知信
+if(isset($_GET['toggle_send'])){
+	$conf = 'conf_'.$_GET['station'];
+	$store_name = $_GET['toggle_send'];
+	$sql = "UPDATE $conf SET mail_over_send = (CASE mail_over_send WHEN  '0' THEN '1' WHEN '1' THEN '0' END) WHERE store_name = '{$store_name}'";
+    $res = $db->execute($sql);
+    echo 'ok';
+}
+
+// 获取发货通知信
+if(isset($_GET['over_send'])){
+	$conf = 'conf_'.$_GET['station'];
+	$store_name = $_GET['over_send'];
+	$sql = "SELECT mail_over_send FROM $conf WHERE store_name = '{$store_name}'";
+    $res = $db->getOne($sql);
+    echo $res['mail_over_send'];
+}
 
 //查询店铺
 if(isset($_GET['get_store'])){
