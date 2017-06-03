@@ -14,7 +14,7 @@ if(isset($_GET['up_express_order'])){
 	$res = $db->execute($sql);
 
 	// 更新单号和快递日期到list表 三个平台次更新 order_line = 6
-	$sql = "UPDATE amazon_response_list list,send_table send SET list.oms_order_express_num = send.oms_order_express_num,list.express_day = send.express_day,list.order_line = '6' WHERE list.order_id = send.order_id AND send.table_status = '2'";
+	$sql = "UPDATE amazon_response_list list,send_table send SET list.express_company = send.express_company,list.send_method = send.send_method,list.oms_order_express_num = send.oms_order_express_num,list.express_day = send.express_day,list.order_line = '6' WHERE list.order_id = send.order_id AND send.table_status = '2'";
 	$res = $db->execute($sql);
 
 	// 移动 table_status = 2 到已出单
@@ -114,7 +114,7 @@ if(isset($_GET['up_express_order'])){
 		$res = $db->execute($sql);
 		
 		// 更新亚马逊 buy_method
-		$sql = "UPDATE history_send SET buy_method = '商品代引' WHERE station = 'amazon' AND buy_method = 'COD' AND table_status = '2'";
+		$sql = "UPDATE history_send SET buy_method = 'DirectPayment' WHERE station = 'amazon' AND buy_method = 'COD' AND table_status = '2'";
 		$res = $db->execute($sql);
 		$sql = "UPDATE history_send SET buy_method = 'Amazon決済（前払い）' WHERE station = 'amazon' AND is_cod <> 'COD' AND table_status = '2'";
 		$res = $db->execute($sql);

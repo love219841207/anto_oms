@@ -1,6 +1,6 @@
 var app=angular.module('myApp');
 app.controller('sendCtrl', ['$rootScope','$scope','$state','$http','$log','$timeout','$compile', function($rootScope,$scope,$state,$http,$log,$timeout,$compile){
-    //赋入库日期
+    //赋日期
     var myDate = new Date();
     var today = myDate.toLocaleDateString().replace("/","-");
     today = today.replace("/","-");

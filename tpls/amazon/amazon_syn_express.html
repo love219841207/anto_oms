@@ -1,4 +1,4 @@
-<div class="container-fluid mt20" ng-controller="amazonCtrl">
+<div class="container-fluid mt20" ng-controller="amazonCtrl" ng-show="now_store_bar"> 
 	<div class="row">
 		<div class="col-lg-10">
 			<div class="panel panel-primary">
@@ -7,32 +7,43 @@
 				</div>
 				<div class="panel-body">
 					<div class="btn-group">
-						<div class="btn btn-default btn-sm blue" ng-click="get_express_list()"><i class="fa fa-eye fa-fw"></i> 查看</div>
-						<div class="btn btn-default btn-sm yellow" ng-click="send_express()"><i class="fa fa-fw fa-cloud-upload"></i> 上传</div>
-						<div class="btn btn-default btn-sm green" ng-click="down_express_csv()"><i class="fa fa-fw fa-table"></i> CSV</div>
+						<button class="btn btn-default btn-sm">
+							<span>
+								<input placeholder="开始日期" class="date_icon blue" readonly="readonly" type="text" name="s_date" ng-flat-datepicker datepicker-config="datepickerConfig" ng-model="s_date"> - <input placeholder="结束日期" class="date_icon blue" readonly="readonly" type="text" name="e_date" ng-flat-datepicker datepicker-config="datepickerConfig" ng-model="e_date">
+							</span>
+						</button>
+						
+						<button class="btn btn-default blue" ng-click="get_express_list()"><i class="fa fa-eye fa-fw"></i> 查看</button>
+						<button ng-disabled="!express_list" class="btn btn-default yellow" ng-click="amz_send_express()"><i class="fa fa-fw fa-cloud-upload"></i> 上传</button>
+						<button ng-disabled="!express_list" class="btn btn-default green" ng-click="down_express_xlsx()"><i class="fa fa-fw fa-table"></i> .xlsx</button>
 					</div>
-					<table class="mt10 f12 table table-condensed table-bordered table-hover table-striped">
+					<table class="mt20 f12 table table-condensed table-bordered table-hover table-striped">
 						<tr class="info blue">
 							<td class="tagc">序 列</td>
+							<td class="tagc">店 铺</td>
 							<td>亚马逊订单号</td>
-							<td>快递商家</td>
-							<td>快递方式</td>
+							<td>快递公司</td>
+							<td>配送方式</td>
 							<td>快递单号</td>
-							<td>是否带引</td>
+							<td>支付方式</td>
+							<td>快递日期</td>
 						</tr>
 						<tr class="blue" ng-repeat="item in express_list track by $index">
 							<td class="tagc">{{$index+1}}</td>
-							<td>{{item.order_id}}</td>
-							<td>{{item.express_name}}</td>
-							<td>{{item.express_method}}</td>
-							<td>{{item.express_num}}</td>
-							<td ng-class="{'red':item.is_money=='DirectPayment'}">{{item.is_money}}</td>
+							<td class="tagc">{{item.store_name}}</td>
+							<td>{{item.amazon_order_id}}</td>
+							<td>{{item.express_company}}</td>
+							<td>{{item.send_method}}</td>
+							<td>{{item.oms_order_express_num}}</td>
+							<td ng-class="{'red':item.buy_method=='DirectPayment'}">{{item.buy_method}}</td>
+							<td>{{item.express_day}}</td>
 						</tr>
 					</table>
 				</div>
 				<div class="panel-footer">
 					点击【查看】列出待发货的订单。<br>
-					点击【发货】进行亚马逊单号上传、发货操作。
+					点击【上传】进行亚马逊单号上传、发货操作。<br>
+					点击【xlsx】下载表格，改为亚马逊要求的格式进行上传。
 				</div>
 			</div>
 		</div>

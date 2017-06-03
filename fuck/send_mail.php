@@ -42,6 +42,7 @@ if(isset($_POST['send_mail'])){
 			$mail_topic = str_replace('#send_method#', '配送方式', $mail_topic);
 			$mail_topic = str_replace('#express_num#', '快递单号', $mail_topic);
 			$mail_topic = str_replace('#order_info#', '', $mail_topic);
+			$mail_topic = str_replace('#pin_book#', '', $mail_topic);
 
 			$mail_html = str_replace('#buyer_name#', '购买人', $mail_html);
 			$mail_html = str_replace('#receive_name#', '收件人', $mail_html);
@@ -50,6 +51,7 @@ if(isset($_POST['send_mail'])){
 			$mail_html = str_replace('#send_method#', '配送方式', $mail_html);
 			$mail_html = str_replace('#express_num#', '快递单号', $mail_html);
 			$mail_html = str_replace('#order_info#', '商品明细', $mail_html);
+			$mail_html = str_replace('#pin_book#', '纳品书', $mail_html);
 
 		}else if($model_name == 'send_express'){
 			//读取信件内容
@@ -62,9 +64,9 @@ if(isset($_POST['send_mail'])){
 			$order_info = '
 <table border="1" bordercolor="no" cellspacing="1" cellpadding="6" style="border-collapse: collapse;font-size:12px;border-color: #ddd;width:100%; font-family: Meiryo;">
 	<tr style="background: #009688;color: #FFF;">
-		<td style="width:60%;text-align: center;">商品名/商品オプション</td>
-		<td style="width:20%">商品コード/サブコード</td>
-		<td style="text-align: right;" style="width:20%">単価 * 数量 = 小計</td>
+		<td style="text-align: center;">商品名/商品オプション</td>
+		<td width="25%">商品コード/サブコード</td>
+		<td style="text-align:right;" width="20%">単価 * 数量 = 小計</td>
 	</tr>
 	<tr >
 		<td style="color: #616161;">試験商品A HIDライト HIDキット H4リレーレス 10mm業界最薄 本物55W HIDフルキット HIDヘッドライト HIDフォグランプ対応 GTX製HIDライト H11 H8 HB3 HB4 H1 H3 H7</td>
@@ -76,52 +78,50 @@ if(isset($_POST['send_mail'])){
 		<td>test-b</td>
 		<td style="text-align: right;font-family: monospace;">1980 * 3 = 5940円</td>
 	</tr>
-</table>
-<table style="width:100%;text-align: right;font-size:12px;">
 	<tr>
-		<td rowspan="7" style="width:70%;text-align: left; font-size:14px;color: #018276;">
+		<td rowspan="7" style="text-align: left; font-size:14px;color: #018276;">
 ■ 備考
 お買い上げ明細書についてご不明な点がございましたら、上記連絡先までお問い合わせください。
 		</td>
-		<td>
+		<td colspan="2" style="text-align: right;">
 			<span style="color:#009688;">商品金額合計:</span>
-			<span style="width:60px;display: inline-block;">14740円</span>
+			<span style="width:80px;display: inline-block;">14740円</span>
 		</td>
 	</tr>
 	<tr>
-		<td>
+		<td colspan="2" style="text-align: right;">
 			<span style="color:#009688;">消费税:</span>
-			<span style="width:60px;display: inline-block;">0円</span>
+			<span style="width:80px;display: inline-block;">0円</span>
 		</td>
 	</tr>
 	<tr>
-		<td>
+		<td colspan="2" style="text-align: right;">
 			<span style="color:#009688;">送料:</span>
-			<span style="width:60px;display: inline-block;">0円</span>
+			<span style="width:80px;display: inline-block;">0円</span>
 		</td>
 	</tr>
 	<tr>
-		<td>
+		<td colspan="2" style="text-align: right;">
 			<span style="color:#009688;">値引き:</span>
-			<span style="width:60px;display: inline-block;">0円</span>
+			<span style="width:80px;display: inline-block;">0円</span>
 		</td>
 	</tr>
 	<tr>
-		<td>
+		<td colspan="2" style="text-align: right;">
 			<span style="color:#009688;">ポイント利用分:</span>
-			<span style="width:60px;display: inline-block;">0円</span>
+			<span style="width:80px;display: inline-block;">0円</span>
 		</td>
 	</tr>
 	<tr>
-		<td>
+		<td colspan="2" style="text-align: right;">
 			<span style="color:#009688;">手数料:</span>
-			<span style="width:60px;display: inline-block;">324円</span>
+			<span style="width:80px;display: inline-block;">324円</span>
 		</td>
 	</tr>
 	<tr>
-		<td>
+		<td colspan="2" style="text-align: right;">
 			<span style="color:#009688;">合計金額（税込）:</span>
-			<span style="width:60px;display: inline-block;color:#ff5722;font-weight: bold;font-size: 14px;">15064円</span>
+			<span style="width:80px;display: inline-block;color:#ff5722;font-weight: bold;font-size: 14px;">15064円</span>
 		</td>
 	</tr>
 </table>';
@@ -142,6 +142,31 @@ if(isset($_POST['send_mail'])){
 			$mail_html = str_replace('#send_method#', '配送方式', $mail_html);
 			$mail_html = str_replace('#express_num#', '快递单号', $mail_html);
 			$mail_html = str_replace('#order_info#', $order_info, $mail_html);
+
+			// 加入样式
+			$mail_html = '
+<style>
+blockquote {
+    display: block;
+    border-left: 8px solid #d0e5f2;
+    padding: 5px 10px;
+    margin: 10px 0;
+    line-height: 1.4;
+    font-size: 100%;
+    background-color: #f1f1f1;
+}
+table {
+  border: none;
+  border-collapse: collapse;
+}
+table td,
+table th {
+  border: 1px solid #999;
+  padding: 3px 5px;
+  min-width: 50px;
+  height: 20px;
+}
+</style>'.$mail_html;
 
 		}
 
