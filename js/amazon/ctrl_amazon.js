@@ -40,6 +40,30 @@ app.controller('amazonCtrl', ['$scope','$state','$http','$log','$timeout', funct
         $scope.check_items();
     }
 
+    // 选择未上传状态
+    $scope.check_no_up_item = function(){
+        angular.forEach($scope.express_list, function(value, index){
+            if($scope.express_list[index].over_upload == 0){
+                $scope.express_list[index].is_click = true;
+            }else{
+                $scope.express_list[index].is_click = false;
+            }
+        })
+        $scope.check_items();
+    }
+
+    // 选择未上传状态
+    $scope.check_no_mail_item = function(){
+        angular.forEach($scope.express_list, function(value, index){
+            if($scope.express_list[index].over_mail == 0){
+                $scope.express_list[index].is_click = true;
+            }else{
+                $scope.express_list[index].is_click = false;
+            }
+        })
+        $scope.check_items();
+    }
+
     //check_items 选择项
     $scope.check_items = function(){
         var my_checked = new Array();
