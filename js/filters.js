@@ -6,6 +6,28 @@ myFilters.filter('replace_symbol', function(){
     }
 });
 
+myFilters.filter('over_upload', function(){
+    return function(item){
+        if(item == 0){
+            return '-';
+        }
+        if(item == 1){
+            return '上传过';
+        }
+    }
+})
+
+myFilters.filter('over_mail', function(){
+    return function(item){
+        if(item == 0){
+            return '-';
+        }
+        if(item == 1){
+            return '已发送';
+        }
+    }
+})
+
 myFilters.filter('status', function(){
     return function(item){
         if(item == 0){

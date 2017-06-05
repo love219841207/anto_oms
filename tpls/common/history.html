@@ -48,7 +48,9 @@
 			<td class="tagc">快递单</td>
 			<td class="tagc">快递日期</td>
 			<!-- <td>item_line</td> -->
-			<td>退单状态</td>
+			<td>退单</td>
+			<td>上传</td>
+			<td>去信</td>
 		</tr>
 		<tr class="am-fade-and-slide-right s_gray" ng-class="{'warning':item.table_status == '3'}" ng-repeat="item in send_table track by $index">
 			<td class="tagc">{{$index+1}}</td>
@@ -82,7 +84,9 @@
 			<td class="green tagc">{{item.express_day}}</td>
 			<!-- <td>{{item.item_line}}</td> -->
 			<!-- <td>{{item.table_status}}</td> -->
-			<td ng-class="{'red':item.back_status=='已退单'}">{{item.back_status}}</td>
+			<td class="tagc" ng-class="{'red':item.back_status=='已退单'}">{{item.back_status}}</td>
+			<td class="tagc">{{item.over_upload | over_upload}}</td>
+			<td class="tagc">{{item.over_mail | over_mail}}</td>
 		</tr>
 	</table>
 	<nav>

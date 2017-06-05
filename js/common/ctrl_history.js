@@ -5,15 +5,15 @@ app.controller('historyCtrl', ['$rootScope','$scope','$state','$http','$log','$t
 // 查看售后数据
     $scope.repair_info = function(order_id){
         $scope.redi = '';
-        $scope.loading_shadow('open'); //打开loading
+        $scope.shadow('open','ss_read','正在读取 '+order_id+' 售后数据');
+
         $http.get('/fuck/common/history_order.php', {
             params:{
                 repair_info:order_id
             }
         }).success(function(data) {
             $scope.redi = data;
-            $timeout(function(){$scope.loading_shadow('close');},300); //关闭loading
-            $log.info(data)
+            $timeout(function(){$scope.shadow('close');},0); //关闭shadow
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
             $log.info("退单查询失败");

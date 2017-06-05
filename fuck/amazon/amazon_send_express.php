@@ -11,20 +11,22 @@ if(isset($_GET['get_express_list'])){
     $e_date = $_GET['e_date'];
 
     // 清空快递列表
-    $sql = "truncate amazon_express;";
+    $sql = "DELETE FROM amazon_express WHERE u_num = '{$u_num}'";
     $res = $db->execute($sql);
 
-    $sql = "INSERT INTO amazon_express (amazon_order_id,express_company,send_method,oms_order_express_num,buy_method,express_day,store_name) SELECT order_id,express_company,send_method,oms_order_express_num,buy_method,express_day,store_name FROM history_send WHERE express_day BETWEEN '{$s_date}' AND '{$e_date}' AND store_name = '{$store}'";
+    $sql = "INSERT INTO amazon_express (amazon_order_id,express_company,send_method,oms_order_express_num,buy_method,express_day,store_name,over_upload,over_mail,u_num) SELECT order_id,express_company,send_method,oms_order_express_num,buy_method,express_day,store_name,over_upload,over_mail,$u_num FROM history_send WHERE express_day BETWEEN '{$s_date}' AND '{$e_date}' AND store_name = '{$store}'";
     $res = $db->execute($sql);
 
-    $sql = "SELECT * FROM amazon_express";
+    $sql = "SELECT * FROM amazon_express WHERE u_num = '{$u_num}'";
     $res = $db->getAll($sql);
 
     echo json_encode($res);
 }
 
 // 下载快递单
-if(isset($_GET['down_express_xlsx'])){
+if(isset($_POST['down_express_xlsx'])){
+    $my_checked_items = $_POST['my_checked_items'];
+
     require_once($dir."/../PHPExcel/PHPExcel.php");//引入PHPExcel
     
     //制作时间
@@ -60,7 +62,7 @@ if(isset($_GET['down_express_xlsx'])){
     $objPHPExcel->getActiveSheet()->getStyle('A')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);//左对齐
 
     //SQL
-    $sql = "SELECT * FROM amazon_express";
+    $sql = "SELECT * FROM amazon_express WHERE u_num = '{$u_num}' AND amazon_order_id in ($my_checked_items)";
     $res = $db->getAll($sql);
     $j=2;
     foreach ($res as $key => $value) {
@@ -82,8 +84,9 @@ if(isset($_GET['down_express_xlsx'])){
 }
 
 //发送订单快递
-if(isset($_GET['amz_send_express'])){
-    $store = $_GET['amz_send_express'];
+if(isset($_POST['amz_send_express'])){
+    $store = $_POST['amz_send_express'];
+    $my_checked_items = $_POST['my_checked_items'];
 
     //获取店铺配置
     $sql = "SELECT * FROM conf_Amazon WHERE store_name = '{$store}'";
@@ -116,7 +119,7 @@ if(isset($_GET['amz_send_express'])){
 	}
 
 	//查询快递列表
-	$sql = "SELECT * FROM amazon_express";
+	$sql = "SELECT * FROM amazon_express WHERE u_num = '{$u_num}' AND amazon_order_id in ($my_checked_items)";
     $res = $db->getAll($sql);
     $amazon_items = '';
     $message_id = 1;
@@ -165,6 +168,12 @@ if(isset($_GET['amz_send_express'])){
             <MessageType>OrderFulfillment</MessageType>'.$amazon_items.'</AmazonEnvelope>';
 
 	sort($url);
+
+    // 标记状态
+    $sql = "UPDATE amazon_express SET over_upload = 1 WHERE amazon_order_id IN ($my_checked_items)";
+    $res = $db->execute($sql);
+    $sql = "UPDATE history_send SET over_upload = 1 WHERE order_id IN ($my_checked_items)";
+    $res = $db->execute($sql);
 echo $amazon_feed;die;
 
 	$arr   = implode('&', $url);
