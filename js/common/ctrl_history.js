@@ -1,6 +1,25 @@
 var app=angular.module('myApp');
 app.controller('historyCtrl', ['$rootScope','$scope','$state','$http','$log','$timeout', function($rootScope,$scope,$state,$http,$log,$timeout){
     $scope.search_field = '';
+
+// 查看售后数据
+    $scope.repair_info = function(order_id){
+        $scope.redi = '';
+        $scope.loading_shadow('open'); //打开loading
+        $http.get('/fuck/common/history_order.php', {
+            params:{
+                repair_info:order_id
+            }
+        }).success(function(data) {
+            $scope.redi = data;
+            $timeout(function(){$scope.loading_shadow('close');},300); //关闭loading
+            $log.info(data)
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("退单查询失败");
+        });
+    }
+
 // 一键转入售后
     $scope.onekey_repair = function(){
         $http.get('/fuck/common/history_order.php', {

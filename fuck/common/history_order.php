@@ -4,6 +4,14 @@ require_once("../log.php");
 require_once("../../pdo/repair.PdoMySQL.class.php");//REPAIR_PDO
 $shdb = new RepairPdoMySQL();
 
+// 查看售后详情
+if(isset($_GET['repair_info'])){
+	$order_id = $_GET['repair_info'];
+	$sql = "SELECT * FROM repair_list WHERE order_id = '{$order_id}'";
+	$res = $shdb->getOne($sql);
+	echo json_encode($res);
+}
+
 //	一键转入售后
 if(isset($_GET['onekey_repair'])){
 	$sql = "SELECT 

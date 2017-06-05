@@ -1,0 +1,179 @@
+<div class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" style="width:1000px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <i class="fa fa-close f20 close" ng-click="$hide()"></i>
+        <h4 class="modal-title blue"><i class="fa fa-fw fa-info-circle"></i> 售后详情&nbsp;&nbsp;<span class="red">{{redi.order_id}}</span></h4>
+      </div>
+      <div class="modal-body">
+        <table class="table table-bordered table-condensed mt10 dark tagl">
+          <tr>
+            <td class="warning">メルアド</td>
+            <td class="">{{redi.email}}</td>
+            <td class="warning">発送日</td>
+            <td class="">{{redi.send_day}}</td>
+          </tr>
+          <tr>
+            <td class="warning">注文番号</td>
+            <td class="">{{redi.order_id}}</td>
+            <td class="warning">対応开始日</td>
+            <td class="">{{redi.start_day}}</td>
+          </tr>
+          <tr>
+            <td class="warning">オークションID</td>
+            <td class="">{{redi.good_id}}</td>
+            <td class="warning">保证品1</td>
+            <td class="">{{redi.re_good1}}</td>
+          </tr>
+          <tr>
+            <td class="warning">店铺</td>
+            <td class="">{{redi.store}}</td>
+            <td class="warning">保证品2</td>
+            <td class="">{{redi.re_good2}}</td>
+          </tr>
+          <tr>
+            <td class="warning">お客様ID</td>
+            <td class="">{{redi.who_id}}</td>
+            <td class="warning">保证品3</td>
+            <td class="">{{redi.re_good3}}</td>
+          </tr>
+          <tr>
+            <td class="warning">ご购入者の电话番号</td>
+            <td class="">{{redi.who_phone}}</td>
+            <td class="warning">保证品4</td>
+            <td class="">{{redi.re_good4}}</td>
+          </tr>
+          <tr>
+            <td class="warning">ご购入者の邮便番号</td>
+            <td class=" yellow">{{redi.who_code}}</td>
+            <td class="warning">保证品5</td>
+            <td class="">{{redi.re_good5}}</td>
+          </tr>
+          <tr>
+            <td class="warning">ご购入者の住所</td>
+            <td class="">{{redi.who_house}}</td>
+            <td class="warning">対応种类</td>
+            <td class="">{{redi.add_type}}</td>
+          </tr>
+          <tr>
+            <td class="warning">ご购入者の住所1</td>
+            <td class="">{{redi.who_house1}}</td>
+            <td class="warning">対応终了日</td>
+            <td class="">{{redi.over_day}}</td>
+          </tr>
+          <tr>
+            <td class="warning">ご购入者の住所2</td>
+            <td class="">{{redi.who_house2}}</td>
+            <td class="warning">お支払い方法</td>
+            <td class="">{{redi.pay_method}}</td>
+          </tr>
+          <tr>
+            <td class="warning">ご购入者</td>
+            <td class="">{{redi.who_name}}</td>
+            <td class="warning">金额</td>
+            <td class="">{{redi.money}}</td>
+          </tr>
+          <tr>
+            <td class="warning">お届け先电话番号</td>
+            <td class="">{{redi.receive_phone}}</td>
+            <td class="warning">代引金额</td>
+            <td class="">{{redi.receive_money}}</td>
+          </tr>
+          <tr>
+            <td class="warning">お届け先邮便番号</td>
+            <td class="">{{redi.receive_code}}</td>
+            <td class="warning">出荷方法</td>
+            <td class="">{{redi.send_method}}</td>
+          </tr>
+          <tr>
+            <td class="warning">お届け先住所</td>
+            <td class="">{{redi.receive_house}}</td>
+            <td class="warning">ミス</td>
+            <td class="">{{redi.is_miss}}</td>
+          </tr>
+          <tr>
+            <td class="warning">お届け先住所1</td>
+            <td class="">{{redi.receive_house1}}</td>
+            <td class="warning">评価</td>
+            <td class="">{{redi.is_bad}}</td>
+          </tr>
+          <tr>
+            <td class="warning">お届け先住所2</td>
+            <td class="">{{redi.receive_house2}}</td>
+            <td class="warning">评価种类</td>
+            <td class="">{{redi.say_type}}</td>
+          </tr>
+          <tr>
+            <td class="warning">お届け先名称</td>
+            <td class="">{{redi.receive_name}}</td>
+            <td class="warning">写真</td>
+            <td class="">{{redi.is_photo}}</td>
+          </tr>
+          <tr>
+            <td class="warning">合计金额</td>
+            <td class="">{{redi.total_money}}</td>
+            <td class="warning">返品</td>
+            <td class="">{{redi.is_receive}}</td>
+          </tr>
+          <tr>
+            <td class="warning">购入送料</td>
+            <td class="">{{redi.ems_money}}</td>
+            <td class="warning">返金</td>
+            <td class="">{{redi.is_money}}</td>
+          </tr>
+          <tr>
+            <td class="warning">购入手数料</td>
+            <td class="">{{redi.bill}}</td>
+            <td class="warning">追迹番号</td>
+            <td class="">{{redi.ems}}</td>
+          </tr>
+          <tr>
+            <td class="warning">购入ポイント</td>
+            <td class="">{{redi.point}}</td>
+            <td class="warning">备注</td>
+            <td class="">{{redi.other}}</td>
+          </tr>
+          <tr>
+            <td class="warning">购入クーポン</td>
+            <td class="">{{redi.cheap}}</td>
+            <td class="warning">操作员</td>
+            <td class="">{{redi.u_name}}</td>
+          </tr>
+          <tr>
+            <td class="warning">购入消费税</td>
+            <td class="">{{redi.tax}}</td>
+            <td class="warning">操作ID</td>
+            <td class="">{{redi.u_num}}</td>
+          </tr>
+          <tr>
+            <td class="warning">商品</td>
+            <td class="">{{redi.goods}}</td>
+            <td class="warning">流水ID</td>
+            <td class="">{{redi.id}}</td>
+          </tr>
+          <tr>
+            <td class="warning">购入金额</td>
+            <td class="">{{redi.buy_money}}</td>
+            <td class="warning" rowspan="4">対応方法</td>
+            <td class="" rowspan="4">{{redi.method}}</td>
+          </tr>
+          <tr>
+            <td class="warning">购入方法</td>
+            <td class="">{{redi.buy_method}}</td>
+          </tr>
+          <tr>
+            <td class="warning">発送方法</td>
+            <td class="">{{redi.to_method}}</td>
+          </tr>
+          <tr>
+            <td class="warning">発送番号</td>
+            <td class="">{{redi.send_num}}</td>
+          </tr>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="$hide()">关 闭</button>
+      </div>
+    </div>
+  </div>
+</div>
