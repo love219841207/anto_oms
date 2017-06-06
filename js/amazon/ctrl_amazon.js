@@ -89,6 +89,7 @@ app.controller('amazonCtrl', ['$scope','$state','$http','$log','$timeout', funct
             }
         }).success(function(data) {
             $scope.express_list = data;
+            $scope.check_no_item();
             $timeout(function(){$scope.loading_shadow('close');},300); //关闭loading
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
@@ -137,4 +138,50 @@ app.controller('amazonCtrl', ['$scope','$state','$http','$log','$timeout', funct
             $log.info("error:下载上传快递单失败。");
         });
 	}
+
+    // 发送发货通知信
+    $scope.send_over_mail = function(){
+        $scope.shadow('open','ss_read','正在发送');
+
+        var post_data = {
+            send_mail:'amazon',
+            station:$scope.now_station,
+            store:$scope.now_store_bar,
+            mail_tpl:'send_express',
+            my_checked_items:$scope.my_checked_items
+        };
+
+        $http.post('/fuck/mail/amazon_send_mail.php', post_data).success(function(data) {
+            if(data.status == 'ok'){
+                $scope.send_error_num = data.error_num;
+                $scope.send_ok_num = data.ok_num;
+
+                //读取错误信件info
+                $scope.read_error_mail();
+            }else{
+                $log.info(data);
+                $scope.plug_alert('danger','发信失败，请联系管理员。','fa fa-ban');
+            }
+            $timeout(function(){$scope.shadow('close');},1000); //关闭shadow
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:下载上传快递单失败。");
+        });
+    }
+
+    //读取错误邮件info
+    $scope.read_error_mail = function(){
+        $http.get('/fuck/mail/amazon_send_mail.php', {
+            params:{
+                read_error_mail:'read'
+            }
+        }).success(function(data) {
+            $scope.error_mail = data;
+            $scope.get_express_list();
+            $scope.plug_alert('success','发信完成。','fa fa-smile-o');
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:邮件内容读取失败。");
+        });
+    }
 }]) 

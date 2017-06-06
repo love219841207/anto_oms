@@ -83,7 +83,7 @@ if(isset($_POST['down_express_xlsx'])){
     echo "ok";
 }
 
-//发送订单快递
+//上传订单快递号
 if(isset($_POST['amz_send_express'])){
     $store = $_POST['amz_send_express'];
     $my_checked_items = $_POST['my_checked_items'];

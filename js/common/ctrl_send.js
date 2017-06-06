@@ -13,17 +13,18 @@ app.controller('sendCtrl', ['$rootScope','$scope','$state','$http','$log','$time
     // 下载发货单
     $scope.send_table = function(type,company){
         $scope.shadow('open','ss_make','正在生成发货单');
-        $http.get('/fuck/common/make_send.php', {
-            params:{
-                send_table:'down',
-                type:type,
-                select_company:company,
-                select_repo:$scope.select_repo,
-                s_date:$scope.s_date,
-                e_date:$scope.e_date
-            }
-        }).success(function(data) {
-            $log.info(data);
+
+        var post_data = {
+            send_table:'down',
+            type:type,
+            select_company:company,
+            select_repo:$scope.select_repo,
+            s_date:$scope.s_date,
+            e_date:$scope.e_date
+        };
+
+        $http.post('/fuck/common/make_send.php', post_data).success(function(data) {
+            log.info(data);
             window.location="/down/"+data;
             $timeout(function(){$scope.shadow('close');},1000);
         }).error(function(data) {

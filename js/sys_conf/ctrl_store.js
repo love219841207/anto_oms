@@ -384,7 +384,7 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log', function($scope,$
             };
         }
 
-        $http.post('/fuck/send_mail.php', post_data).success(function(data) {  
+        $http.post('/fuck/mail/send_mail.php', post_data).success(function(data) {  
             if(data == 'sended'){
                 $scope.plug_alert('success','邮件已发送至：'+$scope.test_mail,'fa fa-send');
             }else{

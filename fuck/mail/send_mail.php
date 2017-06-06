@@ -1,6 +1,6 @@
 <?php
-require_once("./PHPMailer/PHPMailerAutoload.php");
-require_once("./header.php");
+require_once("../PHPMailer/PHPMailerAutoload.php");
+require_once("../header.php");
 
 $mail = new PHPMailer;
 $mail->CharSet = "UTF-8";
@@ -9,13 +9,13 @@ $mail->CharSet = "UTF-8";
 if(isset($_POST['send_mail'])){
 	// 测试店铺
 	if($_POST['send_mail'] == 'test_mail'){
-		$station = 'conf_'.$_POST['station'];
+		$conf = 'conf_'.$_POST['station'];
 		$store = $_POST['store'];
 		$to_mail = $_POST['to_mail'];
 		$model_name = $_POST['model_name'];
 
 		//读取店铺配置
-			$sql = "SELECT * FROM $station WHERE store_name = '{$store}'";
+			$sql = "SELECT * FROM $conf WHERE store_name = '{$store}'";
 			$res = $db->getOne($sql);
 			$mail_name = $res['mail_name'];
 			$mail_id = $res['mail_id'];
@@ -126,6 +126,71 @@ if(isset($_POST['send_mail'])){
 	</tr>
 </table>';
 
+		$pin_book = '
+<table border="1" bordercolor="no" cellspacing="1" cellpadding="6" style="border-collapse: collapse;font-size:12px;border-color: #ddd;width:100%; font-family: Meiryo;">
+	<tr style="background: #009688;color: #FFF;">
+		<td style="text-align: center;">商品名/商品オプション</td>
+		<td width="25%">商品コード/サブコード</td>
+		<td style="text-align:right;" width="20%">単価 * 数量 = 小計</td>
+	</tr>
+	<tr >
+		<td style="color: #616161;">試験商品A HIDライト HIDキット H4リレーレス 10mm業界最薄 本物55W HIDフルキット HIDヘッドライト HIDフォグランプ対応 GTX製HIDライト H11 H8 HB3 HB4 H1 H3 H7</td>
+		<td>test-a</td>
+		<td style="text-align: right;font-family: monospace;">880 * 10 = 8800円</td>
+	</tr>
+	<tr>
+		<td style="color: #616161;">試験商品B HIDライト HIDキット H4リレーレス 10mm業界最薄 本物55W HIDフルキット HIDヘッドライト HIDフォグランプ対応 GTX製HIDライト H11 H8 HB3 HB4 H1 H3 H7</td>
+		<td>test-b</td>
+		<td style="text-align: right;font-family: monospace;">1980 * 3 = 5940円</td>
+	</tr>
+	<tr>
+		<td rowspan="7" style="text-align: left; font-size:14px;color: #018276;">
+■ 備考
+お買い上げ明細書についてご不明な点がございましたら、上記連絡先までお問い合わせください。
+		</td>
+		<td colspan="2" style="text-align: right;">
+			<span style="color:#009688;">商品金額合計:</span>
+			<span style="width:80px;display: inline-block;">14740円</span>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" style="text-align: right;">
+			<span style="color:#009688;">消费税:</span>
+			<span style="width:80px;display: inline-block;">0円</span>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" style="text-align: right;">
+			<span style="color:#009688;">送料:</span>
+			<span style="width:80px;display: inline-block;">0円</span>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" style="text-align: right;">
+			<span style="color:#009688;">値引き:</span>
+			<span style="width:80px;display: inline-block;">0円</span>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" style="text-align: right;">
+			<span style="color:#009688;">ポイント利用分:</span>
+			<span style="width:80px;display: inline-block;">0円</span>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" style="text-align: right;">
+			<span style="color:#009688;">手数料:</span>
+			<span style="width:80px;display: inline-block;">324円</span>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" style="text-align: right;">
+			<span style="color:#009688;">合計金額（税込）:</span>
+			<span style="width:80px;display: inline-block;color:#ff5722;font-weight: bold;font-size: 14px;">15064円</span>
+		</td>
+	</tr>
+</table>';
+
 			//替换信件变量
 			$mail_topic = str_replace('#buyer_name#', '购买人', $mail_topic);
 			$mail_topic = str_replace('#receive_name#', '收件人', $mail_topic);
@@ -134,6 +199,7 @@ if(isset($_POST['send_mail'])){
 			$mail_topic = str_replace('#send_method#', '配送方式', $mail_topic);
 			$mail_topic = str_replace('#express_num#', '快递单号', $mail_topic);
 			$mail_topic = str_replace('#order_info#', '', $mail_topic);
+			$mail_topic = str_replace('#pin_book#', '', $mail_topic);
 
 			$mail_html = str_replace('#buyer_name#', '购买人', $mail_html);
 			$mail_html = str_replace('#receive_name#', '收件人', $mail_html);
@@ -142,6 +208,7 @@ if(isset($_POST['send_mail'])){
 			$mail_html = str_replace('#send_method#', '配送方式', $mail_html);
 			$mail_html = str_replace('#express_num#', '快递单号', $mail_html);
 			$mail_html = str_replace('#order_info#', $order_info, $mail_html);
+			$mail_topic = str_replace('#pin_book#', $pin_book, $mail_topic);
 
 			// 加入样式
 			$mail_html = '
@@ -184,7 +251,7 @@ table th {
 		// $mail->addAddress('ellen@example.com');               // 另一个收件人
 		$mail->addReplyTo($mail_answer_addr, '');	//邮件回复地址
 		// $mail->addCC('cc@example.com');	//抄送
-		$mail->addBCC('ycmbcd@foxmail.com');	//秘密抄送
+		// $mail->addBCC('329331097@qq.com');	//秘密抄送
 
 		// $mail->addAttachment('/var/tmp/file.tar.gz');         // 添加附件
 		// $mail->addAttachment('/images/user_logo.jpg', 'user_logo.jpg');    // Optional name

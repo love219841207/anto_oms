@@ -1177,6 +1177,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
     // 发信
     $scope.amz_mail_items = function(){
         $scope.shadow('open','ss_make','正在发信，请稍后。');
+        $log.info($scope.my_checked_items);
 
         var post_data = {
             send_mail:'amazon',
@@ -1185,7 +1186,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             mail_tpl:$scope.to_mail_tpl,
             order_items:$scope.my_checked_items};
 
-        $http.post('/fuck/amazon_send_mail.php', post_data).success(function(data) {
+        $http.post('/fuck/mail/amazon_send_mail.php', post_data).success(function(data) {
             if(data.status == 'ok'){
                 $scope.send_error_num = data.error_num;
                 $scope.send_ok_num = data.ok_num;
@@ -1205,7 +1206,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
 
     //读取错误邮件info
     $scope.read_error_mail = function(){
-        $http.get('/fuck/amazon_send_mail.php', {
+        $http.get('/fuck/mail/amazon_send_mail.php', {
             params:{
                 read_error_mail:'read'
             }

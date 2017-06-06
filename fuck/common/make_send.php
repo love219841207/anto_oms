@@ -5,20 +5,19 @@ $dir = dirname(__FILE__);
 
 set_time_limit(0);
 
-
-if(isset($_GET['send_table'])){
+if(isset($_POST['send_table'])){
 	// 下载方式
-	$down_type = $_GET['type'];
+	$down_type = $_POST['type'];
 
 	//获取公司
-	$select_company = $_GET['select_company'];
+	$select_company = $_POST['select_company'];
 
 	//获取仓库
-	$select_repo = $_GET['select_repo'];
+	$select_repo = $_POST['select_repo'];
 
 	// 获取日期区间
-	$start = $_GET['s_date'];
-	$end = $_GET['e_date'];
+	$start = $_POST['s_date'];
+	$end = $_POST['e_date'];
 	$the_date = $start."#".$end;
 
 	require_once($dir."/../PHPExcel/PHPExcel.php");	//引入PHPExcel
@@ -55,9 +54,9 @@ if(isset($_GET['send_table'])){
 		$objSheet->getColumnDimension('W')->setWidth(26);//单元格宽
 		// 如果是最新
 		if($down_type == 'new'){
-			$sql = "SELECT who_tel,who_post,who_house,who_name,pack_id,send_day,send_time,due_money,back_status,group_concat(goods_code,'*',out_num separator '#') as aaa,express_company,send_method,need_not_send,other_1 from send_table where repo_status = '{$select_repo}' and express_company='佐川急便' and send_method in('着払い','宅配便') and back_status = '0' and table_status = '0' and import_day between '{$start}' and '{$end}' group by send_id order by id;";	
+			$sql = "SELECT who_tel,who_post,who_house,who_name,pack_id,send_day,send_time,due_money,back_status,group_concat(goods_code,'*',out_num separator '#') as aaa,express_company,send_method,need_not_send,other_1 from send_table where repo_status = '{$select_repo}' and express_company='佐川急便' and send_method in('着払い','宅配便') and back_status = '0' and table_status = '0' and import_day between '{$start}' and '{$end}' group by send_id order by id";	
 		}else{	
-			$sql = "SELECT who_tel,who_post,who_house,who_name,pack_id,send_day,send_time,due_money,back_status,group_concat(goods_code,'*',out_num separator '#') as aaa,express_company,send_method,need_not_send,other_1 from send_table where repo_status = '{$select_repo}' and express_company='佐川急便' and send_method in('着払い','宅配便') and back_status = '0' and import_day between '{$start}' and '{$end}' group by send_id order by id;";
+			$sql = "SELECT who_tel,who_post,who_house,who_name,pack_id,send_day,send_time,due_money,back_status,group_concat(goods_code,'*',out_num separator '#') as aaa,express_company,send_method,need_not_send,other_1 from send_table where repo_status = '{$select_repo}' and express_company='佐川急便' and send_method in('着払い','宅配便') and back_status = '0' and import_day between '{$start}' and '{$end}' group by send_id order by id";
 		}
 		$res = $db->getAll($sql);
 		$j=2;
