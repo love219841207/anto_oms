@@ -62,7 +62,7 @@ if(isset($_POST['send_mail'])){
 			$mail_txt = $res['mail_txt'];
 
 			$order_info = '
-<table border="1" bordercolor="no" cellspacing="1" cellpadding="6" style="border-collapse: collapse;font-size:12px;border-color: #ddd;width:100%; font-family: Meiryo;">
+<table width="100%" border="1" bordercolor="no" cellspacing="1" cellpadding="6" style="border-collapse: collapse;font-size:12px;border-color: #ddd;width:100%; font-family: Meiryo;">
 	<tr style="background: #009688;color: #FFF;">
 		<td style="text-align: center;">商品名/商品オプション</td>
 		<td width="25%">商品コード/サブコード</td>
@@ -125,10 +125,84 @@ if(isset($_POST['send_mail'])){
 </table>';
 
 		$pin_book = '
-<table border="1" bordercolor="no" cellspacing="1" cellpadding="6" style="border-collapse: collapse;font-size:12px;border-color: #ddd;width:100%; font-family: Meiryo;">
-	<tr style="background: #009688;color: #FFF;text-align: center;font-size:18px;">
-		<td colspan="3">納 品 書</td>
+<table width="100%" border="1" bordercolor="no" cellspacing="1" cellpadding="6" style="border-collapse: collapse;font-size:12px;border-color: #ddd;width:100%; font-family: Meiryo;">
+	<tr style="border-color: #FFF;">
+		<td>gtx-amazon</td>
+		<td colspan="2" style="text-align: right;">発行日：2017年05月31日</td>
 	</tr>
+	<th colspan="3" style="border-color: #FFF;border-bottom:4px solid #009688;color:#009688;text-align: center;font-size:18px;">
+		納 品 書
+	</th>
+</table>
+<table width="100%" border="1" bordercolor="no" cellspacing="1" cellpadding="6" style="border-collapse: collapse;font-size:12px;border-color: #FFF;width:100%;line-height: 10px; font-family: Meiryo;">
+	<tr>
+		<td>321-2342</td>
+		<td style="text-align:right;">gtx-amazon</td>
+	</tr>
+	<tr>
+		<td>栃木県日光市</td>
+		<td style="text-align:right;">〒270-1437</td>
+	</tr>
+	<tr>
+		<td>根室９１９‐１株式会社ニチネン栃木工場</td>
+		<td style="text-align:right;">千葉県 白井市</td>
+	</tr>
+	<tr>
+		<td>桑原 竜也 様</td>
+		<td style="text-align:right;">木833-15</td>
+	</tr>
+	<tr>
+		<td colspan="3" style="line-height: 18px;">この度は、「gtx-amazon」にてお買い上げいただきまして、誠にありがとうございました。
+お買い上げ明細書を送付いたしますので、ご確認いただけますようお願い申し上げます。</td>
+	</tr>
+	<tr style="line-height:30px;border-bottom: 2px solid #009688;color:#009688;font-size: 14px;text-align: center;">
+		<td colspan="3">お買い上げ明細</td>
+	</tr>	
+
+	<tr>
+		<td>321-2342</td>
+		<td colspan="2" style="text-align: right;">
+			<span style="color:#009688;">ご注文日：</span>
+			<span style="width:150px;text-align:left;display: inline-block;">2017年05月28日</span>
+		</td>
+	</tr>
+	<tr>
+		<td>栃木県日光市</td>
+		<td colspan="2" style="text-align: right;">
+			<span style="color:#009688;">ご注文番号：</span>
+			<span style="width:150px;text-align:left;display: inline-block;">503-8875397-5924664</span>
+		</td>
+	</tr>
+	<tr>
+		<td>根室９１９‐１株式会社ニチネン栃木工場</td>
+		<td colspan="2" style="text-align: right;">
+			<span style="color:#009688;">お支払方法：</span>
+			<span style="width:150px;text-align:left;display: inline-block;">ポイント全額払い</span>
+		</td>
+	</tr>
+	<tr>
+		<td>桑原 竜也 様</td>
+		<td colspan="2" style="text-align: right;">
+			<span style="color:#009688;">お届け方法：</span>
+			<span style="width:150px;text-align:left;display: inline-block;">メール便</span>
+		</td>
+	</tr>
+	<tr>
+		<td>（クワバラ タツヤ サマ）</td>
+		<td colspan="2" style="text-align: right;">
+			<span style="color:#009688;">お届け希望日：</span>
+			<span style="width:150px;text-align:left;display: inline-block;">希望日なし</span>
+		</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td colspan="2" style="text-align: right;">
+			<span style="color:#009688;">お届け希望時間：</span>
+			<span style="width:150px;text-align:left;display: inline-block;">希望時間なし</span>
+		</td>
+	</tr>
+</table>
+<table width="100%" border="1" bordercolor="no" cellspacing="1" cellpadding="6" style="border-collapse: collapse;font-size:12px;border-color: #ddd;width:100%; font-family: Meiryo;">
 	<tr style="background: #009688;color: #FFF;">
 		<td style="text-align: center;">商品名/商品オプション</td>
 		<td width="25%">商品コード/サブコード</td>
@@ -146,7 +220,7 @@ if(isset($_POST['send_mail'])){
 	</tr>
 	<tr>
 		<td rowspan="7" style="text-align: left; font-size:14px;color: #018276;">
-■ 備考
+		■ 備考
 お買い上げ明細書についてご不明な点がございましたら、上記連絡先までお問い合わせください。
 		</td>
 		<td colspan="2" style="text-align: right;">
@@ -190,7 +264,8 @@ if(isset($_POST['send_mail'])){
 			<span style="width:80px;display: inline-block;color:#ff5722;font-weight: bold;font-size: 14px;">15064円</span>
 		</td>
 	</tr>
-</table>';
+</table>
+';
 
 			//替换信件变量
 			$mail_topic = str_replace('#buyer_name#', '购买人', $mail_topic);
