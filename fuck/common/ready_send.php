@@ -5,6 +5,25 @@ $dir = dirname(__FILE__);
 
 set_time_limit(0);
 
+// 修改快递公司
+if(isset($_GET['change_company'])){
+	$order_id = $_GET['change_company'];
+	$new_company = $_GET['new_company'];
+	$new_method = $_GET['new_method'];
+	$station = $_GET['station'];
+	$store = $_GET['store'];
+	$oms_id = $_GET['oms_id'];
+
+	// 重置快递公司 和包裹
+	$sql = "UPDATE send_table SET express_company = '{$new_company}',send_method = '{$new_method}' WHERE order_id = '{$order_id}'";
+	$res = $db->execute($sql);
+
+	$do = "<订单>【".$order_id."】"."修改<快递公司>为【".$new_company."】<配送方式>为【".$new_method."】";
+	oms_log($u_name,$do,'ready_send',$station,$store,$oms_id);
+
+	echo 'ok';
+}
+
 // 重置express
 if(isset($_GET['reset_express'])){
 	// 重置快递公司 和包裹

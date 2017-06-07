@@ -227,7 +227,7 @@ app.controller('pauseorderCtrl', ['$rootScope','$scope','$state','$http','$log',
         });
     }
 
-//新建一单
+//新增一单
     // 检测店铺
     $scope.check_store = function(){
 
@@ -291,7 +291,7 @@ app.controller('pauseorderCtrl', ['$rootScope','$scope','$state','$http','$log',
         });
     }
 
-    // 新建一单
+    // 新增一单
     $scope.new_pause_order = function(){
         $http.get('/fuck/common/pause_order.php', {
             params:{

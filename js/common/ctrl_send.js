@@ -24,7 +24,7 @@ app.controller('sendCtrl', ['$rootScope','$scope','$state','$http','$log','$time
         };
 
         $http.post('/fuck/common/make_send.php', post_data).success(function(data) {
-            log.info(data);
+            // $log.info(data);
             window.location="/down/"+data;
             $timeout(function(){$scope.shadow('close');},1000);
         }).error(function(data) {

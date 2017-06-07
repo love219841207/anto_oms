@@ -4,7 +4,7 @@
         <div class="btn btn-primary btn-sm mt10" ng-click="show_back_info()" ng-model="radioModel" uib-btn-radio="'Right'">退押表</div>
     </div>
     <div ng-show="radioModel=='Left'" class="pull-left ml20">
-    	<button class="btn btn-default green mt10 btn-sm" ng-click="add_order=!add_order"><i ng-class="{'fa-spin':add_order}" class="fa fa-plus-circle fa-fw"></i> 新建一单</button>
+    	<button class="btn btn-default green mt10 btn-sm" ng-click="add_order=!add_order"><i ng-class="{'fa-spin':add_order}" class="fa fa-plus-circle fa-fw"></i> 新增一单</button>
     </div>
 	<div ng-show="all_pause_orders!='' && radioModel=='Left'" class="btn-group pull-right">
 		<button class="btn btn-default mt10 btn-sm" ng-click="sub_repo()"><i class="fa fa-cubes fa-fw"></i> 扣库存</button>

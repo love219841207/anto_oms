@@ -1,0 +1,38 @@
+<div class="modal" tabindex="-1" role="dialog" ng-controller="readysendCtrl">
+  <div class="modal-dialog" style="width:600px;">
+    <div class="modal-content">
+      <div class="modal-header modal-drag">
+        <i class="fa fa-close f20 close" ng-click="$hide()"></i>
+        <h4 class="modal-title blue"><i class="fa fa-fw fa-info-circle"></i> 订单号 <span class="red">{{item.order_id}}</span> </h4>
+      </div>
+      <div class="modal-body">
+        <table class="tagl table table-hover table-bordered table-condensed">
+          <tr>
+            <td class="s_gray" style="width:30%">快递公司</td>
+            <td class="s_gray">
+              <select class="btn btn-default btn-sm selecter" ng-model="new_company">
+                <option value="佐川急便">佐川急便</option>
+                <option value="ヤマト運輸">ヤマト運輸</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td class="s_gray">
+              配送方式</td>
+            <td class="s_gray">
+              <select class="btn btn-default btn-sm selecter" ng-model="new_method">
+                <option value="宅配便">宅配便</option>
+                <option value="宅急便">宅急便</option>
+              </select>
+            </td>
+          </tr>
+        </table>
+        <div class="clearfix"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="change_company(item.order_id,item.store_name,item.station,item.oms_id);$hide()"><i class="fa fa-save"></i> 保 存</button>
+        <button type="button" class="btn btn-default" ng-click="$hide()">关 闭</button>
+      </div>
+    </div>
+  </div>
+</div>

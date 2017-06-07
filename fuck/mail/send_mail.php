@@ -80,8 +80,6 @@ if(isset($_POST['send_mail'])){
 	</tr>
 	<tr>
 		<td rowspan="7" style="text-align: left; font-size:14px;color: #018276;">
-■ 備考
-お買い上げ明細書についてご不明な点がございましたら、上記連絡先までお問い合わせください。
 		</td>
 		<td colspan="2" style="text-align: right;">
 			<span style="color:#009688;">商品金額合計:</span>
@@ -128,6 +126,9 @@ if(isset($_POST['send_mail'])){
 
 		$pin_book = '
 <table border="1" bordercolor="no" cellspacing="1" cellpadding="6" style="border-collapse: collapse;font-size:12px;border-color: #ddd;width:100%; font-family: Meiryo;">
+	<tr style="background: #009688;color: #FFF;text-align: center;font-size:18px;">
+		<td colspan="3">納 品 書</td>
+	</tr>
 	<tr style="background: #009688;color: #FFF;">
 		<td style="text-align: center;">商品名/商品オプション</td>
 		<td width="25%">商品コード/サブコード</td>
@@ -208,7 +209,7 @@ if(isset($_POST['send_mail'])){
 			$mail_html = str_replace('#send_method#', '配送方式', $mail_html);
 			$mail_html = str_replace('#express_num#', '快递单号', $mail_html);
 			$mail_html = str_replace('#order_info#', $order_info, $mail_html);
-			$mail_topic = str_replace('#pin_book#', $pin_book, $mail_topic);
+			$mail_html = str_replace('#pin_book#', $pin_book, $mail_html);
 
 			// 加入样式
 			$mail_html = '

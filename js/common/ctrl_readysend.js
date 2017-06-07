@@ -1,5 +1,30 @@
 var app=angular.module('myApp');
 app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','$timeout', function($rootScope,$scope,$state,$http,$log,$timeout){
+
+    // 修改快递公司
+    $scope.change_company = function(order_id,store,station,oms_id){
+        $http.get('/fuck/common/ready_send.php', {
+            params:{
+                change_company:order_id,
+                new_company:$scope.new_company,
+                new_method:$scope.new_method,
+                store:store,
+                station:station,
+                oms_id:oms_id
+            }
+        }).success(function(data) {
+            if(data=='ok'){
+                $scope.plug_alert('success','修改完成，请重新检索。','fa fa-smile-o');
+            }else{
+                $scope.plug_alert('danger','更新失败。','fa fa-ban');
+                $log.info(data);
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:修改快递公司。");
+        });
+    }
+
 	//初始化页面
 	$scope.init_list = function(){
 		// $scope.send_table = '';

@@ -67,6 +67,33 @@ if(isset($_POST['send_mail'])){
 		 	$express_company = $res['express_company'];	#快递公司
 		 	$send_method = $res['send_method'];	#配送方式
 		 	$express_num = $res['oms_order_express_num'];	#快递单号
+		 	$all_total_money = $res['all_total_money'];	
+		 	$order_total_money = $res['order_total_money'];	
+
+		 	// 初始化title
+		 	$u_info = '';
+		 	$cod_money = '';
+
+		 	// 读取购买信息
+		 	$sql = "SELECT * FROM amazon_response_info WHERE order_id = '{$value}'";
+			$res = $db->getAll($sql);
+			foreach ($res as $val) {
+				$goods_title = $val['goods_title'];
+				$sku = $val['sku'];
+				$goods_num = $val['goods_num'];
+				$shipping_price = $val['shipping_price'];
+				$shipping_tax = $val['shipping_tax'];
+				$unit_price = $val['unit_price'];
+				$item_price = $val['item_price'];
+				$cod_money = $val['cod_money'];
+
+				$u_info = $u_info.'<tr >
+					<td style="color: #616161;">'.$goods_title.'</td>
+					<td>'.$sku.'</td>
+					<td style="text-align: right;font-family: monospace;">'.$unit_price.' * '.$goods_num.' = '.$item_price.'円</td>
+				</tr>';
+			}
+			
 
 
 $order_info = '
@@ -76,24 +103,13 @@ $order_info = '
 		<td width="25%">商品コード/サブコード</td>
 		<td style="text-align:right;" width="20%">単価 * 数量 = 小計</td>
 	</tr>
-	<tr >
-		<td style="color: #616161;">試験商品A HIDライト HIDキット H4リレーレス 10mm業界最薄 本物55W HIDフルキット HIDヘッドライト HIDフォグランプ対応 GTX製HIDライト H11 H8 HB3 HB4 H1 H3 H7</td>
-		<td>test-a</td>
-		<td style="text-align: right;font-family: monospace;">880 * 10 = 8800円</td>
-	</tr>
-	<tr>
-		<td style="color: #616161;">試験商品B HIDライト HIDキット H4リレーレス 10mm業界最薄 本物55W HIDフルキット HIDヘッドライト HIDフォグランプ対応 GTX製HIDライト H11 H8 HB3 HB4 H1 H3 H7</td>
-		<td>test-b</td>
-		<td style="text-align: right;font-family: monospace;">1980 * 3 = 5940円</td>
-	</tr>
+	'.$u_info.'
 	<tr>
 		<td rowspan="7" style="text-align: left; font-size:14px;color: #018276;">
-■ 備考
-お買い上げ明細書についてご不明な点がございましたら、上記連絡先までお問い合わせください。
 		</td>
 		<td colspan="2" style="text-align: right;">
 			<span style="color:#009688;">商品金額合計:</span>
-			<span style="width:80px;display: inline-block;">14740円</span>
+			<span style="width:80px;display: inline-block;">'.$order_total_money.'円</span>
 		</td>
 	</tr>
 	<tr>
@@ -123,34 +139,28 @@ $order_info = '
 	<tr>
 		<td colspan="2" style="text-align: right;">
 			<span style="color:#009688;">手数料:</span>
-			<span style="width:80px;display: inline-block;">324円</span>
+			<span style="width:80px;display: inline-block;">'.$cod_money.'</span>
 		</td>
 	</tr>
 	<tr>
 		<td colspan="2" style="text-align: right;">
 			<span style="color:#009688;">合計金額（税込）:</span>
-			<span style="width:80px;display: inline-block;color:#ff5722;font-weight: bold;font-size: 14px;">15064円</span>
+			<span style="width:80px;display: inline-block;color:#ff5722;font-weight: bold;font-size: 14px;">'.$all_total_money.'円</span>
 		</td>
 	</tr>
 </table>';
 
 $pin_book = '
 <table border="1" bordercolor="no" cellspacing="1" cellpadding="6" style="border-collapse: collapse;font-size:12px;border-color: #ddd;width:100%; font-family: Meiryo;">
+	<tr style="background: #009688;color: #FFF;text-align: center;font-size:18px;">
+		<td colspan="3">納 品 書</td>
+	</tr>
 	<tr style="background: #009688;color: #FFF;">
 		<td style="text-align: center;">商品名/商品オプション</td>
 		<td width="25%">商品コード/サブコード</td>
 		<td style="text-align:right;" width="20%">単価 * 数量 = 小計</td>
 	</tr>
-	<tr >
-		<td style="color: #616161;">試験商品A HIDライト HIDキット H4リレーレス 10mm業界最薄 本物55W HIDフルキット HIDヘッドライト HIDフォグランプ対応 GTX製HIDライト H11 H8 HB3 HB4 H1 H3 H7</td>
-		<td>test-a</td>
-		<td style="text-align: right;font-family: monospace;">880 * 10 = 8800円</td>
-	</tr>
-	<tr>
-		<td style="color: #616161;">試験商品B HIDライト HIDキット H4リレーレス 10mm業界最薄 本物55W HIDフルキット HIDヘッドライト HIDフォグランプ対応 GTX製HIDライト H11 H8 HB3 HB4 H1 H3 H7</td>
-		<td>test-b</td>
-		<td style="text-align: right;font-family: monospace;">1980 * 3 = 5940円</td>
-	</tr>
+	'.$u_info.'
 	<tr>
 		<td rowspan="7" style="text-align: left; font-size:14px;color: #018276;">
 ■ 備考
@@ -158,7 +168,7 @@ $pin_book = '
 		</td>
 		<td colspan="2" style="text-align: right;">
 			<span style="color:#009688;">商品金額合計:</span>
-			<span style="width:80px;display: inline-block;">14740円</span>
+			<span style="width:80px;display: inline-block;">'.$order_total_money.'円</span>
 		</td>
 	</tr>
 	<tr>
@@ -188,13 +198,13 @@ $pin_book = '
 	<tr>
 		<td colspan="2" style="text-align: right;">
 			<span style="color:#009688;">手数料:</span>
-			<span style="width:80px;display: inline-block;">324円</span>
+			<span style="width:80px;display: inline-block;">'.$cod_money.'</span>
 		</td>
 	</tr>
 	<tr>
 		<td colspan="2" style="text-align: right;">
 			<span style="color:#009688;">合計金額（税込）:</span>
-			<span style="width:80px;display: inline-block;color:#ff5722;font-weight: bold;font-size: 14px;">15064円</span>
+			<span style="width:80px;display: inline-block;color:#ff5722;font-weight: bold;font-size: 14px;">'.$all_total_money.'円</span>
 		</td>
 	</tr>
 </table>';

@@ -17,7 +17,7 @@ if(isset($_GET['get_express_list'])){
     $sql = "INSERT INTO amazon_express (amazon_order_id,express_company,send_method,oms_order_express_num,buy_method,express_day,store_name,over_upload,over_mail,u_num) SELECT order_id,express_company,send_method,oms_order_express_num,buy_method,express_day,store_name,over_upload,over_mail,$u_num FROM history_send WHERE express_day BETWEEN '{$s_date}' AND '{$e_date}' AND store_name = '{$store}'";
     $res = $db->execute($sql);
 
-    $sql = "SELECT * FROM amazon_express WHERE u_num = '{$u_num}'";
+    $sql = "SELECT * FROM amazon_express WHERE u_num = '{$u_num}' GROUP BY amazon_order_id";
     $res = $db->getAll($sql);
 
     echo json_encode($res);

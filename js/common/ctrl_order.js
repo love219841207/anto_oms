@@ -1177,14 +1177,14 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
     // 发信
     $scope.amz_mail_items = function(){
         $scope.shadow('open','ss_make','正在发信，请稍后。');
-        $log.info($scope.my_checked_items);
+        // $log.info($scope.my_checked_items);
 
         var post_data = {
             send_mail:'amazon',
             store:$rootScope.now_store_bar,
             station:'Amazon',
             mail_tpl:$scope.to_mail_tpl,
-            order_items:$scope.my_checked_items};
+            my_checked_items:$scope.my_checked_items};
 
         $http.post('/fuck/mail/amazon_send_mail.php', post_data).success(function(data) {
             if(data.status == 'ok'){

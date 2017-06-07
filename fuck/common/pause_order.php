@@ -151,7 +151,7 @@ if(isset($_GET['del_pause'])){
     echo 'ok';
 }
 
-// 新建一单
+// 新增一单
 if(isset($_GET['new_pause_order'])){
     $order_id = $_GET['new_pause_order'];
     $store = $_GET['store'];
