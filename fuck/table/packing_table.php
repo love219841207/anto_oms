@@ -26,6 +26,7 @@ if(isset($_GET['down_packing'])){
 
     // 预计多少行
     $sql = "SELECT count(1) as cc FROM send_table WHERE repo_status <> '日'";
+    // $sql = "SELECT count(1) as cc FROM send_table";
     $res = $db->getOne($sql);
     $final_row = $res['cc']+1;
 
@@ -60,17 +61,27 @@ if(isset($_GET['down_packing'])){
     $objSheet->freezePane('A2');//冻结表头
     $objPHPExcel->getActiveSheet()->getStyle('A')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);//左对齐
     $objPHPExcel->getActiveSheet()->getStyle('A1:G'.$final_row)->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+    $objPHPExcel->getActiveSheet()->getStyle('A1:G'.$final_row)->getBorders()->getAllBorders()->getColor()->setARGB('dedede');
+
+    $Border2 = array( 
+        'borders' => array ( 
+            'outline' => array ( 
+            'style' => PHPExcel_Style_Border::BORDER_THICK, //设置border样式 
+            'color' => array ('argb' => '333'), //设置border颜色 
+        ), 
+    ),);
+
 
     //SQL
     $sql = "SELECT * FROM send_table WHERE repo_status <> '日' order by pack_id";
-    // UPDATE send_table ss set ss.pack_type=( pp where ss.pack_id = pp.pack_id);
+    // $sql = "SELECT * FROM send_table order by pack_id";
     $res = $db->getAll($sql);
     $j=2;
     $ppk = '';  //判断是否可以合并单元格
     foreach ($res as $key => $value) {
-        if($ppk == $value['pack_count']){
             $jj = $j-1;
-            $objPHPExcel->getActiveSheet()->getStyle('A'.$jj.':G'.$j)->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        if($ppk == $value['pack_count']){
+            $objPHPExcel->getActiveSheet()->getStyle('A'.$jj.':G'.$j)->applyFromArray($Border2);
         }
 
         if($value['pause_ch']=='0'){
