@@ -120,6 +120,27 @@ app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','
         });
     }
 
+    // 打包表
+    $scope.down_packing = function(){
+        $scope.shadow('open','ss_read','正在生成');
+        $http.get('/fuck/table/packing_table.php', {
+            params:{
+                down_packing:'down'
+            }
+        }).success(function(data) {
+            if(data == 'ok'){
+                window.location="/down/packing_table.xlsx";
+            }else{
+                $scope.plug_alert('danger','下载失败。','fa fa-ban');
+                $log.info(data);
+            }$log.info(data);
+            $timeout(function(){$scope.shadow('close');},1000); //关闭shadow
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:打包表生成出错。");
+        });
+    }
+
     // 检测商品代码
     $scope.check_goods_code = function(){
         var dom = document.querySelector('#add_goods_code');

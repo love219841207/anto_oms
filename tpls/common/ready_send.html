@@ -1,5 +1,6 @@
 <div class="" ng-controller="readysendCtrl">
 	<button class="btn btn-warning mt10" ng-click="packing()" ng-show="send_table!=''"><i class="fa fa-gift fa-fw"></i>打包</button>
+	<button class="btn btn-success mt10 ml10" ng-click="down_packing()" ng-show="send_table!=''"><i class="fa fa-table fa-fw"></i>中国打包表（包括中、中+日订单）</button>
 	<div class="btn-group ml10 mt10 pull-left mr20">
 		<div class="btn btn-default btn-sm">
 			<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="search_field" ng-change="change_search_field()">
@@ -25,7 +26,7 @@
 			<td>导入日期</td>
 			<td>订单号</td>
 			<!-- <td>OMS-ID</td> -->
-			<td>INFO-ID</td>
+			<!-- <td>INFO-ID</td> -->
 			<td>快递公司</td>
 			<td>配送方式</td>
 			<td>包裹ID</td>
@@ -55,7 +56,7 @@
 			<td class="red">{{item.import_day}}</td>
 			<td ng-class="{'green':item.table_status=='1'}">{{item.order_id}}</td>
 			<!-- <td>{{item.oms_id}}</td> -->
-			<td>{{item.info_id}}</td>
+			<!-- <td>{{item.info_id}}</td> -->
 			<td>{{item.express_company}} <i class="fa fa-edit pointer" data-animation="am-fade-and-slide-top" data-template-url="/modal/change_company.html" bs-modal="modal" ng-click="new_company=item.express_company;new_method=item.send_method"></i></td>
 			<td>{{item.send_method}}</td>
 			<td>{{item.pack_id}}</td>
