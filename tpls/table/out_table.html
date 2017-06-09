@@ -24,9 +24,9 @@
 							<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-change="goods_code=''" ng-model="table_type">
 								<option value="">表类型 ..</option>
 								<option value="one">单品</option>
-								<option value="detail">明细</option>
-								<option value="goods_code">物料结算</option>
-								<option value="daybyday">物料日结算</option>
+								<option value="out_detail_table">明细</option>
+								<option value="out_table">出库表</option>
+								<option value="out_daybyday_table">日结出库表</option>
 							</select>
 							<span ng-show="table_type=='one'">
 								<input type="text" class="key_words" ng-model="goods_code" style="width: 300px;" placeholder="商品代码" ng-keyup="tip_goods_code()">
@@ -35,18 +35,33 @@
 								<input placeholder="开始日期" class="date_icon blue" readonly="readonly" type="text" name="s_date" ng-flat-datepicker datepicker-config="datepickerConfig" ng-model="s_date"> - <input placeholder="结束日期" class="date_icon blue" readonly="readonly" type="text" name="e_date" ng-flat-datepicker datepicker-config="datepickerConfig" ng-model="e_date">
 							</span>
 						</button>
-						<button ng-show="table_type=='one'" class="btn btn-primary" ng-disabled="!table_type|| !goods_code || !s_date || !e_date" ng-click="oue_table()">查看</button>
+						<button ng-show="table_type=='one'" class="btn btn-primary" ng-disabled="!table_type|| !goods_code || !s_date || !e_date" ng-click="look_one()">查看</button>
 						<button ng-hide="table_type=='one'" ng-click="out_table()" class="btn btn-success" ng-disabled="!table_type || !s_date || !e_date">下载</button>
 						<table class="tip_table table table-bordered f12 table-condensed">
 							<tr ng-repeat="item in goods_codes">
 								<td ng-click="click_code(item.goods_code)">{{item.goods_code}}</td>
 							</tr>
 						</table>
+						<div class="clearfix"></div>
+						<table ng-show="one_data" class="table table-bordered f12 mt20 blue">
+							<tr class="info">
+								<td>商品代码</td>
+								<td>出货数</td>
+								<td>扣中国</td>
+								<td>扣日本</td>
+							</tr>
+							<tr ng-repeat="item2 in one_data">
+								<td>{{item2.goods_code}}</td>
+								<td class="tagr">{{item2.sum_out_num}}</td>
+								<td class="tagr">{{item2.sum_pause_ch}}</td>
+								<td class="tagr">{{item2.sum_pause_jp}}</td>
+							</tr>
+						</table>
 					</div>
 				</div>
 				<div class="mt50"></div>
 				<div class="panel-footer">
-					统计一段时间内库存（包括中国、日本）物料的单品统计、出库明细、物料结算及每日出库的物料结算。<br>日期区间以扣库存后订单转入发货区日期为准且统计数据以已有快递单号订单为准。
+					统计一段时间内库存（包括中国、日本）物料的单品统计、出库明细、出库结算及每日出库结算。<br>日期区间以扣库存后订单转入发货区日期为准且统计数据以已有快递单号订单为准。
 				</div>
 			</div>
 		</div>
