@@ -31,7 +31,113 @@ app.controller('tableCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
                 e_date:$scope.e_date,
             }
         }).success(function(data) {
-            $scope.one_data = data;
+            $scope.one_data = data.table;
+
+            //图表数据
+            $scope.chart_box = true;
+            $scope.y_line = data.labels.split(",");
+            $scope.sum_out_num = data.sum_out_num.split(",");
+            $scope.sum_pause_ch = data.sum_pause_ch.split(",");
+            $scope.sum_pause_jp = data.sum_pause_jp.split(",");
+
+
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+
+        // 指定图表的配置项和数据
+        var option = {
+            tooltip : {
+                trigger: 'axis',
+                axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                    type : 'line'        // 默认为直线，可选为：'line' | 'shadow'
+                }
+            },
+            color: ['#51616d','#c23531','#36a38b'],
+            toolbox: {
+                show: true,
+                feature: {
+                    dataView: {readOnly: false},
+                    magicType: {type: ['line', 'bar']},
+                    restore: {},
+                    saveAsImage: {}
+                }
+            },
+            // dataZoom: [
+            //     {
+            //         type: 'inside',
+            //         start: 80,
+            //         end: 100,
+            //         minValueSpan: 10
+            //     },
+            //     {
+            //         show: true,
+            //         type: 'slider',
+            //         top: 26,
+            //         start: 80,
+            //         end: 100,
+            //         minValueSpan: 10
+            //     }
+            // ],
+            legend: {
+                data: ['总出货数', '中国出货数','日本出货数']
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis:  {
+                type: 'category',
+                data: $scope.y_line
+            },
+            yAxis: {
+                type: 'value'
+                
+            },
+            series: [
+                {
+                    name: '总出货数',
+                    type: 'line',
+                    stack: '总量',
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'right'
+                        }
+                    },
+                    data: $scope.sum_out_num
+                },
+                {
+                    name: '中国出货数',
+                    type: 'bar',
+                    stack: '分量',
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'inside'
+                        }
+                    },
+                    data: $scope.sum_pause_ch
+                },
+                {
+                    name: '日本出货数',
+                    type: 'bar',
+                    stack: '分量',
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'inside'
+                        }
+                    },
+                    data: $scope.sum_pause_jp
+                }
+            ]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+
+        myChart.setOption(option);
             // $log.info(data)
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
@@ -96,4 +202,6 @@ app.controller('tableCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         $scope.goods_codes = false;
     }
 
+
+    
 }])

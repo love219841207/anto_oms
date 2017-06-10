@@ -13,7 +13,36 @@ if(isset($_GET['look_one'])){
 
 	$sql = "SELECT goods_code,sum(out_num) AS sum_out_num,sum(pause_ch) AS sum_pause_ch,sum(pause_jp) AS sum_pause_jp FROM history_send WHERE goods_code = '{$goods_code}' AND import_day BETWEEN '{$s_date}' AND '{$e_date}'";
 	$res = $db->getAll($sql);
-	echo json_encode($res);
+	$final_res['table'] = $res; 
+
+	$sql = "SELECT goods_code,sum(out_num) AS sum_out_num,sum(pause_ch) AS sum_pause_ch,sum(pause_jp) AS sum_pause_jp,import_day FROM history_send WHERE goods_code = '{$goods_code}' AND import_day BETWEEN '{$s_date}' AND '{$e_date}' GROUP BY import_day";
+	$res = $db->getAll($sql);
+	$final_res['chart'] = $res; 
+
+	// 图表
+	$labels = array();
+	$sum_out_num = array();
+	$sum_pause_ch = array();
+	$sum_pause_jp = array();
+	foreach ($res as $val) {
+		array_push($labels, $val['import_day']);
+		array_push($sum_out_num, $val['sum_out_num']);
+		array_push($sum_pause_ch, $val['sum_pause_ch']);
+		array_push($sum_pause_jp, $val['sum_pause_jp']);
+	}
+	$labels = implode(',', $labels);
+	$sum_out_num = implode(',', $sum_out_num);
+	$sum_pause_ch = implode(',', $sum_pause_ch);
+	$sum_pause_jp = implode(',', $sum_pause_jp);
+
+	$final_res['labels'] = $labels;
+	$final_res['sum_out_num'] = $sum_out_num;
+	$final_res['sum_pause_ch'] = $sum_pause_ch;
+	$final_res['sum_pause_jp'] = $sum_pause_jp;
+
+	
+
+	echo json_encode($final_res);
 }
 
 // 下载出库表
@@ -76,7 +105,7 @@ if(isset($_GET['out_table'])){
 	        $j++;
 	    }
             
-	}else if($out_table == 'out_goods_table'){
+	}else if($out_table == 'out_table'){
 		$t_title = '物料结算@';
 		$objSheet
 			->setCellValue("A1","商品代码")
