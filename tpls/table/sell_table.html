@@ -1,0 +1,60 @@
+<div class="container-fluid mt20" ng-controller="tableCtrl">
+
+	<div class="panel panel-primary">
+		<div class="panel-heading"><i class="fa fa-fw fa-line-chart"></i> 销售统计</div>
+		<div class="panel-body">
+			<div class="btn-group mt10">
+				<button type="button" class="btn btn_fff btn-sm">
+					<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-change="goods_code='';one_data=false;chart_box=false" ng-model="table_type">
+						<option value="">表类型 ..</option>
+						<option value="sell_detail">销售明细</option>
+						<option value="sell_table">销售额</option>
+					</select>
+					<span ng-show="table_type=='one'">
+						<input type="text" class="key_words" ng-model="goods_code" style="width: 300px;" placeholder="商品代码" ng-keyup="tip_goods_code()">
+					</span>
+					<span>
+						<input placeholder="开始日期" class="date_icon blue" readonly="readonly" type="text" name="s_date" ng-flat-datepicker datepicker-config="datepickerConfig" ng-model="s_date"> - <input placeholder="结束日期" class="date_icon blue" readonly="readonly" type="text" name="e_date" ng-flat-datepicker datepicker-config="datepickerConfig" ng-model="e_date">
+					</span>
+				</button>
+				<button ng-show="table_type=='sell_detail'" ng-click="sell_detail_table()" class="btn btn-success" ng-disabled="!table_type || !s_date || !e_date">下载</button>
+				<button ng-hide="table_type=='sell_detail'" class="btn btn-primary" ng-disabled="!table_type || !s_date || !e_date" ng-click="look_sell()">查看</button>
+				<table class="tip_table table table-bordered f12 table-condensed">
+					<tr ng-repeat="item in goods_codes">
+						<td ng-click="click_code(item.goods_code)">{{item.goods_code}}</td>
+					</tr>
+				</table>
+				<div class="clearfix"></div>
+				<table ng-show="sell_data" class="table table-bordered f12 mt20 blue">
+					<tr class="info">
+						<td>总金額</td>
+						<td>总运费</td>
+						<td>总手续费</td>
+						<td>总积分</td>
+						<td>总优惠券</td>
+						<td>总消费税</td>
+						<td>总购买金额</td>
+					</tr>
+					<tr ng-repeat="item2 in sell_data">
+						<td class="tagr">{{item2.sum_total_money | number}}</td>
+						<td class="tagr">{{item2.sum_ems_money | number}}</td>
+						<td class="tagr">{{item2.sum_bill | number}}</td>
+						<td class="tagr">{{item2.sum_point | number}}</td>
+						<td class="tagr">{{item2.sum_cheap | number}}</td>
+						<td class="tagr">{{item2.sum_tax | number}}</td>
+						<td class="tagr">{{item2.sum_buy_money | number}}</td>
+					</tr>
+				</table>
+			</div>
+
+			<div id="main" class="mt20" style="height: 500px;"></div>
+
+		</div>
+		<div class="mt50"></div>
+		<div class="panel-footer">
+			统计一段时间销售商品订单明细。<br>日期区间以扣库存后订单转入发货区日期为准且统计数据以已有快递单号订单为准。
+		</div>
+	</div>
+	
+	<div class="end_height"></div>
+</div>

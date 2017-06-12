@@ -101,13 +101,17 @@
 					<i class="fa fa-fw fa-snowflake-o ml5"></i>
 					<span class="am-fade" ng-show="side_bar"> 冻结表</span>
 				</div>
-				<!-- <div ui-sref="site.page_size" ui-sref-active="active" class="list-group-item">
-					<i class="fa fa-fw fa-sort-numeric-asc ml5"></i>
-					<span class="am-fade" ng-show="side_bar"> 销售额统计</span>
-				</div> -->
-				<div ng-mouseenter="side_info('出库统计')" ui-sref="site.out_table" ui-sref-active="active" class="list-group-item">
+				<div ng-mouseenter="side_info('销售统计')" ui-sref="site.sell_table" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-line-chart ml5"></i>
+					<span class="am-fade" ng-show="side_bar"> 销售统计</span>
+				</div>
+				<div ng-mouseenter="side_info('出库统计')" ui-sref="site.out_table" ui-sref-active="active" class="list-group-item">
+					<i class="fa fa-fw fa-bar-chart ml5"></i>
 					<span class="am-fade" ng-show="side_bar"> 出库统计</span>
+				</div>
+				<div ng-mouseenter="side_info('历史订单')" ui-sref="site.history_order" ui-sref-active="active" class="list-group-item">
+					<i class="fa fa-fw fa-database ml5"></i>
+					<span class="am-fade" ng-show="side_bar"> 历史订单</span>
 				</div>
 			</div>
 			<!-- 个人设置 -->

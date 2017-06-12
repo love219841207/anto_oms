@@ -110,7 +110,7 @@ if(isset($_GET['up_express_order'])){
 		$res = $db->execute($sql);
 
 		// 亚马逊匹配 bill
-		$sql = "UPDATE history_send history,amazon_response_info info SET history.bill = info.cod_money WHERE history.info_id = info.id AND history.table_status = '2'";
+		$sql = "UPDATE history_send history,amazon_response_info info SET history.unit_price = info.unit_price,history.bill = info.cod_money WHERE history.info_id = info.id AND history.table_status = '2'";
 		$res = $db->execute($sql);
 		
 		// 更新亚马逊 buy_method

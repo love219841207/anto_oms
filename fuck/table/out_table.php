@@ -101,7 +101,7 @@ if(isset($_GET['out_table'])){
 	                ->setCellValue("G".$j,'<'.$value['express_company'].'>'.$value['send_method'].$value['oms_order_express_num'])
 	                ->setCellValue("H".$j,$value['store_name'])
 	                ->setCellValue("I".$j,$value['order_id'])
-	                ->setCellValue("J".$j,$value['who_name']);
+	                ->setCellValue("J".$j,$value['receive_name']);
 	        $j++;
 	    }
             
@@ -155,7 +155,6 @@ if(isset($_GET['out_table'])){
 	}
 
 	$objSheet->setTitle($t_title.$now_time);//表名
-    
     
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
     $objWriter->save($dir."/../../down/".$out_table.".xlsx");   //保存在服务器
