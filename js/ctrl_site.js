@@ -136,6 +136,7 @@ app.controller('topCtrl', ['$rootScope','$scope','$state','$stateParams','$http'
     $scope.ping_repo = function(){
         $http.get('/fuck/ping_repo.php', {params:{ping_repo:"ping"}
         }).success(function(data) {
+            // $log.info(data)
             if(data.repo_status == 1){
                 $timeout(function(){
                     $scope.repo_status = true;
@@ -295,7 +296,22 @@ app.controller('FileController', ['$rootScope','$scope','$state', 'Upload' , '$t
 
     //亚马逊文件导入
     $scope.amazon_import_file = function(file_name){
-        if(file_name == 'oms'){     //导入快递单
+        if(file_name == 'amz_mail'){    //导入亚马逊mail
+            $http.get('/fuck/import_mail_bian.php', {params:{import_file:file_name}
+            }).success(function(data) {
+                // console.log(data)
+                
+                if(data == 'ok'){
+                    $scope.plug_alert('success','导入完成。','fa fa-smile-o');
+                }else{
+                    $scope.plug_alert('danger','库存系统没有：'+data,'fa fa-ban');
+                }
+                $timeout(function(){$scope.shadow('close');},1000);
+            }).error(function(data) {
+                alert("系统错误，请联系管理员。");
+                $log.info(file_name+" 导入失败");
+            });
+        }else if(file_name == 'oms'){     //导入快递单
             $http.get('/fuck/amazon/amazon_import_express.php', {params:{import_file:file_name}
             }).success(function(data) {
                 console.log(data)

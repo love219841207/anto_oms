@@ -41,9 +41,59 @@ if(isset($_GET['reset_express'])){
 	echo 'ok';
 }
 
+function mail_own_key(){
+	// 如果是 mail便，查询出，遍历进行体积运算，分pack_id(包裹数，oms_id-1,2,x)
+	// 检索amz_mail库
+	$db = new PdoMySQL();
+	$sql = "SELECT goods_code FROM amz_mail ORDER BY ID";
+	$res = $db->getAll($sql);
+	$amz_mail = array();
+	foreach ($res as $value) {
+		array_push($amz_mail, "'".$value['goods_code']."'");
+	}
+	$amz_mail = implode(',', $amz_mail);
+
+	// 改mail便 
+	$sql = "UPDATE send_table SET send_method = 'メール便' WHERE goods_code in ($amz_mail) AND station = 'amazon'";
+	$res = $db->execute($sql);
+}
+
+function make_bags(){
+	$db = new PdoMySQL();
+	// 拆亚马逊mail
+	$sql = "SELECT pack_id FROM send_table WHERE station = 'amazon' AND send_method = 'メール便' GROUP BY pack_id";
+	$res = $db->getAll($sql);
+
+	foreach ($res as $value) {
+		$pack_id = $value['pack_id'];
+
+		$sql = "SELECT goods_code FROM send_table WHERE pack_id = '{$pack_id}'";
+		$res = $db->getAll($sql);
+		
+		$user_goods = array();
+		foreach ($res as $val) {
+			$goods_code = $val['goods_code'];
+			array_push($user_goods, "'".$goods_code."'");
+		}
+
+		$user_goods = implode(',', $user_goods);
+
+		//查询体积
+		$sql = "SELECT sum(own_key) AS sum_own_key FROM amz_mail WHERE goods_code IN ($user_goods)";
+		$res = $db->getOne($sql);
+		$sum_own_key = $res['sum_own_key'];
+		// echo $sum_own_key;
+		if($sum_own_key > 600){
+			$sql = "UPDATE send_table SET send_method = '宅配便' WHERE pack_id = '{$pack_id}'";
+			$res = $db->execute($sql);
+		}
+	}
+}
+
 // 打包
 if(isset($_GET['packing'])){
-	// 如果是 mail便，查询出，遍历进行体积运算，分pack_id(包裹数，oms_id-1,2,x)
+	// 亚马逊分配
+	mail_own_key();
 
 	// pack_id
 	$sql = "UPDATE send_table SET pack_id = oms_id";
@@ -71,8 +121,11 @@ if(isset($_GET['packing'])){
 	$sql = "UPDATE send_table SET pack_id = concat('33',pack_id) WHERE station = 'rakuten'";
 	$res = $db->execute($sql);
 
+	// 分包裹
+	make_bags();
+
 	//先变成佐川
-	$sql = "UPDATE send_table SET express_company ='佐川急便' WHERE send_method = '宅配便'";
+	$sql = "UPDATE send_table SET express_company ='佐川急便'";
 	$res = $db->execute($sql);
 
 	//地址分配配送公司，更新黑猫地址	（神奈川県，埼玉県，茨城県，群馬県，山梨県）

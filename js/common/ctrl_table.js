@@ -2,7 +2,8 @@ var app=angular.module('myApp');
 app.controller('tableCtrl', ['$rootScope','$scope','$state','$http','$log','$timeout','$compile', function($rootScope,$scope,$state,$http,$log,$timeout,$compile){
     // 销售额查看
     $scope.look_sell = function(){
-       $http.get('/fuck/table/sell_table.php', {
+        $scope.shadow('open','ss_make','正在生成图表');
+        $http.get('/fuck/table/sell_table.php', {
             params:{
                 look_sell:'get',
                 s_date:$scope.s_date,
@@ -10,6 +11,7 @@ app.controller('tableCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             }
         }).success(function(data) {
             $scope.sell_data = data.table;
+            $timeout(function(){$scope.shadow('close');},1000); //关闭shadow
 
             //图表数据
             $scope.chart_box = true;
@@ -216,7 +218,7 @@ app.controller('tableCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
 
     // 单品统计
     $scope.look_one = function(){
-
+        $scope.shadow('open','ss_make','正在生成图表');
         $http.get('/fuck/table/out_table.php', {
             params:{
                 look_one:$scope.goods_code,
@@ -225,7 +227,7 @@ app.controller('tableCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             }
         }).success(function(data) {
             $scope.one_data = data.table;
-
+            $timeout(function(){$scope.shadow('close');},1000); //关闭shadow
             //图表数据
             $scope.chart_box = true;
             $scope.x_line = data.labels.split(",");

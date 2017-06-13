@@ -260,9 +260,12 @@ if(isset($_GET['check_all_field'])){
 // 33333333333333333333 检测SKU 如果是福袋则拆结束 33333333333333333333
 // 44444444444444444444 运费代码验证开始 44444444444444444444
 	if($station == 'amazon'){
-		//如果是亚马逊，则全部宅配
+		// 如果是亚马逊，则默认全部宅配
 		$sql = "UPDATE $response_info SET yfcode='宅配便' WHERE yfcode_ok = 0";
 		$res = $db->execute($sql);
+
+		// 亚马逊么有运费代码 过
+
 		$sql = "UPDATE $response_info SET yfcode_ok=1 WHERE yfcode_ok = 0";
 		$res = $db->execute($sql);
 
