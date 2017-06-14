@@ -231,6 +231,9 @@ if(isset($_GET['sub_repo'])){
 
 	// 按照 send_id 扣库存	
 	$res = $db->getAll($sql);
+	if(empty($res)){
+		echo 'ok';die;
+	}
 	foreach ($res as $val) {
 		$station = $val['station'];
 		$response_list = $val['station'].'_response_list';
