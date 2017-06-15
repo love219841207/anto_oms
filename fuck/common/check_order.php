@@ -160,7 +160,7 @@ if(isset($_GET['check_all_field'])){
 		$res = $db->execute($sql);
 
 		// SKU更正
-		$sql = "SELECT goods_code FROM true_sku WHERE sku = '{$new_name}'";
+		$sql = "SELECT goods_code FROM true_sku WHERE sku = '{$new_name}' AND store = '{$store}'";
 		$res = $db->getOne($sql);
 		$true_sku = $res['goods_code'];
 		if(empty($res)){
