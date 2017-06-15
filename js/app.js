@@ -550,12 +550,31 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
             }
         })
 
-        //邮编管理
+        //亚马逊mail
         .state('site.amz_mail',{
             url: '/amz_mail/{data}',
             views:{
                 'show@site':{
                     templateUrl: 'tpls/sys_conf/amz_mail.html',
+                    controller: function($scope){
+                        $scope.status.isopen1 = false;
+                        $scope.status.isopen2 = false;
+                        $scope.status.isopen3 = false;
+                        $scope.status.isopen4 = false;
+                        $scope.status.isopen5 = false;
+                        $scope.status.isopen6 = false;
+                        $scope.status.isopen7 = true;
+                    }
+                }
+            }
+        })
+
+        //店铺sku更正
+        .state('site.true_sku',{
+            url: '/true_sku/{data}',
+            views:{
+                'show@site':{
+                    templateUrl: 'tpls/sys_conf/true_sku.html',
                     controller: function($scope){
                         $scope.status.isopen1 = false;
                         $scope.status.isopen2 = false;

@@ -65,6 +65,7 @@ if(isset($_GET['check_all_field'])){
 	$rdb = new RepoPdoMySQL();
 	$response_list = $station.'_response_list';
 	$response_info = $station.'_response_info';
+
 // 11111111111111111111 验证邮编地址开始 11111111111111111111
 	// 搜出本店铺未验证的地址的订单号 post_ok=0
 	$sql = "SELECT order_id FROM $response_list WHERE store = '{$store}' AND post_ok = 0";
@@ -157,6 +158,18 @@ if(isset($_GET['check_all_field'])){
 			$sql = "UPDATE $response_info SET goods_code = sku WHERE id = '{$now_id}'";
 		}
 		$res = $db->execute($sql);
+
+		// SKU更正
+		$sql = "SELECT goods_code FROM true_sku WHERE sku = '{$new_name}'";
+		$res = $db->getOne($sql);
+		$true_sku = $res['goods_code'];
+		if(empty($res)){
+
+		}else{
+			$sql = "UPDATE $response_info SET goods_code = '{$true_sku}' WHERE id = '{$now_id}'";
+			$res = $db->execute($sql);
+			$new_name = $true_sku;
+		}
 
 		// 拆福袋
 		$sql = "SELECT count(1) FROM new_name WHERE new_name='{$new_name}'";

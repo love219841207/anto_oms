@@ -2,12 +2,12 @@
 	<div class="row">
 		<div class="col-lg-9 col-md-9 col-sm-10">
 			<div class="panel panel-primary">
-				<div class="panel-heading"><i class="fa fa-fw fa-amazon"></i> 亚马逊 mail便 更新</div>
+				<div class="panel-heading"><i class="fa fa-fw fa-check-square-o"></i> SKU更正</div>
 				<div class="panel-body">
 					<div class="container-fluid">
 						<form name="fileForm" ng-controller="FileController">
 							<div class="row">
-								<div class="">文件类型： amz_mail.xlsx</div>
+								<div class="">文件类型： true_sku.xlsx</div>
 							</div>
 							<div class="row mt10">
 								<button ng-click="chose_file()" class="btn btn-default" ngf-select="" ngf-pattern="'.xlsx'" name="file" ng-model="upload_file" ngf-multiple="false" required="1">选择文件</button> 
@@ -15,9 +15,9 @@
 								<span class="green">{{upload_file.name}}</span>
 							</div>
 							<div class="row mt10">
-								<button class="btn btn-primary btn-sm mr10" ng-disabled="!fileForm.$valid" ng-click="submit('amz_mail','xlsx','amazon')"><i class="fa fa-upload fa-fw"></i> 导 入</button>
-								<button class="btn btn-warning btn-sm mr10" ng-click="look_amz_mail()"><i class="fa fa-feed fa-fw"></i> 检 测</button>
-								<button class="btn btn-success btn-sm" ng-click="down_amz_mail()"><i class="fa fa-download fa-fw"></i> 下 载</button>
+								<button class="btn btn-primary btn-sm mr10" ng-disabled="!fileForm.$valid" ng-click="submit('true_sku','xlsx','amazon')"><i class="fa fa-upload fa-fw"></i> 导 入</button>
+								<button class="btn btn-warning btn-sm mr10" ng-click="look_true_sku()"><i class="fa fa-feed fa-fw"></i> 检 测</button>
+								<button class="btn btn-success btn-sm" ng-click="down_true_sku()"><i class="fa fa-download fa-fw"></i> 下 载</button>
 							</div>
 							<div class="row mt10">
 								<div class="col-lg-11">
@@ -34,13 +34,15 @@
 								<table class="table table-bordered mt20 f12 table-condensed">
 									<tr class="success green">
 										<td>ID</td>
-										<td>商品代码</td>
-										<td>体积值</td>
+										<td>SKU</td>
+										<td>更正SKU</td>
+										<td>店铺</td>
 									</tr>
 									<tr ng-repeat="item in post_response.look_data1 track by $index" class="s_gray">
 										<td>{{item.id}}</td>
+										<td>{{item.sku}}</td>
 										<td>{{item.goods_code}}</td>
-										<td>{{item.own_key}}</td>
+										<td>{{item.store}}</td>
 									</tr>
 									<tr class="s_gray">
 										<td>...</td>
@@ -49,8 +51,9 @@
 									</tr>
 									<tr ng-repeat="item in post_response.look_data2 track by $index" class="s_gray">
 										<td>{{item.id}}</td>
+										<td>{{item.sku}}</td>
 										<td>{{item.goods_code}}</td>
-										<td>{{item.own_key}}</td>
+										<td>{{item.store}}</td>
 									</tr>
 								</table> 
 							</div>
@@ -59,7 +62,7 @@
 					</div>
 
 				</div>
-				<div class="panel-footer">上传覆盖亚马逊mail便库，从 .xlsx 文件的第二行导入数据。<br>点击【下载】下载上次导入的数据。</div>
+				<div class="panel-footer">系统验证环节进行自动SKU转化原数据，例：ACT→ZHB。<br>上传覆盖原始数据，从 .xlsx 文件的第二行导入数据。<br>点击【下载】下载上次导入的数据。<br><span class="red">注：同一店铺不能有重复的SKU更正规则。</span></div>
 			</div>
 		</div>
 	</div>

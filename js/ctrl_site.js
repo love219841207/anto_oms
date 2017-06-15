@@ -296,7 +296,21 @@ app.controller('FileController', ['$rootScope','$scope','$state', 'Upload' , '$t
 
     //亚马逊文件导入
     $scope.amazon_import_file = function(file_name){
-        if(file_name == 'amz_mail'){    //导入亚马逊mail
+        if(file_name == 'true_sku'){    //导入true_sku
+            $http.get('/fuck/import_true_sku.php', {params:{import_file:file_name}
+            }).success(function(data) {
+                // console.log(data)
+                
+                if(data == 'ok'){
+                    $scope.plug_alert('success','导入完成。','fa fa-smile-o');
+                }
+                $timeout(function(){$scope.shadow('close');},1000);
+            }).error(function(data) {
+                alert("系统错误，请联系管理员。");
+                $log.info(file_name+" 导入失败");
+            });
+
+        }else if(file_name == 'amz_mail'){    //导入亚马逊mail
             $http.get('/fuck/import_mail_bian.php', {params:{import_file:file_name}
             }).success(function(data) {
                 // console.log(data)
