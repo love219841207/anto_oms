@@ -8,21 +8,26 @@ ini_set("memory_limit", "1024M");
 
 // 下载打包表
 if(isset($_GET['down_packing'])){
-    // 计算打包数
-    $sql = "SELECT pack_id,count(pack_id) as count FROM send_table GROUP BY pack_id";
-    $res = $db->getAll($sql);
-    foreach ($res as $value) {
-        $pack_id = $value['pack_id'];
-        $pack_count = $value['count'];
-        if($pack_count > 1){
-            $sql = "UPDATE send_table SET pack_count = concat(pack_id,'-{$pack_count}') WHERE pack_id = '{$pack_id}'";
-            $res = $db->execute($sql);
-        }else{
-            $sql = "UPDATE send_table SET pack_count = concat(pack_id) WHERE pack_id = '{$pack_id}'";
-            $res = $db->execute($sql);
-        }
+    // 
+    $sql = "UPDATE send_table SET pack_count = pack_id";
+    $res = $db->execute($sql);
+    // 替换pack_count里的（）为空
+    $sql = "UPDATE send_table SET pack_count = REPLACE(pack_count,substring(pack_count, locate('(', pack_count),locate(')', pack_count)),'')";
 
-    }
+    $res = $db->execute($sql);
+
+    // 计算打包数
+    // $sql = "SELECT pack_id,pack_count,count(pack_id) as count FROM send_table GROUP BY pack_count";
+    // $res = $db->getAll($sql);
+    // foreach ($res as $value) {
+    //     $pack_id = $value['pack_id'];
+    //     $count = $value['count'];
+    //     $pack_count = $value['pack_count'];
+    //     if($count > '1'){
+    //         $sql = "UPDATE send_table SET pack_count = concat(pack_id,'-{$count}') WHERE pack_count = '{$pack_count}'";
+    //         $res = $db->execute($sql);
+    //     }
+    // }
 
     // 预计多少行
     $sql = "SELECT count(1) as cc FROM send_table WHERE repo_status <> '日'";
@@ -46,13 +51,14 @@ if(isset($_GET['down_packing'])){
             ->setCellValue("D1","包裹")
             ->setCellValue("E1","总数")
             ->setCellValue("F1","中")
-            ->setCellValue("G1","日");    //表头值
+            ->setCellValue("G1","日")
+            ->setCellValue("H1","快递");    //表头值
     $objSheet->getDefaultStyle()->getFont()->setName("微软雅黑")->setSize(14);  //默认字体
-    $objPHPExcel->getActiveSheet()->getStyle('A1:G1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
-    $objPHPExcel->getActiveSheet()->getStyle('A:G')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
-    $objPHPExcel->getActiveSheet()->getStyle('A1:G1')->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_WHITE);//前景色
-    $objSheet->getStyle('A1:G1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
-    $objSheet->getStyle('A1:G1')->getFill()->getStartColor()->setRGB('1d9c73'); //背景色
+    $objPHPExcel->getActiveSheet()->getStyle('A1:H1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
+    $objPHPExcel->getActiveSheet()->getStyle('A:H')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
+    $objPHPExcel->getActiveSheet()->getStyle('A1:H1')->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_WHITE);//前景色
+    $objSheet->getStyle('A1:H1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+    $objSheet->getStyle('A1:H1')->getFill()->getStartColor()->setRGB('1d9c73'); //背景色
     // $objSheet->getDefaultRowDimension()->setRowHeight(28);   //单元格高
     $objSheet->getColumnDimension('A')->setWidth(10);//单元格宽
     $objSheet->getColumnDimension('C')->setWidth(24);//单元格宽
@@ -60,28 +66,31 @@ if(isset($_GET['down_packing'])){
     $objSheet->getColumnDimension('D')->setWidth(30);//单元格宽
     $objSheet->freezePane('A2');//冻结表头
     $objPHPExcel->getActiveSheet()->getStyle('A')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);//左对齐
-    $objPHPExcel->getActiveSheet()->getStyle('A1:G'.$final_row)->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
-    $objPHPExcel->getActiveSheet()->getStyle('A1:G'.$final_row)->getBorders()->getAllBorders()->getColor()->setARGB('dedede');
+    $objPHPExcel->getActiveSheet()->getStyle('A1:H'.$final_row)->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+    $objPHPExcel->getActiveSheet()->getStyle('A1:H'.$final_row)->getBorders()->getAllBorders()->getColor()->setARGB('dedede');
 
     $Border2 = array( 
         'borders' => array ( 
             'outline' => array ( 
-            'style' => PHPExcel_Style_Border::BORDER_THICK, //设置border样式 
-            'color' => array ('argb' => '333'), //设置border颜色 
+            'style' => PHPExcel_Style_Border::BORDER_THIN, //设置border样式 
+            'color' => array ('argb' => 'FFFFFF'), //设置border颜色 
         ), 
     ),);
 
 
     //SQL
-    $sql = "SELECT * FROM send_table WHERE repo_status <> '日' order by pack_id";
+    $sql = "SELECT * FROM send_table WHERE repo_status <> '日' order by pack_count";
     // $sql = "SELECT * FROM send_table order by pack_id";
     $res = $db->getAll($sql);
     $j=2;
     $ppk = '';  //判断是否可以合并单元格
     foreach ($res as $key => $value) {
             $jj = $j-1;
+            // echo $ppk;echo 'xxx';
         if($ppk == $value['pack_count']){
-            $objPHPExcel->getActiveSheet()->getStyle('A'.$jj.':G'.$j)->applyFromArray($Border2);
+            $objPHPExcel->getActiveSheet()->getStyle('A'.$j.':H'.$j)->applyFromArray($Border2);
+            $objPHPExcel->getActiveSheet()->getStyle('A'.$jj.':H'.$jj)->applyFromArray($Border2);
+        }else{
         }
 
         if($value['pause_ch']=='0'){
@@ -97,7 +106,8 @@ if(isset($_GET['down_packing'])){
                 ->setCellValueExplicit("D".$j,$value['pack_count'],PHPExcel_Cell_DataType::TYPE_STRING)
                 ->setCellValue("E".$j,$value['out_num'])
                 ->setCellValue("F".$j,$value['pause_ch'])
-                ->setCellValue("G".$j,$value['pause_jp']);
+                ->setCellValue("G".$j,$value['pause_jp'])
+                ->setCellValue("H".$j,$value['send_method']);
         $j++;
         $ppk = $value['pack_count'];
     }
