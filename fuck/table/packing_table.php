@@ -48,11 +48,11 @@ if(isset($_GET['down_packing'])){
     $objSheet->setCellValue("A1","导入日期")
             ->setCellValue("B1","收件人")
             ->setCellValue("C1","商品代码")
-            ->setCellValue("D1","包裹")
-            ->setCellValue("E1","总数")
-            ->setCellValue("F1","中")
-            ->setCellValue("G1","日")
-            ->setCellValue("H1","快递");    //表头值
+            ->setCellValue("D1","总数")
+            ->setCellValue("E1","中")
+            ->setCellValue("F1","日")
+            ->setCellValue("G1","快递")
+            ->setCellValue("H1","包裹");    //表头值
     $objSheet->getDefaultStyle()->getFont()->setName("微软雅黑")->setSize(14);  //默认字体
     $objPHPExcel->getActiveSheet()->getStyle('A1:H1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
     $objPHPExcel->getActiveSheet()->getStyle('A:H')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
@@ -61,13 +61,21 @@ if(isset($_GET['down_packing'])){
     $objSheet->getStyle('A1:H1')->getFill()->getStartColor()->setRGB('1d9c73'); //背景色
     // $objSheet->getDefaultRowDimension()->setRowHeight(28);   //单元格高
     $objSheet->getColumnDimension('A')->setWidth(10);//单元格宽
-    $objSheet->getColumnDimension('C')->setWidth(24);//单元格宽
+    $objSheet->getColumnDimension('C')->setWidth(30);//单元格宽
     $objSheet->getColumnDimension('B')->setWidth(10);//单元格宽
-    $objSheet->getColumnDimension('D')->setWidth(30);//单元格宽
+    // $objSheet->getColumnDimension('D')->setWidth(30);//单元格宽
     $objSheet->freezePane('A2');//冻结表头
     $objPHPExcel->getActiveSheet()->getStyle('A')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);//左对齐
     $objPHPExcel->getActiveSheet()->getStyle('A1:H'.$final_row)->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
     $objPHPExcel->getActiveSheet()->getStyle('A1:H'.$final_row)->getBorders()->getAllBorders()->getColor()->setARGB('dedede');
+
+    $Border1 = array( 
+        'borders' => array ( 
+            'outline' => array ( 
+            'style' => PHPExcel_Style_Border::BORDER_THIN, //设置border样式 
+            'color' => array ('argb' => '666666'), //设置border颜色 
+        ), 
+    ),);
 
     $Border2 = array( 
         'borders' => array ( 
@@ -103,13 +111,39 @@ if(isset($_GET['down_packing'])){
         $objSheet->setCellValue("A".$j,$value['import_day'])
                 ->setCellValueExplicit("B".$j,$value['who_name'],PHPExcel_Cell_DataType::TYPE_STRING)
                 ->setCellValue("C".$j,$value['goods_code'])
-                ->setCellValueExplicit("D".$j,$value['pack_count'],PHPExcel_Cell_DataType::TYPE_STRING)
-                ->setCellValue("E".$j,$value['out_num'])
-                ->setCellValue("F".$j,$value['pause_ch'])
-                ->setCellValue("G".$j,$value['pause_jp'])
-                ->setCellValue("H".$j,$value['send_method']);
+                ->setCellValue("D".$j,$value['out_num'])
+                ->setCellValue("E".$j,$value['pause_ch'])
+                ->setCellValue("F".$j,$value['pause_jp'])
+                ->setCellValue("G".$j,$value['send_method'])
+                ->setCellValueExplicit("H".$j,$value['pack_count'],PHPExcel_Cell_DataType::TYPE_STRING);
         $j++;
         $ppk = $value['pack_count'];
+    }
+
+    $k = $j+1;
+    $objSheet->setCellValue("C".$k,"商品代码")
+            ->setCellValue("D".$k,"总发货数")
+            ->setCellValue("E".$k,"总中国发货数")
+            ->setCellValue("F".$k,"总日本发货数");    //表头值
+
+    $k = $k+1;
+    $sql = "SELECT goods_code,
+            sum(out_num) AS sum_out_num,
+            sum(pause_ch) AS sum_pause_ch,
+            sum(pause_jp) AS sum_pause_jp FROM send_table
+             WHERE goods_code <> substring(goods_code, locate('bag (', goods_code),locate(')', goods_code))
+             AND repo_status <> '日' 
+             GROUP BY goods_code";
+
+    $res = $db->getAll($sql);
+    foreach ($res as $key => $value) {
+        $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':H'.$k)->applyFromArray($Border1);
+
+        $objSheet->setCellValue("C".$k,$value['goods_code'])
+                ->setCellValueExplicit("D".$k,$value['sum_out_num'],PHPExcel_Cell_DataType::TYPE_STRING)
+                ->setCellValueExplicit("E".$k,$value['sum_pause_ch'],PHPExcel_Cell_DataType::TYPE_STRING)
+                ->setCellValueExplicit("F".$k,$value['sum_pause_jp'],PHPExcel_Cell_DataType::TYPE_STRING);
+        $k++;
     }
 
     // $objPHPExcel->getActiveSheet()->getColumnDimension()->setAutoSize(true);

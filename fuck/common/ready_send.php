@@ -26,6 +26,13 @@ if(isset($_GET['change_company'])){
 
 // 重置express
 if(isset($_GET['reset_express'])){
+	reset_express();
+	echo 'ok';
+}
+
+//重置功能
+function reset_express(){
+	$db = new PdoMySQL();
 	// 重置快递公司 和包裹
 	$sql = "UPDATE send_table SET express_company ='',pack_id = ''";
 	$res = $db->execute($sql);
@@ -37,14 +44,17 @@ if(isset($_GET['reset_express'])){
 	// item_line
 	$sql = "UPDATE send_table SET item_line = '0'";
 	$res = $db->execute($sql);
-
-	echo 'ok';
 }
 
-function mail_own_key(){
-	// 如果是 mail便，查询出，遍历进行体积运算，分pack_id(包裹数，oms_id-1,2,x)
-	// 检索amz_mail库
+
+// 亚马逊mail
+function amz_mail_own_key(){
 	$db = new PdoMySQL();
+	// 亚马逊默认宅配便
+	$sql = "UPDATE send_table SET send_method = '宅配便' WHERE station = 'amazon'";
+	$res = $db->execute($sql);
+
+	// 检索amz_mail库
 	$sql = "SELECT goods_code FROM amz_mail ORDER BY ID";
 	$res = $db->getAll($sql);
 	$amz_mail = array();
@@ -60,6 +70,30 @@ function mail_own_key(){
 
 function make_bags(){
 	$db = new PdoMySQL();
+
+	// 同捆中存在DM便和宅配则改为宅配
+	$sql = "SELECT pack_id,count(1) as cct FROM send_table GROUP BY pack_id";
+	$res = $db->getAll($sql);
+	foreach ($res as $val) {
+		$cct = $val['cct'];
+		$pid = $val['pack_id'];
+
+		if($cct > 1){	//如果订单数大于1
+			// echo $pid.' ';
+			$sql = "SELECT count(1) as zpb FROM send_table WHERE send_method = '宅配便' AND pack_id = '{$pid}'";
+			$res = $db->getOne($sql);
+			$zpb = $res['zpb'];
+			if($zpb > 0){	//如果至少有一单宅配
+				$sql = "SELECT count(1) as dmb FROM send_table WHERE send_method = 'DM便' AND pack_id = '{$pid}'";
+				$res = $db->getOne($sql);
+				$dmb = $res['dmb'];
+				if($dmb > 0){	//如果至少有一单DM便
+					$sql = "UPDATE send_table SET send_method = '宅配便',express_company = '' WHERE pack_id = '{$pid}'";
+					$res = $db->execute($sql);
+				}
+			}	
+		}
+	}
 
 	// 删除自动添加的包裹
 	$sql = "DELETE FROM send_table WHERE other_1 = 'add'";
@@ -100,7 +134,6 @@ function make_bags(){
 			$now_key = $now_out_num * $ress['own_key'];
 			$sum_own_key = $sum_own_key + $now_key;
 		}
-// echo $sum_own_key.'*';
 
 		if(1200 >$sum_own_key AND $sum_own_key > 600){	
 			$ppc = $pack_id.'(1/2)';
@@ -166,11 +199,12 @@ function make_bags(){
 
 // 打包
 if(isset($_GET['packing'])){
+	reset_express();	// 重置
 	// 亚马逊分配
-	mail_own_key();
+	amz_mail_own_key();
 
 	// pack_id
-	$sql = "UPDATE send_table SET pack_id = oms_id";
+	$sql = "UPDATE send_table SET pack_id = oms_id,pack_count = ''";
 	$res = $db->execute($sql);
 
 	// 如果是合单
