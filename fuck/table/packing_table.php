@@ -43,88 +43,55 @@ if(isset($_GET['down_packing'])){
 
     //PHPExcel
     $objPHPExcel = new PHPExcel();
-    $objSheet = $objPHPExcel->getActiveSheet();
-    $objSheet->setTitle('打包表@'.$now_time);//表名
-    $objSheet->setCellValue("A1","导入日期")
-            ->setCellValue("B1","收件人")
-            ->setCellValue("C1","商品代码")
-            ->setCellValue("D1","总数")
-            ->setCellValue("E1","中")
-            ->setCellValue("F1","日")
-            ->setCellValue("G1","快递")
-            ->setCellValue("H1","包裹");    //表头值
-    $objSheet->getDefaultStyle()->getFont()->setName("微软雅黑")->setSize(14);  //默认字体
-    $objPHPExcel->getActiveSheet()->getStyle('A1:H1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
-    $objPHPExcel->getActiveSheet()->getStyle('A:H')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
-    $objPHPExcel->getActiveSheet()->getStyle('A1:H1')->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_WHITE);//前景色
-    $objSheet->getStyle('A1:H1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
-    $objSheet->getStyle('A1:H1')->getFill()->getStartColor()->setRGB('1d9c73'); //背景色
-    // $objSheet->getDefaultRowDimension()->setRowHeight(28);   //单元格高
-    $objSheet->getColumnDimension('A')->setWidth(10);//单元格宽
-    $objSheet->getColumnDimension('C')->setWidth(30);//单元格宽
-    $objSheet->getColumnDimension('B')->setWidth(10);//单元格宽
-    // $objSheet->getColumnDimension('D')->setWidth(30);//单元格宽
-    $objSheet->freezePane('A2');//冻结表头
+
+    // 表格边框
+    $Border_all = array(  
+        'borders' => array(  
+            'allborders' => array(  
+                //'style' => PHPExcel_Style_Border::BORDER_THICK,//边框是粗的  
+                'style' => PHPExcel_Style_Border::BORDER_THIN,//细边框  
+                'color' => array('argb' => 'dedede'),
+            ),  
+        ),  
+    );
+
+    $Border_out = array( 
+        'borders' => array ( 
+            'outline' => array ( 
+                'style' => PHPExcel_Style_Border::BORDER_THICK, //设置border样式 
+                'color' => array ('argb' => '666666'), //设置border颜色 
+        ), 
+    ),);
+
+
+    $Border_fff = array( 
+        'borders' => array ( 
+            'outline' => array ( 
+                'style' => PHPExcel_Style_Border::BORDER_THIN, //设置border样式 
+                'color' => array ('argb' => 'FFFFFF'), //设置border颜色 
+        ), 
+    ),);
+
+    // sheet1
+    $objPHPExcel->setActiveSheetIndex(0); 
+    $objPHPExcel->getActiveSheet()->setTitle('总发货表@'.$now_time);//表名
+    $objPHPExcel->getActiveSheet()->getDefaultStyle()->getFont()->setName("微软雅黑")->setSize(14);  //默认字体
+    $objPHPExcel->getActiveSheet()->getStyle('A1:D1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
+    $objPHPExcel->getActiveSheet()->getStyle('A:D')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
+    $objPHPExcel->getActiveSheet()->getStyle('A1:D1')->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_WHITE);//前景色
+    $objPHPExcel->getActiveSheet()->getStyle('A1:D1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+    $objPHPExcel->getActiveSheet()->getStyle('A1:D1')->getFill()->getStartColor()->setRGB('1d9c73'); //背景色
+    $objPHPExcel->getActiveSheet()->freezePane('A2');//冻结表头
     $objPHPExcel->getActiveSheet()->getStyle('A')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);//左对齐
-    $objPHPExcel->getActiveSheet()->getStyle('A1:H'.$final_row)->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
-    $objPHPExcel->getActiveSheet()->getStyle('A1:H'.$final_row)->getBorders()->getAllBorders()->getColor()->setARGB('dedede');
-
-    $Border1 = array( 
-        'borders' => array ( 
-            'outline' => array ( 
-            'style' => PHPExcel_Style_Border::BORDER_THIN, //设置border样式 
-            'color' => array ('argb' => '666666'), //设置border颜色 
-        ), 
-    ),);
-
-    $Border2 = array( 
-        'borders' => array ( 
-            'outline' => array ( 
-            'style' => PHPExcel_Style_Border::BORDER_THIN, //设置border样式 
-            'color' => array ('argb' => 'FFFFFF'), //设置border颜色 
-        ), 
-    ),);
-
-
-    //SQL
-    $sql = "SELECT * FROM send_table WHERE repo_status <> '日' order by pack_count";
-    // $sql = "SELECT * FROM send_table order by pack_id";
-    $res = $db->getAll($sql);
-    $j=2;
-    $ppk = '';  //判断是否可以合并单元格
-    foreach ($res as $key => $value) {
-            $jj = $j-1;
-            // echo $ppk;echo 'xxx';
-        if($ppk == $value['pack_count']){
-            $objPHPExcel->getActiveSheet()->getStyle('A'.$j.':H'.$j)->applyFromArray($Border2);
-            $objPHPExcel->getActiveSheet()->getStyle('A'.$jj.':H'.$jj)->applyFromArray($Border2);
-        }else{
-        }
-
-        if($value['pause_ch']=='0'){
-            $value['pause_ch'] = '';
-        }
-
-        if($value['pause_jp']=='0'){
-            $value['pause_jp'] = '';
-        }
-        $objSheet->setCellValue("A".$j,$value['import_day'])
-                ->setCellValueExplicit("B".$j,$value['who_name'],PHPExcel_Cell_DataType::TYPE_STRING)
-                ->setCellValue("C".$j,$value['goods_code'])
-                ->setCellValue("D".$j,$value['out_num'])
-                ->setCellValue("E".$j,$value['pause_ch'])
-                ->setCellValue("F".$j,$value['pause_jp'])
-                ->setCellValue("G".$j,$value['send_method'])
-                ->setCellValueExplicit("H".$j,$value['pack_count'],PHPExcel_Cell_DataType::TYPE_STRING);
-        $j++;
-        $ppk = $value['pack_count'];
-    }
-
-    $k = $j+1;
-    $objSheet->setCellValue("C".$k,"商品代码")
-            ->setCellValue("D".$k,"总发货数")
-            ->setCellValue("E".$k,"总中国发货数")
-            ->setCellValue("F".$k,"总日本发货数");    //表头值
+    $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(40);//单元格宽
+    $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(10);//单元格宽
+    $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(10);//单元格宽
+    $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(10);//单元格宽
+    $k = 1;
+    $objPHPExcel->getActiveSheet()->setCellValue("A".$k,"商品代码")
+            ->setCellValue("B".$k,"总发货数")
+            ->setCellValue("C".$k,"总中国发货数")
+            ->setCellValue("D".$k,"总日本发货数");    //表头值
 
     $k = $k+1;
     $sql = "SELECT goods_code,
@@ -137,14 +104,146 @@ if(isset($_GET['down_packing'])){
 
     $res = $db->getAll($sql);
     foreach ($res as $key => $value) {
-        $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':H'.$k)->applyFromArray($Border1);
-
-        $objSheet->setCellValue("C".$k,$value['goods_code'])
-                ->setCellValueExplicit("D".$k,$value['sum_out_num'],PHPExcel_Cell_DataType::TYPE_STRING)
-                ->setCellValueExplicit("E".$k,$value['sum_pause_ch'],PHPExcel_Cell_DataType::TYPE_STRING)
-                ->setCellValueExplicit("F".$k,$value['sum_pause_jp'],PHPExcel_Cell_DataType::TYPE_STRING);
+        $objPHPExcel->getActiveSheet()->getStyle('A'.$k.':D'.$k)->applyFromArray($Border_all);
+        $objPHPExcel->getActiveSheet()->setCellValue("A".$k,$value['goods_code'])
+                ->setCellValueExplicit("B".$k,$value['sum_out_num'],PHPExcel_Cell_DataType::TYPE_STRING)
+                ->setCellValueExplicit("C".$k,$value['sum_pause_ch'],PHPExcel_Cell_DataType::TYPE_STRING)
+                ->setCellValueExplicit("D".$k,$value['sum_pause_jp'],PHPExcel_Cell_DataType::TYPE_STRING);
         $k++;
     }
+
+    // sheet2
+    $objPHPExcel->createSheet();
+    $objPHPExcel->setActiveSheetIndex(1); 
+    $objPHPExcel->getActiveSheet()->setTitle('佐川急便');//表名
+    $objPHPExcel->getActiveSheet()->setCellValue("A1","导入日期")
+            ->setCellValue("B1","收件人")
+            ->setCellValue("C1","商品代码")
+            ->setCellValue("D1","总数")
+            ->setCellValue("E1","中")
+            ->setCellValue("F1","日")
+            ->setCellValue("G1","快递")
+            ->setCellValue("H1","包裹");    //表头值
+    $objPHPExcel->getActiveSheet()->getDefaultStyle()->getFont()->setName("微软雅黑")->setSize(14);  //默认字体
+    $objPHPExcel->getActiveSheet()->getStyle('A1:H1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
+    $objPHPExcel->getActiveSheet()->getStyle('A:H')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
+    $objPHPExcel->getActiveSheet()->getStyle('A1:H1')->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_WHITE);//前景色
+    $objPHPExcel->getActiveSheet()->getStyle('A1:H1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+    $objPHPExcel->getActiveSheet()->getStyle('A1:H1')->getFill()->getStartColor()->setRGB('1d9c73'); //背景色
+    // $objSheet->getDefaultRowDimension()->setRowHeight(28);   //单元格高
+    $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(10);//单元格宽
+    $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(40);//单元格宽
+    $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(10);//单元格宽
+    // $objSheet->getColumnDimension('D')->setWidth(30);//单元格宽
+    $objPHPExcel->getActiveSheet()->freezePane('A2');//冻结表头
+    $objPHPExcel->getActiveSheet()->getStyle('A')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);//左对齐
+
+    //SQL
+    $sql = "SELECT * FROM send_table WHERE repo_status <> '日' AND express_company = '佐川急便' order by pack_count";
+    // $sql = "SELECT * FROM send_table order by pack_id";
+    $res = $db->getAll($sql);
+    $j=2;
+    $ppk = '';  //判断是否可以合并单元格
+    foreach ($res as $key => $value) {
+            $jj = $j-1;
+
+            $objPHPExcel->getActiveSheet()->getStyle('A'.$j.':H'.$j)->applyFromArray($Border_all);
+
+        if($ppk == $value['pack_count']){
+            $objPHPExcel->getActiveSheet()->getStyle('A'.$jj.':H'.$jj)->getBorders()->getBottom()->getColor()->setARGB('FFFFFF');
+        }else{
+            $objPHPExcel->getActiveSheet()->getStyle('A'.$jj.':H'.$jj)->getBorders()->getBottom()->getColor()->setARGB('1d9c73');
+            $objPHPExcel->getActiveSheet()->getStyle('A'.$jj.':H'.$jj)->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        }
+
+        if($value['pause_ch']=='0'){
+            $value['pause_ch'] = '';
+        }
+
+        if($value['pause_jp']=='0'){
+            $value['pause_jp'] = '';
+        }
+        $objPHPExcel->getActiveSheet()->setCellValue("A".$j,$value['import_day'])
+                ->setCellValueExplicit("B".$j,$value['who_name'],PHPExcel_Cell_DataType::TYPE_STRING)
+                ->setCellValue("C".$j,$value['goods_code'])
+                ->setCellValue("D".$j,$value['out_num'])
+                ->setCellValue("E".$j,$value['pause_ch'])
+                ->setCellValue("F".$j,$value['pause_jp'])
+                ->setCellValue("G".$j,$value['send_method'])
+                ->setCellValueExplicit("H".$j,$value['pack_count'],PHPExcel_Cell_DataType::TYPE_STRING);
+        $j++;
+        $ppk = $value['pack_count'];
+    }
+
+    // sheet3
+    $objPHPExcel->createSheet();
+    $objPHPExcel->setActiveSheetIndex(2); 
+    $objPHPExcel->getActiveSheet()->setTitle('ヤマト運輸');//表名
+    $objPHPExcel->getActiveSheet()->setCellValue("A1","导入日期")
+            ->setCellValue("B1","收件人")
+            ->setCellValue("C1","商品代码")
+            ->setCellValue("D1","总数")
+            ->setCellValue("E1","中")
+            ->setCellValue("F1","日")
+            ->setCellValue("G1","快递")
+            ->setCellValue("H1","包裹");    //表头值
+    $objPHPExcel->getActiveSheet()->getDefaultStyle()->getFont()->setName("微软雅黑")->setSize(14);  //默认字体
+    $objPHPExcel->getActiveSheet()->getStyle('A1:H1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
+    $objPHPExcel->getActiveSheet()->getStyle('A:H')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
+    $objPHPExcel->getActiveSheet()->getStyle('A1:H1')->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_WHITE);//前景色
+    $objPHPExcel->getActiveSheet()->getStyle('A1:H1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+    $objPHPExcel->getActiveSheet()->getStyle('A1:H1')->getFill()->getStartColor()->setRGB('1d9c73'); //背景色
+    // $objSheet->getDefaultRowDimension()->setRowHeight(28);   //单元格高
+    $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(10);//单元格宽
+    $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(40);//单元格宽
+    $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(10);//单元格宽
+    // $objSheet->getColumnDimension('D')->setWidth(30);//单元格宽
+    $objPHPExcel->getActiveSheet()->freezePane('A2');//冻结表头
+    $objPHPExcel->getActiveSheet()->getStyle('A')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);//左对齐
+    // $objPHPExcel->getActiveSheet()->getStyle('A1:H'.$final_row)->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+    // $objPHPExcel->getActiveSheet()->getStyle('A1:H'.$final_row)->getBorders()->getAllBorders()->getColor()->setARGB('dedede');
+
+    //SQL
+    $sql = "SELECT * FROM send_table WHERE repo_status <> '日' AND express_company = 'ヤマト運輸' order by pack_count";
+    // $sql = "SELECT * FROM send_table order by pack_id";
+    $res = $db->getAll($sql);
+    $j=2;
+    $LL = 3;
+    $L = 2;
+    $ppk = '';  //判断是否可以合并单元格
+    foreach ($res as $key => $value) {
+            $jj = $j-1;
+
+            $objPHPExcel->getActiveSheet()->getStyle('A'.$j.':H'.$j)->applyFromArray($Border_all);
+
+        if($ppk == $value['pack_count']){
+            $objPHPExcel->getActiveSheet()->getStyle('A'.$jj.':H'.$jj)->getBorders()->getBottom()->getColor()->setARGB('FFFFFF');
+        }else{
+            $objPHPExcel->getActiveSheet()->getStyle('A'.$jj.':H'.$jj)->getBorders()->getBottom()->getColor()->setARGB('1d9c73');
+            $objPHPExcel->getActiveSheet()->getStyle('A'.$jj.':H'.$jj)->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        }
+
+        if($value['pause_ch']=='0'){
+            $value['pause_ch'] = '';
+        }
+
+        if($value['pause_jp']=='0'){
+            $value['pause_jp'] = '';
+        }
+        $objPHPExcel->getActiveSheet()->setCellValue("A".$j,$value['import_day'])
+                ->setCellValueExplicit("B".$j,$value['who_name'],PHPExcel_Cell_DataType::TYPE_STRING)
+                ->setCellValue("C".$j,$value['goods_code'])
+                ->setCellValue("D".$j,$value['out_num'])
+                ->setCellValue("E".$j,$value['pause_ch'])
+                ->setCellValue("F".$j,$value['pause_jp'])
+                ->setCellValue("G".$j,$value['send_method'])
+                ->setCellValueExplicit("H".$j,$value['pack_count'],PHPExcel_Cell_DataType::TYPE_STRING);
+        $j++;
+        $ppk = $value['pack_count'];
+    }
+    $objPHPExcel->setActiveSheetIndex(0);   //默认回第一个 sheet 
 
     // $objPHPExcel->getActiveSheet()->getColumnDimension()->setAutoSize(true);
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
