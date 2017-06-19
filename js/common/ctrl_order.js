@@ -569,6 +569,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
                 $scope.show_one_info(order_id);
                 $scope.plug_alert('success','通过。','fa fa-smile-o');
             }else{
+            $log.info(data)
                 $scope.plug_alert('danger',data,'fa fa-ban');
             }
         }).error(function(data) {

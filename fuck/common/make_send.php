@@ -227,9 +227,9 @@ if(isset($_POST['send_table'])){
 	$objPHPExcel->getActiveSheet()->getStyle('A')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);//左对齐
 	//sql
 	if($down_type=='new'){
-		$sql = "SELECT pack_id as A,send_method as B,due_money,import_day as E,send_day as F,send_time as G,who_tel as I,who_post as K,who_house,who_name as P,group_concat(goods_code,'*',out_num separator ' ') as ABD,due_money as AH,need_not_send as AJ,who_email as AW,order_method,other_1,back_status from send_table where express_company='ヤマト運輸' and repo_status = '{$select_repo}' and back_status ='0' and table_status='0' and import_day between '{$start}' and '{$end}' group by send_id order by send_id";
+		$sql = "SELECT pack_id as A,send_method as B,due_money,import_day as E,send_day as F,send_time as G,who_tel as I,who_post as K,who_house,who_name as P,group_concat(goods_code,'*',out_num separator ' ') as ABD,due_money as AH,need_not_send as AJ,who_email as AW,order_method,other_1,back_status from send_table where express_company='ヤマト運輸' and repo_status = '{$select_repo}' and back_status ='0' and table_status='0' and import_day between '{$start}' and '{$end}' group by send_id order by send_method,send_id";
 	}else{	
-		$sql = "SELECT pack_id as A,send_method as B,due_money,import_day as E,send_day as F,send_time as G,who_tel as I,who_post as K,who_house,who_name as P,group_concat(goods_code,'*',out_num separator ' ') as ABD,due_money as AH,need_not_send as AJ,who_email as AW,order_method,other_1,back_status from send_table where express_company='ヤマト運輸' and repo_status = '{$select_repo}' and back_status ='0' and import_day between '{$start}' and '{$end}' group by send_id order by send_id";
+		$sql = "SELECT pack_id as A,send_method as B,due_money,import_day as E,send_day as F,send_time as G,who_tel as I,who_post as K,who_house,who_name as P,group_concat(goods_code,'*',out_num separator ' ') as ABD,due_money as AH,need_not_send as AJ,who_email as AW,order_method,other_1,back_status from send_table where express_company='ヤマト運輸' and repo_status = '{$select_repo}' and back_status ='0' and import_day between '{$start}' and '{$end}' group by send_id order by send_method,send_id";
 	}
 
 		$res = $db->getAll($sql);

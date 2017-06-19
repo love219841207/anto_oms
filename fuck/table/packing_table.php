@@ -205,7 +205,7 @@ if(isset($_GET['down_packing'])){
     // $objPHPExcel->getActiveSheet()->getStyle('A1:H'.$final_row)->getBorders()->getAllBorders()->getColor()->setARGB('dedede');
 
     //SQL
-    $sql = "SELECT * FROM send_table WHERE repo_status <> '日' AND express_company = 'ヤマト運輸' order by pack_count";
+    $sql = "SELECT * FROM send_table WHERE repo_status <> '日' AND express_company = 'ヤマト運輸' order by send_method,send_id";
     // $sql = "SELECT * FROM send_table order by pack_id";
     $res = $db->getAll($sql);
     $j=2;
