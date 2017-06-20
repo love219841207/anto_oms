@@ -142,7 +142,7 @@ $order_info = '
 	<tr>
 		<td colspan="2" style="text-align: right;">
 			<span style="color:#009688;">ポイント利用分:</span>
-			<span style="width:80px;display: inline-block;">0円</span>
+			<span style="width:80px;display: inline-block;">0</span>
 		</td>
 	</tr>
 	<tr>
@@ -275,7 +275,7 @@ $pin_book = '
 	<tr>
 		<td colspan="2" style="text-align: right;">
 			<span style="color:#009688;">ポイント利用分:</span>
-			<span style="width:80px;display: inline-block;">0円</span>
+			<span style="width:80px;display: inline-block;">0</span>
 		</td>
 	</tr>
 	<tr>

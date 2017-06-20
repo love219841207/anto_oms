@@ -60,7 +60,7 @@ if(isset($_GET['list_orders'])){
 	$signature = urlencode(base64_encode($signature));
 	$link  = "https://mws.amazonservices.jp/Orders/2013-09-01?";
 	$link .= $arr . "&Signature=" . $signature;
-
+// echo($link);echo '<hr>'; //for debug
 	$ch = curl_init($link);
 	curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/xml'));
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

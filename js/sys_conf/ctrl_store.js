@@ -254,6 +254,10 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log', function($scope,$
         $scope.express_mail_html = $scope.express_mail_html + e;
         $scope.express_mail_txt = $scope.express_mail_txt + e;
     }
+    $scope.add_var2 = function(e){
+        $scope.mail_tpl_html = $scope.mail_tpl_html + e;
+        $scope.mail_tpl_txt = $scope.mail_tpl_txt + e;
+    }
 
     //新增店铺邮件模板
     $scope.add_mail_tpl = function(){
