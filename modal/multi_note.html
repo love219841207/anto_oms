@@ -9,6 +9,11 @@
       	<div class="red">注意：原有备注的订单将会被覆盖！</div>
       	<hr>
         <textarea style="resize:vertical;" class="form-control" id="multi_note_key"> </textarea>
+
+        <table ng-show="my_checked!=''" class="table table-bordered table-condensed mt10">
+            <tr class="f12 info"><td class="tagc blue">序号</td><td class="tagc blue">订单号</td></tr>
+            <tr ng-repeat="(key,val) in my_checked track by $index"><td class="tagc blue">{{$index+1}}</td><td class="tagc blue">{{val}}</td></tr>
+          </table>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-info" ng-click="multi_note();$hide()"><i class='fa fa-save fa-fw'></i> 保存</button>

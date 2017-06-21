@@ -3,7 +3,7 @@ require_once("../header.php");
 require_once("../log.php");
 $dir = dirname(__FILE__);
 
-set_time_limit(0);
+set_time_limit(800);
 
 if(isset($_POST['send_table'])){
 	// 下载方式
@@ -113,8 +113,11 @@ if(isset($_POST['send_table'])){
 			// 标注已经下载过1
 			$sql = "UPDATE send_table set table_status = '1' where express_company = '佐川急便' and send_method in('着払い','宅配便') and back_status = '0' and import_day between '{$start}' and '{$end}';";
 			$res = $db->execute($sql);
+			echo $select_repo.'_佐川.xlsx';
+		}else{
+			echo $select_repo.'_佐川.xlsx';
 		}
-		echo $select_repo.'_佐川.xlsx';
+		
 	}else if($select_company == 'heimao'){
 		// 如果是黑猫
 		$objSheet->
@@ -360,8 +363,11 @@ if(isset($_POST['send_table'])){
 			// 标注已经下载过1
 			$sql = "UPDATE send_table set table_status = '1' where express_company='ヤマト運輸' and back_status ='0' and import_day between '{$start}' and '{$end}';";
 			$res = $db->execute($sql);
+			echo $select_repo.'_黑猫.xlsx';
+		}else{
+			echo $select_repo.'_黑猫.xlsx';
 		}
-		echo $select_repo.'_黑猫.xlsx';
+		
 	}
 
 }

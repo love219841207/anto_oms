@@ -174,7 +174,7 @@ if(isset($_POST['amz_send_express'])){
     $res = $db->execute($sql);
     $sql = "UPDATE history_send SET over_upload = 1 WHERE order_id IN ($my_checked_items)";
     $res = $db->execute($sql);
-echo $amazon_feed;die;
+     $amazon_feed;
 
 	$arr   = implode('&', $url);
 

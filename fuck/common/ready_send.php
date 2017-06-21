@@ -4,6 +4,22 @@ require_once("../log.php");
 $dir = dirname(__FILE__);
 
 set_time_limit(0);
+// 转入待回单
+if(isset($_GET['to_wait'])){
+	$sql = "UPDATE send_table SET has_pack = '1' WHERE has_pack = '0'";
+    $res = $db->execute($sql);
+    echo 'ok';
+}
+
+// 待回单转待出单
+if(isset($_GET['back_to_ready'])){
+	$id = $_GET['back_to_ready'];
+
+	$sql = "UPDATE send_table SET has_pack = '0',table_status = '0' WHERE id = '{$id}'";
+	$res = $db->execute($sql);
+
+	echo 'ok';
+}
 
 // 修改快递公司
 if(isset($_GET['change_company'])){

@@ -25,6 +25,43 @@ app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','
         });
     }
 
+    // 转入待回单
+    $scope.to_wait = function(){
+        $http.get('/fuck/common/ready_send.php', {
+            params:{
+                to_wait:'to',
+            }
+        }).success(function(data) {
+            if(data=='ok'){
+                $scope.get_count();
+                $scope.to_page($scope.now_page);
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:转入待回单失败。");
+        });
+    }
+
+    // 待回单 回到待出单
+    $scope.back_to_ready = function(id){
+        $http.get('/fuck/common/ready_send.php', {
+            params:{
+                back_to_ready:id,
+            }
+        }).success(function(data) {
+            if(data=='ok'){
+                $scope.get_count();
+                $scope.to_page($scope.now_page);
+            }else{
+                $scope.plug_alert('danger','操作失败。','fa fa-ban');
+                $log.info(data);
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:回单失败。");
+        });
+    }
+
 	//初始化页面
 	$scope.init_list = function(){
 		// $scope.send_table = '';
@@ -443,7 +480,8 @@ app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','
         var post_data = {
             ready_send_count:'get',
             search_field:$scope.search_field,
-            search_key:$scope.search_key
+            search_key:$scope.search_key,
+            is_wait:$scope.is_wait
         };
         // $log.info(post_data);
         $http.post('/fuck/common/search_order.php', post_data).success(function(data) { 
@@ -586,7 +624,8 @@ app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','
             start:start,
             page_size:$scope.pageSize,
             search_field:$scope.search_field,
-            search_key:$scope.search_key
+            search_key:$scope.search_key,
+            is_wait:$scope.is_wait
         };
         // $log.info(post_data);
         $http.post('/fuck/common/search_order.php', post_data).success(function(data) {  
@@ -611,15 +650,23 @@ app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','
     }
 
     //筛选组确定按钮
-    $scope.filter_bar_submit = function(){
+    $scope.filter_bar_submit = function(dd){
         if($scope.search_field != '' && $scope.search_key == ''){
             $scope.plug_alert('danger','关键词不能为空。','fa fa-exclamation-triangle');
             return false;
         }
-        
+
+
+        if(dd == 'wait'){
+            // 查询待回来的订单
+            $scope.is_wait = '1';
+        }else{
+            $scope.is_wait = '0';
+        }
         $scope.init_list(); //初始化列表数据
         $scope.get_count();     //分配页码
         $scope.to_page('1');   //再次初始化数据
+        
     }
 //数据分页查询结束
 

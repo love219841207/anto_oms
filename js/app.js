@@ -247,6 +247,25 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
             }
         })
 
+        // 待回单
+        .state('site.wait_back',{
+            url: '/wait_back/{data}',
+            views:{
+                'show@site':{
+                    templateUrl: 'tpls/common/wait_back.html',
+                    controller: function($scope){
+                        $scope.status.isopen1 = false;
+                        $scope.status.isopen2 = false;
+                        $scope.status.isopen3 = false;
+                        $scope.status.isopen4 = true;
+                        $scope.status.isopen5 = false;
+                        $scope.status.isopen6 = false;
+                        $scope.status.isopen7 = false;
+                    }
+                }
+            }
+        })
+
         //佐川发货单
         .state('site.make_send',{
             url: '/make_send/{data}',

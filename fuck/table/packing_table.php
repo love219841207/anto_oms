@@ -99,7 +99,7 @@ if(isset($_GET['down_packing'])){
             sum(pause_ch) AS sum_pause_ch,
             sum(pause_jp) AS sum_pause_jp FROM send_table
              WHERE goods_code <> substring(goods_code, locate('bag (', goods_code),locate(')', goods_code))
-             AND repo_status <> '日' 
+             AND repo_status <> '日' AND has_pack = '0'
              GROUP BY goods_code";
 
     $res = $db->getAll($sql);
@@ -117,13 +117,13 @@ if(isset($_GET['down_packing'])){
     $objPHPExcel->setActiveSheetIndex(1); 
     $objPHPExcel->getActiveSheet()->setTitle('佐川急便');//表名
     $objPHPExcel->getActiveSheet()->setCellValue("A1","导入日期")
-            ->setCellValue("B1","收件人")
-            ->setCellValue("C1","商品代码")
-            ->setCellValue("D1","总数")
+            ->setCellValue("B1","包裹")
+            ->setCellValue("C1","收件人")
+            ->setCellValue("D1","商品代码")
             ->setCellValue("E1","中")
             ->setCellValue("F1","日")
-            ->setCellValue("G1","快递")
-            ->setCellValue("H1","包裹");    //表头值
+            ->setCellValue("G1","总数")
+            ->setCellValue("H1","快递");    //表头值
     $objPHPExcel->getActiveSheet()->getDefaultStyle()->getFont()->setName("微软雅黑")->setSize(14);  //默认字体
     $objPHPExcel->getActiveSheet()->getStyle('A1:H1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
     $objPHPExcel->getActiveSheet()->getStyle('A:H')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
@@ -132,14 +132,14 @@ if(isset($_GET['down_packing'])){
     $objPHPExcel->getActiveSheet()->getStyle('A1:H1')->getFill()->getStartColor()->setRGB('1d9c73'); //背景色
     // $objSheet->getDefaultRowDimension()->setRowHeight(28);   //单元格高
     $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(10);//单元格宽
-    $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(40);//单元格宽
+    $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(40);//单元格宽
     $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(10);//单元格宽
     // $objSheet->getColumnDimension('D')->setWidth(30);//单元格宽
     $objPHPExcel->getActiveSheet()->freezePane('A2');//冻结表头
     $objPHPExcel->getActiveSheet()->getStyle('A')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);//左对齐
 
     //SQL
-    $sql = "SELECT * FROM send_table WHERE repo_status <> '日' AND express_company = '佐川急便' order by pack_count";
+    $sql = "SELECT * FROM send_table WHERE repo_status <> '日' AND express_company = '佐川急便' AND has_pack = '0' order by pack_count";
     // $sql = "SELECT * FROM send_table order by pack_id";
     $res = $db->getAll($sql);
     $j=2;
@@ -165,13 +165,13 @@ if(isset($_GET['down_packing'])){
             $value['pause_jp'] = '';
         }
         $objPHPExcel->getActiveSheet()->setCellValue("A".$j,$value['import_day'])
-                ->setCellValueExplicit("B".$j,$value['who_name'],PHPExcel_Cell_DataType::TYPE_STRING)
-                ->setCellValue("C".$j,$value['goods_code'])
-                ->setCellValue("D".$j,$value['out_num'])
+                ->setCellValueExplicit("B".$j,$value['pack_count'],PHPExcel_Cell_DataType::TYPE_STRING)
+                ->setCellValueExplicit("C".$j,$value['who_name'],PHPExcel_Cell_DataType::TYPE_STRING)
+                ->setCellValue("D".$j,$value['goods_code'])
                 ->setCellValue("E".$j,$value['pause_ch'])
                 ->setCellValue("F".$j,$value['pause_jp'])
-                ->setCellValue("G".$j,$value['send_method'])
-                ->setCellValueExplicit("H".$j,$value['pack_count'],PHPExcel_Cell_DataType::TYPE_STRING);
+                ->setCellValue("G".$j,$value['out_num'])
+                ->setCellValue("H".$j,$value['send_method']);
         $j++;
         $ppk = $value['pack_count'];
     }
@@ -181,13 +181,13 @@ if(isset($_GET['down_packing'])){
     $objPHPExcel->setActiveSheetIndex(2); 
     $objPHPExcel->getActiveSheet()->setTitle('ヤマト運輸');//表名
     $objPHPExcel->getActiveSheet()->setCellValue("A1","导入日期")
-            ->setCellValue("B1","收件人")
-            ->setCellValue("C1","商品代码")
-            ->setCellValue("D1","总数")
+            ->setCellValue("B1","包裹")
+            ->setCellValue("C1","收件人")
+            ->setCellValue("D1","商品代码")
             ->setCellValue("E1","中")
             ->setCellValue("F1","日")
-            ->setCellValue("G1","快递")
-            ->setCellValue("H1","包裹");    //表头值
+            ->setCellValue("G1","总数")
+            ->setCellValue("H1","快递");    //表头值
     $objPHPExcel->getActiveSheet()->getDefaultStyle()->getFont()->setName("微软雅黑")->setSize(14);  //默认字体
     $objPHPExcel->getActiveSheet()->getStyle('A1:H1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
     $objPHPExcel->getActiveSheet()->getStyle('A:H')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
@@ -196,7 +196,7 @@ if(isset($_GET['down_packing'])){
     $objPHPExcel->getActiveSheet()->getStyle('A1:H1')->getFill()->getStartColor()->setRGB('1d9c73'); //背景色
     // $objSheet->getDefaultRowDimension()->setRowHeight(28);   //单元格高
     $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(10);//单元格宽
-    $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(40);//单元格宽
+    $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(40);//单元格宽
     $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(10);//单元格宽
     // $objSheet->getColumnDimension('D')->setWidth(30);//单元格宽
     $objPHPExcel->getActiveSheet()->freezePane('A2');//冻结表头
@@ -205,7 +205,7 @@ if(isset($_GET['down_packing'])){
     // $objPHPExcel->getActiveSheet()->getStyle('A1:H'.$final_row)->getBorders()->getAllBorders()->getColor()->setARGB('dedede');
 
     //SQL
-    $sql = "SELECT * FROM send_table WHERE repo_status <> '日' AND express_company = 'ヤマト運輸' order by send_method,send_id";
+    $sql = "SELECT * FROM send_table WHERE repo_status <> '日' AND express_company = 'ヤマト運輸' AND has_pack = '0' order by send_method,send_id";
     // $sql = "SELECT * FROM send_table order by pack_id";
     $res = $db->getAll($sql);
     $j=2;
@@ -248,5 +248,6 @@ if(isset($_GET['down_packing'])){
     // $objPHPExcel->getActiveSheet()->getColumnDimension()->setAutoSize(true);
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
     $objWriter->save($dir."/../../down/packing_table.xlsx");   //保存在服务器
+    
     echo "ok";
 }

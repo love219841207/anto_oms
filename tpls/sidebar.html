@@ -70,6 +70,10 @@
 					<i class="fa fa-fw fa-file-text-o ml5"></i>
 					<span class="am-fade" ng-show="side_bar"> 待出单</span>
 				</div>
+				<div ng-mouseenter="side_info('待回单')" ui-sref="site.wait_back" ui-sref-active="active" class="list-group-item">
+					<i class="fa fa-fw fa-clock-o ml5"></i>
+					<span class="am-fade" ng-show="side_bar"> 待回单</span>
+				</div>
 				<div ng-mouseenter="side_info('佐川发货单')" ui-sref="site.make_send" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-hand-o-left ml5"></i>
 					<span class="am-fade" ng-show="side_bar"> 佐川发货单</span>

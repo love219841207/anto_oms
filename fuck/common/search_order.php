@@ -222,13 +222,20 @@ if(isset($_POST['get_order_list'])){
 if(isset($_POST['ready_send_count'])){
     $search_field = $_POST['search_field'];
     $search_key = addslashes($_POST['search_key']);
-
-    if($search_field == ''){   //0没有筛选条件  
-        $sql = "SELECT count(1) as cc FROM send_table";
+    $is_wait = addslashes($_POST['is_wait']);
+    if($is_wait == '1'){
+        if($search_field == ''){   //0没有筛选条件  
+            $sql = "SELECT count(1) as cc FROM send_table WHERE has_pack = '1'";
+        }else{
+            $sql = "SELECT count(1) as cc FROM send_table WHERE {$search_field} LIKE '%{$search_key}%' AND has_pack = '1'";
+        }
     }else{
-        $sql = "SELECT count(1) as cc FROM send_table WHERE {$search_field} LIKE '%{$search_key}%'";
+        if($search_field == ''){   //0没有筛选条件  
+            $sql = "SELECT count(1) as cc FROM send_table WHERE has_pack = '0'";
+        }else{
+            $sql = "SELECT count(1) as cc FROM send_table WHERE {$search_field} LIKE '%{$search_key}%' AND has_pack = '0'";
+        }
     }
-  
     $res = $db->getOne($sql);
     echo $res['cc'];
 }
@@ -239,12 +246,21 @@ if(isset($_POST['ready_send_data'])){
     $start = $_POST['start'];
     $search_field = $_POST['search_field'];
     $search_key = addslashes($_POST['search_key']);
-
-    if($search_field == ''){   //0没有筛选条件
-        $sql = "SELECT * FROM send_table ORDER BY send_id LIMIT {$start},{$page_size}";
+    $is_wait = addslashes($_POST['is_wait']);
+    if($is_wait == '1'){
+        if($search_field == ''){   //0没有筛选条件
+            $sql = "SELECT * FROM send_table WHERE has_pack = '1' ORDER BY send_id LIMIT {$start},{$page_size}";
+        }else{
+            $sql = "SELECT * FROM send_table WHERE {$search_field} LIKE '%{$search_key}%' AND has_pack = '1' ORDER BY send_id LIMIT {$start},{$page_size}";
+        }
     }else{
-        $sql = "SELECT * FROM send_table WHERE {$search_field} LIKE '%{$search_key}%' ORDER BY send_id LIMIT {$start},{$page_size}";
+        if($search_field == ''){   //0没有筛选条件
+            $sql = "SELECT * FROM send_table WHERE has_pack = '0' ORDER BY send_id LIMIT {$start},{$page_size}";
+        }else{
+            $sql = "SELECT * FROM send_table WHERE {$search_field} LIKE '%{$search_key}%' AND has_pack = '0' ORDER BY send_id LIMIT {$start},{$page_size}";
+        }
     }
+    
     $res = $db->getAll($sql);
     echo json_encode($res);
 }
