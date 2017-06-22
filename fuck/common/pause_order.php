@@ -237,40 +237,38 @@ if(isset($_GET['down_pause_orders_table'])){
     $objPHPExcel = new PHPExcel();
     $objSheet = $objPHPExcel->getActiveSheet();
     $objSheet->setTitle('冻结订单表@'.$now_time);//表名
-    $objSheet->setCellValue("A1","店铺")
-    		->setCellValue("B1","订单号")
-    		->setCellValue("C1","商品代码")
-    		->setCellValue("D1","数量")
-    		->setCellValue("E1","押中国")
-    		->setCellValue("F1","押日本")
-    		->setCellValue("G1","子订单价格")
-            ->setCellValue("H1","代引金额");    //表头值
+    $objSheet->setCellValue("A1","订单日期")
+            ->setCellValue("B1","注文番号")
+    		->setCellValue("C1","OMS-ID")
+    		->setCellValue("D1","商品代码")
+    		->setCellValue("E1","数量")
+    		->setCellValue("I1","收件人")
+            ->setCellValue("M1","店铺");    //表头值
     $objSheet->getDefaultStyle()->getFont()->setName("微软雅黑")->setSize(12);  //默认字体
-    $objPHPExcel->getActiveSheet()->getStyle('A1:H1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
-    $objPHPExcel->getActiveSheet()->getStyle('A:H')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
-    $objPHPExcel->getActiveSheet()->getStyle('A1:H1')->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_WHITE);//前景色
-    $objSheet->getStyle('A1:H1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
-    $objSheet->getStyle('A1:H1')->getFill()->getStartColor()->setRGB('1d9c73'); //背景色
+    $objPHPExcel->getActiveSheet()->getStyle('A1:M1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
+    $objPHPExcel->getActiveSheet()->getStyle('A:M')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
+    $objPHPExcel->getActiveSheet()->getStyle('A1:M1')->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_WHITE);//前景色
+    $objSheet->getStyle('A1:M1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+    $objSheet->getStyle('A1:M1')->getFill()->getStartColor()->setRGB('1d9c73'); //背景色
     // $objSheet->getDefaultRowDimension()->setRowHeight(28);   //单元格高
-    $objSheet->getColumnDimension('A')->setWidth(18);//单元格宽
-    $objSheet->getColumnDimension('B')->setWidth(34);//单元格宽
-    $objSheet->getColumnDimension('C')->setWidth(34);//单元格宽
+    $objSheet->getColumnDimension('A')->setWidth(12);;//单元格宽
+    $objSheet->getColumnDimension('B')->setWidth(20);//单元格宽
+    $objSheet->getColumnDimension('D')->setWidth(34);//单元格宽
     $objSheet->freezePane('A2');//冻结表头
     $objPHPExcel->getActiveSheet()->getStyle('A')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);//左对齐
 
     //SQL
-    $sql = "SELECT * FROM amazon_response_info WHERE is_pause = 'pause' ORDER BY ID DESC";
+    $sql = "SELECT list.syn_day,list.order_id,list.id,info.goods_code,(info.goods_num-info.pause_ch-info.pause_jp) as pause_num,list.receive_name,list.store FROM amazon_response_list list,amazon_response_info info WHERE list.order_id = info.order_id AND info.is_pause = 'pause' ORDER BY info.id DESC";
 	$res = $db->getAll($sql);
     $j=2;
     foreach ($res as $key => $value) {
-        $objSheet->setCellValue("A".$j,$value['store'])
+        $objSheet->setCellValue("A".$j,$value['syn_day'])
         		->setCellValue("B".$j,$value['order_id'])
-        		->setCellValue("C".$j,$value['goods_code'])
-                ->setCellValueExplicit("D".$j,$value['goods_num'],PHPExcel_Cell_DataType::TYPE_STRING)
-                ->setCellValueExplicit("E".$j,$value['pause_ch'],PHPExcel_Cell_DataType::TYPE_STRING)
-                ->setCellValueExplicit("F".$j,$value['pause_jp'],PHPExcel_Cell_DataType::TYPE_STRING)
-                ->setCellValueExplicit("G".$j,$value['item_price'],PHPExcel_Cell_DataType::TYPE_STRING)
-                ->setCellValueExplicit("H".$j,$value['cod_money'],PHPExcel_Cell_DataType::TYPE_STRING);
+                ->setCellValue("C".$j,$value['id'])
+                ->setCellValue("D".$j,$value['goods_code'])
+                ->setCellValueExplicit("E".$j,$value['pause_num'],PHPExcel_Cell_DataType::TYPE_STRING)
+                ->setCellValue("I".$j,$value['receive_name'])
+                ->setCellValue("M".$j,$value['store']);
         $j++;
     }
 
