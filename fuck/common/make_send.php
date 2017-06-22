@@ -111,12 +111,11 @@ if(isset($_POST['send_table'])){
 		$objWriter->save($dir."/../../down/".$select_repo."_佐川.xlsx");	//保存在服务器
 		if($down_type=='new'){
 			// 标注已经下载过1
-			$sql = "UPDATE send_table set table_status = '1' where express_company = '佐川急便' and send_method in('着払い','宅配便') and back_status = '0' and import_day between '{$start}' and '{$end}';";
+			$sql = "UPDATE send_table set table_status = '1' where repo_status = '{$select_repo}' and express_company = '佐川急便' and send_method in('着払い','宅配便') and back_status = '0' and import_day between '{$start}' and '{$end}';";
 			$res = $db->execute($sql);
-			echo $select_repo.'_佐川.xlsx';
 		}else{
-			echo $select_repo.'_佐川.xlsx';
 		}
+		echo $select_repo.'_佐川.xlsx';
 		
 	}else if($select_company == 'heimao'){
 		// 如果是黑猫
@@ -230,9 +229,9 @@ if(isset($_POST['send_table'])){
 	$objPHPExcel->getActiveSheet()->getStyle('A')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);//左对齐
 	//sql
 	if($down_type=='new'){
-		$sql = "SELECT pack_id as A,send_method as B,due_money,import_day as E,send_day as F,send_time as G,who_tel as I,who_post as K,who_house,who_name as P,group_concat(goods_code,'*',out_num separator ' ') as ABD,due_money as AH,need_not_send as AJ,who_email as AW,order_method,other_1,back_status from send_table where express_company='ヤマト運輸' and repo_status = '{$select_repo}' and back_status ='0' and table_status='0' and import_day between '{$start}' and '{$end}' group by send_id order by send_method,send_id";
+		$sql = "SELECT pack_id as A,send_method as B,due_money,import_day as E,send_day as F,send_time as G,who_tel as I,who_post as K,left(who_house,15) as LL,substring(who_house,16,15) as MM,substring(who_house,31,25) as NN,substring(who_house,56,25) as OO,who_name as P,group_concat(goods_code,'*',out_num separator ' ') as ABD,due_money as AH,need_not_send as AJ,who_email as AW,order_method,other_1,back_status from send_table where express_company='ヤマト運輸' and repo_status = '{$select_repo}' and back_status ='0' and table_status='0' and import_day between '{$start}' and '{$end}' group by send_id order by send_method,send_id";
 	}else{	
-		$sql = "SELECT pack_id as A,send_method as B,due_money,import_day as E,send_day as F,send_time as G,who_tel as I,who_post as K,who_house,who_name as P,group_concat(goods_code,'*',out_num separator ' ') as ABD,due_money as AH,need_not_send as AJ,who_email as AW,order_method,other_1,back_status from send_table where express_company='ヤマト運輸' and repo_status = '{$select_repo}' and back_status ='0' and import_day between '{$start}' and '{$end}' group by send_id order by send_method,send_id";
+		$sql = "SELECT pack_id as A,send_method as B,due_money,import_day as E,send_day as F,send_time as G,who_tel as I,who_post as K,left(who_house,15) as LL,substring(who_house,16,15) as MM,substring(who_house,31,25) as NN,substring(who_house,56,25) as OO,who_name as P,group_concat(goods_code,'*',out_num separator ' ') as ABD,due_money as AH,need_not_send as AJ,who_email as AW,order_method,other_1,back_status from send_table where express_company='ヤマト運輸' and repo_status = '{$select_repo}' and back_status ='0' and import_day between '{$start}' and '{$end}' group by send_id order by send_method,send_id";
 	}
 
 		$res = $db->getAll($sql);
@@ -276,21 +275,7 @@ if(isset($_POST['send_table'])){
 			}
 			//出荷予定日格式替换
 			$value['E']=str_replace("-","/",$value['E']);
-			//地址分割
-			$house = $value['who_house'];
-			$house = str_replace(" ","",$house);	//去掉空格
-			$len_house = strlen($house);
-			$MM="";
-			$NN="";
-			$OO="";
-			if($len_house<33){
-				$LL=mb_substr($house,0,$len_house);
-			}else{
-				$LL=mb_substr($house,0,16);
-				$MM=mb_substr($house,16,16);
-				$NN=mb_substr($house,32,25);
-				$OO=mb_substr($house,57,25);
-			}
+
 			//商品分割
 			$ABD = $value['ABD'];
 			$len_ABD = strlen($ABD);
@@ -316,6 +301,7 @@ if(isset($_POST['send_table'])){
 			if($value['AH'] == '0'){
 				$value['AH'] = '';
 			};
+
 			//写入表格
 			$objSheet->
 			setCellValueExplicit("A".$j,$value['A'],PHPExcel_Cell_DataType::TYPE_STRING)->
@@ -323,11 +309,13 @@ if(isset($_POST['send_table'])){
 			setCellValue("E".$j,$value['E'])->
 			setCellValue("F".$j,$value['F'])->
 			setCellValue("G".$j,$value['G'])->
-			setCellValue("I".$j,$value['I'])->setCellValue("K".$j,$value['K'])->
-			setCellValueExplicit("L".$j,$LL,PHPExcel_Cell_DataType::TYPE_STRING)->
-			setCellValueExplicit("M".$j,$MM,PHPExcel_Cell_DataType::TYPE_STRING)->
-			setCellValueExplicit("N".$j,$NN,PHPExcel_Cell_DataType::TYPE_STRING)->
-			setCellValueExplicit("O".$j,$OO,PHPExcel_Cell_DataType::TYPE_STRING)->
+			setCellValue("I".$j,$value['I'])->
+			setCellValue("K".$j,$value['K'])->
+			// setCellValue("L".$j,$LL)->
+			setCellValueExplicit("L".$j,$value['LL'],PHPExcel_Cell_DataType::TYPE_STRING)->
+			setCellValueExplicit("M".$j,$value['MM'],PHPExcel_Cell_DataType::TYPE_STRING)->
+			setCellValueExplicit("N".$j,$value['NN'],PHPExcel_Cell_DataType::TYPE_STRING)->
+			setCellValueExplicit("O".$j,$value['OO'],PHPExcel_Cell_DataType::TYPE_STRING)->
 			setCellValue("P".$j,$value['P'])->
 			setCellValue("R".$j,"様")->
 			setCellValue("T".$j,"047-498-2370")->
@@ -361,12 +349,11 @@ if(isset($_POST['send_table'])){
 		$objWriter->save($dir."/../../down/".$select_repo."_黑猫.xlsx");	//保存在服务器
 		if($down_type=='new'){
 			// 标注已经下载过1
-			$sql = "UPDATE send_table set table_status = '1' where express_company='ヤマト運輸' and back_status ='0' and import_day between '{$start}' and '{$end}';";
+			$sql = "UPDATE send_table set table_status = '1' where repo_status = '{$select_repo}' and express_company='ヤマト運輸' and back_status ='0' and import_day between '{$start}' and '{$end}';";
 			$res = $db->execute($sql);
-			echo $select_repo.'_黑猫.xlsx';
 		}else{
-			echo $select_repo.'_黑猫.xlsx';
 		}
+		echo $select_repo.'_黑猫.xlsx';
 		
 	}
 

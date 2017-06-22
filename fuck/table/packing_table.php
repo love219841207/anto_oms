@@ -233,13 +233,13 @@ if(isset($_GET['down_packing'])){
             $value['pause_jp'] = '';
         }
         $objPHPExcel->getActiveSheet()->setCellValue("A".$j,$value['import_day'])
-                ->setCellValueExplicit("B".$j,$value['who_name'],PHPExcel_Cell_DataType::TYPE_STRING)
-                ->setCellValue("C".$j,$value['goods_code'])
-                ->setCellValue("D".$j,$value['out_num'])
+                ->setCellValueExplicit("B".$j,$value['pack_count'],PHPExcel_Cell_DataType::TYPE_STRING)
+                ->setCellValueExplicit("C".$j,$value['who_name'],PHPExcel_Cell_DataType::TYPE_STRING)
+                ->setCellValue("D".$j,$value['goods_code'])
                 ->setCellValue("E".$j,$value['pause_ch'])
                 ->setCellValue("F".$j,$value['pause_jp'])
-                ->setCellValue("G".$j,$value['send_method'])
-                ->setCellValueExplicit("H".$j,$value['pack_count'],PHPExcel_Cell_DataType::TYPE_STRING);
+                ->setCellValue("G".$j,$value['out_num'])
+                ->setCellValue("H".$j,$value['send_method']);
         $j++;
         $ppk = $value['pack_count'];
     }
