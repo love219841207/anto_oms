@@ -8,7 +8,8 @@ ini_set("memory_limit", "1024M");
 
 // 读取冻结表
 if(isset($_GET['look_pause'])){
-	$sql = "SELECT goods_code,sum(goods_num)-sum(pause_ch)-sum(pause_jp) AS pause_num FROM amazon_response_info WHERE is_pause = 'pause' group by goods_code";
+    // 读取亚马逊冻结表
+	$sql = "SELECT goods_code,sum(goods_num)-sum(pause_ch)-sum(pause_jp) AS pause_num,FROM_UNIXTIME(import_time, '%Y-%m-%d') as import_time FROM amazon_response_info WHERE is_pause = 'pause' group by goods_code,import_time ORDER BY import_time DESC";
 	$res = $db->getAll($sql);
 	echo json_encode($res);
 }
@@ -26,25 +27,27 @@ if(isset($_GET['down_pause'])){
     $objSheet = $objPHPExcel->getActiveSheet();
     $objSheet->setTitle('统计冻结表@'.$now_time);//表名
     $objSheet->setCellValue("A1","商品代码")
-            ->setCellValue("B1","冻结数");    //表头值
+            ->setCellValue("B1","冻结数")
+            ->setCellValue("C1","订单导入日期");    //表头值
     $objSheet->getDefaultStyle()->getFont()->setName("微软雅黑")->setSize(12);  //默认字体
-    $objPHPExcel->getActiveSheet()->getStyle('A1:B1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
-    $objPHPExcel->getActiveSheet()->getStyle('A:B')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
-    $objPHPExcel->getActiveSheet()->getStyle('A1:B1')->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_WHITE);//前景色
-    $objSheet->getStyle('A1:B1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
-    $objSheet->getStyle('A1:B1')->getFill()->getStartColor()->setRGB('1d9c73'); //背景色
+    $objPHPExcel->getActiveSheet()->getStyle('A1:C1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
+    $objPHPExcel->getActiveSheet()->getStyle('A:C')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
+    $objPHPExcel->getActiveSheet()->getStyle('A1:C1')->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_WHITE);//前景色
+    $objSheet->getStyle('A1:C1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+    $objSheet->getStyle('A1:C1')->getFill()->getStartColor()->setRGB('1d9c73'); //背景色
     // $objSheet->getDefaultRowDimension()->setRowHeight(28);   //单元格高
     $objSheet->getColumnDimension('A')->setWidth(34);//单元格宽
     $objSheet->freezePane('A2');//冻结表头
     $objPHPExcel->getActiveSheet()->getStyle('A')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);//左对齐
 
     //SQL
-    $sql = "SELECT goods_code,sum(goods_num)-sum(pause_ch)-sum(pause_jp) AS pause_num FROM amazon_response_info WHERE is_pause = 'pause' group by goods_code";
+    $sql = "SELECT goods_code,sum(goods_num)-sum(pause_ch)-sum(pause_jp) AS pause_num,FROM_UNIXTIME(import_time, '%Y-%m-%d') as import_time FROM amazon_response_info WHERE is_pause = 'pause' group by goods_code,import_time ORDER BY import_time DESC";
     $res = $db->getAll($sql);
     $j=2;
     foreach ($res as $key => $value) {
         $objSheet->setCellValue("A".$j,$value['goods_code'])
-                ->setCellValueExplicit("B".$j,$value['pause_num'],PHPExcel_Cell_DataType::TYPE_STRING);
+                ->setCellValueExplicit("B".$j,$value['pause_num'],PHPExcel_Cell_DataType::TYPE_STRING)
+                ->setCellValue("C".$j,$value['import_time']);
         $j++;
     }
 

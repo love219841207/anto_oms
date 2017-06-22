@@ -10,11 +10,13 @@
 			<td class="tagc"><i class="fa-sort-numeric-asc fa fa-fw"></i></td>
 			<td>商品代码</td>
 			<td>冻结数</td>
+			<td class="tagc">订单导入日期</td>
 		</tr>
 		<tr ng-dblclick="bg_yellow=!bg_yellow" ng-class="{'bg_yellow':bg_yellow}" class="am-fade-and-slide-right" ng-repeat="item in pause_table track by $index">
 			<td class="tagc">{{$index+1}}</td>
 			<td>{{item.goods_code}}</td>
 			<td class="tagr">{{item.pause_num}}</td>
+			<td class="tagc">{{item.import_time}}</td>
 		</tr>
 	</table>
 	</div>
