@@ -60,7 +60,7 @@ if(isset($_GET['look_sell'])){
 	echo json_encode($final_res);
 }
 
-// 下载出库表
+// 下载销售明细
 if(isset($_GET['sell_detail_table'])){
 	$s_date = $_GET['s_date'];
 	$e_date = $_GET['e_date'];
@@ -102,10 +102,10 @@ if(isset($_GET['sell_detail_table'])){
         ->setCellValue("M1","种类")
         ->setCellValue("N1","担当")
         ->setCellValue("O1","店铺")
-        ->setCellValue("P1","注文番号")
+        ->setCellValue("P1","追跡番号")
         ->setCellValue("Q1","包裹ID")
+        ->setCellValue("R1","注文番号")
         // ->setCellValue("R1","配送电话")
-        // ->setCellValue("S1","快递详情")
         // ->setCellValue("T1","购买人邮箱")
         ->setCellValue("S1",$s_date)
         ->setCellValue("U1",$e_date);
@@ -130,13 +130,13 @@ if(isset($_GET['sell_detail_table'])){
                 ->setCellValue("M".$j,'新規')
                 ->setCellValue("N".$j,$value['holder'])
                 ->setCellValue("O".$j,$value['store_name'])
-                ->setCellValueExplicit("P".$j,$value['order_id'],PHPExcel_Cell_DataType::TYPE_STRING)
-                ->setCellValue("Q".$j,$value['pack_id']);
+                ->setCellValue("P".$j,$value['oms_order_express_num'])
+                ->setCellValue("Q".$j,$value['pack_id'])
+                ->setCellValueExplicit("R".$j,$value['order_id'],PHPExcel_Cell_DataType::TYPE_STRING);
                 
                 // ->setCellValue("D".$j,$value['sku'])
                 // ->setCellValue("Q".$j,$value['receive_code'])
                 // ->setCellValue("R".$j,$value['receive_phone'])
-                // ->setCellValue("S".$j,'<'.$value['express_company'].'>'.$value['send_method'].$value['oms_order_express_num'])
                 // ->setCellValue("T".$j,$value['who_email']);
         $j++;
     }

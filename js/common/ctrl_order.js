@@ -929,6 +929,26 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         }
     }
 
+    // 下载订单
+    $scope.down_items = function(){
+        $scope.shadow('open','ss_make','正在生成 ..');
+
+        var post_data = {order_table:$scope.my_checked_items,station:$scope.now_station,store:$scope.now_store_bar};
+
+        $http.post('/fuck/table/order_table.php', post_data).success(function(data) {
+            if(data == 'ok'){
+                window.location="/down/order_table.xlsx";
+            }else{
+                $log.info(data);
+                $scope.plug_alert('danger','下载失败。','fa fa-ban');
+            }
+            $timeout(function(){$scope.shadow('close');},500); //关闭shadow
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:下载订单失败。");
+        });
+    }
+
     // 添加item
     $scope.add_item = function(order_id){
         var dom = document.querySelector('#add_goods_code');
