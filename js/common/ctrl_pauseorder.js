@@ -1,6 +1,63 @@
 var app=angular.module('myApp');
 app.controller('pauseorderCtrl', ['$rootScope','$scope','$state','$http','$log','$timeout', function($rootScope,$scope,$state,$http,$log,$timeout){
      $scope.radioModel = 'Left';
+    //全选
+    $scope.check_all_item = function(){
+        angular.forEach($scope.all_pause_orders, function(value, index){
+            $scope.all_pause_orders[index].is_click = true;
+        })
+        $scope.cc_all = false;
+        $scope.check_items();
+    }
+    $scope.cc_all = true; //默认显示全选按钮
+    
+    //全不选
+    $scope.check_no_item = function(){
+        angular.forEach($scope.all_pause_orders, function(value, index){
+            $scope.all_pause_orders[index].is_click = false;
+        })
+        $scope.cc_all = true;
+        $scope.check_items();
+    }
+
+    //反选
+    $scope.check_back_item = function(){
+        angular.forEach($scope.all_pause_orders, function(value, index){
+            if($scope.all_pause_orders[index].is_click == true){
+                $scope.all_pause_orders[index].is_click = false;
+            }else{
+                $scope.all_pause_orders[index].is_click = true;
+            }
+        })
+        $scope.check_items();
+    }
+
+    //check_items 选择项
+    $scope.check_items = function(){
+        var my_checked = new Array();
+        angular.forEach($scope.all_pause_orders, function(value, index){
+            if($scope.all_pause_orders[index].is_click == true){
+                my_checked.push("'"+$scope.all_pause_orders[index].order_id+"'");
+            }
+        })
+        my_checked = unique1(my_checked);
+        $scope.my_checked = my_checked;
+        $scope.my_checked_items = my_checked.join(',');
+        // $log.info($scope.my_checked_items)
+    }
+    $scope.check_items();
+
+    // 数组去重
+    function unique1(array){ 
+        var n = []; //一个新的临时数组 
+        //遍历当前数组 
+        for(var i = 0; i < array.length; i++){ 
+        //如果当前数组的第i已经保存进了临时数组，那么跳过， 
+        //否则把当前项push到临时数组里面 
+        if (n.indexOf(array[i]) == -1) n.push(array[i]); 
+        } 
+        return n; 
+    } 
 
 	// 查询所有平台冻结订单info表
     $scope.show_pause_info = function(){
@@ -11,6 +68,7 @@ app.controller('pauseorderCtrl', ['$rootScope','$scope','$state','$http','$log',
             }
         }).success(function(data) {
             $scope.all_pause_orders = data;
+            $scope.check_no_item();
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
             $log.info("error:查询所有平台冻结订单info失败。");
@@ -321,23 +379,26 @@ app.controller('pauseorderCtrl', ['$rootScope','$scope','$state','$http','$log',
     //扣库存
     $scope.sub_repo = function(){
         $scope.shadow('open','ss_write','正在扣库存，请稍后。');
-        $http.get('/fuck/common/list_order.php', {
-            params:{
-                sub_repo:'get',
-                station:'all_station'
-            }
-        }).success(function(data) {
-            if(data == 'ok'){
+
+        var post_data = {
+            sub_repo:'get',
+            station:'all_station',
+            my_checked_items:$scope.my_checked_items
+        };
+        $http.post('/fuck/common/list_order.php', post_data).success(function(data) {  
+            if(data=='ok'){
                 $scope.show_pause_info();
                 $scope.plug_alert('success','扣库完成。','fa fa-smile-o');
             }else{
                 $log.info(data)
                 $scope.plug_alert('danger','扣库失败。','fa fa-ban');
             }
-            $timeout(function(){$scope.shadow('close');},500); //关闭shadow
-        }).error(function(data) {
+            $scope.show_pause_info();
+            $timeout(function(){$scope.shadow('close');},1000); //关闭shadow
+        }).error(function(data) {  
             alert("系统错误，请联系管理员。");
             $log.info("error:扣库存失败。");
-        });
+        });  
     }
+
 }]);

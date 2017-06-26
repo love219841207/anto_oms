@@ -212,18 +212,19 @@ if(isset($_GET['break_common_order'])){
 }
 
 //扣库存
-if(isset($_GET['sub_repo'])){
+if(isset($_POST['sub_repo'])){
 	$today = date('y-m-d',time()); //获取日期
 	
-	$now_station = strtolower($_GET['station']);
+	$now_station = strtolower($_POST['station']);
 
 	if($now_station == 'all_station'){
+		$my_checked_items = $_POST['my_checked_items'];
 		// 如果是所有平台扣库存，即冻结表
-		$sql = "SELECT id,station,send_id FROM amazon_response_list WHERE order_line = 3 UNION SELECT id,station,send_id FROM yahoo_response_list WHERE order_line = 3 GROUP BY send_id ORDER BY id";
+		$sql = "SELECT id,station,send_id FROM amazon_response_list WHERE order_line = 3 AND order_id in ($my_checked_items) UNION ALL SELECT id,station,send_id FROM yahoo_response_list WHERE order_line = 3 GROUP BY send_id ORDER BY id";
 
 	}else{
 		// 单个平台正常店铺发货
-		$store = $_GET['store'];
+		$store = $_POST['store'];
 		$now_response_list = $now_station.'_response_list';
 
 		$sql = "SELECT station,send_id FROM $now_response_list WHERE order_line = 2 AND store = '{$store}' GROUP BY send_id";

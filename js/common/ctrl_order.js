@@ -1106,15 +1106,14 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
     $scope.sub_repo = function(){
     	$scope.shadow('open','ss_write','正在扣库存，请稍后。');
     	$scope.init_list(); //初始化列表数据
-    	$http.get('/fuck/common/list_order.php', {
-            params:{
-                sub_repo:'get',
-                station:$scope.now_station,
-                store:$scope.now_store_bar
-            }
-        }).success(function(data) {
-        	$log.info(data)
-            if(data == 'ok'){
+
+        var post_data = {
+            sub_repo:'get',
+            station:$scope.now_station,
+            store:$scope.now_store_bar
+        };
+    	$http.post('/fuck/common/list_order.php', post_data).success(function(data) {  
+            if(data=='ok'){
                 $scope.plug_alert('success','扣库完成。','fa fa-smile-o');
             }else{
                 $scope.plug_alert('danger','扣库失败。','fa fa-ban');
