@@ -102,6 +102,7 @@ if(isset($_POST['send_mail'])){
 					<td style="text-align: right;font-family: monospace;">'.$unit_price.' * '.$goods_num.' = '.$item_price.'円</td>
 				</tr>';
 			}
+			$order_total_money = $order_total_money - $cod_money;
 			
 
 

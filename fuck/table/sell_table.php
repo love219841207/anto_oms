@@ -5,16 +5,16 @@ $dir = dirname(__FILE__);
 
 set_time_limit(0);
 ini_set("memory_limit", "1024M");
-// 单品查看
+// 查看销售额
 if(isset($_GET['look_sell'])){
 	$s_date = $_GET['s_date'];
 	$e_date = $_GET['e_date'];
 
-	$sql = "SELECT sum(total_money) AS sum_total_money,sum(ems_money) AS sum_ems_money,sum(bill) AS sum_bill,sum(point) AS sum_point,sum(cheap) AS sum_cheap,sum(tax) AS sum_tax,sum(buy_money) AS sum_buy_money FROM history_send WHERE import_day BETWEEN '{$s_date}' AND '{$e_date}'";
+	$sql = "SELECT sum(total_money) AS sum_total_money,sum(ems_money) AS sum_ems_money,sum(bill) AS sum_bill,sum(point) AS sum_point,sum(cheap) AS sum_cheap,sum(tax) AS sum_tax,sum(buy_money)-sum(ems_money)-sum(bill)-sum(point)-sum(cheap)-sum(tax) AS sum_buy_money FROM history_send WHERE import_day BETWEEN '{$s_date}' AND '{$e_date}'";
 	$res = $db->getAll($sql);
 	$final_res['table'] = $res; 
 
-	$sql = "SELECT import_day,sum(total_money) AS sum_total_money,sum(ems_money) AS sum_ems_money,sum(bill) AS sum_bill,sum(point) AS sum_point,sum(cheap) AS sum_cheap,sum(tax) AS sum_tax,sum(buy_money) AS sum_buy_money FROM history_send WHERE import_day BETWEEN '{$s_date}' AND '{$e_date}' GROUP BY import_day";
+	$sql = "SELECT import_day,sum(total_money) AS sum_total_money,sum(ems_money) AS sum_ems_money,sum(bill) AS sum_bill,sum(point) AS sum_point,sum(cheap) AS sum_cheap,sum(tax) AS sum_tax,sum(buy_money)-sum(ems_money)-sum(bill)-sum(point)-sum(cheap)-sum(tax) AS sum_buy_money FROM history_send WHERE import_day BETWEEN '{$s_date}' AND '{$e_date}' GROUP BY import_day";
 	$res = $db->getAll($sql);
 	$final_res['chart'] = $res; 
 
@@ -130,7 +130,7 @@ if(isset($_GET['sell_detail_table'])){
                 ->setCellValue("M".$j,'新規')
                 ->setCellValue("N".$j,$value['holder'])
                 ->setCellValue("O".$j,$value['store_name'])
-                ->setCellValue("P".$j,$value['oms_order_express_num'])
+                ->setCellValueExplicit("P".$j,$value['oms_order_express_num'],PHPExcel_Cell_DataType::TYPE_STRING)
                 ->setCellValue("Q".$j,$value['pack_id'])
                 ->setCellValueExplicit("R".$j,$value['order_id'],PHPExcel_Cell_DataType::TYPE_STRING);
                 

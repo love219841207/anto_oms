@@ -321,20 +321,26 @@ if(isset($_GET['change_post_addr'])){
 
 	// 查询出该 post_code 的对应市区
 	$sql = "SELECT post_name FROM oms_post WHERE post_code = '{$new_post_code}'";
-	$res = $db->getOne($sql);
+	$res = $db->getAll($sql);
 	
-	$post_name = $res['post_name'];
-	// 去掉括弧里面的地址
-	if(strstr($post_name,'（')==true){
-		$res = explode('（',$post_name);
-		$post_name = $res[0];
+	$pass = 0;
+	foreach ($res as $value) {
+		$post_name = $value['post_name'];
+		// 去掉括弧里面的地址
+		if(strstr($post_name,'（')==true){
+			$res = explode('（',$post_name);
+			$post_name = $res[0];
+		}
+		if(strstr($new_address, $post_name) == true){
+			$pass = 1;
+		}
 	}
 	
-	if($post_name == ''){
+	if($pass == 0){
 		echo '邮编不存在。';
 	}else{
 		// 邮编和地址匹配
-		if(strstr($new_address, $post_name) == true){
+		if($pass == 1){
 			// 查询原字段值
 			$sql = "SELECT post_code,address FROM $response_list WHERE order_id = '{$order_id}'";
 			$res = $db->getOne($sql);

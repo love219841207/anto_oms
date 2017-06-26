@@ -14,7 +14,9 @@ app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','
             }
         }).success(function(data) {
             if(data=='ok'){
-                $scope.plug_alert('success','修改完成，请重新检索。','fa fa-smile-o');
+                // 刷新
+                var time=new Date().getTime();
+                $state.go('site.ready_send',{data:time});
             }else{
                 $scope.plug_alert('danger','更新失败。','fa fa-ban');
                 $log.info(data);

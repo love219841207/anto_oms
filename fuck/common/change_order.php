@@ -36,7 +36,7 @@ if(isset($_GET['play_price'])){
 
 		$pay_money = $pay_money+$cod_money;
 		//更新
-		$sql = "UPDATE $response_list SET all_total_money = '{$pay_money}',order_total_money = '{$pay_money2}',pay_money = '{$pay_money}'  WHERE order_id='{$order_id}'";
+		$sql = "UPDATE $response_list SET all_total_money = '{$pay_money}',order_total_money = '{$pay_money}',pay_money = '{$pay_money}'  WHERE order_id='{$order_id}'";
 		$res = $db->execute($sql);
 
 		// 是否已经到发货区

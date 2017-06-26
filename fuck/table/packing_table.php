@@ -115,7 +115,7 @@ if(isset($_GET['down_packing'])){
     // sheet2
     $objPHPExcel->createSheet();
     $objPHPExcel->setActiveSheetIndex(1); 
-    $objPHPExcel->getActiveSheet()->setTitle('佐川急便');//表名
+    $objPHPExcel->getActiveSheet()->setTitle('宅配');//表名
     $objPHPExcel->getActiveSheet()->setCellValue("A1","导入日期")
             ->setCellValue("B1","包裹")
             ->setCellValue("C1","收件人")
@@ -139,7 +139,7 @@ if(isset($_GET['down_packing'])){
     $objPHPExcel->getActiveSheet()->getStyle('A')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);//左对齐
 
     //SQL
-    $sql = "SELECT * FROM send_table WHERE repo_status <> '日' AND express_company = '佐川急便' AND has_pack = '0' order by pack_count";
+    $sql = "SELECT * FROM send_table WHERE repo_status <> '日' AND send_method IN ('宅配便','宅急便') AND has_pack = '0' order by pack_count";
     // $sql = "SELECT * FROM send_table order by pack_id";
     $res = $db->getAll($sql);
     $j=2;
@@ -179,7 +179,7 @@ if(isset($_GET['down_packing'])){
     // sheet3
     $objPHPExcel->createSheet();
     $objPHPExcel->setActiveSheetIndex(2); 
-    $objPHPExcel->getActiveSheet()->setTitle('ヤマト運輸');//表名
+    $objPHPExcel->getActiveSheet()->setTitle('mail');//表名
     $objPHPExcel->getActiveSheet()->setCellValue("A1","导入日期")
             ->setCellValue("B1","包裹")
             ->setCellValue("C1","收件人")
@@ -205,7 +205,7 @@ if(isset($_GET['down_packing'])){
     // $objPHPExcel->getActiveSheet()->getStyle('A1:H'.$final_row)->getBorders()->getAllBorders()->getColor()->setARGB('dedede');
 
     //SQL
-    $sql = "SELECT * FROM send_table WHERE repo_status <> '日' AND express_company = 'ヤマト運輸' AND has_pack = '0' order by send_method,send_id";
+    $sql = "SELECT * FROM send_table WHERE repo_status <> '日' AND send_method NOT IN ('宅配便','宅急便') AND has_pack = '0' order by send_method,send_id";
     // $sql = "SELECT * FROM send_table order by pack_id";
     $res = $db->getAll($sql);
     $j=2;

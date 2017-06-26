@@ -90,9 +90,9 @@ if(isset($_POST['items_count'])){
 		        }
     		}else if($search_order_line == 'ing'){
                 if($start_date =='' or $end_date ==''){  
-                    $sql = "SELECT count(1) as cc FROM $response_list WHERE store = '{$store}' AND order_line<4 AND order_line>0";
+                    $sql = "SELECT count(1) as cc FROM $response_list WHERE store = '{$store}' AND order_line<6 AND order_line>0";
                 }else{
-                    $sql = "SELECT count(1) as cc FROM $response_list WHERE store = '{$store}' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}' AND order_line<4 AND order_line>0";
+                    $sql = "SELECT count(1) as cc FROM $response_list WHERE store = '{$store}' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}' AND order_line<6 AND order_line>0";
                 }
             }else{
     			if($start_date =='' or $end_date ==''){
@@ -111,9 +111,9 @@ if(isset($_POST['items_count'])){
 		        }
     		}else if($search_order_line == 'ing'){
                 if($start_date =='' or $end_date ==''){
-                    $sql = "SELECT count(1) as cc FROM $response_list WHERE store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' AND order_line<4 AND order_line>0";
+                    $sql = "SELECT count(1) as cc FROM $response_list WHERE store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' AND order_line<6 AND order_line>0";
                 }else{
-                    $sql = "SELECT count(1) as cc FROM $response_list WHERE store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}' AND order_line<4 AND order_line>0";
+                    $sql = "SELECT count(1) as cc FROM $response_list WHERE store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}' AND order_line<6 AND order_line>0";
                 }
             }else{
     			if($start_date =='' or $end_date ==''){
@@ -173,9 +173,9 @@ if(isset($_POST['get_order_list'])){
 		        }
     		}else if($search_order_line == 'ing'){
                 if($start_date =='' or $end_date ==''){
-                    $sql = "SELECT * FROM $response_list WHERE store = '{$store}' AND order_line>0 AND order_line<4 ORDER BY id DESC limit {$start},{$page_size}";
+                    $sql = "SELECT * FROM $response_list WHERE store = '{$store}' AND order_line>0 AND order_line<6 ORDER BY id DESC limit {$start},{$page_size}";
                 }else{
-                    $sql = "SELECT * FROM $response_list WHERE store = '{$store}' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}'  AND order_line>0 AND order_line<4 ORDER BY id DESC limit {$start},{$page_size}";
+                    $sql = "SELECT * FROM $response_list WHERE store = '{$store}' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}'  AND order_line>0 AND order_line<6 ORDER BY id DESC limit {$start},{$page_size}";
                 }
             }else{
     			if($start_date =='' or $end_date ==''){
@@ -194,9 +194,9 @@ if(isset($_POST['get_order_list'])){
 		        }
     		}else if($search_order_line == 'ing'){
                 if($start_date =='' or $end_date ==''){
-                    $sql = "SELECT * FROM $response_list WHERE store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' AND order_line<4 AND order_line>0 ORDER BY id DESC limit {$start},{$page_size}";
+                    $sql = "SELECT * FROM $response_list WHERE store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' AND order_line<6 AND order_line>0 ORDER BY id DESC limit {$start},{$page_size}";
                 }else{
-                    $sql = "SELECT * FROM $response_list WHERE store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}'  AND order_line>0 ORDER BY id DESC limit {$start},{$page_size}";
+                    $sql = "SELECT * FROM $response_list WHERE store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}' AND order_line<6 AND order_line>0 ORDER BY id DESC limit {$start},{$page_size}";
                 }
             }else{
     			if($start_date =='' or $end_date ==''){

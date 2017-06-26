@@ -98,6 +98,9 @@ if(isset($_GET['list_orders'])){
 			@$order_type = $arr2['Order'][$i]['OrderType'];
 			@$purchase_date = $arr2['Order'][$i]['PurchaseDate'];
 			@$payment_method = $arr2['Order'][$i]['PaymentExecutionDetail']['PaymentExecutionDetailItem']['PaymentMethod'];
+			if($payment_method == 'GC'){
+				
+			}
 			@$pay_money = $arr2['Order'][$i]['PaymentExecutionDetail']['PaymentExecutionDetailItem']['Payment']['Amount'];
 			@$buyer_email = $arr2['Order'][$i]['BuyerEmail'];
 			// @$last_update_date = $arr2['Order'][$i]['LastUpdateDate'];

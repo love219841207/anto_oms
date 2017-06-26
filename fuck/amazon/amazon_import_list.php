@@ -89,6 +89,7 @@ if(isset($_GET['import_add_list'])){
 			$ship_promotion_discount = $new_arr[27];	#对应Shipping_discount
 			$payment_method = $new_arr[30];	#代引
 			$pay_money = $new_arr[31];	#代引金额
+			$gc = $new_arr[32];	#亚马逊GC
 			$cod_money = $new_arr[33];	#cod费
 
 			// 查询是否存在此订单

@@ -50,15 +50,15 @@ if(isset($_GET['reset_express'])){
 function reset_express(){
 	$db = new PdoMySQL();
 	// 重置快递公司 和包裹
-	$sql = "UPDATE send_table SET express_company ='',pack_id = ''";
+	$sql = "UPDATE send_table SET express_company ='',pack_id = '' WHERE has_pack = '0'";
 	$res = $db->execute($sql);
 
 	// 重置配送方式
-	$sql = "UPDATE send_table SET send_method = '宅配便' WHERE send_method = '宅急便'";
+	$sql = "UPDATE send_table SET send_method = '宅配便' WHERE send_method = '宅急便' AND has_pack = '0'";
 	$res = $db->execute($sql);
 
 	// item_line
-	$sql = "UPDATE send_table SET item_line = '0'";
+	$sql = "UPDATE send_table SET item_line = '0' WHERE has_pack = '0'";
 	$res = $db->execute($sql);
 }
 
@@ -67,7 +67,7 @@ function reset_express(){
 function amz_mail_own_key(){
 	$db = new PdoMySQL();
 	// 亚马逊默认宅配便
-	$sql = "UPDATE send_table SET send_method = '宅配便' WHERE station = 'amazon'";
+	$sql = "UPDATE send_table SET send_method = '宅配便' WHERE station = 'amazon' AND has_pack = '0'";
 	$res = $db->execute($sql);
 
 	// 检索amz_mail库
@@ -80,7 +80,7 @@ function amz_mail_own_key(){
 	$amz_mail = implode(',', $amz_mail);
 
 	// 改mail便 
-	$sql = "UPDATE send_table SET send_method = 'DM便',express_company = 'ヤマト運輸' WHERE goods_code in ($amz_mail) AND station = 'amazon'";
+	$sql = "UPDATE send_table SET send_method = 'DM便',express_company = 'ヤマト運輸' WHERE goods_code in ($amz_mail) AND station = 'amazon' AND has_pack = '0'";
 	$res = $db->execute($sql);
 }
 
@@ -88,7 +88,7 @@ function make_bags(){
 	$db = new PdoMySQL();
 
 	// 同捆中存在DM便和宅配则改为宅配
-	$sql = "SELECT pack_id,count(1) as cct FROM send_table GROUP BY pack_id";
+	$sql = "SELECT pack_id,count(1) as cct FROM send_table WHERE has_pack = '0' GROUP BY pack_id";
 	$res = $db->getAll($sql);
 	foreach ($res as $val) {
 		$cct = $val['cct'];
@@ -112,11 +112,11 @@ function make_bags(){
 	}
 
 	// 删除自动添加的包裹
-	$sql = "DELETE FROM send_table WHERE other_1 = 'add'";
+	$sql = "DELETE FROM send_table WHERE other_1 = 'add' AND has_pack = '0'";
 	$res = $db->execute($sql);
 
 	// 拆亚马逊mail
-	$sql = "SELECT pack_id FROM send_table WHERE station = 'amazon' AND send_method = 'DM便' GROUP BY pack_id";
+	$sql = "SELECT pack_id FROM send_table WHERE station = 'amazon' AND has_pack = '0' AND send_method = 'DM便' GROUP BY pack_id";
 	$res = $db->getAll($sql);
 
 	foreach ($res as $value) {
@@ -216,15 +216,16 @@ function make_bags(){
 // 打包
 if(isset($_GET['packing'])){
 	reset_express();	// 重置
+
 	// 亚马逊分配
 	amz_mail_own_key();
 
 	// pack_id
-	$sql = "UPDATE send_table SET pack_id = oms_id,pack_count = ''";
+	$sql = "UPDATE send_table SET pack_id = oms_id,pack_count = '' WHERE has_pack = '0'";
 	$res = $db->execute($sql);
 
 	// 如果是合单
-	$sql = "SELECT send_id FROM send_table WHERE item_line = '0' AND send_id LIKE 'H%' GROUP BY send_id";
+	$sql = "SELECT send_id FROM send_table WHERE has_pack = '0' AND item_line = '0' AND send_id LIKE 'H%' GROUP BY send_id";
 	$res = $db->getAll($sql);
 	foreach ($res as $value) {
 		// 更新为一个pack_id
@@ -238,22 +239,22 @@ if(isset($_GET['packing'])){
 	}
 
 	// 包裹ID分平台
-	$sql = "UPDATE send_table SET pack_id = concat('11',pack_id) WHERE station = 'amazon'";
+	$sql = "UPDATE send_table SET pack_id = concat('11',pack_id) WHERE station = 'amazon' AND has_pack = '0'";
 	$res = $db->execute($sql);
-	$sql = "UPDATE send_table SET pack_id = concat('22',pack_id) WHERE station = 'yahoo'";
+	$sql = "UPDATE send_table SET pack_id = concat('22',pack_id) WHERE station = 'yahoo' AND has_pack = '0'";
 	$res = $db->execute($sql);
-	$sql = "UPDATE send_table SET pack_id = concat('33',pack_id) WHERE station = 'rakuten'";
+	$sql = "UPDATE send_table SET pack_id = concat('33',pack_id) WHERE station = 'rakuten' AND has_pack = '0'";
 	$res = $db->execute($sql);
 
 	// 分包裹
 	make_bags();
 
 	//先变成佐川
-	$sql = "UPDATE send_table SET express_company ='佐川急便' WHERE express_company ='' or express_company ='无'";
+	$sql = "UPDATE send_table SET express_company ='佐川急便' WHERE express_company ='' or express_company ='无' AND has_pack = '0'";
 	$res = $db->execute($sql);
 
 	//地址分配配送公司，更新黑猫地址	（神奈川県，埼玉県，茨城県，群馬県，山梨県）
-	$sql = "UPDATE send_table SET express_company = 'ヤマト運輸',send_method = '宅急便' WHERE send_method = '宅配便' AND who_house LIKE '%神奈川県%' OR who_house LIKE '%埼玉県%' OR who_house LIKE '%茨城県%' OR who_house LIKE '%群馬県%' OR who_house LIKE '%山梨県%'";
+	$sql = "UPDATE send_table SET express_company = 'ヤマト運輸',send_method = '宅急便' WHERE has_pack = '0' AND send_method = '宅配便' AND (who_house LIKE '%神奈川県%' OR who_house LIKE '%埼玉県%' OR who_house LIKE '%茨城県%' OR who_house LIKE '%群馬県%' OR who_house LIKE '%山梨県%')";
 	$res = $db->execute($sql);
 
 	// item_line
