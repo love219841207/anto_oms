@@ -14,6 +14,12 @@ if(isset($_POST['send_table'])){
 
 	//获取仓库
 	$select_repo = $_POST['select_repo'];
+	$ttt = $select_repo;
+	if($select_repo == 'ch'){
+		$select_repo = "'中','中+日'";
+	}else if($select_repo == 'jp'){
+		$select_repo = "'日'";
+	}
 
 	// 获取日期区间
 	$start = $_POST['s_date'];
@@ -29,7 +35,7 @@ if(isset($_POST['send_table'])){
     //PHPExcel
     $objPHPExcel = new PHPExcel();
     $objSheet = $objPHPExcel->getActiveSheet();
-    $objSheet->setTitle($select_company.$select_repo.$now_time);//表名
+    $objSheet->setTitle($select_company.'-'.$ttt.$now_time);//表名
     $objSheet->getDefaultStyle()->getFont()->setName("微软雅黑")->setSize(12);  //默认字体
     $objPHPExcel->getActiveSheet()->getStyle('A:CQ')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
     $objPHPExcel->getActiveSheet()->getStyle('A1:CQ1')->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_WHITE);//前景色
@@ -54,9 +60,9 @@ if(isset($_POST['send_table'])){
 		$objSheet->getColumnDimension('W')->setWidth(26);//单元格宽
 		// 如果是最新
 		if($down_type == 'new'){
-			$sql = "SELECT who_tel,who_post,who_house,who_name,pack_id,send_day,send_time,due_money,back_status,group_concat(goods_code,'*',out_num separator '#') as aaa,express_company,send_method,need_not_send,other_1 from send_table where repo_status = '{$select_repo}' and express_company='佐川急便' and send_method in('着払い','宅配便') and back_status = '0' and table_status = '0' and import_day between '{$start}' and '{$end}' group by send_id order by id";	
+			$sql = "SELECT who_tel,who_post,who_house,who_name,pack_id,send_day,send_time,due_money,back_status,group_concat(goods_code,'*',out_num separator '#') as aaa,express_company,send_method,need_not_send,other_1 from send_table where repo_status in ($select_repo) and express_company='佐川急便' and send_method in('着払い','宅配便') and back_status = '0' and table_status = '0' and import_day between '{$start}' and '{$end}' group by send_id order by id";	
 		}else{	
-			$sql = "SELECT who_tel,who_post,who_house,who_name,pack_id,send_day,send_time,due_money,back_status,group_concat(goods_code,'*',out_num separator '#') as aaa,express_company,send_method,need_not_send,other_1 from send_table where repo_status = '{$select_repo}' and express_company='佐川急便' and send_method in('着払い','宅配便') and back_status = '0' and import_day between '{$start}' and '{$end}' group by send_id order by id";
+			$sql = "SELECT who_tel,who_post,who_house,who_name,pack_id,send_day,send_time,due_money,back_status,group_concat(goods_code,'*',out_num separator '#') as aaa,express_company,send_method,need_not_send,other_1 from send_table where repo_status in ($select_repo) and express_company='佐川急便' and send_method in('着払い','宅配便') and back_status = '0' and import_day between '{$start}' and '{$end}' group by send_id order by id";
 		}
 		$res = $db->getAll($sql);
 		$j=2;
@@ -111,7 +117,7 @@ if(isset($_POST['send_table'])){
 		$objWriter->save($dir."/../../down/".$select_repo."_佐川.xlsx");	//保存在服务器
 		if($down_type=='new'){
 			// 标注已经下载过1
-			$sql = "UPDATE send_table set table_status = '1' where repo_status = '{$select_repo}' and express_company = '佐川急便' and send_method in('着払い','宅配便') and back_status = '0' and import_day between '{$start}' and '{$end}';";
+			$sql = "UPDATE send_table set table_status = '1' where repo_status in ($select_repo) and express_company = '佐川急便' and send_method in('着払い','宅配便') and back_status = '0' and import_day between '{$start}' and '{$end}';";
 			$res = $db->execute($sql);
 		}else{
 		}
@@ -229,9 +235,9 @@ if(isset($_POST['send_table'])){
 	$objPHPExcel->getActiveSheet()->getStyle('A')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);//左对齐
 	//sql
 	if($down_type=='new'){
-		$sql = "SELECT pack_id as A,send_method as B,due_money,import_day as E,send_day as F,send_time as G,who_tel as I,who_post as K,left(who_house,15) as LL,substring(who_house,16,15) as MM,substring(who_house,31,25) as NN,substring(who_house,56,25) as OO,who_name as P,group_concat(goods_code,'*',out_num separator ' ') as ABD,due_money as AH,need_not_send as AJ,who_email as AW,order_method,other_1,back_status from send_table where express_company='ヤマト運輸' and repo_status = '{$select_repo}' and back_status ='0' and table_status='0' and import_day between '{$start}' and '{$end}' group by send_id order by send_method,send_id";
+		$sql = "SELECT pack_id as A,send_method as B,due_money,import_day as E,send_day as F,send_time as G,who_tel as I,who_post as K,left(who_house,15) as LL,substring(who_house,16,15) as MM,substring(who_house,31,25) as NN,substring(who_house,56,25) as OO,who_name as P,group_concat(goods_code,'*',out_num separator ' ') as ABD,due_money as AH,need_not_send as AJ,who_email as AW,order_method,other_1,back_status from send_table where express_company='ヤマト運輸' and repo_status in ($select_repo) and back_status ='0' and table_status='0' and import_day between '{$start}' and '{$end}' group by send_id order by send_method,send_id";
 	}else{	
-		$sql = "SELECT pack_id as A,send_method as B,due_money,import_day as E,send_day as F,send_time as G,who_tel as I,who_post as K,left(who_house,15) as LL,substring(who_house,16,15) as MM,substring(who_house,31,25) as NN,substring(who_house,56,25) as OO,who_name as P,group_concat(goods_code,'*',out_num separator ' ') as ABD,due_money as AH,need_not_send as AJ,who_email as AW,order_method,other_1,back_status from send_table where express_company='ヤマト運輸' and repo_status = '{$select_repo}' and back_status ='0' and import_day between '{$start}' and '{$end}' group by send_id order by send_method,send_id";
+		$sql = "SELECT pack_id as A,send_method as B,due_money,import_day as E,send_day as F,send_time as G,who_tel as I,who_post as K,left(who_house,15) as LL,substring(who_house,16,15) as MM,substring(who_house,31,25) as NN,substring(who_house,56,25) as OO,who_name as P,group_concat(goods_code,'*',out_num separator ' ') as ABD,due_money as AH,need_not_send as AJ,who_email as AW,order_method,other_1,back_status from send_table where express_company='ヤマト運輸' and repo_status in ($select_repo) and back_status ='0' and import_day between '{$start}' and '{$end}' group by send_id order by send_method,send_id";
 	}
 
 		$res = $db->getAll($sql);
@@ -349,7 +355,7 @@ if(isset($_POST['send_table'])){
 		$objWriter->save($dir."/../../down/".$select_repo."_黑猫.xlsx");	//保存在服务器
 		if($down_type=='new'){
 			// 标注已经下载过1
-			$sql = "UPDATE send_table set table_status = '1' where repo_status = '{$select_repo}' and express_company='ヤマト運輸' and back_status ='0' and import_day between '{$start}' and '{$end}';";
+			$sql = "UPDATE send_table set table_status = '1' where repo_status in ($select_repo) and express_company='ヤマト運輸' and back_status ='0' and import_day between '{$start}' and '{$end}';";
 			$res = $db->execute($sql);
 		}else{
 		}
