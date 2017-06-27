@@ -249,15 +249,15 @@ if(isset($_POST['ready_send_data'])){
     $is_wait = addslashes($_POST['is_wait']);
     if($is_wait == '1'){
         if($search_field == ''){   //0没有筛选条件
-            $sql = "SELECT * FROM send_table WHERE has_pack = '1' ORDER BY send_id LIMIT {$start},{$page_size}";
+            $sql = "SELECT * FROM send_table WHERE has_pack = '1' ORDER BY import_day LIMIT {$start},{$page_size}";
         }else{
-            $sql = "SELECT * FROM send_table WHERE {$search_field} LIKE '%{$search_key}%' AND has_pack = '1' ORDER BY send_id LIMIT {$start},{$page_size}";
+            $sql = "SELECT * FROM send_table WHERE {$search_field} LIKE '%{$search_key}%' AND has_pack = '1' ORDER BY import_day LIMIT {$start},{$page_size}";
         }
     }else{
         if($search_field == ''){   //0没有筛选条件
-            $sql = "SELECT * FROM send_table WHERE has_pack = '0' ORDER BY send_id LIMIT {$start},{$page_size}";
+            $sql = "SELECT * FROM send_table WHERE has_pack = '0' ORDER BY import_day LIMIT {$start},{$page_size}";
         }else{
-            $sql = "SELECT * FROM send_table WHERE {$search_field} LIKE '%{$search_key}%' AND has_pack = '0' ORDER BY send_id LIMIT {$start},{$page_size}";
+            $sql = "SELECT * FROM send_table WHERE {$search_field} LIKE '%{$search_key}%' AND has_pack = '0' ORDER BY import_day LIMIT {$start},{$page_size}";
         }
     }
     

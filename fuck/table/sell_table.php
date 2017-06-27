@@ -10,11 +10,11 @@ if(isset($_GET['look_sell'])){
 	$s_date = $_GET['s_date'];
 	$e_date = $_GET['e_date'];
 
-	$sql = "SELECT sum(total_money) AS sum_total_money,sum(ems_money) AS sum_ems_money,sum(bill) AS sum_bill,sum(point) AS sum_point,sum(cheap) AS sum_cheap,sum(tax) AS sum_tax,sum(buy_money)-sum(ems_money)-sum(bill)-sum(point)-sum(cheap)-sum(tax) AS sum_buy_money FROM history_send WHERE import_day BETWEEN '{$s_date}' AND '{$e_date}'";
+	$sql = "SELECT sum(total_money) AS sum_total_money,sum(ems_money) AS sum_ems_money,sum(bill) AS sum_bill,sum(point) AS sum_point,sum(cheap) AS sum_cheap,sum(tax) AS sum_tax,sum(buy_money)-sum(ems_money)-sum(bill)-sum(point)-sum(cheap)-sum(tax) AS sum_buy_money FROM history_send WHERE express_day BETWEEN '{$s_date}' AND '{$e_date}'";
 	$res = $db->getAll($sql);
 	$final_res['table'] = $res; 
 
-	$sql = "SELECT import_day,sum(total_money) AS sum_total_money,sum(ems_money) AS sum_ems_money,sum(bill) AS sum_bill,sum(point) AS sum_point,sum(cheap) AS sum_cheap,sum(tax) AS sum_tax,sum(buy_money)-sum(ems_money)-sum(bill)-sum(point)-sum(cheap)-sum(tax) AS sum_buy_money FROM history_send WHERE import_day BETWEEN '{$s_date}' AND '{$e_date}' GROUP BY import_day";
+	$sql = "SELECT express_day,sum(total_money) AS sum_total_money,sum(ems_money) AS sum_ems_money,sum(bill) AS sum_bill,sum(point) AS sum_point,sum(cheap) AS sum_cheap,sum(tax) AS sum_tax,sum(buy_money)-sum(ems_money)-sum(bill)-sum(point)-sum(cheap)-sum(tax) AS sum_buy_money FROM history_send WHERE express_day BETWEEN '{$s_date}' AND '{$e_date}' GROUP BY express_day";
 	$res = $db->getAll($sql);
 	$final_res['chart'] = $res; 
 
@@ -29,7 +29,7 @@ if(isset($_GET['look_sell'])){
 	$sum_buy_money = array();
 
 	foreach ($res as $val) {
-		array_push($labels, $val['import_day']);
+		array_push($labels, $val['express_day']);
 		array_push($sum_total_money, $val['sum_total_money']);
 		array_push($sum_ems_money, $val['sum_ems_money']);
 		array_push($sum_bill, $val['sum_bill']);
@@ -110,7 +110,7 @@ if(isset($_GET['sell_detail_table'])){
         ->setCellValue("S1",$s_date)
         ->setCellValue("U1",$e_date);
 
-	$sql_line = "SELECT * FROM history_send WHERE import_day BETWEEN '{$s_date}' AND '{$e_date}'";
+	$sql_line = "SELECT * FROM history_send WHERE express_day BETWEEN '{$s_date}' AND '{$e_date}'";
 	$res = $db->getAll($sql_line);
 
     $j=2;
@@ -126,7 +126,7 @@ if(isset($_GET['sell_detail_table'])){
                 ->setCellValueExplicit("I".$j,$value['point'],PHPExcel_Cell_DataType::TYPE_STRING)
                 ->setCellValueExplicit("J".$j,$value['cheap'],PHPExcel_Cell_DataType::TYPE_STRING)
                 ->setCellValueExplicit("K".$j,$value['total_money'],PHPExcel_Cell_DataType::TYPE_STRING)
-                ->setCellValue("L".$j,$value['import_day'])
+                ->setCellValue("L".$j,$value['express_day'])
                 ->setCellValue("M".$j,'新規')
                 ->setCellValue("N".$j,$value['holder'])
                 ->setCellValue("O".$j,$value['store_name'])

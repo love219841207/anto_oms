@@ -849,12 +849,14 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
                 $scope.get_count();
                 $scope.to_page($scope.now_page);
                 
-                $timeout(function(){$scope.shadow('close');},500); //关闭shadow
                 $scope.plug_alert('success','删除完成。','fa fa-smile-o');
+            }else if(data == 'cut'){
+                $scope.plug_alert('danger','勾选不合理。','fa fa-ban');
             }else{
                 $log.info(data);
                 $scope.plug_alert('danger','删除失败，请联系管理员。','fa fa-ban');
             }
+            $timeout(function(){$scope.shadow('close');},500); //关闭shadow
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
             $log.info("error:删除订单失败。");
@@ -881,6 +883,54 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
             $log.info("error:删除订单失败。");
+        });
+    }
+
+    // 保留订单
+    $scope.stop_order = function(){
+        $scope.shadow('open','ss_make','正在保留，请稍后。');
+
+        var post_data = {stop_order:$scope.my_checked_items,station:$scope.now_station,store:$scope.now_store_bar};
+
+        $http.post('/fuck/common/change_order.php', post_data).success(function(data) {
+            if(data == 'ok'){
+                $scope.get_count();
+                $scope.to_page($scope.now_page);
+                
+                $scope.plug_alert('success','保留操作完成，如果订单冻结：记得联系发货员【退押】哦。','fa fa-smile-o');
+            }else if(data == 'cut'){
+                $scope.plug_alert('danger','勾选不合理。','fa fa-ban');
+            }else{
+                $log.info(data);
+                $scope.plug_alert('danger','保留失败，请联系管理员。','fa fa-ban');
+            }
+            $timeout(function(){$scope.shadow('close');},500); //关闭shadow
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:保留订单失败。");
+        });
+    }
+
+    // 不保留订单
+    $scope.stop_back_order = function(){
+        $scope.shadow('open','ss_make','正在不保留，请稍后。');
+
+        var post_data = {stop_back_order:$scope.my_checked_items,station:$scope.now_station,store:$scope.now_store_bar};
+
+        $http.post('/fuck/common/change_order.php', post_data).success(function(data) {
+            if(data == 'ok'){
+                $scope.get_count();
+                $scope.to_page($scope.now_page);
+                
+                $scope.plug_alert('success','不保留操作完成。','fa fa-smile-o');
+            }else{
+                $log.info(data);
+                $scope.plug_alert('danger','不保留失败，请联系管理员。','fa fa-ban');
+            }
+            $timeout(function(){$scope.shadow('close');},500); //关闭shadow
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:不保留订单失败。");
         });
     }
 
@@ -1156,10 +1206,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:单品发货失败。");
         });
-    }
-
-
-    
+    }  
 
     // 邮件模板查询
     $scope.get_mail_tpl = function(){

@@ -82,5 +82,8 @@ myFilters.filter('order_line', function(){
         if(item == '-4'){
             return '已退单';
         }
+        if(item == 9){
+            return '保留';
+        }
     }
 });

@@ -9,7 +9,7 @@ ini_set("memory_limit", "1024M");
 // 读取所有冻结订单info表
 if(isset($_GET['pause_order'])){
 	//	获取所有平台 ******************** select * (select * from t1 union all select * from t2) tmp order by tmp.createDate时间戳
-	$sql = "SELECT * FROM amazon_response_info WHERE is_pause = 'pause' ORDER BY order_id,ID DESC";
+	$sql = "SELECT * FROM amazon_response_info WHERE is_pause = 'pause' ORDER BY import_time";
 	$res = $db->getAll($sql);
 
 	echo json_encode($res);
@@ -18,7 +18,7 @@ if(isset($_GET['pause_order'])){
 // 读取所有冻结退押订单info表
 if(isset($_GET['back_order'])){
     //  获取所有平台 ******************** select * (select * from t1 union all select * from t2) tmp order by tmp.createDate时间戳
-    $sql = "SELECT * FROM amazon_response_info WHERE is_pause = 'back' ORDER BY order_id,ID DESC";
+    $sql = "SELECT * FROM amazon_response_info WHERE is_pause = 'back' ORDER BY import_time";
     $res = $db->getAll($sql);
 
     echo json_encode($res);
@@ -120,6 +120,12 @@ if(isset($_GET['del_pause'])){
     $sql = "SELECT * FROM $response_info WHERE id = '{$info_id}'";
     $res = $db->getOne($sql);
     $order_id = $res['order_id'];
+    $goods_title = $res['goods_title'];
+    $goods_code = $res['goods_code'];
+    $goods_num = $res['goods_num'];
+    $unit_price = $res['unit_price'];
+    $item_price = $res['item_price'];
+    $cod_money = $res['cod_money'];
 
     // 删除
     $sql1 = "DELETE FROM $response_info WHERE id = '{$info_id}'";
@@ -145,7 +151,7 @@ if(isset($_GET['del_pause'])){
     $res2 = $db->getOne($sql);
     $oms_id = $res2['id'];
 
-    $do = '[删除一单]：订单号【'.$res['order_id'].'】商品代码【'.$res['goods_code'].'】数量【'.$res['goods_num'].'】子订单价格【'.$res['item_price'].'】运费代码【'.$res['yfcode'].'】运费金额【'.$res['yf_money'].'】代引金额【'.$res['cod_money'].'】';
+    $do = '[删除一单]：订单号【'.$order_id.'】商品代码【'.$goods_code.'】数量【'.$goods_num.'】子订单价格【'.$item_price.'】单价【'.$unit_price.'】代引金额【'.$cod_money.'】';
 
     oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
     echo 'ok';
@@ -258,7 +264,7 @@ if(isset($_GET['down_pause_orders_table'])){
     $objPHPExcel->getActiveSheet()->getStyle('A')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);//左对齐
 
     //SQL
-    $sql = "SELECT list.syn_day,list.order_id,list.id,info.goods_code,(info.goods_num-info.pause_ch-info.pause_jp) as pause_num,list.receive_name,list.store FROM amazon_response_list list,amazon_response_info info WHERE list.order_id = info.order_id AND info.is_pause = 'pause' ORDER BY info.id DESC";
+    $sql = "SELECT list.syn_day,list.order_id,list.id,info.goods_code,(info.goods_num-info.pause_ch-info.pause_jp) as pause_num,list.receive_name,list.store FROM amazon_response_list list,amazon_response_info info WHERE list.order_id = info.order_id AND info.is_pause = 'pause' ORDER BY import_time";
 	$res = $db->getAll($sql);
     $j=2;
     foreach ($res as $key => $value) {

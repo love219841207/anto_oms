@@ -362,30 +362,45 @@ if(isset($_POST['del_items'])){
 	$response_list = $station.'_response_list';
 	$response_info = $station.'_response_info';
 
-	// 判断是否彻底删除
-	if($method == 'delete'){
-		// 删除response_list
-		$sql = "DELETE FROM $response_list WHERE order_id IN $del_items";
-		$res = $db->execute($sql);
-		// 删除response_info
-		$sql = "DELETE FROM $response_info WHERE order_id IN $del_items";
-		$res = $db->execute($sql);
+	$can_stop = 1;	//默认可以删除
 
-		//日志
-		$do = ' [彻底删除订单]：【'.$del_log_items.'】';
-		oms_log($u_name,$do,'change_order',$station,$store,'-');
+	// 查询是否可以删除
+	$sql = "SELECT order_line FROM $response_list WHERE order_id IN $del_items";
+	$res = $db->getAll($sql);
+	foreach ($res as $val) {
+		$order_line = $val['order_line'].'|';
+		if($order_line > 2){	//如果包含冻结以上，不能删除
+			$can_stop = 0;
+		}
+	}
+	if($can_stop == 0){
+		echo 'cut';
+	}else{
+		// 判断是否彻底删除
+		if($method == 'delete'){
+			// 删除response_list
+			$sql = "DELETE FROM $response_list WHERE order_id IN $del_items";
+			$res = $db->execute($sql);
+			// 删除response_info
+			$sql = "DELETE FROM $response_info WHERE order_id IN $del_items";
+			$res = $db->execute($sql);
 
-		echo 'ok';
-	}else if($method == 'trash'){
-		// 删除response_list，取消标记
-		$sql = "UPDATE $response_list SET order_line = '-1',is_mark='0' WHERE order_id IN $del_items";
-		$res = $db->execute($sql);
+			//日志
+			$do = ' [彻底删除订单]：【'.$del_log_items.'】';
+			oms_log($u_name,$do,'change_order',$station,$store,'-');
 
-		//日志
-		$do = ' [删除订单]：【'.$del_log_items.'】';
-		oms_log($u_name,$do,'change_order',$station,$store,'-');
+			echo 'ok';
+		}else if($method == 'trash'){
+			// 删除response_list，取消标记
+			$sql = "UPDATE $response_list SET order_line = '-1',is_mark='0' WHERE order_id IN $del_items";
+			$res = $db->execute($sql);
 
-		echo 'ok';
+			//日志
+			$do = ' [删除订单]：【'.$del_log_items.'】';
+			oms_log($u_name,$do,'change_order',$station,$store,'-');
+
+			echo 'ok';
+		}
 	}
 }
 
@@ -407,6 +422,65 @@ if(isset($_POST['return_items'])){
 	$do = ' [还原订单]：【'.$res_log_items.'】';
 	oms_log($u_name,$do,'change_order',$station,$store,'-');
 
+	echo 'ok';
+}
+
+// 保留订单，实则修改order_id=9
+if(isset($_POST['stop_order'])){
+	$stop_order = $_POST['stop_order'];
+	$stop_order = '('.$stop_order.')';
+	$del_log_items = addslashes($_POST['stop_order']);
+	$station = strtolower($_POST['station']);
+	$store = $_POST['store'];
+
+	$response_list = $station.'_response_list';
+	$response_info = $station.'_response_info';
+
+	$can_stop = 1;	//默认可以stop
+
+	// 查询是否可以保留
+	$sql = "SELECT order_line FROM $response_list WHERE order_id IN $stop_order";
+	$res = $db->getAll($sql);
+	foreach ($res as $val) {
+		$order_line = $val['order_line'].'|';
+		if($order_line > 3){
+			$can_stop = 0;
+		}
+	}
+	if($can_stop == 0){
+		echo 'cut';
+	}else{
+		// 删除response_list，取消标记
+		$sql = "UPDATE $response_list SET order_line = '9' WHERE order_id IN $stop_order";
+		$res = $db->execute($sql);
+
+		//日志
+		$do = ' [保留订单]：【'.$del_log_items.'】';
+		oms_log($u_name,$do,'change_order',$station,$store,'-');
+		echo 'ok';
+	}
+}
+
+// 不保留订单，实则修改order_id=9
+if(isset($_POST['stop_back_order'])){
+	$stop_order = $_POST['stop_back_order'];
+	$stop_order = '('.$stop_order.')';
+	$del_log_items = addslashes($_POST['stop_back_order']);
+	$station = strtolower($_POST['station']);
+	$store = $_POST['store'];
+
+	$response_list = $station.'_response_list';
+	$response_info = $station.'_response_info';
+
+	$can_stop = 1;	//默认可以stop
+
+	// 删除response_list，取消标记
+	$sql = "UPDATE $response_list SET order_line = '1' WHERE order_id IN $stop_order";
+	$res = $db->execute($sql);
+
+	//日志
+	$do = ' [不保留订单]：【'.$del_log_items.'】';
+	oms_log($u_name,$do,'change_order',$station,$store,'-');
 	echo 'ok';
 }
 

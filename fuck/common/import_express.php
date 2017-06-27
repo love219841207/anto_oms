@@ -189,7 +189,7 @@ if(isset($_GET['import_express'])){
 	        $dd = substr ($strs[1],6,2);
 	        $express_day = $yy.'-'.$mm.'-'.$dd;
 
-			if($strs[0]==""){
+			if($strs[12]==''){
 	        	//如果没有填入数目，则跳过
 	        }else{
 	        	//查询是否已经包含

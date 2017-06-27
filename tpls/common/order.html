@@ -123,6 +123,7 @@
 					<button class="btn btn_fff btn-sm" ng-show="tool_1">
 						<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="search_order_line" ng-change="change_search_line()">
 							<option value="ing">ing</option>
+							<option value="9">保留</option>
 							<option ng-hide="now_list_order_count.mark_count==0" value="mark">标记</option>
 							<option ng-hide="now_list_order_count.no_info_count==0" value="0">无详单</option>
 							<option ng-hide="now_list_order_count.no_post_count==0" value="post_ok">卡邮编</option>
@@ -324,11 +325,17 @@
 		      	<button ng-show="search_order_line=='-1'" ng-disabled="my_checked==''" ng-click="check_items();del_true='true'" data-animation="am-fade-and-slide-top" data-template-url="/modal/del_item.html" bs-modal="modal" class="btn btn-danger btn-sm">
 		      		<i class="fa fa-trash-o fa-fw"></i>彻底删除
 		      	</button>
-		      	<button ng-hide="search_order_line=='-1'" ng-disabled="my_checked==''" type="button" ng-click="check_items();del_true='false'" data-animation="am-fade-and-slide-top" data-template-url="/modal/del_item.html" bs-modal="modal" class="btn btn-default btn-sm red">
+		      	<button ng-disabled="my_checked==''" type="button" ng-click="check_items();del_true='false'" data-animation="am-fade-and-slide-top" data-template-url="/modal/down_item.html" bs-modal="modal" class="btn btn-default btn-sm green">
+		      		<i class="fa fa-download fa-fw"></i>下载
+		      	</button>
+		      	<button ng-show="search_order_line=='ing'" ng-disabled="my_checked==''" type="button" ng-click="check_items();del_true='false'" data-animation="am-fade-and-slide-top" data-template-url="/modal/del_item.html" bs-modal="modal" class="btn btn-default btn-sm red">
 		      		<i class="fa fa-trash-o fa-fw"></i>删除
 		      	</button>
-		      	<button ng-hide="search_order_line=='-1'" ng-disabled="my_checked==''" type="button" ng-click="check_items();del_true='false'" data-animation="am-fade-and-slide-top" data-template-url="/modal/down_item.html" bs-modal="modal" class="btn btn-default btn-sm green">
-		      		<i class="fa fa-download fa-fw"></i>下载
+		      	<button ng-show="search_order_line=='ing'" ng-disabled="my_checked==''" type="button" ng-click="check_items();del_true='false';stop_order();" class="btn btn-default btn-sm yellow">
+		      		<i class="fa fa-shopping-basket fa-fw"></i>保留
+		      	</button>
+		      	<button ng-show="search_order_line=='9'" ng-disabled="my_checked==''" type="button" ng-click="check_items();del_true='false';stop_back_order();" class="btn btn-default btn-sm yellow">
+		      		<i class="fa fa-undo fa-fw"></i>不保留
 		      	</button>
 		    </div>
 			<div ng-repeat="item in get_order_list_data track by $index" class="animate slide-left">

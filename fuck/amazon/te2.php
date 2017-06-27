@@ -32,9 +32,9 @@ if(isset($_GET['list_orders'])){
 	$param['SignatureMethod']  		= 'HmacSHA256';						//*   
 	$param['Timestamp']        		= gmdate("Y-m-d\TH:i:s\Z", time());	//*
 	$param['Version']          		= '2013-09-01'; 					//*
-	$param['OrderStatus.Status.1']    = 'Unshipped';			//ListOrders
-	$param['OrderStatus.Status.2']    = 'PartiallyShipped';		//ListOrders
-	$param['CreatedAfter']  = '2016-12-01T00:30:00Z';	//传值
+	// $param['OrderStatus.Status.1']    = 'Unshipped';			//ListOrders
+	// $param['OrderStatus.Status.2']    = 'PartiallyShipped';		//ListOrders
+	$param['LastUpdatedAfter']  = '2017-06-05T00:30:00Z';	//传值
 	$url = array();
 	foreach ($param as $key => $val) {
 	    $key = str_replace("%7E", "~", rawurlencode($key));
@@ -75,6 +75,7 @@ if(isset($_GET['list_orders'])){
 
 	$arr =  $amazon_orders['ListOrdersResult'];
 	$arr2 = $arr['Orders'];
+	// var_dump($arr2);die;
 	$count_order = count($arr2['Order']);
 
 	//初始化数
@@ -91,14 +92,15 @@ if(isset($_GET['list_orders'])){
 	        @$latest_ship_date = $arr2['Order'][$i]['LatestShipDate'];
 			@$order_type = $arr2['Order'][$i]['OrderType'];
 			@$purchase_date = $arr2['Order'][$i]['PurchaseDate'];
-		echo	@$payment_method = $arr2['Order'][$i]['PaymentExecutionDetail']['PaymentExecutionDetailItem']['PaymentMethod'];
+			@$payment_method = $arr2['Order'][$i]['PaymentExecutionDetail']['PaymentExecutionDetailItem']['PaymentMethod'];
+	echo	$payment_method->firstChild;
 			if($payment_method == 'GC'){
 				
 			}
 			@$pay_money = $arr2['Order'][$i]['PaymentExecutionDetail']['PaymentExecutionDetailItem']['Payment']['Amount'];
 			@$buyer_email = $arr2['Order'][$i]['BuyerEmail'];
 			// @$last_update_date = $arr2['Order'][$i]['LastUpdateDate'];
-			@$buyer_name = $arr2['Order'][$i]['BuyerName'];
+		echo	@$buyer_name = $arr2['Order'][$i]['BuyerName'];
 			@$order_total_currency = $arr2['Order'][$i]['OrderTotal']['CurrencyCode'];
 			@$order_total_money = $arr2['Order'][$i]['OrderTotal']['Amount'];
 			@$phone = $arr2['Order'][$i]['ShippingAddress']['Phone'];
@@ -120,7 +122,7 @@ if(isset($_GET['list_orders'])){
 				}
 			// }
 
-		echo	@$receive_name = $arr2['Order'][$i]['ShippingAddress']['Name'];
+			@$receive_name = $arr2['Order'][$i]['ShippingAddress']['Name'];
 			@$country = $arr2['Order'][$i]['ShippingAddress']['CountryCode'];
 			@$post_code = $arr2['Order'][$i]['ShippingAddress']['PostalCode'];
 			@$address0 = $arr2['Order'][$i]['ShippingAddress']['StateOrRegion'];
@@ -135,12 +137,6 @@ echo '<hr>';
 
 			usleep(50000);
 			$insert_count = $insert_count + 1;
-	    }else{
-	    	// $sql = "UPDATE amazon_response_list SET oms_has_me = 'has' WHERE order_id = '{$order_id}'";
-	    	// $res = $db->execute($sql);
-	    	$has_count = $has_count + 1;
-	    	usleep(50000);
-	    	continue;
 	    }
 	}
 
