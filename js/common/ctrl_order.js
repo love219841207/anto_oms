@@ -737,36 +737,16 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         $scope.my_checked_items = my_checked.join(',');
     }
 
-    //备注按钮点击
-    $scope.change_note = function(order_id,index){
-        $scope.change_note_order_id = order_id;  //备注传值
-        $scope.change_note_index = index;  //备注传值
-        $scope.loading_shadow('open'); //打开loading
-        //读取备注
-        $http.get('/fuck/common/change_order.php', {
-            params:{
-                read_note:$scope.change_note_order_id,
-                station:$scope.now_station
-            }
-        }).success(function(data) {
-            var dom = document.querySelector('#change_note_key');
-            angular.element(dom).val(data);
-            $timeout(function(){$scope.loading_shadow('close');},300); //关闭loading
-        }).error(function(data) {
-            alert("系统错误，请联系管理员。");
-            $log.info("error:备注读取失败。");
-        });
-    }
-
     //备注
-    $scope.save_note = function(index){
+    $scope.save_note = function(order_id){
+
         var dom = document.querySelector('#change_note_key');
         var change_note_key = angular.element(dom).val();
 
         $scope.loading_shadow('open'); //打开loading
         $http.get('/fuck/common/change_order.php', {
             params:{
-                change_note:$scope.change_note_order_id,
+                change_note:order_id,
                 note:change_note_key,
                 station:$scope.now_station,
                 store:$scope.now_store_bar
@@ -774,6 +754,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         }).success(function(data) {
             if(data == 'ok'){
                 $scope.to_page($scope.now_page);
+                $scope.show_one_info(order_id);
                 $scope.plug_alert('success','已保存。','fa fa-smile-o');
             }else{
                 $scope.plug_alert('danger','保存失败。','fa fa-ban');

@@ -323,17 +323,6 @@ if(isset($_GET['change_multi_note'])){
 	echo 'ok';
 }
 
-//读取订单备注
-if(isset($_GET['read_note'])){
-	$order_id = $_GET['read_note'];
-	$station = strtolower($_GET['station']);
-	$response_list = $station.'_response_list';
-
-	$sql = "SELECT order_note FROM $response_list WHERE order_id = '{$order_id}'";
-	$res = $db->getOne($sql);
-	echo $res['order_note'];
-}
-
 // 标记订单查询
 if(isset($_GET['mark_orders'])){
 	$mark_orders = $_GET['mark_orders'];

@@ -3,7 +3,7 @@
     <div class="modal-content">
       <div class="modal-header modal-drag">
         <i class="fa fa-close f20 close" ng-click="$hide()"></i>
-        <h4 class="modal-title blue"><i class="fa fa-fw fa-info-circle"></i> 订单 <span class="red">{{item.order_id}}</span> 详单</h4>
+        <h4 class="modal-title blue"><i class="fa fa-fw fa-info-circle"></i><span class="red">{{item.order_id}}</span></h4>
       </div>
       <div class="modal-body">
         <table class="tagl table table-hover table-bordered table-condensed" ng-repeat="item in one_res_list track by $index">
@@ -96,10 +96,11 @@
           <tr ng-show="aa_post_addr">
             <td colspan="2"><div class="btn btn-warning btn-xs f14 pull-right" ng-click="change_post_addr(item.order_id)">&nbsp;&nbsp;&nbsp;&nbsp;修&nbsp;&nbsp;&nbsp;正&nbsp;&nbsp;&nbsp;</div></td>
           </tr>
-          <tr ng-show="item.order_note">
+          <tr>
             <td class="s_gray">备注</td>
             <td>
-              <textarea style="resize: vertical;" readonly class="form-control f12 dark">{{item.order_note}}</textarea>
+              <textarea style="resize: vertical;" class="form-control f12 red" id="change_note_key">{{item.order_note}}</textarea>
+              <button class="btn btn-info btn-xs mt5 pull-right" ng-click="save_note(item.order_id);">更新备注</button>
             </td>
           </tr>
           <tr>
