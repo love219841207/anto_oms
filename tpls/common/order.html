@@ -161,6 +161,7 @@
 							<option value="buyer_email">邮箱</option>
 							<option value="buyer_name">购买人</option>
 							<option value="receive_name">收件人</option>
+							<option value="order_note">备注</option>
 						</select>
 						<span ng-hide="search_field==''">
 							<input class="key_words blue" ng-model="search_key" type="text" placeholder="关键词 ..">
@@ -331,7 +332,7 @@
 		      	<button ng-show="search_order_line=='ing'" ng-disabled="my_checked==''" type="button" ng-click="check_items();del_true='false'" data-animation="am-fade-and-slide-top" data-template-url="/modal/del_item.html" bs-modal="modal" class="btn btn-default btn-sm red">
 		      		<i class="fa fa-trash-o fa-fw"></i>删除
 		      	</button>
-		      	<button ng-show="search_order_line=='ing'" ng-disabled="my_checked==''" type="button" ng-click="check_items();del_true='false';stop_order();" class="btn btn-default btn-sm yellow">
+		      	<button ng-show="search_order_line=='ing' || search_order_line=='-3'" ng-disabled="my_checked==''" type="button" ng-click="check_items();del_true='false';stop_order();" class="btn btn-default btn-sm yellow">
 		      		<i class="fa fa-shopping-basket fa-fw"></i>保留
 		      	</button>
 		      	<button ng-show="search_order_line=='9'" ng-disabled="my_checked==''" type="button" ng-click="check_items();del_true='false';stop_back_order();" class="btn btn-default btn-sm yellow">
@@ -373,8 +374,8 @@
 							<span class="s_gray">总金额：</span>
 						{{item.all_total_money}}</td>
 						<td style="width:8%" class="tagc">
-							<button data-animation="am-fade-and-slide-top" data-template-url="/modal/show_one_info.html" bs-modal="modal" class="btn btn-xs btn-primary mr5" ng-click="show_one_info(item.order_id)">详单</button>
-							<!-- <button data-animation="am-fade-and-slide-top" data-template-url="/modal/note.html" bs-modal="modal" class="btn btn-xs btn-info" ng-click="change_note(item.order_id,$index)">配送时间</button> -->
+							<button data-animation="am-fade-and-slide-top" data-template-url="/modal/show_one_info.html" bs-modal="modal" class="btn btn-xs btn-primary mr5" ng-click="show_one_info(item.order_id)">
+							详单</button>
 						</td>
 					</tr>
 					<tr ng-show="info_box" class="white am-fade-and-slide-right" ng-class="{'ready_color':item.order_line=='5',
@@ -384,13 +385,7 @@
 						<td class=""><span class="s_gray">购买人：</span>{{item.buyer_name}}</td>
 						<td class="green"><span class="s_gray">电话：</span>{{item.phone}}</td>
 						<td class="blue"><span class="s_gray">邮箱：</span>{{item.buyer_email}}</td>
-						<td>
-							<!-- <span class="s_gray">国家/货币：</span>{{item.country}}/{{item.order_total_currency}} -->
-							<span class="s_gray">{{item.express_company}}：</span>{{item.send_method}}
-						</td>	
-						<td colspan="3">
-							<span class="s_gray">快递单号：</span><span class="blue">{{item.oms_order_express_num}}</span>
-						</td>
+						<td colspan="4"><textarea ng-show="item.order_note" rows="1" style="width: 100%; border: none; background: none; resize: vertical;" readonly class="f12 red">备注：{{item.order_note}}</textarea></td>
 					</tr>
 					<tr ng-show="info_box" class="white am-fade-and-slide-right" ng-class="{'ready_color':item.order_line=='5',
 							'close_color':item.order_line=='6',
@@ -399,7 +394,35 @@
 						<td class="yellow"><span class="s_gray">收件人：</span>{{item.receive_name}}</td>
 						<td class="blue"><span class="s_gray">邮编：</span>{{item.post_code}}</td>
 						<td class="green"><span class="s_gray">地址：</span>{{item.address}}</td>
-						<td colspan="4"><textarea ng-show="item.order_note" rows="1" style="width: 100%; border: none; background: none; resize: vertical;" readonly class="f12 red">备注：{{item.order_note}}</textarea></td>
+						<td>
+							<!-- <span class="s_gray">国家/货币：</span>{{item.country}}/{{item.order_total_currency}} -->
+							<span class="s_gray">{{item.express_company}}：</span>{{item.send_method}}
+						</td>	
+						<td colspan="3">
+							<span class="s_gray">最后出货时间：</span><span class="blue">{{item.latest_ship_date}}</span>
+						</td>
+					</tr>
+					<tr ng-show="info_box" class="white am-fade-and-slide-right" ng-class="{'ready_color':item.order_line=='5',
+							'close_color':item.order_line=='6',
+							'del_color':item.order_line=='-1'}">
+						<td class="tagc">
+							<span class="s_gray">物流栏</span>
+						</td>
+						<td colspan="2">
+			            	<span class="s_gray">客人指定配送时间：</span>
+							<i class="fa fa-fw fa-clock-o yellow pointer" data-animation="am-fade-and-slide-top" data-template-url="/modal/want_date.html" bs-modal="modal" ng-click="change_want_date(item.order_id)"></i>
+			            	<span class="bg_yellow red">{{item.want_date}} {{item.want_time}}</span>
+
+			            </td>
+						<td>
+			            	<span class="s_gray">物流快递单号：</span>{{item.oms_order_express_num}}
+			            </td>
+			            <td>
+			            	<span class="s_gray">发货仓：</span>{{item.repo_status}}
+			            </td>
+			            <td colspan="2">
+			            	<span class="s_gray">快递日期：</span>{{item.express_day}}
+			            </td>
 					</tr>
 				</table>
 			</div>	
@@ -455,33 +478,48 @@
 					</select>
 				</a>
 			</li>
-			<li class="disabled">
+			<li>
 				<a class="pg_e">Page {{selPage}} / {{pages}}</a>
 				<a>共 {{all_num}} 条
 				<!-- 错误数统计 -->
 					<!-- 标记 -->
 				<span ng-hide="now_list_order_count.mark_count==0">/</span>
-				<i class="fa fa-star yellow fa-fw" ng-hide="now_list_order_count.mark_count==0"></i>
-				<span class="yellow" ng-hide="now_list_order_count.mark_count==0">{{now_list_order_count.mark_count}}</span>
+				<span class="pointer" ng-click="jump_cut('mark')">
+					<i class="fa fa-star yellow fa-fw" ng-hide="now_list_order_count.mark_count==0"></i>
+					<span class="yellow" ng-hide="now_list_order_count.mark_count==0">
+					{{now_list_order_count.mark_count}}</span>
+				</span>
 					<!-- 无详单 -->
 				<span ng-hide="now_list_order_count.no_info_count==0">/</span>
-				<i class="fa fa-info-circle red fa-fw" ng-hide="now_list_order_count.no_info_count==0"></i>
-				<span class="red" ng-hide="now_list_order_count.no_info_count==0">{{now_list_order_count.no_info_count}}</span>
+				<span class="pointer" ng-click="jump_cut('0')">
+					<i class="fa fa-info-circle red fa-fw" ng-hide="now_list_order_count.no_info_count==0"></i>
+					<span class="red" ng-hide="now_list_order_count.no_info_count==0">{{now_list_order_count.no_info_count}}</span>
+				</span>
 					<!-- 卡邮编 -->
 				<span ng-hide="now_list_order_count.no_post_count==0">/</span>
-				<i class="fa fa-truck red fa-fw" ng-hide="now_list_order_count.no_post_count==0"></i>
-				<span class="red" ng-hide="now_list_order_count.no_post_count==0">{{now_list_order_count.no_post_count}}</span>
+				<span class="pointer" ng-click="jump_cut('post_ok')">
+					<i class="fa fa-truck red fa-fw" ng-hide="now_list_order_count.no_post_count==0"></i>
+					<span class="red" ng-hide="now_list_order_count.no_post_count==0">{{now_list_order_count.no_post_count}}</span>
+				</span>
 					<!-- 卡电话 -->
 				<span ng-hide="now_list_order_count.no_tel_count==0">/</span>
-				<i class="fa fa-phone red fa-fw" ng-hide="now_list_order_count.no_tel_count==0"></i>
-				<span class="red" ng-hide="now_list_order_count.no_tel_count==0">{{now_list_order_count.no_tel_count}}</span>
+				<span class="pointer" ng-click="jump_cut('tel_ok')">
+					<i class="fa fa-phone red fa-fw" ng-hide="now_list_order_count.no_tel_count==0"></i>
+					<span class="red" ng-hide="now_list_order_count.no_tel_count==0">
+					{{now_list_order_count.no_tel_count}}</span>
+				</span>
 					<!-- 卡sku -->
 				<span ng-hide="now_list_order_count.no_sku_count==0">/</span>
-				<i class="fa fa-hashtag red fa-fw" ng-hide="now_list_order_count.no_sku_count==0"></i>
-				<span class="red" ng-hide="now_list_order_count.no_sku_count==0">{{now_list_order_count.no_sku_count}}</span> 
+				<span class="pointer" ng-click="jump_cut('sku_ok')">
+					<i class="fa fa-hashtag red fa-fw" ng-hide="now_list_order_count.no_sku_count==0"></i>
+					<span class="red" ng-hide="now_list_order_count.no_sku_count==0">
+					{{now_list_order_count.no_sku_count}}</span> 
+				</span>
 					<!-- 卡运代 -->
-				<i class="fa fa-code red fa-fw" ng-hide="now_list_order_count.no_yfcode_count==0"></i>
-				<span class="red" ng-hide="now_list_order_count.no_yfcode_count==0">{{now_list_order_count.no_yfcode_count}}</span> 
+				<span class="pointer" ng-click="jump_cut('yfcode_ok')">
+					<i class="fa fa-code red fa-fw" ng-hide="now_list_order_count.no_yfcode_count==0"></i>
+					<span class="red" ng-hide="now_list_order_count.no_yfcode_count==0">{{now_list_order_count.no_yfcode_count}}</span>
+				</span>
 				</a>
 			</li>
 		</ul>

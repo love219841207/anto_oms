@@ -1,6 +1,6 @@
 <?php
 require_once("../header.php");
-require_once("../amazon_conf.php");
+
 $dir = dirname(__FILE__);
 
 set_time_limit(30);

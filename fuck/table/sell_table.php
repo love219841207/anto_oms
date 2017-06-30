@@ -110,11 +110,25 @@ if(isset($_GET['sell_detail_table'])){
         ->setCellValue("S1",$s_date)
         ->setCellValue("U1",$e_date);
 
-	$sql_line = "SELECT * FROM history_send WHERE express_day BETWEEN '{$s_date}' AND '{$e_date}'";
+	$sql_line = "SELECT * FROM history_send WHERE express_day BETWEEN '{$s_date}' AND '{$e_date}' ORDER BY receive_name";
 	$res = $db->getAll($sql_line);
 
     $j=2;
+    $o_who_name = '';
+    $o_receive_name = '';
     foreach ($res as $key => $value) {
+        if($value['who_name'] == $o_who_name){
+            $value['who_name'] = '';
+        }else{
+            $o_who_name = $value['who_name'];
+        }
+        
+        if($value['receive_name'] == $o_receive_name){
+            $value['receive_name'] = '';
+        }else{
+            $o_receive_name = $value['receive_name'];
+        }
+
         $objSheet->setCellValue("A".$j,$value['who_name'])
                 ->setCellValue("B".$j,$value['receive_name'])
                 ->setCellValueExplicit("C".$j,$value['goods_code'],PHPExcel_Cell_DataType::TYPE_STRING)
@@ -139,6 +153,7 @@ if(isset($_GET['sell_detail_table'])){
                 // ->setCellValue("R".$j,$value['receive_phone'])
                 // ->setCellValue("T".$j,$value['who_email']);
         $j++;
+        
     }
 
 	$objSheet->setTitle($t_title.$now_time);//表名

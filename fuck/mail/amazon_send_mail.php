@@ -1,6 +1,7 @@
 <?php
 require_once("../PHPMailer/PHPMailerAutoload.php");
 require_once("../header.php");
+require_once("../log.php");
 
 
 // $mail->SMTPDebug = true; 
@@ -17,6 +18,7 @@ if(isset($_POST['send_mail'])){
 	// amazon发信
 	if($_POST['send_mail'] == 'amazon'){
 		$conf = 'conf_'.$_POST['station'];
+		$station = 'amazon';
 		$store = $_POST['store'];
 		$mail_tpl = $_POST['mail_tpl'];
 		$my_checked_items = $_POST['my_checked_items'];
@@ -62,6 +64,7 @@ if(isset($_POST['send_mail'])){
 
 			$purchase_date = $res['purchase_date'];	#付款日期
 
+			$oms_id = $res['id'];	#OMS-ID
 			$to_mail = $res['buyer_email'];	#邮箱
 		 	$buyer_name = $res['buyer_name'];	#购买人
 		 	$receive_name = $res['receive_name'];	#收货人
@@ -343,13 +346,29 @@ $pin_book = '
 			} else {
 				$ok_num = $ok_num + 1;
 			}
+
+			//读取信件内容
+			if($mail_tpl == 'send_express'){
+				// 日志
+				$do = '发送发货通知信';
+				oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
+			}else{
+				// 日志
+				$do = '发信： <'.$mail_topic.'>';
+				oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
+			}
+
 		}	# 遍历id
 
-		// 标记状态
-	    $sql = "UPDATE amazon_express SET over_mail = 1 WHERE amazon_order_id IN ($my_checked_items)";
-	    $res = $db->execute($sql);
-	    $sql = "UPDATE history_send SET over_mail = 1 WHERE order_id IN ($my_checked_items)";
-	    $res = $db->execute($sql);
+		if($mail_tpl == 'send_express'){
+			// 标记状态
+		    $sql = "UPDATE amazon_express SET over_mail = 1 WHERE amazon_order_id IN ($my_checked_items)";
+		    $res = $db->execute($sql);
+		    $sql = "UPDATE history_send SET over_mail = 1 WHERE order_id IN ($my_checked_items)";
+		    $res = $db->execute($sql);
+		}else{
+			
+		}
 
 		$final_res['status'] = 'ok';
 		$final_res['error_num'] = $error_num;

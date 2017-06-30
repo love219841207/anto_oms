@@ -1,0 +1,30 @@
+<div class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" style="width:500px;">
+    <div class="modal-content">
+      <div class="modal-header tagc">
+        <i class="fa fa-close f20 close" ng-click="$hide()"></i>
+        <h4 class="modal-title yellow"><i class="fa fa-fw fa-clock-o"></i>指定配送时间 <span class="blue">{{change_want_date_order_id}}</span></h4>
+      </div>
+      <div class="modal-body tagc">
+        <div>指定配送日期：
+        <input placeholder="指定日期" class="date_icon blue" type="text" name="want_date" id="want_date" ng-flat-datepicker datepicker-config="datepickerConfig" ng-model="want_date"></div>
+        <div class="mt10">指定配送时间：
+          <select id="want_time" class="btn btn-default date_icon btn-sm selecter blue">
+            <option value=""></option>
+            <option value="09:00～12:00">09:00～12:00</option>
+            <option value="12:00～14:00">12:00～14:00</option>
+            <option value="14:00～16:00">14:00～16:00</option>
+            <option value="14:00～16:00">14:00～16:00</option>
+            <option value="16:00～18:00">16:00～18:00</option>
+            <option value="18:00～20:00">18:00～20:00</option>
+            <option value="20:00～21:00">20:00～21:00</option>
+          </select>
+        </div> 
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-warning" ng-click="save_want_date();$hide()"><i class="fa fa-fw fa-save"></i>保 存</button>
+        <button type="button" class="btn btn-default" ng-click="$hide()">关 闭</button>
+      </div>
+    </div>
+  </div>
+</div>

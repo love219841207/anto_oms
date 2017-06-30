@@ -60,9 +60,9 @@ if(isset($_POST['send_table'])){
 		$objSheet->getColumnDimension('W')->setWidth(26);//单元格宽
 		// 如果是最新
 		if($down_type == 'new'){
-			$sql = "SELECT who_tel,who_post,who_house,who_name,pack_id,send_day,send_time,due_money,back_status,group_concat(goods_code,'*',out_num separator '#') as aaa,express_company,send_method,need_not_send,other_1 from send_table where repo_status in ($select_repo) and express_company='佐川急便' and send_method in('着払い','宅配便') and back_status = '0' and table_status = '0' and import_day between '{$start}' and '{$end}' group by send_id order by id";	
+			$sql = "SELECT who_tel,who_post,who_house,who_name,pack_id,send_day,send_time,due_money,back_status,group_concat(goods_code,'*',out_num separator '#') as aaa,express_company,send_method,need_not_send,other_1,want_date,want_time from send_table where repo_status in ($select_repo) and express_company='佐川急便' and send_method in('着払い','宅配便') and back_status = '0' and table_status = '0' and import_day between '{$start}' and '{$end}' group by send_id order by id";	
 		}else{	
-			$sql = "SELECT who_tel,who_post,who_house,who_name,pack_id,send_day,send_time,due_money,back_status,group_concat(goods_code,'*',out_num separator '#') as aaa,express_company,send_method,need_not_send,other_1 from send_table where repo_status in ($select_repo) and express_company='佐川急便' and send_method in('着払い','宅配便') and back_status = '0' and import_day between '{$start}' and '{$end}' group by send_id order by id";
+			$sql = "SELECT who_tel,who_post,who_house,who_name,pack_id,send_day,send_time,due_money,back_status,group_concat(goods_code,'*',out_num separator '#') as aaa,express_company,send_method,need_not_send,other_1,want_date,want_time from send_table where repo_status in ($select_repo) and express_company='佐川急便' and send_method in('着払い','宅配便') and back_status = '0' and import_day between '{$start}' and '{$end}' group by send_id order by id";
 		}
 		$res = $db->getAll($sql);
 		$j=2;
@@ -110,7 +110,32 @@ if(isset($_POST['send_table'])){
 			}else{
 				$yuan='';
 			}
-			$objSheet->setCellValue("B".$j,$value['who_tel'])->setCellValue("C".$j,$value['who_post'])->setCellValue("D".$j,$value['who_house'])->setCellValue("G".$j,$value['who_name'])->setCellValue("I".$j,$value['pack_id'])->setCellValue("S".$j,$value['other_1'])->setCellValue("AB".$j,$value['send_day'])->setCellValueExplicit("AC".$j,$value['send_time'],PHPExcel_Cell_DataType::TYPE_STRING)->setCellValue("AE".$j,$due_money)->setCellValue("T".$j,$new_0)->setCellValue("U".$j,$new_1)->setCellValue("V".$j,$new_2)->setCellValue("W".$j,$new_3)->setCellValue("X".$j,$new_4)->setCellValue("AK".$j,$value['need_not_send'])->setCellValue("AM".$j,$yuan);
+			//指定配送日
+			if($value['want_date']==""){
+
+			}else{
+				// $value['want_date']=gmdate("Y-m-d", PHPExcel_Shared_Date::ExcelToPHP($value['want_date']));	
+				$value['want_date']=str_replace("-","",$value['want_date']); 
+			}
+			//指定配送时间
+			if($value['want_time']==""){
+
+			}else if($value['want_time']=="9:00～12:00"){
+				$value['want_time']="01";
+			}else if($value['want_time']=="09:00～12:00"){
+				$value['want_time']="01";
+			}else if($value['want_time']=="12:00～14:00"){
+				$value['want_time']="12";
+			}else if($value['want_time']=="14:00～16:00"){
+				$value['want_time']="14";
+			}else if($value['want_time']=="16:00～18:00"){
+				$value['want_time']="16";
+			}else if($value['want_time']=="18:00～20:00" or $value['want_time']=="20:00～21:00"){
+				$value['want_time']="04";
+			}else if($value['want_time']=="午前中"){
+				$value['want_time']="01";
+			}
+			$objSheet->setCellValue("B".$j,$value['who_tel'])->setCellValue("C".$j,$value['who_post'])->setCellValue("D".$j,$value['who_house'])->setCellValue("G".$j,$value['who_name'])->setCellValue("I".$j,$value['pack_id'])->setCellValue("S".$j,$value['other_1'])->setCellValue("AB".$j,$value['want_date'])->setCellValueExplicit("AC".$j,$value['want_time'],PHPExcel_Cell_DataType::TYPE_STRING)->setCellValue("AE".$j,$due_money)->setCellValue("T".$j,$new_0)->setCellValue("U".$j,$new_1)->setCellValue("V".$j,$new_2)->setCellValue("W".$j,$new_3)->setCellValue("X".$j,$new_4)->setCellValue("AK".$j,$value['need_not_send'])->setCellValue("AM".$j,$yuan);
 			$j++;
 		}
 		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
@@ -235,9 +260,9 @@ if(isset($_POST['send_table'])){
 	$objPHPExcel->getActiveSheet()->getStyle('A')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);//左对齐
 	//sql
 	if($down_type=='new'){
-		$sql = "SELECT pack_id as A,send_method as B,due_money,import_day as E,send_day as F,send_time as G,who_tel as I,who_post as K,left(who_house,15) as LL,substring(who_house,16,15) as MM,substring(who_house,31,25) as NN,substring(who_house,56,25) as OO,who_name as P,group_concat(goods_code,'*',out_num separator ' ') as ABD,due_money as AH,need_not_send as AJ,who_email as AW,order_method,other_1,back_status from send_table where express_company='ヤマト運輸' and repo_status in ($select_repo) and back_status ='0' and table_status='0' and import_day between '{$start}' and '{$end}' group by send_id order by send_method,send_id";
+		$sql = "SELECT pack_id as A,send_method as B,due_money,import_day as E,want_date as F,want_time as G,who_tel as I,who_post as K,left(who_house,15) as LL,substring(who_house,16,15) as MM,substring(who_house,31,25) as NN,substring(who_house,56,25) as OO,who_name as P,group_concat(goods_code,'*',out_num separator ' ') as ABD,due_money as AH,need_not_send as AJ,who_email as AW,order_method,other_1,back_status from send_table where express_company='ヤマト運輸' and repo_status in ($select_repo) and back_status ='0' and table_status='0' and import_day between '{$start}' and '{$end}' group by send_id order by send_method,send_id";
 	}else{	
-		$sql = "SELECT pack_id as A,send_method as B,due_money,import_day as E,send_day as F,send_time as G,who_tel as I,who_post as K,left(who_house,15) as LL,substring(who_house,16,15) as MM,substring(who_house,31,25) as NN,substring(who_house,56,25) as OO,who_name as P,group_concat(goods_code,'*',out_num separator ' ') as ABD,due_money as AH,need_not_send as AJ,who_email as AW,order_method,other_1,back_status from send_table where express_company='ヤマト運輸' and repo_status in ($select_repo) and back_status ='0' and import_day between '{$start}' and '{$end}' group by send_id order by send_method,send_id";
+		$sql = "SELECT pack_id as A,send_method as B,due_money,import_day as E,want_date as F,want_time as G,who_tel as I,who_post as K,left(who_house,15) as LL,substring(who_house,16,15) as MM,substring(who_house,31,25) as NN,substring(who_house,56,25) as OO,who_name as P,group_concat(goods_code,'*',out_num separator ' ') as ABD,due_money as AH,need_not_send as AJ,who_email as AW,order_method,other_1,back_status from send_table where express_company='ヤマト運輸' and repo_status in ($select_repo) and back_status ='0' and import_day between '{$start}' and '{$end}' group by send_id order by send_method,send_id";
 	}
 
 		$res = $db->getAll($sql);
@@ -303,18 +328,46 @@ if(isset($_POST['send_table'])){
 			if($value['B']=='7'){
 				$CI=$value['order_method'];
 			};
+
 			// 代引如果是0则为空
 			if($value['AH'] == '0'){
 				$value['AH'] = '';
 			};
+
+			$want_date = $value['F'];
+			$want_time = $value['G'];
+
+			//变换日期YYYY/MM/DD
+			if($want_date==""){
+
+			}else{
+				// $want_date=gmdate("Y-m-d", PHPExcel_Shared_Date::ExcelToPHP($want_date));	
+				$want_date=str_replace("-","/",$want_date); 
+			}
+
+			if($want_time==""){
+
+			}else if($want_time=="12:00～14:00"){
+				$want_time="1214";
+			}else if($want_time=="14:00～16:00"){
+				$want_time="1416";
+			}else if($want_time=="16:00～18:00"){
+				$want_time="1618";
+			}else if($want_time=="18:00～20:00"){
+				$want_time="1820";
+			}else if($want_time=="20:00～21:00"){
+				$want_time="2021";
+			}else if($want_time=="午前中" or $want_time=="09:00～12:00" or $want_time=="9:00～12:00"){
+				$want_time="0812";
+			}
 
 			//写入表格
 			$objSheet->
 			setCellValueExplicit("A".$j,$value['A'],PHPExcel_Cell_DataType::TYPE_STRING)->
 			setCellValue("B".$j,$value['B'])->
 			setCellValue("E".$j,$value['E'])->
-			setCellValue("F".$j,$value['F'])->
-			setCellValue("G".$j,$value['G'])->
+			setCellValue("F".$j,$want_date)->
+			setCellValue("G".$j,$want_time,PHPExcel_Cell_DataType::TYPE_STRING)->
 			setCellValue("I".$j,$value['I'])->
 			setCellValue("K".$j,$value['K'])->
 			// setCellValue("L".$j,$LL)->

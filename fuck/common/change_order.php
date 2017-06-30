@@ -4,6 +4,31 @@ require_once("../log.php");
 $dir = dirname(__FILE__);
 
 set_time_limit(0);
+// 指定配送日期时间
+if(isset($_GET['want_date'])){
+	$station = strtolower($_GET['station']);
+	$store = $_GET['store'];
+	$response_list = $station.'_response_list';
+	$want_date = $_GET['want_date'];
+	$want_time = $_GET['want_time'];
+	$order_id = $_GET['order_id'];
+
+	$sql = "UPDATE $response_list SET want_date = '{$want_date}',want_time = '{$want_time}' WHERE order_id = '{$order_id}'";
+	$res = $db->execute($sql);
+
+	// 更新send_table
+	$sql = "UPDATE send_table SET want_date = '{$want_date}',want_time = '{$want_time}' WHERE order_id = '{$order_id}' AND station = '{$station}'";
+	$res = $db->execute($sql);
+
+	$sql = "SELECT id FROM $response_list WHERE order_id = '{$order_id}'";
+	$res = $db->getOne($sql);
+	$oms_id = $res['id'];
+
+	// 日志
+	$do = '指定配送时间： <'.$order_id.'>【'.$want_date.'】'.$want_time;
+	oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
+	echo 'ok';
+}
 
 // 计算价格
 if(isset($_GET['play_price'])){
@@ -432,7 +457,7 @@ if(isset($_POST['stop_order'])){
 	$res = $db->getAll($sql);
 	foreach ($res as $val) {
 		$order_line = $val['order_line'].'|';
-		if($order_line > 3){
+		if($order_line > 2){
 			$can_stop = 0;
 		}
 	}

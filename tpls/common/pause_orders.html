@@ -59,7 +59,7 @@
 			<td class="tagr">代引金额</td>
 			<td class="tagc">操作</td>
 		</tr>
-		<tr class="am-fade-and-slide-right blue" ng-repeat="item in all_pause_orders track by $index">
+		<tr class="am-fade-and-slide-right blue" ng-class="{'bg_yellow':item.is_click}" ng-repeat="item in all_pause_orders track by $index">
 			<td class="pointer tagc" ng-click="item.is_click=!item.is_click;check_items()">
 				<i class="fa red fa-lg fa-fw" ng-class="{'fa-square-o':item.is_click==false,'fa-check-square':item.is_click==true}"></i>
 			</td>

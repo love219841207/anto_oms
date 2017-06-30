@@ -390,6 +390,8 @@ if(isset($_POST['sub_repo'])){
 		who_email,	#邮编
 		store_name,	#店铺名
 		holder,		#担当者
+		want_date,	#指定配送日
+		want_time,	#指定配送时间
 		import_day) SELECT	#导入日期 
 		'{$station}',
 		list.order_id,
@@ -412,6 +414,8 @@ if(isset($_POST['sub_repo'])){
 		list.buyer_email,
 		list.store,
 		'{$u_name}',
+		want_date,
+		want_time,
 		'{$today}' from amazon_response_list list,amazon_response_info info where list.order_id = info.order_id AND list.order_line = '4'";
 	$res = $db->execute($sql);
 

@@ -124,6 +124,9 @@ li{
 .mb10{
 	margin-bottom: 10px;
 }
+.fwb{
+	font-weight: bold;
+}
 .bg_yellow{
 	background: #fdfa9e !important;
 	color:#f44336;

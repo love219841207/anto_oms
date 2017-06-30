@@ -878,7 +878,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
                 $scope.get_count();
                 $scope.to_page($scope.now_page);
                 
-                $scope.plug_alert('success','保留操作完成，如果订单冻结：记得联系发货员【退押】哦。','fa fa-smile-o');
+                $scope.plug_alert('success','保留操作完成。','fa fa-smile-o');
             }else if(data == 'cut'){
                 $scope.plug_alert('danger','勾选不合理。','fa fa-ban');
             }else{
@@ -1264,6 +1264,48 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
             $log.info("error:邮件内容读取失败。");
+        });
+    }
+
+    // 跳转筛选
+    $scope.jump_cut = function(line){
+        $scope.search_order_line = line;
+        $scope.open_filter_btn = true;
+        $scope.tool_1 = true;
+        $scope.open_check = true;
+        $scope.filter_bar_submit();
+    }
+
+    // 配送指定时间
+    $scope.change_want_date = function(order_id){
+        $scope.change_want_date_order_id = order_id;
+    }
+
+    // 保存配送指定日期时间
+    $scope.save_want_date = function(){  
+        var dom = document.querySelector('#want_date');
+        var want_date = angular.element(dom).val();
+        var dom = document.querySelector('#want_time');
+        var want_time = angular.element(dom).val();
+
+        $http.get('/fuck/common/change_order.php', {
+            params:{
+                station:$scope.now_station,
+                store:$scope.now_store_bar,
+                want_date:want_date,
+                want_time:want_time,
+                order_id:$scope.change_want_date_order_id
+            }
+        }).success(function(data) {
+            if(data == 'ok'){
+                $scope.to_page($scope.now_page);
+                $scope.plug_alert('success','指定完成。','fa fa-smile-o');
+            }else{
+                $scope.plug_alert('danger','系统出错，请联系管理员。','fa fa-ban');
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:保存配送指定日期时间失败。");
         });
     }
 
