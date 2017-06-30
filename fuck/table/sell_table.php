@@ -119,12 +119,24 @@ if(isset($_GET['sell_detail_table'])){
     foreach ($res as $key => $value) {
         if($value['who_name'] == $o_who_name){
             $value['who_name'] = '';
+            $value['ems_money'] = '';
+            $value['bill'] = '';
+            $value['tax'] = '';
+            $value['point'] = '';
+            $value['cheap'] = '';
+            $value['total_money'] = '';
         }else{
             $o_who_name = $value['who_name'];
         }
         
         if($value['receive_name'] == $o_receive_name){
             $value['receive_name'] = '';
+            $value['ems_money'] = '';
+            $value['bill'] = '';
+            $value['tax'] = '';
+            $value['point'] = '';
+            $value['cheap'] = '';
+            $value['total_money'] = '';
         }else{
             $o_receive_name = $value['receive_name'];
         }

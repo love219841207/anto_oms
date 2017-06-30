@@ -261,6 +261,10 @@ if(isset($_GET['packing'])){
 	$sql = "UPDATE send_table SET item_line = '1'";
 	$res = $db->execute($sql);
 
+	// 更新单号和快递日期到list表 三个平台次更新 
+	$sql = "UPDATE amazon_response_list list,send_table send SET list.express_company = send.express_company,list.send_method = send.send_method WHERE list.order_id = send.order_id";
+	$res = $db->execute($sql);
+
 	echo 'ok';
 }
 
