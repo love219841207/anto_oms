@@ -191,3 +191,282 @@ if(isset($_GET['read_mail_tpl'])){
 	$res = $db->getAll($sql);
 	echo json_encode($res);
 }
+
+//邮件预览
+if(isset($_GET['demo_mail'])){
+	$value = $_GET['demo_mail'];
+	$mail_tpl = $_GET['to_mail_tpl'];
+
+	//读取信件内容
+
+	$sql = "SELECT * FROM mail_tpl WHERE id = '{$mail_tpl}'";
+	$res = $db->getOne($sql);
+			
+	$mail_topic = $res['mail_topic'];
+	$mail_html = $res['mail_html'];
+	$mail_txt = $res['mail_txt'];
+
+	//读取邮箱、收件人等信息
+	$sql = "SELECT * FROM amazon_response_list WHERE order_id = {$value}";
+	$res = $db->getOne($sql);
+
+	$purchase_date = $res['purchase_date'];	#付款日期
+
+	$oms_id = $res['id'];	#OMS-ID
+	$store = $res['store'];	#store
+	$to_mail = $res['buyer_email'];	#邮箱
+ 	$buyer_name = $res['buyer_name'];	#购买人
+ 	$receive_name = $res['receive_name'];	#收货人
+ 	$order_id = $res['order_id'];	#订单号
+ 	$express_company = $res['express_company'];	#快递公司
+ 	$send_method = $res['send_method'];	#配送方式
+ 	$express_num = $res['oms_order_express_num'];	#快递单号
+ 	$express_day = $res['express_day'];	#快递日期
+ 	$all_total_money = $res['all_total_money'];	
+ 	$order_total_money = $res['order_total_money'];	
+ 	$payment_method = $res['payment_method'];	
+ 	if($payment_method == 'COD'){
+ 		$payment_method = "DirectPayment";
+ 	}else{
+ 		$payment_method = "Amazon決済（前払い）";
+ 	}
+
+ 	// 初始化title
+ 	$u_info = '';
+ 	$cod_money = '';
+
+ 	// 读取购买信息
+ 	$sql = "SELECT * FROM amazon_response_info WHERE order_id = {$value}";
+	$res = $db->getAll($sql);
+	foreach ($res as $val) {
+		$goods_title = $val['goods_title'];
+		$sku = $val['sku'];
+		$goods_num = $val['goods_num'];
+		$shipping_price = $val['shipping_price'];
+		$shipping_tax = $val['shipping_tax'];
+		$unit_price = $val['unit_price'];
+		$item_price = $val['item_price'];
+		$cod_money = $val['cod_money'];
+
+		$u_info = $u_info.'<tr >
+			<td style="color: #616161;">'.$goods_title.'</td>
+			<td>'.$sku.'</td>
+			<td style="text-align: right;font-family: monospace;">'.$unit_price.' * '.$goods_num.' = '.$item_price.'円</td>
+		</tr>';
+	}
+	$order_total_money = $order_total_money - $cod_money;
+			
+
+
+$order_info = '
+<table width="100%" border="1" bordercolor="no" cellspacing="1" cellpadding="6" style="border-collapse: collapse;font-size:12px;border-color: #ddd;width:100%; font-family: Meiryo;">
+	<tr style="background: #009688;color: #FFF;">
+		<td style="text-align: center;">商品名/商品オプション</td>
+		<td width="25%">商品コード/サブコード</td>
+		<td style="text-align:right;" width="20%">単価 * 数量 = 小計</td>
+	</tr>
+	'.$u_info.'
+	<tr>
+		<td rowspan="7" style="text-align: left; font-size:14px;color: #018276;">
+		</td>
+		<td colspan="2" style="text-align: right;">
+			<span style="color:#009688;">商品金額合計:</span>
+			<span style="width:80px;display: inline-block;">'.$order_total_money.'円</span>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" style="text-align: right;">
+			<span style="color:#009688;">消费税:</span>
+			<span style="width:80px;display: inline-block;">0円</span>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" style="text-align: right;">
+			<span style="color:#009688;">送料:</span>
+			<span style="width:80px;display: inline-block;">0円</span>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" style="text-align: right;">
+			<span style="color:#009688;">値引き:</span>
+			<span style="width:80px;display: inline-block;">0円</span>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" style="text-align: right;">
+			<span style="color:#009688;">ポイント利用分:</span>
+			<span style="width:80px;display: inline-block;">0</span>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" style="text-align: right;">
+			<span style="color:#009688;">手数料:</span>
+			<span style="width:80px;display: inline-block;">'.$cod_money.'</span>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" style="text-align: right;">
+			<span style="color:#009688;">合計金額（税込）:</span>
+			<span style="width:80px;display: inline-block;color:#ff5722;font-weight: bold;font-size: 14px;">'.$all_total_money.'円</span>
+		</td>
+	</tr>
+</table>';
+
+$pin_book = '
+<table width="100%" border="1" bordercolor="no" cellspacing="1" cellpadding="6" style="border-collapse: collapse;font-size:12px;border-color: #ddd;width:100%; font-family: Meiryo;">
+	<tr style="border-color: #FFF;">
+		<td>'.$store.'</td>
+		<td colspan="2" style="text-align: right;">発行日：'.$express_day.'</td>
+	</tr>
+	<th colspan="3" style="border-color: #FFF;border-bottom:4px solid #009688;color:#009688;text-align: center;font-size:18px;">
+		納 品 書
+	</th>
+</table>
+<table width="100%" border="1" bordercolor="no" cellspacing="1" cellpadding="6" style="border-collapse: collapse;font-size:12px;border-color: #FFF;width:100%;line-height: 10px; font-family: Meiryo;">
+	<tr>
+		<td>'.$buyer_name.' 様</td>
+		<td style="text-align:right;">'.$store.'</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td style="text-align:right;">〒270-1437</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td style="text-align:right;">千葉県 白井市</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td style="text-align:right;">木833-15</td>
+	</tr>
+	<tr>
+		<td colspan="3" style="line-height: 18px;">この度は、「gtx-amazon」にてお買い上げいただきまして、誠にありがとうございました。
+お買い上げ明細書を送付いたしますので、ご確認いただけますようお願い申し上げます。</td>
+	</tr>
+	<tr style="line-height:30px;border-bottom: 2px solid #009688;color:#009688;font-size: 14px;text-align: center;">
+		<td colspan="3">お買い上げ明細</td>
+	</tr>	
+
+	<tr>
+		<td></td>
+		<td colspan="2" style="text-align: right;">
+			<span style="color:#009688;">ご注文日：</span>
+			<span style="width:150px;text-align:left;display: inline-block;">'.$purchase_date.'</span>
+		</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td colspan="2" style="text-align: right;">
+			<span style="color:#009688;">ご注文番号：</span>
+			<span style="width:150px;text-align:left;display: inline-block;">'.$value.'</span>
+		</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td colspan="2" style="text-align: right;">
+			<span style="color:#009688;">お支払方法：</span>
+			<span style="width:150px;text-align:left;display: inline-block;">'.$payment_method.'</span>
+		</td>
+	</tr>
+	<tr>
+		<td>桑原 竜也 様</td>
+		<td colspan="2" style="text-align: right;">
+			<span style="color:#009688;">お届け方法：</span>
+			<span style="width:150px;text-align:left;display: inline-block;">'.$send_method.'</span>
+		</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td colspan="2" style="text-align: right;">
+			<span style="color:#009688;">お届け希望日：</span>
+			<span style="width:150px;text-align:left;display: inline-block;">希望日なし</span>
+		</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td colspan="2" style="text-align: right;">
+			<span style="color:#009688;">お届け希望時間：</span>
+			<span style="width:150px;text-align:left;display: inline-block;">希望時間なし</span>
+		</td>
+	</tr>
+</table>
+<table width="100%" border="1" bordercolor="no" cellspacing="1" cellpadding="6" style="border-collapse: collapse;font-size:12px;border-color: #ddd;width:100%; font-family: Meiryo;">
+	<tr style="background: #009688;color: #FFF;">
+		<td style="text-align: center;">商品名/商品オプション</td>
+		<td width="25%">商品コード/サブコード</td>
+		<td style="text-align:right;" width="20%">単価 * 数量 = 小計</td>
+	</tr>
+	'.$u_info.'
+	<tr>
+		<td rowspan="7" style="text-align: left; font-size:14px;color: #018276;">
+		■ 備考
+お買い上げ明細書についてご不明な点がございましたら、上記連絡先までお問い合わせください。
+		</td>
+		<td colspan="2" style="text-align: right;">
+			<span style="color:#009688;">商品金額合計:</span>
+			<span style="width:80px;display: inline-block;">'.$order_total_money.'円</span>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" style="text-align: right;">
+			<span style="color:#009688;">消费税:</span>
+			<span style="width:80px;display: inline-block;">0円</span>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" style="text-align: right;">
+			<span style="color:#009688;">送料:</span>
+			<span style="width:80px;display: inline-block;">0円</span>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" style="text-align: right;">
+			<span style="color:#009688;">値引き:</span>
+			<span style="width:80px;display: inline-block;">0円</span>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" style="text-align: right;">
+			<span style="color:#009688;">ポイント利用分:</span>
+			<span style="width:80px;display: inline-block;">0</span>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" style="text-align: right;">
+			<span style="color:#009688;">手数料:</span>
+			<span style="width:80px;display: inline-block;">'.$cod_money.'</span>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" style="text-align: right;">
+			<span style="color:#009688;">合計金額（税込）:</span>
+			<span style="width:80px;display: inline-block;color:#ff5722;font-weight: bold;font-size: 14px;">'.$all_total_money.'円</span>
+		</td>
+	</tr>
+</table>
+';
+
+	//替换信件变量
+	$mail_topic = str_replace('#buyer_name#', $buyer_name, $mail_topic);
+	$mail_topic = str_replace('#receive_name#', $receive_name, $mail_topic);
+	$mail_topic = str_replace('#order_id#', $order_id, $mail_topic);
+	$mail_topic = str_replace('#express_company#', $express_company, $mail_topic);
+	$mail_topic = str_replace('#send_method#', $send_method, $mail_topic);
+	$mail_topic = str_replace('#express_num#', $express_num, $mail_topic);
+	$mail_topic = str_replace('#order_info#', '', $mail_topic);
+	$mail_topic = str_replace('#pin_book#', '', $mail_topic);
+
+	$mail_html = str_replace('#buyer_name#', $buyer_name, $mail_html);
+	$mail_html = str_replace('#receive_name#', $receive_name, $mail_html);
+	$mail_html = str_replace('#order_id#', $order_id, $mail_html);
+	$mail_html = str_replace('#express_company#', $express_company, $mail_html);
+	$mail_html = str_replace('#send_method#', $send_method, $mail_html);
+	$mail_html = str_replace('#express_num#', $express_num, $mail_html);
+	$mail_html = str_replace('#order_info#', $order_info, $mail_html);
+	$mail_html = str_replace('#pin_book#', $pin_book, $mail_html);
+
+	$final_res['mail_topic'] = $mail_topic;
+	$final_res['mail_html'] = $mail_html;
+
+	echo json_encode($final_res);
+}

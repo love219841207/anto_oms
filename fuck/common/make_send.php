@@ -360,6 +360,7 @@ if(isset($_POST['send_table'])){
 			}else if($want_time=="午前中" or $want_time=="09:00～12:00" or $want_time=="9:00～12:00"){
 				$want_time="0812";
 			}
+			// echo $value['I']
 
 			//写入表格
 			$objSheet->
@@ -367,7 +368,7 @@ if(isset($_POST['send_table'])){
 			setCellValue("B".$j,$value['B'])->
 			setCellValue("E".$j,$value['E'])->
 			setCellValue("F".$j,$want_date)->
-			setCellValue("G".$j,$want_time,PHPExcel_Cell_DataType::TYPE_STRING)->
+			setCellValueExplicit("G".$j,$want_time,PHPExcel_Cell_DataType::TYPE_STRING)->
 			setCellValue("I".$j,$value['I'])->
 			setCellValue("K".$j,$value['K'])->
 			// setCellValue("L".$j,$LL)->

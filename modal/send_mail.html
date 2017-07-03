@@ -9,15 +9,17 @@
           <div ng-show="my_checked!=''" class="blue">发信至以下订单：</div>
           <table ng-show="my_checked!=''" class="table table-bordered table-condensed mt10">
             <tr class="f12 info"><td class="tagc blue">序号</td><td class="tagc blue">订单号</td></tr>
-            <tr ng-repeat="(key,val) in my_checked track by $index"><td class="tagc blue">{{$index+1}}</td><td class="tagc blue">{{val}}</td></tr>
+            <tr ng-repeat="(key,val) in my_checked track by $index"><td class="tagc blue">{{$index+1}}</td><td class="tagc blue">{{val}}
+              <button class="btn btn-success btn-xs ml5" ng-disabled="!to_mail_tpl" ng-click="demo_mail(val)">预览</button> 
+            </td></tr>
           </table>
           <div ng-show="my_checked!=''"><hr></div>
           <div ng-show="my_checked!=''" class="blue mt20">选择邮件模板：
 			     <select class="selecter" ng-model="to_mail_tpl" ng-change="read_mail_info()">
 	          	<option value="">选择模板..</option>
 	          	<option ng-repeat="item in mail_tpls track by $index" value="{{item.id}}">{{item.model_name}}</option>
-	          </select>
-          </div>          
+	          </select>    
+          </div>    
           <div class="mt10" ng-show="to_mail_tpl!==''">
   	        <div class="panel panel-success">
       			  <div class="panel-heading"><span class="red">主题：</span><span id='mail_info_topic'></span></div>
