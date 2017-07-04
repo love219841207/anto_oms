@@ -110,7 +110,7 @@ if(isset($_GET['sell_detail_table'])){
         ->setCellValue("S1",$s_date)
         ->setCellValue("U1",$e_date);
 
-	$sql_line = "SELECT * FROM history_send WHERE express_day BETWEEN '{$s_date}' AND '{$e_date}' ORDER BY receive_name";
+	$sql_line = "SELECT * FROM history_send WHERE express_day BETWEEN '{$s_date}' AND '{$e_date}' ORDER BY send_id";
 	$res = $db->getAll($sql_line);
 
     $j=2;
