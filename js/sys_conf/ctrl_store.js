@@ -1,5 +1,5 @@
 var app=angular.module('myApp');
-app.controller('storeCtrl', ['$scope','$state','$http','$log', function($scope,$state,$http,$log){
+app.controller('storeCtrl', ['$scope','$state','$http','$log','$timeout', function($scope,$state,$http,$log,$timeout){
     //调用下拉
     $scope.plug_dropdown();
 
@@ -360,16 +360,38 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log', function($scope,$
             }
         }).error(function(data) {  
             alert('系统错误，请联系管理员。')
-            $log.info('保存发货通知信失败。');
+            $log.info('保存邮件模板失败。');
+        });  
+    }
+
+    //保存邮件自定义模板
+    $scope.save_mail_custom = function(){
+        var post_data = {   
+            save_mail_custom:'custom',
+            mail_topic:$scope.mail_tpl_topic,
+            mail_html:$scope.mail_tpl_html,
+            mail_txt:$scope.mail_tpl_txt
+        };
+
+        $http.post('/fuck/systems/store_manage.php', post_data).success(function(data) {  
+            if(data == 'ok'){
+                $scope.plug_alert('success','已保存。','fa fa-smile-o');
+            }else{
+                $scope.plug_alert('danger','系统错误，请联系管理员。','fa fa-ban');
+                $log.info(data);
+            }
+        }).error(function(data) {  
+            alert('系统错误，请联系管理员。')
+            $log.info('保存自定义模板失败。');
         });  
     }
 
     //邮件测试
     $scope.test_send_mail = function(method){
-        $scope.save_express_mail(); //测试前先保存邮件
-        $scope.save_mail_tpl();
 
         if(method == 'send_express'){
+            $scope.save_express_mail(); //测试前先保存邮件
+
             var post_data = {
                 send_mail:'test_mail',
                 model_name:method,
@@ -378,12 +400,24 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log', function($scope,$
                 to_mail:$scope.test_mail
             };
         }else if(method == 'tpl'){
+            $scope.save_mail_tpl(); //测试前先保存邮件
+
             var post_data = {
                 send_mail:'test_mail',
                 model_name:method,
                 id:$scope.edit_tpl_id,
                 station:$scope.mail_tpl_station,
                 store:$scope.mail_tpl_store,
+                to_mail:$scope.test_mail
+            };
+        }else if(method == 'custom'){
+            $scope.save_mail_custom(); //测试前先保存邮件
+
+            var post_data = {
+                send_mail:'test_mail',
+                model_name:method,
+                station:$scope.now_station,
+                store:$scope.now_store_bar,
                 to_mail:$scope.test_mail
             };
         }
@@ -399,5 +433,58 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log', function($scope,$
             alert('系统错误，请联系管理员。')
             $log.info('邮件测试失败。');
         });  
+    }
+
+    // 邮件预览
+    $scope.demo_mail_custom = function(order_id){
+        
+        $scope.demo_show = 1;
+
+        var post_data = {
+                demo_mail:order_id,
+                method:'custom',
+                mail_tpl_topic:$scope.mail_tpl_topic,
+                mail_tpl_html:$scope.mail_tpl_html,
+                mail_tpl_txt:$scope.mail_tpl_txt
+            };
+
+        $http.post('/fuck/systems/store_manage.php', post_data).success(function(data) {
+            document.getElementById('mail_info_topic').innerHTML = data.mail_topic;
+            document.getElementById('mail_info_html').innerHTML = data.mail_html;
+        }).error(function(data) {  
+            alert("系统错误，请联系管理员。");
+            $log.info("error:邮件内容读取失败。");
+        }); 
+
+    }
+
+    // 发信
+    $scope.amz_mail_custom_items = function(){
+        $scope.shadow('open','ss_make','正在发信，请稍后。');
+        // $log.info($scope.my_checked_items);
+
+        var post_data = {
+            send_mail:'amazon',
+            store:$scope.now_store_bar,
+            station:'Amazon',
+            mail_tpl:'custom',
+            my_checked_items:$scope.my_checked_items};
+
+        $http.post('/fuck/mail/amazon_send_mail.php', post_data).success(function(data) {
+            if(data.status == 'ok'){
+                $scope.send_error_num = data.error_num;
+                $scope.send_ok_num = data.ok_num;
+                $timeout(function(){$scope.shadow('close');},500); //关闭shadow
+
+                //读取错误信件info
+                $scope.read_error_mail();
+            }else{
+                $log.info(data);
+                $scope.plug_alert('danger','发信失败，请联系管理员。','fa fa-ban');
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:发信失败。");
+        });
     }
 }])

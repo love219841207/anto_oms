@@ -53,13 +53,23 @@ if(isset($_POST['send_mail'])){
 			$mail_html = str_replace('#order_info#', '商品明细', $mail_html);
 			$mail_html = str_replace('#pin_book#', '纳品书', $mail_html);
 
-		}else if($model_name == 'send_express'){
-			//读取信件内容
-			$sql = "SELECT * FROM mail_tpl WHERE store_name = '{$store}' and model_name = '{$model_name}'";
-			$res = $db->getOne($sql);
-			$mail_topic = $res['mail_topic'];
-			$mail_html = $res['mail_html'];
-			$mail_txt = $res['mail_txt'];
+		}else{
+			if($model_name == 'send_express'){
+				//读取自定义信件内容
+				$sql = "SELECT * FROM mail_tpl WHERE store_name = '{$store}' and model_name = '{$model_name}'";
+				$res = $db->getOne($sql);
+				$mail_topic = $res['mail_topic'];
+				$mail_html = $res['mail_html'];
+				$mail_txt = $res['mail_txt'];
+			}
+			if($model_name == 'custom'){
+				//读取模板信件内容
+				$sql = "SELECT * FROM mail_tpl WHERE store_name = '{$u_num}' and model_name = 'custom'";
+				$res = $db->getOne($sql);
+				$mail_topic = $res['mail_topic'];
+				$mail_html = $res['mail_html'];
+				$mail_txt = $res['mail_txt'];
+			}
 
 			$order_info = '
 <table width="100%" border="1" bordercolor="no" cellspacing="1" cellpadding="6" style="border-collapse: collapse;font-size:12px;border-color: #ddd;width:100%; font-family: Meiryo;">

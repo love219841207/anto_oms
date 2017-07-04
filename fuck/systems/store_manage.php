@@ -192,19 +192,44 @@ if(isset($_GET['read_mail_tpl'])){
 	echo json_encode($res);
 }
 
+//保存自定义邮件模板
+if(isset($_POST['save_mail_custom'])){
+	$mail_topic = addslashes($_POST['mail_topic']);
+	$mail_html = addslashes($_POST['mail_html']);
+	$mail_txt = addslashes($_POST['mail_txt']);
+
+	// 判断是否存在用户 mail_tpl
+	$sql = "INSERT INTO mail_tpl (store_name,model_name, mail_topic, mail_html, mail_txt) SELECT '{$u_num}', 'custom','{$mail_topic}','{$mail_html}','{$mail_txt}' FROM DUAL WHERE NOT EXISTS(SELECT store_name FROM mail_tpl WHERE store_name = '{$u_num}')";
+	$res = $db->execute($sql);
+
+	$sql = "UPDATE mail_tpl set mail_topic = '{$mail_topic}',mail_html = '{$mail_html}',mail_txt = '{$mail_txt}' WHERE store_name = '{$u_num}'";
+	$res = $db->execute($sql);
+
+	echo 'ok';
+}
+
 //邮件预览
-if(isset($_GET['demo_mail'])){
-	$value = $_GET['demo_mail'];
-	$mail_tpl = $_GET['to_mail_tpl'];
+if(isset($_POST['demo_mail'])){
+	$value = $_POST['demo_mail'];
+	$method = $_POST['method'];
 
-	//读取信件内容
+	if($method == 'tpl'){
+		$mail_tpl = $_POST['to_mail_tpl'];
 
-	$sql = "SELECT * FROM mail_tpl WHERE id = '{$mail_tpl}'";
-	$res = $db->getOne($sql);
-			
-	$mail_topic = $res['mail_topic'];
-	$mail_html = $res['mail_html'];
-	$mail_txt = $res['mail_txt'];
+		//读取信件内容
+		$sql = "SELECT * FROM mail_tpl WHERE id = '{$mail_tpl}'";
+		$res = $db->getOne($sql);
+				
+		$mail_topic = $res['mail_topic'];
+		$mail_html = $res['mail_html'];
+		$mail_txt = $res['mail_txt'];
+	}
+
+	if($method == 'custom'){
+        $mail_topic = $_POST['mail_tpl_topic'];
+        $mail_html = $_POST['mail_tpl_html'];
+        $mail_txt = $_POST['mail_tpl_txt'];
+	}
 
 	//读取邮箱、收件人等信息
 	$sql = "SELECT * FROM amazon_response_list WHERE order_id = {$value}";

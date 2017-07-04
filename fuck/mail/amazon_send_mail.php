@@ -50,8 +50,13 @@ if(isset($_POST['send_mail'])){
 				$sql = "SELECT * FROM mail_tpl WHERE store_name = '{$store}' AND model_name = 'send_express'";
 				$res = $db->getOne($sql);
 			}else{
-				$sql = "SELECT * FROM mail_tpl WHERE id = '{$mail_tpl}'";
-				$res = $db->getOne($sql);
+				if($mail_tpl == 'custom'){
+					$sql = "SELECT * FROM mail_tpl WHERE store_name = '{$u_num}' AND model_name = 'custom'";
+					$res = $db->getOne($sql);
+				}else{
+					$sql = "SELECT * FROM mail_tpl WHERE id = '{$mail_tpl}'";
+					$res = $db->getOne($sql);
+				}
 			}
 			
 			$mail_topic = $res['mail_topic'];

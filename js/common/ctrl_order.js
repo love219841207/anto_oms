@@ -1224,22 +1224,22 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
 
     // 邮件预览
     $scope.demo_mail = function(order_id){
-        $http.get('/fuck/systems/store_manage.php', {
-            params:{
+        var post_data = {
                 demo_mail:order_id,
+                method:'tpl',
                 to_mail_tpl:$scope.to_mail_tpl
-            }
-        }).success(function(data) {
-            $log.info(data);
+            };
+
+        $http.post('/fuck/systems/store_manage.php', post_data).success(function(data) {  
             document.getElementById('mail_info_topic').innerHTML = data.mail_topic;
             document.getElementById('mail_info_html').innerHTML = data.mail_html;
-        }).error(function(data) {
+        }).error(function(data) {  
             alert("系统错误，请联系管理员。");
             $log.info("error:邮件内容读取失败。");
-        });
+        }); 
     }
 
-    // 发信
+    // 发模板信
     $scope.amz_mail_items = function(){
         $scope.shadow('open','ss_make','正在发信，请稍后。');
         // $log.info($scope.my_checked_items);
