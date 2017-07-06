@@ -892,9 +892,9 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         });
     }
 
-    // 不保留订单
+    // 不保留订单，取回订单
     $scope.stop_back_order = function(){
-        $scope.shadow('open','ss_make','正在不保留，请稍后。');
+        $scope.shadow('open','ss_make','正在取回订单，请稍后。');
 
         var post_data = {stop_back_order:$scope.my_checked_items,station:$scope.now_station,store:$scope.now_store_bar};
 
@@ -903,15 +903,15 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
                 $scope.get_count();
                 $scope.to_page($scope.now_page);
                 
-                $scope.plug_alert('success','不保留操作完成。','fa fa-smile-o');
+                $scope.plug_alert('success','取回订单操作完成。','fa fa-smile-o');
             }else{
                 $log.info(data);
-                $scope.plug_alert('danger','不保留失败，请联系管理员。','fa fa-ban');
+                $scope.plug_alert('danger','取回订单失败，请联系管理员。','fa fa-ban');
             }
             $timeout(function(){$scope.shadow('close');},500); //关闭shadow
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
-            $log.info("error:不保留订单失败。");
+            $log.info("error:取回订单订单失败。");
         });
     }
 

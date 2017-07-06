@@ -1,6 +1,27 @@
 var app=angular.module('myApp');
 app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','$timeout', function($rootScope,$scope,$state,$http,$log,$timeout){
 
+    // 退库
+    $scope.to_back_repo = function(){
+        // 去检测是否存在，如果存在退库，如果不存在，报错。
+        $http.get('/fuck/common/ready_send.php', {
+            params:{
+                to_back_repo:$scope.search_key,
+            }
+        }).success(function(data) {
+            if(data=='ok'){
+                $scope.to_page($scope.now_page);
+                $scope.plug_alert('success','退库完成。','fa fa-smile-o');
+            }else{
+                $scope.plug_alert('danger',data,'fa fa-ban');
+                $log.info(data);
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:修改快递公司。");
+        });
+    }
+
     // 修改快递公司
     $scope.change_company = function(order_id,store,station,oms_id){
         $http.get('/fuck/common/ready_send.php', {
@@ -363,100 +384,6 @@ app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','
                 $scope.plug_alert('danger','电话长度超过了。','fa fa-ban');
             }
         }   
-    }
-
-    // 验证修改的send字段
-    $scope.need_check_send = function(field_name,o_key,station,store,id,oms_id,info_id,order_id){
-        var dom = document.querySelector('#'+field_name);
-        var new_key = angular.element(dom).val();
-
-        $http.get('/fuck/common/ready_send.php', {
-            params:{
-                need_check_send:'get',
-                station:station,
-                store:store,
-                order_id,order_id,
-                field_name:field_name,
-                new_key:new_key,
-                o_key:o_key,
-                id:id,
-                oms_id:oms_id,
-                info_id:info_id
-            }
-        }).success(function(data) {
-            if(data == 'ok'){
-
-                $scope.change_send_field(o_key,station,store,field_name,new_key,id,oms_id,info_id,order_id);
-            }else{
-                $scope.plug_alert('danger',data,'fa fa-ban');
-            }
-        }).error(function(data) {
-            alert("系统错误，请联系管理员。");
-            $log.info("error:验证send字段失败。");
-        });
-    }
-
-    // 修改send字段
-    $scope.change_send_field = function(o_key,station,store,field_name,new_key,id,oms_id,info_id,order_id){
-        $http.get('/fuck/common/ready_send.php', {
-            params:{
-                change_send_field:'change',
-                station:station,
-                store:store,
-                field_name:field_name,
-                new_key:new_key,
-                o_key:o_key,
-                id:id,
-                oms_id:oms_id,
-                info_id:info_id
-            }
-        }).success(function(data) {
-            if(data == 'ok'){
-                $scope.reset_express(); //重置快递
-                $scope.repo_status();   //计算发货单
-                $scope.play_price(id,order_id,station);    // 价格计算
-                $scope.show_send_info(id);
-            }else{
-                $scope.plug_alert('danger',data,'fa fa-ban');
-                $log.info(data);
-            }
-        }).error(function(data) {
-            alert("系统错误，请联系管理员。");
-            $log.info("error:修改send字段失败。");
-        });
-    }
-
-    // 验证邮编、地址并修改
-    $scope.change_post_addr = function(station,store,id,oms_id,info_id){
-        var dom = document.querySelector('#new_post_code');
-        var new_post_code = angular.element(dom).val();
-        var dom = document.querySelector('#new_address');
-        var new_address = angular.element(dom).val();
-
-        $http.get('/fuck/common/ready_send.php', {
-            params:{
-                change_post_addr:'change',
-                station:station,
-                store:store,
-                new_post_code:new_post_code,
-                new_address:new_address,
-                id:id,
-                oms_id:oms_id,
-                info_id:info_id
-            }
-        }).success(function(data) {
-            if(data == 'ok'){
-                $scope.reset_express(); //重置快递
-                $scope.to_page($scope.now_page);
-                $scope.show_send_info(id);
-                $scope.plug_alert('success','通过。','fa fa-smile-o');
-            }else{
-                $scope.plug_alert('danger',data,'fa fa-ban');
-            }
-        }).error(function(data) {
-            alert("系统错误，请联系管理员。");
-            $log.info("error:验证send邮编地址失败。");
-        });
     }
 
 //数据分页查询开始

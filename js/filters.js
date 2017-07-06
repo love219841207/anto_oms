@@ -79,8 +79,14 @@ myFilters.filter('order_line', function(){
         if(item == '-1'){
             return '回收站';
         }
-        if(item == '-4'){
+        if(item == '-3'){   // 冻结退单
+            return '已退押';   
+        }
+        if(item == '-4'){   // 已出快递单退单
             return '已退单';
+        }
+        if(item == '-5'){   // 待发货退回
+            return '已退库';
         }
         if(item == 9){
             return '保留';

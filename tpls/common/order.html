@@ -134,7 +134,9 @@
 							<option value="5">待发货</option>
 							<option value="3">已冻结</option>
 							<option value="-3">已退押</option>
-							<!-- <option value="6">close</option> -->
+							<option value="-5">已退库</option>
+							<option value="-4">已退单</option>
+							<option value="6">close</option>
 							<option value="all">所有单</option>
 							<option value="-1">回收站</option>
 						</select>
@@ -146,6 +148,7 @@
 							<option value="syn_day">同步日期</option>
 							<option value="purchase_date">购买日期</option>
 							<option value="latest_ship_date">最后发货日期</option>
+							<option value="express_day">快递日期</option>
 						</select>
 						<span ng-hide="search_date==''">
 							<input placeholder="开始日期" class="date_icon blue" readonly="readonly" type="text" name="s_date" ng-flat-datepicker datepicker-config="datepickerConfig" ng-model="s_date"> - <input placeholder="结束日期" class="date_icon blue" readonly="readonly" type="text" name="e_date" ng-flat-datepicker datepicker-config="datepickerConfig" ng-model="e_date">
@@ -335,11 +338,11 @@
 		      	<button ng-show="search_order_line=='ing'" ng-disabled="my_checked==''" type="button" ng-click="check_items();del_true='false'" data-animation="am-fade-and-slide-top" data-template-url="/modal/del_item.html" bs-modal="modal" class="btn btn-default btn-sm red">
 		      		<i class="fa fa-trash-o fa-fw"></i>删除
 		      	</button>
-		      	<button ng-show="search_order_line=='ing' || search_order_line=='-3'" ng-disabled="my_checked==''" type="button" ng-click="check_items();del_true='false';stop_order();" class="btn btn-default btn-sm yellow">
+		      	<button ng-show="search_order_line=='ing' || search_order_line=='-3' || search_order_line=='-5'" ng-disabled="my_checked==''" type="button" ng-click="check_items();del_true='false';stop_order();" class="btn btn-default btn-sm yellow">
 		      		<i class="fa fa-shopping-basket fa-fw"></i>保留
 		      	</button>
 		      	<button ng-show="search_order_line=='9'" ng-disabled="my_checked==''" type="button" ng-click="check_items();del_true='false';stop_back_order();" class="btn btn-default btn-sm yellow">
-		      		<i class="fa fa-undo fa-fw"></i>不保留
+		      		<i class="fa fa-undo fa-fw"></i>取回
 		      	</button>
 		    </div>
 			<div ng-repeat="item in get_order_list_data track by $index" class="animate slide-left">

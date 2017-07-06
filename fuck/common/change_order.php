@@ -493,7 +493,7 @@ if(isset($_POST['stop_back_order'])){
 	$res = $db->execute($sql);
 
 	//日志
-	$do = ' [不保留订单]：【'.$del_log_items.'】';
+	$do = ' [取回订单]：【'.$del_log_items.'】';
 	oms_log($u_name,$do,'change_order',$station,$store,'-');
 	echo 'ok';
 }
