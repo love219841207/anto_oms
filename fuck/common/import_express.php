@@ -114,7 +114,7 @@ if(isset($_GET['up_express_order'])){
 		$res = $db->execute($sql);
 		
 		// 更新亚马逊 buy_method
-		$sql = "UPDATE history_send SET buy_method = 'DirectPayment' WHERE station = 'amazon' AND buy_method = 'COD' AND table_status = '2'";
+		$sql = "UPDATE history_send SET buy_method = 'DirectPayment' WHERE station = 'amazon' AND is_cod = 'COD' AND table_status = '2'";
 		$res = $db->execute($sql);
 		$sql = "UPDATE history_send SET buy_method = 'Amazon決済（前払い）' WHERE station = 'amazon' AND is_cod <> 'COD' AND table_status = '2'";
 		$res = $db->execute($sql);

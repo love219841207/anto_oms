@@ -6,10 +6,10 @@ $dir = dirname(__FILE__);
 set_time_limit(0);
 ini_set("memory_limit", "1024M");
 
-// 读取所有冻结订单info表
+// 读取所有冻结订单list,info表
 if(isset($_GET['pause_order'])){
 	//	获取所有平台 ******************** select * (select * from t1 union all select * from t2) tmp order by tmp.createDate时间戳
-	$sql = "SELECT * FROM amazon_response_info WHERE is_pause = 'pause' ORDER BY import_time";
+	$sql = "SELECT info.id,info.station,list.pause_time,info.store,info.order_id,info.goods_code,info.goods_num,info.pause_ch,info.pause_jp,info.unit_price,info.item_price,info.cod_money,info.import_time FROM amazon_response_list list,amazon_response_info info WHERE list.order_id = info.order_id AND info.is_pause = 'pause' ORDER BY list.pause_time";
 	$res = $db->getAll($sql);
 
 	echo json_encode($res);
@@ -18,7 +18,7 @@ if(isset($_GET['pause_order'])){
 // 读取所有冻结退押订单info表
 if(isset($_GET['back_order'])){
     //  获取所有平台 ******************** select * (select * from t1 union all select * from t2) tmp order by tmp.createDate时间戳
-    $sql = "SELECT * FROM amazon_response_info WHERE is_pause = 'back' ORDER BY import_time";
+    $sql = "SELECT info.id,info.station,list.pause_time,info.store,info.order_id,info.goods_code,info.goods_num,info.pause_ch,info.pause_jp,info.unit_price,info.item_price,info.cod_money,info.import_time FROM amazon_response_list list,amazon_response_info info WHERE list.order_id = info.order_id AND info.is_pause = 'back' ORDER BY list.pause_time";
     $res = $db->getAll($sql);
 
     echo json_encode($res);
@@ -243,7 +243,7 @@ if(isset($_GET['down_pause_orders_table'])){
     $objPHPExcel = new PHPExcel();
     $objSheet = $objPHPExcel->getActiveSheet();
     $objSheet->setTitle('冻结订单表@'.$now_time);//表名
-    $objSheet->setCellValue("A1","订单日期")
+    $objSheet->setCellValue("A1","冻结日期")
             ->setCellValue("B1","注文番号")
     		->setCellValue("C1","OMS-ID")
     		->setCellValue("D1","商品代码")
@@ -264,11 +264,11 @@ if(isset($_GET['down_pause_orders_table'])){
     $objPHPExcel->getActiveSheet()->getStyle('A')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);//左对齐
 
     //SQL
-    $sql = "SELECT list.syn_day,list.order_id,list.id,info.goods_code,(info.goods_num-info.pause_ch-info.pause_jp) as pause_num,list.receive_name,list.store FROM amazon_response_list list,amazon_response_info info WHERE list.order_id = info.order_id AND info.is_pause = 'pause' ORDER BY import_time";
+    $sql = "SELECT FROM_UNIXTIME(list.pause_time, '%Y-%m-%d %H:%I:%S') as pause_time,list.order_id,list.id,info.goods_code,(info.goods_num-info.pause_ch-info.pause_jp) as pause_num,list.receive_name,list.store FROM amazon_response_list list,amazon_response_info info WHERE list.order_id = info.order_id AND info.is_pause = 'pause' ORDER BY pause_time";
 	$res = $db->getAll($sql);
     $j=2;
     foreach ($res as $key => $value) {
-        $objSheet->setCellValue("A".$j,$value['syn_day'])
+        $objSheet->setCellValue("A".$j,$value['pause_time'])
         		->setCellValue("B".$j,$value['order_id'])
                 ->setCellValue("C".$j,$value['id'])
                 ->setCellValue("D".$j,$value['goods_code'])

@@ -61,7 +61,7 @@ if(isset($_GET['play_price'])){
 
 		$pay_money = $pay_money+$cod_money;
 		//更新
-		$sql = "UPDATE $response_list SET all_total_money = '{$pay_money}',order_total_money = '{$pay_money}',pay_money = '{$pay_money}'  WHERE order_id='{$order_id}'";
+		$sql = "UPDATE $response_list SET all_total_money = '{$pay_money}',order_total_money = '{$pay_money}',pay_money = '{$pay_money}'-points-coupon  WHERE order_id='{$order_id}'";
 		$res = $db->execute($sql);
 
 		// 是否已经到发货区
@@ -117,7 +117,7 @@ if(isset($_GET['play_price'])){
 			$normal_sum = $res['normal_sum'];
 			$fee_pay = $fee - $normal_sum;
 
-			$sql = "UPDATE $response_list SET pay_money = $fee_pay WHERE send_id='{$send_id}'";
+			$sql = "UPDATE $response_list SET pay_money = $fee_pay-points-coupon WHERE send_id='{$send_id}'";
 			$res = $db->execute($sql);
 			// 是否已经到发货区
 			if($order_line > 4){
@@ -490,6 +490,9 @@ if(isset($_POST['stop_back_order'])){
 
 	// 删除response_list，取消标记
 	$sql = "UPDATE $response_list SET order_line = '1' WHERE order_id IN $stop_order";
+	$res = $db->execute($sql);
+	// 修改退押情况下info
+	$sql = "UPDATE $response_info SET is_pause = '' WHERE order_id IN $del_items";
 	$res = $db->execute($sql);
 
 	//日志

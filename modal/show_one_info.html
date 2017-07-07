@@ -184,7 +184,7 @@
             <td class="yellow">{{item2.unit_price}}
               <i ng-click="aa_unit_price=!aa_unit_price" 
                 class="fa fa-edit fa-fw pointer"
-                ng-hide="item.order_line>3"
+                ng-hide="item.order_line>2"
                 ></i>
               <div ng-show="aa_unit_price" class="input-group">
                 <input ng-blur="check_int('unit_price_'+$index)" class="form-control input-sm" placeholder="单价 更改为..." type="number" id="unit_price_{{$index}}">

@@ -371,12 +371,14 @@
 								<span class="blue">{{item.order_total_money}}</span>
 							</span>
 						</td>
-						<td style="width:11%" class="yellow">
+						<td style="width:11%" class="yellow tagr">
 							<span ng-hide="!item.payment_method">
-								<span class="s_gray">代引金额：</span>{{item.pay_money}}
+								<span class="s_gray">代:</span>{{item.pay_money}}
+								<span class="s_gray">分:</span>{{item.points}}
+								<span class="s_gray">卡:</span>{{item.coupon}}
 							</span>
 						</td>
-						<td style="width:11%" class="red">
+						<td style="width:11%" class="red tagr">
 							<span class="s_gray">总金额：</span>
 						{{item.all_total_money}}</td>
 						<td style="width:8%" class="tagc">

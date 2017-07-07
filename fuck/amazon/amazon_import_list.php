@@ -205,7 +205,8 @@ if(isset($_GET['import_add_list'])){
     	address,
     	receive_name,
     	oms_order_info_status,
-    	send_id
+    	send_id,
+    	coupon
     ) SELECT 
     	store,
 		'{$today}',
@@ -225,7 +226,8 @@ if(isset($_GET['import_add_list'])){
 		address,
 		receive_name,
 		'ok',
-		'ready'
+		'ready',
+		'{$gc}'
 	FROM amazon_import_list GROUP BY order_id";
 	$res = $db->execute($sql);
 

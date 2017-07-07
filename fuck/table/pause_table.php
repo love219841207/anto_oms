@@ -9,7 +9,7 @@ ini_set("memory_limit", "1024M");
 // 读取冻结表
 if(isset($_GET['look_pause'])){
     // 读取亚马逊冻结表
-	$sql = "SELECT goods_code,sum(goods_num)-sum(pause_ch)-sum(pause_jp) AS pause_num,FROM_UNIXTIME(import_time, '%Y-%m-%d') as import_time FROM amazon_response_info WHERE is_pause = 'pause' group by goods_code,import_time ORDER BY import_time DESC";
+	$sql = "SELECT FROM_UNIXTIME(list.pause_time, '%Y-%m-%d %H:%I:%S') as pause_time,info.goods_code,sum(info.goods_num-info.pause_ch-info.pause_jp) as pause_num FROM amazon_response_list list,amazon_response_info info WHERE list.order_id = info.order_id AND info.is_pause = 'pause' group by info.goods_code,pause_time ORDER BY pause_time DESC";
 	$res = $db->getAll($sql);
 	echo json_encode($res);
 }
@@ -28,7 +28,7 @@ if(isset($_GET['down_pause'])){
     $objSheet->setTitle('统计冻结表@'.$now_time);//表名
     $objSheet->setCellValue("A1","商品代码")
             ->setCellValue("B1","冻结数")
-            ->setCellValue("C1","订单导入日期");    //表头值
+            ->setCellValue("C1","冻结时间");    //表头值
     $objSheet->getDefaultStyle()->getFont()->setName("微软雅黑")->setSize(12);  //默认字体
     $objPHPExcel->getActiveSheet()->getStyle('A1:C1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
     $objPHPExcel->getActiveSheet()->getStyle('A:C')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
@@ -41,13 +41,13 @@ if(isset($_GET['down_pause'])){
     $objPHPExcel->getActiveSheet()->getStyle('A')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);//左对齐
 
     //SQL
-    $sql = "SELECT goods_code,sum(goods_num)-sum(pause_ch)-sum(pause_jp) AS pause_num,FROM_UNIXTIME(import_time, '%Y-%m-%d') as import_time FROM amazon_response_info WHERE is_pause = 'pause' group by goods_code,import_time ORDER BY import_time DESC";
+    $sql = "SELECT FROM_UNIXTIME(list.pause_time, '%Y-%m-%d %H:%I:%S') as pause_time,info.goods_code,sum(info.goods_num-info.pause_ch-info.pause_jp) as pause_num FROM amazon_response_list list,amazon_response_info info WHERE list.order_id = info.order_id AND info.is_pause = 'pause' group by info.goods_code,pause_time ORDER BY pause_time DESC";
     $res = $db->getAll($sql);
     $j=2;
     foreach ($res as $key => $value) {
         $objSheet->setCellValue("A".$j,$value['goods_code'])
                 ->setCellValueExplicit("B".$j,$value['pause_num'],PHPExcel_Cell_DataType::TYPE_STRING)
-                ->setCellValue("C".$j,$value['import_time']);
+                ->setCellValue("C".$j,$value['pause_time']);
         $j++;
     }
 

@@ -335,6 +335,16 @@ if(isset($_POST['sub_repo'])){
 			// 没有货，冻结订单
 			$sql = "UPDATE $response_list SET order_line = '3' WHERE send_id = '{$send_id}'";
 			$res = $db->execute($sql);
+			// 冻结时间
+			$now_time = time();
+			// 更新冻结时间
+			$sql = "SELECT pause_time FROM $response_list WHERE send_id = '{$send_id}'";
+			$res = $db->getOne($sql);
+			$pause_time = $res['pause_time'];
+			if($pause_time == 0){
+				$sql = "UPDATE $response_list SET pause_time = '{$now_time}' WHERE send_id = '{$send_id}'";
+				$res = $db->execute($sql);
+			}
 		}else if($can_send == 1){
 			// 更新order_line
 			$sql = "UPDATE $response_list SET order_line = '4' WHERE send_id = '{$send_id}'";
