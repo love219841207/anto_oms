@@ -1,6 +1,7 @@
 <?php
 require_once("../header.php");
 require_once("../log.php");
+require_once("./play_price.php");
 $dir = dirname(__FILE__);
 
 set_time_limit(0);
@@ -120,43 +121,18 @@ if(isset($_GET['onekey_common_order'])){
 	// 查询所有合单号
 	$sql = "SELECT send_id FROM $response_list WHERE store='{$store}' AND order_line = '2' AND send_id LIKE 'H%' GROUP BY send_id";
 	$res3 = $db->getAll($sql);
-
 	$all_one = '';
 	foreach ($res3 as $value) {
 		$all_one = $all_one.'['.$value['send_id'].']';
-		$send_id = $value['send_id'];
+	}
 
-		// 合单金额计算 = 合单金额计算 - 代引订单数 * COD费用 + COD费用 （以后涉及运费代码问题）
-		$sql = "SELECT count(order_id) as count_cod FROM $response_list WHERE send_id = '{$send_id}' AND payment_method = 'COD'";
-		$res = $db->getOne($sql);
-		$count_cod = $res['count_cod'];
+	// 查询所有订单号并计算价格
+	$sql = "SELECT order_id FROM $response_list WHERE store='{$store}' AND order_line = '2'";
+	$res4 = $db->getAll($sql);
 
-		// 查询一个订单号
-		$sql = "SELECT order_id FROM $response_list WHERE send_id = '{$send_id}'";
-		$res = $db->getOne($sql);
-		$order_id = $res['order_id'];
-
-		// 查询该订单号下的COD费用
-		$sql = "SELECT cod_money FROM $response_info WHERE order_id = '{$order_id}'";
-		$res = $db->getOne($sql);
-		$cod_money = $res['cod_money'];
-
-		$fee = $count_cod * $cod_money;
-
-		$sql = "SELECT sum(all_total_money) as sum FROM amazon_response_list WHERE send_id = '{$send_id}'";
-		$res = $db->getOne($sql);
-		$sum_total_money = $res['sum'];
-		$fee = $sum_total_money - $fee + $cod_money;
-		
-		// 算出非代引总价
-		$sql = "SELECT sum(all_total_money) as normal_sum FROM amazon_response_list WHERE send_id = '{$send_id}' AND payment_method <> 'COD'";
-		$res = $db->getOne($sql);
-
-		$normal_sum = $res['normal_sum'];
-		$fee_pay = $fee - $normal_sum;
-
-		$sql = "UPDATE $response_list SET all_total_money = $fee,pay_money = $fee_pay WHERE send_id = '{$send_id}'";
-		$res = $db->execute($sql);
+	foreach ($res4 as $value) {
+		$order_id = $value['order_id'];
+		play_order_price($station,$response_list,$response_info,$order_id);
 	}
 
 	// 日志
@@ -200,9 +176,20 @@ if(isset($_GET['break_common_order'])){
 	$store = $_GET['store'];
 	$station = strtolower($_GET['station']);
 	$response_list = $station.'_response_list';
-	// 总合单金额 = 订单金额 ,单号回执
-	$sql = "UPDATE $response_list SET all_total_money = order_total_money,send_id = concat('amz',id) WHERE send_id = '{$send_id}'";
-	$res = $db->execute($sql);
+	$response_info = $station.'_response_info';
+
+	$sql = "SELECT order_id FROM $response_list WHERE send_id = '{$send_id}'";
+	$res = $db->getAll($sql);
+
+	// 单号回执
+	$sql = "UPDATE $response_list SET send_id = concat('amz',id) WHERE send_id = '{$send_id}'";
+	$res2 = $db->execute($sql);
+
+	// 计算金额
+	foreach ($res as $value) {
+		$order_id = $value['order_id'];
+		play_order_price($station,$response_list,$response_info,$order_id);
+	}
 
 	//日志
 	$do = '[拆单]：'.$send_id;

@@ -1,5 +1,9 @@
 var app=angular.module('myApp');
 app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$timeout','$compile', function($rootScope,$scope,$state,$http,$log,$timeout,$compile){
+    // 去掉空格
+    $scope.trim = function(str){
+        return str.replace(/(^\s*)|(\s*$)/g, "");
+    }
 
 // 初始化开始
 	//默认tool_bar关闭
@@ -527,6 +531,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
     $scope.need_check_list = function(field_name,order_id){
         var dom = document.querySelector('#'+field_name);
         var new_key = angular.element(dom).val();
+        new_key = $scope.trim(new_key);
 
         $http.get('/fuck/common/check_order.php', {
             params:{
@@ -554,6 +559,8 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         var new_post_code = angular.element(dom).val();
         var dom = document.querySelector('#new_address');
         var new_address = angular.element(dom).val();
+        new_post_code = $scope.trim(new_post_code);
+        new_address = $scope.trim(new_address);
 
         $http.get('/fuck/common/check_order.php', {
             params:{
@@ -580,6 +587,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
 
     // 修改list字段
     $scope.change_list_field = function(field_name,order_id,new_key){    //字段名，订单号
+        new_key = $scope.trim(new_key);
         $http.get('/fuck/common/change_order.php', {
             params:{
                 change_list_field:'change',
@@ -627,7 +635,8 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
     $scope.change_info_field = function(id,field_name,index,order_id){
         var dom = document.querySelector('#'+field_name+'_'+index);
         var new_key = angular.element(dom).val();
-        
+        new_key = $scope.trim(new_key);
+
         $http.get('/fuck/common/change_order.php', {
             params:{
                 change_info_field:id,
@@ -1057,6 +1066,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         });
     }
 
+
     //获取某个合单
     $scope.get_common_order = function(send_id){
         $scope.get_order_list_data = '';
@@ -1124,6 +1134,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
                 $scope.plug_alert('success','拆单完成。','fa fa-smile-o');
                 $scope.list_common_order();
             }else{
+                $log.info(data)
                 $scope.plug_alert('danger','拆单失败。','fa fa-ban');
             }
             $timeout(function(){$scope.shadow('close');},500); //关闭shadow

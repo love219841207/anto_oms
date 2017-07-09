@@ -122,7 +122,8 @@ if(isset($_GET['import_add_list'])){
 					ship_promotion_discount,
 					payment_method,
 					pay_money,
-					cod_money
+					cod_money,
+					coupon
 				) VALUES (
 					'{$store}',
 					'{$order_id}',
@@ -147,9 +148,11 @@ if(isset($_GET['import_add_list'])){
 					'{$ship_promotion_discount}',
 					'{$payment_method}',
 					'{$pay_money}',
-					'{$cod_money}'
+					'{$cod_money}',
+					'{$gc}'
 				)";
 				$res = $db->execute($sql);
+
 		    	$insert_count = $insert_count + 1;
 
 		    	//日志
@@ -227,7 +230,7 @@ if(isset($_GET['import_add_list'])){
 		receive_name,
 		'ok',
 		'ready',
-		'{$gc}'
+		coupon
 	FROM amazon_import_list GROUP BY order_id";
 	$res = $db->execute($sql);
 

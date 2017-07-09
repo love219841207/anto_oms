@@ -367,15 +367,17 @@
 						<td style="width:30%">
 							<span class="s_gray">注文时间：</span>{{item.purchase_date}}
 							<span class="pull-right">
-								<span class="s_gray">订单金额：</span>
+								<span class="s_gray">订单金额：
+									<span ng-class="{'red bg_yellow':item.payment_method=='COD'}">{{item.payment_method}}</span>
+								</span>
 								<span class="blue">{{item.order_total_money}}</span>
 							</span>
 						</td>
 						<td style="width:11%" class="yellow tagr">
 							<span ng-hide="!item.payment_method">
-								<span class="s_gray">代:</span>{{item.pay_money}}
-								<span class="s_gray">分:</span>{{item.points}}
-								<span class="s_gray">卡:</span>{{item.coupon}}
+								<span class="s_gray">代 </span><span ng-class="{'red bg_yellow':item.payment_method=='COD'}">{{item.pay_money}}</span>
+								<span class="s_gray">分 </span>{{item.points}}
+								<span class="s_gray">卡 </span>{{item.coupon}}
 							</span>
 						</td>
 						<td style="width:11%" class="red tagr">
