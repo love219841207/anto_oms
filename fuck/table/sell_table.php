@@ -117,6 +117,7 @@ if(isset($_GET['sell_detail_table'])){
     $o_who_name = '';
     $o_receive_name = '';
     foreach ($res as $key => $value) {
+        $k = $value['total_money'] - $value['point'] - $value['cheap'];
         if($value['who_name'] == $o_who_name){
             $value['who_name'] = '';
             $value['ems_money'] = '';
@@ -151,7 +152,7 @@ if(isset($_GET['sell_detail_table'])){
                 ->setCellValueExplicit("H".$j,$value['tax'],PHPExcel_Cell_DataType::TYPE_STRING)
                 ->setCellValueExplicit("I".$j,$value['point'],PHPExcel_Cell_DataType::TYPE_STRING)
                 ->setCellValueExplicit("J".$j,$value['cheap'],PHPExcel_Cell_DataType::TYPE_STRING)
-                ->setCellValueExplicit("K".$j,$value['total_money'],PHPExcel_Cell_DataType::TYPE_STRING)
+                ->setCellValueExplicit("K".$j,$k,PHPExcel_Cell_DataType::TYPE_STRING)
                 ->setCellValue("L".$j,$value['express_day'])
                 ->setCellValue("M".$j,'新規')
                 ->setCellValue("N".$j,$value['holder'])
