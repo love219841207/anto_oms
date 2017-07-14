@@ -209,7 +209,7 @@ function make_bags(){
 			$sum_own_key = $sum_own_key + $now_key;
 		}
 
-		if(1200 >$sum_own_key AND $sum_own_key > 600){	
+		if(1201 >$sum_own_key AND $sum_own_key > 600){	
 			$ppc = $pack_id.'(1/2)';
 			$sql = "UPDATE send_table SET pack_id = '{$ppc}' WHERE pack_id = '{$pack_id}'";
 			$res = $db->execute($sql);
@@ -217,7 +217,7 @@ function make_bags(){
 			$p_a = $pack_id.'(2/2)';
 			$sql = "INSERT INTO send_table (goods_code,who_name,send_id,pack_id,pack_count,repo_status,import_day,oms_id,info_id,order_id,store_name,station,express_company,send_method,who_house,who_tel,who_post,other_1)VALUES('bag (2/2)','{$who_name}',concat('{$send_id}','-2'),'{$p_a}','{$p_a}','{$repo_status}','{$import_day}',0,0,0,'{$store_name}','{$station}','{$express_company}','{$send_method}','{$who_house}','{$who_tel}','{$who_post}','add')";
 			$res = $db->execute($sql);
-		}elseif (1800 > $sum_own_key AND $sum_own_key > 1199) {		
+		}elseif (1801 > $sum_own_key AND $sum_own_key > 1200) {		
 			$ppc = $pack_id.'(1/3)';
 			$sql = "UPDATE send_table SET pack_id = '{$ppc}' WHERE pack_id = '{$pack_id}'";
 			$res = $db->execute($sql);
@@ -228,7 +228,7 @@ function make_bags(){
 			$res = $db->execute($sql);
 			$sql = "INSERT INTO send_table (goods_code,who_name,send_id,pack_id,pack_count,repo_status,import_day,oms_id,info_id,order_id,store_name,station,express_company,send_method,who_house,who_tel,who_post,other_1)VALUES('bag (3/3)','{$who_name}',concat('{$send_id}','-3'),'{$p_b}','{$p_b}','{$repo_status}','{$import_day}',0,0,0,'{$store_name}','{$station}','{$express_company}','{$send_method}','{$who_house}','{$who_tel}','{$who_post}','add')";
 			$res = $db->execute($sql);
-		}elseif (2400 > $sum_own_key AND $sum_own_key > 1799) {	
+		}elseif (2401 > $sum_own_key AND $sum_own_key > 1800) {	
 			$ppc = $pack_id.'(1/4)';
 			$sql = "UPDATE send_table SET pack_id = '{$ppc}' WHERE pack_id = '{$pack_id}'";
 			$res = $db->execute($sql);
@@ -242,7 +242,7 @@ function make_bags(){
 			$res = $db->execute($sql);
 			$sql = "INSERT INTO send_table (goods_code,who_name,send_id,pack_id,pack_count,repo_status,import_day,oms_id,info_id,order_id,store_name,station,express_company,send_method,who_house,who_tel,who_post,other_1)VALUES('bag (4/4)','{$who_name}',concat('{$send_id}','-4'),'{$p_c}','{$p_c}','{$repo_status}','{$import_day}',0,0,0,'{$store_name}','{$station}','{$express_company}','{$send_method}','{$who_house}','{$who_tel}','{$who_post}','add')";
 			$res = $db->execute($sql);
-		}elseif (3000 > $sum_own_key AND $sum_own_key > 2399) {
+		}elseif (3001 > $sum_own_key AND $sum_own_key > 2400) {
 			$ppc = $pack_id.'(1/5)';
 			$sql = "UPDATE send_table SET pack_id = '{$ppc}' WHERE pack_id = '{$pack_id}'";
 			$res = $db->execute($sql);
@@ -259,7 +259,7 @@ function make_bags(){
 			$res = $db->execute($sql);
 			$sql = "INSERT INTO send_table (goods_code,who_name,send_id,pack_id,pack_count,repo_status,import_day,oms_id,info_id,order_id,store_name,station,express_company,send_method,who_house,who_tel,who_post,other_1)VALUES('bag (5/5)','{$who_name}',concat('{$send_id}','-5'),'{$p_d}','{$p_d}','{$repo_status}','{$import_day}',0,0,0,'{$store_name}','{$station}','{$express_company}','{$send_method}','{$who_house}','{$who_tel}','{$who_post}','add')";
 			$res = $db->execute($sql);
-		}elseif (2999 < $sum_own_key){
+		}elseif (3000 < $sum_own_key){
 			// 转宅配
 			$sql = "UPDATE send_table SET express_company = '',send_method = '宅配便' WHERE pack_id = '{$pack_id}'";
 			$res = $db->execute($sql);

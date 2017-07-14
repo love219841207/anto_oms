@@ -117,6 +117,9 @@ if(isset($_GET['sell_detail_table'])){
     $o_who_name = '';
     $o_receive_name = '';
     foreach ($res as $key => $value) {
+        if($value['order_id'] == '0'){
+            continue;
+        }
         $k = $value['total_money'] - $value['point'] - $value['cheap'];
         if($value['who_name'] == $o_who_name){
             $value['who_name'] = '';
@@ -125,7 +128,7 @@ if(isset($_GET['sell_detail_table'])){
             $value['tax'] = '';
             $value['point'] = '';
             $value['cheap'] = '';
-            $value['total_money'] = '';
+            $k = '';
         }else{
             $o_who_name = $value['who_name'];
         }
@@ -137,7 +140,7 @@ if(isset($_GET['sell_detail_table'])){
             $value['tax'] = '';
             $value['point'] = '';
             $value['cheap'] = '';
-            $value['total_money'] = '';
+            $k = '';
         }else{
             $o_receive_name = $value['receive_name'];
         }
