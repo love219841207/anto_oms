@@ -11,6 +11,7 @@
 						id="active_tools1"
 						class="btn btn-default active_tools" 
 						ng-class="{'active':active_tools_1}"
+						ng-hide="now_station=='Rakuten'"
 						ng-dblclick="
 							list_orders();
 							upload_list = false;
@@ -145,9 +146,9 @@
 					<button type="button" class="btn btn_fff btn-sm" ng-show="tool_1 && search_order_line!='mark' && search_order_line!='0' && search_order_line!='post_ok' && search_order_line!='tel_ok' && search_order_line!='sku_ok' && search_order_line!='yfcode_ok'">
 						<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="search_date" ng-change="change_search_date()">
 							<option value="">日期筛选 ..</option>
-							<option value="syn_day">同步日期</option>
+							<option value="syn_day">同步/导入日期</option>
 							<option value="purchase_date">购买日期</option>
-							<option value="latest_ship_date">最后发货日期</option>
+							<!-- <option value="latest_ship_date">最后发货日期</option> -->
 							<option value="express_day">快递日期</option>
 						</select>
 						<span ng-hide="search_date==''">
@@ -213,7 +214,7 @@
 					<form name="fileForm" ng-controller="FileController">
 						<div class="row">
 							<div class="col-lg-12">
-								<div class="blue">文件类型： 亚马逊后台订单表.txt</div>
+								<div class="blue">文件： {{now_store_bar}}后台订单导出表</div>
 							</div>
 						</div>
 						<div class="row mt10">
@@ -223,14 +224,19 @@
 						</div>
 						<div class="row mt10">
 							<div class="col-lg-12">
-								<button ng-click="chose_file();count_order = false;" class="btn btn-default" ngf-select="" ngf-pattern="'.txt'" name="file" ng-model="upload_file" ngf-multiple="false" required="1">选择文件</button> 
+								<button ng-click="chose_file();count_order = false;" class="btn btn-default" ngf-select="" ngf-pattern="" name="file" ng-model="upload_file" ngf-multiple="false" required="1">选择文件</button> 
 								<i ng-show="fileForm.file.$error.required" class="fa fa-fw fa-star red"></i>
 								<span class="green">{{upload_file.name}}</span>
 							</div>
 						</div>
 						<div class="row mt10">
-							<div class="col-lg-12">
-								<button ng-show="now_station=='Amazon'" class="btn btn-primary btn-sm" ng-disabled="!fileForm.$valid || upload_store!=now_store_bar" ng-click="submit('amazon_add_list','txt','amazon')"><i class="fa fa-upload fa-fw"></i> 导入-{{now_store_bar}}</button>
+							<!-- 亚马逊导入 -->
+							<div class="col-lg-12" ng-show="now_station=='Amazon'">
+								<button class="btn btn-primary btn-sm" ng-disabled="!fileForm.$valid || upload_store!=now_store_bar" ng-click="submit('amazon_add_list','txt','amazon')"><i class="fa fa-upload fa-fw"></i> 导入 {{now_store_bar}}</button>
+							</div>
+							<!-- 乐天导入 -->
+							<div class="col-lg-12" ng-show="now_station=='Rakuten'">
+								<button class="btn btn-primary btn-sm" ng-disabled="!fileForm.$valid || upload_store!=now_store_bar" ng-click="submit('rakuten_add_list','csv','rakuten')"><i class="fa fa-upload fa-fw"></i> 导入 {{now_store_bar}}</button>
 							</div>
 						</div>
 						<div class="row mt10">
@@ -258,7 +264,10 @@
 					</div> -->
 				</div>
 			</div>
-			<div class="panel-footer">导入 .txt 格式的亚马逊订单。</div>
+			<div class="panel-footer">
+				<span ng-show="now_station=='Amazon'">导入 <span class="red">.txt</span> 格式的亚马逊订单。</span>
+				<span ng-show="now_station=='Rakuten'">导入 <span class="red">.csv</span> 格式的乐天订单。</span>
+			</div>
 		</div>
 	</div>
 	<div class="row mt40" ng-show="common_order_data">
@@ -375,6 +384,9 @@
 						</td>
 						<td style="width:11%" class="yellow tagr">
 							<span ng-hide="!item.payment_method">
+								<span ng-hide="now_station=='Amazon'" class="s_gray">
+									运 <span ng-class="{'dark bg_yellow':item.shipping_price!='0'}">{{item.shipping_price}}</span>
+								</span>
 								<span class="s_gray">代 </span><span ng-class="{'red bg_yellow':item.payment_method=='COD'}">{{item.pay_money}}</span>
 								<span class="s_gray">分 </span>{{item.points}}
 								<span class="s_gray">卡 </span>{{item.coupon}}
@@ -392,7 +404,15 @@
 							'close_color':item.order_line=='6',
 							'del_color':item.order_line=='-1'}">
 						<td class="blue">{{item.order_line | order_line}}</td>
-						<td class=""><span class="s_gray">购买人：</span>{{item.buyer_name}}</td>
+						<td class="">
+							<span ng-show="now_station=='Amazon'" class="s_gray">
+								购买人：<span>{{item.buyer_name}}</span>
+							</span>
+							<span ng-show="now_station=='Rakuten'">
+								<span class="s_gray">购：</span>{{item.buyer_name}} | 
+								<span class="s_gray">收：</span><span class="yellow">{{item.receive_name}}</span>
+							</span>
+						</td>
 						<td class="green"><span class="s_gray">电话：</span>{{item.phone}}</td>
 						<td class="blue"><span class="s_gray">邮箱：</span>{{item.buyer_email}}</td>
 						<td colspan="4"><textarea ng-show="item.order_note" rows="1" style="width: 100%; border: none; background: none; resize: vertical;" readonly class="f12 red">备注：{{item.order_note}}</textarea></td>
@@ -401,7 +421,12 @@
 							'close_color':item.order_line=='6',
 							'del_color':item.order_line=='-1'}">
 						<td>{{item.send_id}}</td>
-						<td class="yellow"><span class="s_gray">收件人：</span>{{item.receive_name}}</td>
+						<td>
+							<span ng-show="now_station=='Amazon'" class="s_gray">
+								收件人：<span class="yellow">{{item.receive_name}}</span>
+							</span>
+							<span ng-show="now_station=='Rakuten'">结算状态：<span class="blue">{{item.order_payment_method}}</span></span>
+						</td>
 						<td class="blue"><span class="s_gray">邮编：</span>{{item.post_code}}</td>
 						<td class="green"><span class="s_gray">地址：</span>{{item.address}}</td>
 						<td>
@@ -409,7 +434,12 @@
 							<span class="s_gray">{{item.express_company}}：</span>{{item.send_method}}
 						</td>	
 						<td colspan="3">
-							<span class="s_gray">最后出货时间：</span><span class="blue">{{item.latest_ship_date}}</span>
+							<span ng-show="now_station=='Amazon' && item.latest_ship_date!=''" class="s_gray">
+								最后出货时间：<span class="blue">{{item.latest_ship_date}}</span>
+							</span>
+							<span ng-show="now_station=='Rakuten' && item.buyer_send_method!=''" class="s_gray">
+								客人指定配送：<span class="blue">{{item.buyer_send_method}}</span>
+							</span>
 						</td>
 					</tr>
 					<tr ng-show="info_box" class="white am-fade-and-slide-right" ng-class="{'ready_color':item.order_line=='5',
@@ -419,10 +449,12 @@
 							<span class="s_gray">物流栏</span>
 						</td>
 						<td colspan="2">
-			            	<span class="s_gray">客人指定配送时间：</span>
+							<span ng-show="now_station=='Rakuten' && item.buyer_others!=''" class="s_gray">客人指定：</span><span class="red bg_yellow">{{item.buyer_others}}</span>
+
+			            	<span class="s_gray">指定配送时间：</span>
 							<i class="fa fa-fw fa-clock-o yellow pointer" data-animation="am-fade-and-slide-top" data-template-url="/modal/want_date.html" bs-modal="modal" ng-click="change_want_date(item.order_id)"></i>
 			            	<span class="bg_yellow red">{{item.want_date}} {{item.want_time}}</span>
-
+							
 			            </td>
 						<td>
 			            	<span class="s_gray">物流快递单号：</span>{{item.oms_order_express_num}}

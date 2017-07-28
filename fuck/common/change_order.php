@@ -65,7 +65,7 @@ if(isset($_GET['show_one_info'])){
    	$oms_id = $res['id'];
 
 	//查询操作日志
-	$sql = "SELECT * FROM oms_log WHERE oms_id = '{$oms_id}' ORDER BY id DESC";
+	$sql = "SELECT * FROM oms_log WHERE oms_id = '{$oms_id}' AND station='{$station}' AND store = '{$store}' ORDER BY id DESC";
 	$res_logs = $db->getAll($sql);
 
 	//final_res
@@ -121,6 +121,11 @@ if(isset($_GET['change_list_field'])){
 		$ch_field = '邮箱';
 		$sql = "UPDATE $response_list SET $field_name = '{$new_key}' WHERE order_id = '{$order_id}'";
 	}
+	if($field_name == 'shipping_price'){
+		$ch_field = '运费';
+		$sql = "UPDATE $response_list SET $field_name = '{$new_key}' WHERE order_id = '{$order_id}'";
+	}
+	
 	$res = $db->execute($sql);
 
 	// 日志

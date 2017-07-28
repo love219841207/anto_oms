@@ -31,7 +31,9 @@ if(isset($_GET['read_oms_post'])){
 // 获取未验证订单数
 if(isset($_GET['need_check_num'])){
 	$store = $_GET['need_check_num'];
-	$sql = "SELECT count(1) as need_check_num FROM amazon_response_list WHERE (post_ok=0 OR tel_ok=0 OR sku_ok=0 OR yfcode_ok=0) AND store = '{$store}'";
+	$station = strtolower($_GET['station']);
+	$response_list = $station.'_response_list';
+	$sql = "SELECT count(1) as need_check_num FROM $response_list WHERE (post_ok=0 OR tel_ok=0 OR sku_ok=0 OR yfcode_ok=0) AND store = '{$store}'";
 	$res = $db->getOne($sql);
 	echo $res['need_check_num'];
 }
@@ -301,8 +303,8 @@ if(isset($_GET['need_check_list'])){
 
 	$response_list = $station.'_response_list';
 
-	//	收件人/电话/地址
-	if($field_name == 'receive_name' or $field_name == 'phone' or $field_name == 'buyer_email'){
+	//	收件人/电话/地址/运费
+	if($field_name == 'receive_name' or $field_name == 'phone' or $field_name == 'buyer_email' or $field_name == 'shipping_price'){
 		echo 'ok';
 	}
 

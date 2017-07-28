@@ -28,7 +28,7 @@
 					<input class="key_words" ng-model='default_yf' ng-blur="check_int('default_yf')" type="number" placeholder="默认基础运费">
 				</div>
 				<div class="btn btn-default btn-sm">
-					<input class="key_words" ng-model='default_one_yf' ng-blur="check_int('default_one_yf')" type="number" placeholder="默认单件运费">
+					<input class="key_words" ng-model='default_one_yf' ng-blur="check_int('default_one_yf')" type="number" placeholder="默认单件追加运费">
 				</div>
 				<div class="btn btn-success" ng-click="add_yfcode()" ng-disabled="!yf_code || !level || !send_method || !need_cod || !default_yf || !default_one_yf" ><i class="fa fa-plus fa-fw"></i>新 增</div>
 			</div>
@@ -42,7 +42,7 @@
 						<td>包裹类型</td>
 						<td>必须COD</td>
 						<td>默认基础运费</td>
-						<td>默认单件运费</td>
+						<td>默认单件追加运费</td>
 						<td>特殊运费</td>
 						<td>状态</td>
 						<td>操作</td>
@@ -54,7 +54,7 @@
 						<td>{{item.send_method}}</td>
 						<td ng-class="{'green success':item.need_cod==1,'red danger':item.need_cod==0}">{{item.need_cod | status}} <i class="blue pointer fa fa-hand-pointer-o fa-fw" ng-click="change_status(item.id,'need_cod')"></i></td>
 						<td>{{item.default_yf}}</td>
-						<td>{{item.default_one_yf}}</td>
+						<td>{{item.default_one_yf}}/件</td>
 						<td><div class="btn btn-primary btn-xs" data-animation="am-fade-and-slide-top" data-template-url="/modal/yf_code.html" bs-modal="modal">查看</div></td>
 						<td ng-class="{'green success':item.status==1,'red danger':item.status==0}">{{item.status | status}} <i class="blue pointer fa fa-hand-pointer-o fa-fw" ng-click="change_status(item.id,'status')"></i></td>
 						<td>

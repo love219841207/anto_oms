@@ -286,6 +286,9 @@ app.controller('FileController', ['$rootScope','$scope','$state', 'Upload' , '$t
                     if(station == 'express'){
                         $timeout(function(){$scope.express_import_file(file_name)},1000);
                     }
+                    if(station == 'rakuten'){
+                        $timeout(function(){$scope.rakuten_import_file(file_name)},1000);    
+                    }
                 },1000);
             }
         }).error(function (data, status, headers, config) {
@@ -367,9 +370,31 @@ app.controller('FileController', ['$rootScope','$scope','$state', 'Upload' , '$t
                 }
             }).error(function(data) {
                 alert("系统错误，请联系管理员。");
-                $log.info(file_name+" 日本邮编导入失败");
+                $log.info(file_name+" 亚马逊订单导入失败");
             });
         }  
+    }
+
+    //乐天订单导入
+    $scope.rakuten_import_file = function(file_name){
+        $http.get('/fuck/rakuten/rakuten_import_list.php', {params:{import_add_list:file_name,store:$scope.upload_store}
+        }).success(function(data) {
+            console.log(data)
+            $scope.count_order = data.count_order;
+            $scope.insert_count = data.insert_count;
+            $scope.has_count = data.has_count;
+            if(data.status == 'ok'){
+                $scope.plug_alert('success','数据导入完成。','fa fa-smile-o');
+                
+                // 刷新
+                var time=new Date().getTime();
+                $state.go('site.rakuten_order',{data:time});
+            }
+            $timeout(function(){$scope.shadow('close');},1000);
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info(file_name+" 乐天订单导入失败");
+        });
     }
 
     //快递单文件导入

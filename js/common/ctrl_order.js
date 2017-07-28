@@ -178,6 +178,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
     $scope.need_check_num = function(){
         $http.get('/fuck/common/check_order.php', {
             params:{
+                station:$scope.now_station,
                 need_check_num:$scope.now_store_bar
             }
         }).success(function(data) {

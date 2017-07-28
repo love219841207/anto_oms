@@ -197,6 +197,7 @@ if(isset($_GET['list_orders'])){
     	$address2 = $child->ShippingAddress->AddressLine2;
 	    $address3 = $child->ShippingAddress->AddressLine3;
 	    $address = $address0.$address1.$address2.$address3;
+	    $address = addslashes($address);
 
 		@$phone = $child->ShippingAddress->Phone;
 		if(@$phone == ''){

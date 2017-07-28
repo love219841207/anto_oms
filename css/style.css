@@ -39,7 +39,7 @@ li{
 	background: rgba(255, 127, 107, 0.62);
 }
 .dark{
-	color:#2a2a2a;
+	color:#2a2a2a !important;
 }
 .error{
 	background: #ffd6d6}
@@ -130,6 +130,9 @@ li{
 .bg_yellow{
 	background: #fdfa9e !important;
 	color:#f44336;
+}
+.bg_green{
+	background: #8ee89d !important;
 }
 .bg_yellow td{
 	background: #fdfa9e !important;

@@ -36,8 +36,12 @@
 									<td class="tagl green">
 										&nbsp;{{item.u_amazon | replace_symbol}} <i ng-hide="item.u_num<1001" data-animation="am-fade-and-slide-top" data-template-url="/modal/change_user_store.html" bs-modal="modal" ng-click="change_usaer_store_modal('Amazon',item.u_num)" class="fa fa-edit pointer s_gray"></i>
 									</td>
-									<td>{{item.u_rakuten | replace_symbol}}</td>
-									<td>{{item.u_yahoo | replace_symbol}}</td>
+									<td class="tagl green">
+										&nbsp;{{item.u_rakuten | replace_symbol}} <i ng-hide="item.u_num<1001" data-animation="am-fade-and-slide-top" data-template-url="/modal/change_user_store.html" bs-modal="modal" ng-click="change_usaer_store_modal('Rakuten',item.u_num)" class="fa fa-edit pointer s_gray"></i>
+									</td>
+									<td class="tagl green">
+										&nbsp;{{item.u_yahoo | replace_symbol}} <i ng-hide="item.u_num<1001" data-animation="am-fade-and-slide-top" data-template-url="/modal/change_user_store.html" bs-modal="modal" ng-click="change_usaer_store_modal('Yahoo',item.u_num)" class="fa fa-edit pointer s_gray"></i>
+									</td>
 									<td>
 										<div ng-hide="item.u_num<1000" data-animation="am-fade-and-slide-top" data-template-url="/modal/re_pwd_user.html" bs-modal="modal" ng-click="re_pwd_modal(item.u_num,item.u_name)" class="btn btn-xs btn-warning mr20"><i class="fa-undo fa fa-fw"></i>重置密码</div>
 										<div ng-hide="item.u_num<1000" data-animation="am-fade-and-slide-top" data-template-url="/modal/del_user.html" bs-modal="modal" ng-click="del_user_modal(item.u_num,item.u_name)" class="btn-danger btn btn-xs"><i class="fa fa-trash-o fa-fw"></i>删 除</div>

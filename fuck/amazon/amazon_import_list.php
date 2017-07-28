@@ -282,7 +282,7 @@ if(isset($_GET['import_add_list'])){
 	$final_res['has_count'] = $has_count;
 
 	//日志
-	$do = '[END] 导入订单：'.$store.'总单数：'.$count_order.' | 导入数：'.$insert_count.' | 已存在：'.$has_count;
+	$do = '[END] 导入订单：'.$store.' 总单数：'.$count_order.' | 导入数：'.$insert_count.' | 已存在：'.$has_count;
 	oms_log($u_name,$do,'amazon_import','amazon',$store,'-');
 
 	echo json_encode($final_res);

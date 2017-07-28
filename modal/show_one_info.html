@@ -16,8 +16,13 @@
             <td class="red warning">{{item.pay_money}}</td>
           </tr>
           <tr>
-            <td class="s_gray">购买人</td>
-            <td class="s_gray">{{item.buyer_name}}</td>
+            <td class="s_gray">购买人信息</td>
+            <td class="s_gray">
+              <i class="fa fa-user"> {{item.buyer_name}}</i>
+              <i class="fa fa-phone" ng-hide="now_station=='Amazon'"> {{item.buyer_phone}}</i>
+              <i class="fa fa-truck" ng-hide="now_station=='Amazon'"> {{item.buyer_post_code}}</i>
+              <i class="fa fa-home" ng-hide="now_station=='Amazon'"> {{item.buyer_address}}</i>
+            </td>
           </tr>
           <tr>
             <td class="s_gray">注文时间</td>
@@ -42,6 +47,7 @@
               </div>
             </td>
           </tr>
+          <tr>
             <td class="s_gray">收件人</td>
             <td class="s_gray">{{item.receive_name}}
               <i ng-click="aa_receive_name=!aa_receive_name" 
@@ -55,8 +61,24 @@
                 </span>
               </div>
             </td>
+          </tr>
           <tr>
-            <td class="s_gray">电话</td>
+            <td class="s_gray">运费</td>
+            <td class="s_gray">{{item.shipping_price}}
+              <i ng-click="aa_shipping_price=!aa_shipping_price" 
+                class="fa fa-edit fa-fw pointer"
+                ng-hide="item.order_line>3"
+                ></i>
+              <div ng-show="aa_shipping_price" class="input-group">
+                <input class="form-control input-sm" placeholder="运费 更改为..." type="number" id="shipping_price">
+                <span class="input-group-btn">
+                  <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="need_check_list('shipping_price',item.order_id);aa_shipping_price=!aa_shipping_price">确定</button>
+                </span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="s_gray">收件电话</td>
             <td class="s_gray" ng-class="{'danger red':item.tel_ok==2}">{{item.phone}}
               <i ng-click="aa_phone=!aa_phone" 
                 class="fa fa-edit fa-fw pointer"
@@ -71,7 +93,7 @@
             </td>
           </tr>
           <tr>
-            <td class="s_gray">邮编</td>
+            <td class="s_gray">收件邮编</td>
             <td class="s_gray" ng-class="{'danger red':item.post_ok==2}">{{item.post_code}}
                 <i ng-click="aa_post_addr=!aa_post_addr" 
                 class="fa fa-edit fa-fw pointer"
@@ -87,7 +109,7 @@
             <td>{{item.post_name}}</td>
           </tr>
           <tr>
-            <td class="s_gray">地址</td>
+            <td class="s_gray">收件地址</td>
             <td class="s_gray" ng-class="{'danger red':item.post_ok==2}">{{item.address}}
             <input ng-show="aa_post_addr" class="form-control input-sm" type="text" id="new_address" style="width:400px;padding-left: 4px;" placeholder=".. 新的地址" value="{{item.address}}">
             </td>
@@ -127,6 +149,10 @@
                 </span>
               </div> -->
             </td>
+          </tr>
+          <tr ng-hide="now_station=='Amazon'">
+            <td class="s_gray">运费代码</td>
+            <td class="green">{{item2.yfcode}}</td>
           </tr>
           <tr>
             <td class="s_gray">SKU</td>
