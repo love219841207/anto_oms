@@ -1,6 +1,7 @@
 <?php
 require_once("../header.php");
 require_once("../log.php");
+require_once("./play_yfcode.php");
 $dir = dirname(__FILE__);
 
 set_time_limit(0);
@@ -19,6 +20,28 @@ if(isset($_GET['search_oms_addr'])){
 	echo json_encode($res);
 }
 // --- 搜索邮编查询 ---
+
+// 查询运费代码信息
+if(isset($_GET['read_yfcode'])){
+	$info_id = $_GET['info_id'];
+	$station = $_GET['station'];
+	$response_info = $station.'_response_info';
+	$yfcode = $_GET['read_yfcode'];
+	$sql = "SELECT * FROM yf_code WHERE yf_code_name = '{$yfcode}'";
+	$res = $db->getOne($sql);
+	$status = $res['status'];
+	$level = $res['level'];
+	$send_method = $res['send_method'];
+	if($status == 1){
+		$status = '已开启';
+	}else{
+		$status = '已关闭';
+	}
+	$yf_info = $status.' / 优先级：'.$level.' / 配送方式：'.$send_method;
+	$sql = "UPDATE $response_info SET yf_info = '{$yf_info}' WHERE id = '{$info_id}'";
+	$res = $db->execute($sql);
+	echo 'ok';
+}
 
 // 获取邮编地址结果
 if(isset($_GET['read_oms_post'])){
@@ -286,6 +309,13 @@ if(isset($_GET['check_all_field'])){
 
 		$sql = "UPDATE $response_list SET yfcode_ok=1 WHERE yfcode_ok = 0";
 		$res = $db->execute($sql);
+	}else{
+		$sql = "SELECT order_id FROM $response_list WHERE store = '{$store}' AND yfcode_ok = 0 ORDER BY id";
+		$res = $db->getAll($sql);
+		foreach ($res as $value) {
+			$now_order_id = $value['order_id'];
+			play_yf_code($station,$response_list,$response_info,$now_order_id);
+		}
 	}
 // 44444444444444444444 运费代码验证结束 44444444444444444444
 	echo 'ok';

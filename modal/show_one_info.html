@@ -78,6 +78,11 @@
             </td>
           </tr>
           <tr>
+            <td class="s_gray">客人指定配送</td>
+            <td class="s_gray">{{item.buyer_send_method}}
+            </td>
+          </tr>
+          <tr>
             <td class="s_gray">收件电话</td>
             <td class="s_gray" ng-class="{'danger red':item.tel_ok==2}">{{item.phone}}
               <i ng-click="aa_phone=!aa_phone" 
@@ -152,7 +157,10 @@
           </tr>
           <tr ng-hide="now_station=='Amazon'">
             <td class="s_gray">运费代码</td>
-            <td class="green">{{item2.yfcode}}</td>
+            <td class="green" ng-class="{'danger red':item2.yfcode_ok==2}">{{item2.yfcode}}
+              <i class="fa fa-lightbulb-o fa-fw pointer blue" ng-hide="item.order_line>3" ng-click="read_yfcode(item2.yfcode,item2.station,item2.order_id,item2.id);open_yf=1"></i>
+              <span ng-show="open_yf==1" class="blue">{{item2.yf_info}}</span>
+            </td>
           </tr>
           <tr>
             <td class="s_gray">SKU</td>

@@ -387,7 +387,9 @@
 								<span ng-hide="now_station=='Amazon'" class="s_gray">
 									运 <span ng-class="{'dark bg_yellow':item.shipping_price!='0'}">{{item.shipping_price}}</span>
 								</span>
-								<span class="s_gray">代 </span><span ng-class="{'red bg_yellow':item.payment_method=='COD'}">{{item.pay_money}}</span>
+								<span ng-show="item.payment_method=='COD'" class="s_gray">代 </span>
+								<span ng-show="item.payment_method!='COD'" class="s_gray">支 </span>
+								<span ng-class="{'red bg_yellow':item.payment_method=='COD'}">{{item.pay_money}}</span>
 								<span class="s_gray">分 </span>{{item.points}}
 								<span class="s_gray">卡 </span>{{item.coupon}}
 							</span>

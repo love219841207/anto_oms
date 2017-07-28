@@ -19,7 +19,7 @@
 				</div>
 				<div class="btn btn-default btn-sm">
 					<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="need_cod" ng-change="change_search_field()">
-						<option value="">必须COD ..</option>
+						<option value="">支持COD ..</option>
 						<option value="1">Y</option>
 						<option value="0">N</option>
 					</select>
@@ -40,7 +40,7 @@
 						<td>运费代码</td>
 						<td>优先级</td>
 						<td>包裹类型</td>
-						<td>必须COD</td>
+						<td>支持COD</td>
 						<td>默认基础运费</td>
 						<td>默认单件追加运费</td>
 						<td>特殊运费</td>
@@ -66,7 +66,9 @@
 			</div>
 		</div>
 		<div class="panel-footer">
-			进行运费代码管理，点击【查看】进行特殊运费操作。
+			进行运费代码管理，点击【查看】进行特殊运费操作。<br>
+			<span class="red">【注意】运费代码不能相同，优先级不能相同。</span>
+
 		</div>
 	</div>
 

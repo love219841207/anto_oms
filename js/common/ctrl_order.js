@@ -428,6 +428,25 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
     };
 // 列表展示结束
 // 修改列表字段开始
+    // 读取运费代码信息
+    $scope.read_yfcode = function(yfcode,station,order_id,id){
+        $http.get('/fuck/common/check_order.php', {
+            params:{
+                info_id:id,
+                station:station,
+                read_yfcode:yfcode}
+        }).success(function(data) {
+            if(data=='ok'){
+                $scope.show_one_info(order_id);
+            }else{
+                $log.info(data);
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:运费代码读取失败。");
+        });
+    }
+
 	// 读取邮编地址
     $scope.read_oms_post = function(post_code){
         $http.get('/fuck/common/check_order.php', {
@@ -487,6 +506,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
     $scope.show_one_info = function(order_id){
         $scope.open_repo = '0';
         $scope.sku_pass = false;
+        $scope.now_yfcode = false; 
         $scope.loading_shadow('open'); //打开loading
         $scope.now_post_name = '';	// 初始化参考地域
         $http.get('/fuck/common/change_order.php', {

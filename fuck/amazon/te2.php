@@ -45,7 +45,7 @@ if(isset($_GET['list_orders'])){
 	}
 	sort($url);
 
-	$arr   = implode('&', $url);
+	$yahoo   = implode('&', $url);
 
 	$sign  = 'GET' . "\n";
 	$sign .= 'mws.amazonservices.jp' . "\n";
