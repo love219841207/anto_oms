@@ -128,7 +128,7 @@ if(isset($_GET['import_add_list'])){
 				$receive_phone = $re1.'-'.$re2.'-'.$re3;
 
 				// 修改 佐川急便メール便（規定：厚さ2ｃｍ以内）の商品は「代引き」できません。 为 メール便
-				if($buyer_send_method == '佐川急便メール便（規定：厚さ2ｃｍ以内）の商品は「代引き」できません。'){
+				if($buyer_send_method == '佐川急便メール便（規定：厚さ2ｃｍ以内）の商品は「代引き」できません。' or $buyer_send_method == 'ネコポス便'){
 					$buyer_send_method = 'メール便';
 				}
 

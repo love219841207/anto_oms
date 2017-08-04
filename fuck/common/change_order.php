@@ -2,6 +2,7 @@
 require_once("../header.php");
 require_once("../log.php");
 require_once("./play_price.php");
+require_once("./play_yfcode.php");
 $dir = dirname(__FILE__);
 
 set_time_limit(0);
@@ -135,6 +136,36 @@ if(isset($_GET['change_list_field'])){
 	echo 'ok';
 }
 
+// 修改同步运费代码
+if(isset($_GET['syn_yfcode'])){
+	$send_id = $_GET['syn_yfcode'];
+	$station = strtolower($_GET['station']);
+	$store = $_GET['store'];
+	$response_list = $station.'_response_list';
+	$response_info = $station.'_response_info';
+
+	// 查询原始运费
+	$sql = "SELECT id,shipping_price,all_yfmoney FROM $response_list WHERE send_id = '{$send_id}'";
+	$res = $db->getOne($sql);
+
+	$o_key = $res['shipping_price'];
+	$new_key = $res['all_yfmoney'];
+	$oms_id = $res['id'];
+
+	// 更新运费
+	$sql = "UPDATE $response_list SET shipping_price = all_yfmoney WHERE send_id = '{$send_id}'";
+	$res = $db->execute($sql);
+
+	// 计算运费代码
+	play_yf_code($station,$response_list,$response_info,$send_id);
+
+	// 日志
+	$do = '同步运费代码【'.$o_key.'】为【'.$new_key.'】';
+	oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
+
+	echo 'ok';
+}
+
 //修改info字段
 if(isset($_GET['change_info_field'])){
 	$id = $_GET['change_info_field'];
@@ -157,6 +188,9 @@ if(isset($_GET['change_info_field'])){
 	}
 	if($field_name == 'unit_price'){
 		$ch_field = '单价';
+	}
+	if($field_name == 'yfcode'){
+		$ch_field = '运费代码';
 	}
 
 	//查询原字段值
@@ -197,6 +231,14 @@ if(isset($_GET['change_info_field'])){
 		$sql = "UPDATE $response_info SET $field_name = '{$new_key}' WHERE id = '{$id}'";
 		$res = $db->execute($sql);
 		echo 'ok';
+	}
+	// 如果是运费代码，计算
+	if($field_name == 'yfcode'){
+		// 查询send_id
+		$sql = "SELECT send_id FROM $response_list WHERE order_id = '{$order_id}'";
+		$res = $db->getOne($sql);
+		$send_id = $res['send_id'];
+		play_yf_code($station,$response_list,$response_info,$send_id);
 	}
 
 	//查询OMS-ID
@@ -399,7 +441,7 @@ if(isset($_POST['stop_back_order'])){
 	$can_stop = 1;	//默认可以stop
 
 	// 删除response_list，取消标记
-	$sql = "UPDATE $response_list SET order_line = '1' WHERE order_id IN $stop_order";
+	$sql = "UPDATE $response_list SET order_line = '1',pause_time='' WHERE order_id IN $stop_order";
 	$res = $db->execute($sql);
 	// 修改退押情况下info
 	$sql = "UPDATE $response_info SET is_pause = '' WHERE order_id IN $stop_order";

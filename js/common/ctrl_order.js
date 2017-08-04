@@ -475,6 +475,19 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         });
     }
 
+    // 读取运费代码列表
+    $scope.read_yfcode_list = function(){
+        $http.get('/fuck/systems/yf_code.php', {
+            params:{
+                get_table:'get'}
+        }).success(function(data) {
+            $scope.yfcode_list = data;
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:读取邮运费代码列表失败。");
+        });
+    }
+
     // --- 搜索邮编查询开始 ---
     $scope.search_oms_post = function(){
         $scope.search_post_addr = ''; //清空另一个
@@ -649,6 +662,28 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
             $log.info("error:订单价格计算失败。");
+        });
+    }
+
+    // 同步运费代码
+    $scope.syn_yfcode = function (send_id,order_id) {
+        // alert(send_id);
+        $http.get('/fuck/common/change_order.php', {
+            params:{
+                syn_yfcode:send_id,
+                store:$scope.now_store_bar,
+                station:$scope.now_station}
+        }).success(function(data) {
+            if(data == 'ok'){
+                $scope.to_page($scope.now_page);
+                $scope.show_one_info(order_id);
+            }else{
+                $scope.plug_alert('danger','修改失败。','fa fa-ban');
+                $log.info(data);
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:同步运费代码失败。");
         });
     }
 

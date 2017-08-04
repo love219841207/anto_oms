@@ -47,6 +47,11 @@ function play_order_price($station,$response_list,$response_info,$order_id){
 
 	// // 查询是否是合单
 	if(strstr($send_id, 'H') == true){
+		// 查询该单有几个
+		$sql = "SELECT count(1) as count_h FROM $response_list WHERE send_id = '{$send_id}'";
+		$res = $db->getOne($sql);
+		$count_H = $res['count_h']-1;
+
 		// 总合单金额计算 = 合单金额计算 - COD订单数 * COD费用 + 一个COD费用 （以后涉及运费代码问题）
 		// 查询有合单中有几单是合单的费用
 		$sql = "SELECT count(order_id) as count_cod FROM $response_list WHERE send_id = '{$send_id}' AND payment_method = 'COD'";
@@ -60,13 +65,14 @@ function play_order_price($station,$response_list,$response_info,$order_id){
 		$all_cod_fee = $count_cod * $cod_money;
 
 		// 查出总价
-		$sql = "SELECT sum(order_total_money) as sum,sum(points+coupon) as has_pay FROM $response_list WHERE send_id = '{$send_id}'";
+		$sql = "SELECT sum(order_total_money) as sum,sum(points+coupon) as has_pay,all_yfmoney FROM $response_list WHERE send_id = '{$send_id}'";
 		$res = $db->getOne($sql);
 		$sum_total_money = $res['sum'];
 		$has_pay = $res['has_pay'];
+		$all_yfmoney = $res['all_yfmoney'];
 
-		// 合单金额 = 总订单金额 - 总COD手续费 + 一个COD手续费 + 运费！！！！
-		$all_fee = $sum_total_money - $all_cod_fee + $cod_money;
+		// 合单金额 = 总订单金额 - 总COD手续费 + 一个COD手续费 - 运费（多出订单的）！！！！
+		$all_fee = $sum_total_money - $all_cod_fee + $cod_money - ($all_yfmoney * $count_H);
 
 		// 更新合单金额到 LIST
 		$sql = "UPDATE $response_list SET all_total_money = $all_fee WHERE send_id='{$send_id}'";
@@ -80,12 +86,13 @@ function play_order_price($station,$response_list,$response_info,$order_id){
 			$normal_sum = $res['normal_sum'];
 
 			// 算出代引总价
-			$sql = "SELECT sum(points+coupon) as has_pay FROM amazon_response_list WHERE send_id = '{$send_id}' AND payment_method = 'COD'";
+			$sql = "SELECT sum(points+coupon) as has_pay,all_yfmoney FROM amazon_response_list WHERE send_id = '{$send_id}' AND payment_method = 'COD'";
 			$res = $db->getOne($sql);
 			$has_pay = $res['has_pay'];
+			$all_yfmoney = $res['all_yfmoney'];
 
-			// 客人最终需要付款 = 合单金额 - 正常订单总价 - 已经付过的积分（优惠券）
-			$pay_money = $all_fee - $normal_sum - $has_pay;
+			// 客人最终需要付款 = 合单金额 - 正常订单总价 - 已经付过的积分（优惠券）- 运费
+			$pay_money = $all_fee - $normal_sum - $has_pay - ($all_yfmoney * $count_H);
 
 			$sql = "UPDATE $response_list SET pay_money = '{$pay_money}' WHERE send_id='{$send_id}'";
 			$res = $db->execute($sql);

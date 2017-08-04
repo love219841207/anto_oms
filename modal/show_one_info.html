@@ -62,19 +62,26 @@
               </div>
             </td>
           </tr>
-          <tr>
+          <tr ng-hide="now_station == Amazon">
             <td class="s_gray">运费</td>
-            <td class="s_gray">{{item.shipping_price}}
-              <i ng-click="aa_shipping_price=!aa_shipping_price" 
+            <td class="s_gray" ng-class="{'danger red':item.shipping_price!=item.all_yfmoney}">{{item.shipping_price}}
+              <!-- <i ng-click="aa_shipping_price=!aa_shipping_price" 
                 class="fa fa-edit fa-fw pointer"
                 ng-hide="item.order_line>3"
-                ></i>
-              <div ng-show="aa_shipping_price" class="input-group">
+                ></i> -->
+              <!-- <div ng-show="aa_shipping_price" class="input-group">
                 <input class="form-control input-sm" placeholder="运费 更改为..." type="number" id="shipping_price">
                 <span class="input-group-btn">
                   <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="need_check_list('shipping_price',item.order_id);aa_shipping_price=!aa_shipping_price">确定</button>
                 </span>
-              </div>
+              </div> -->
+              <i class="fa fa-long-arrow-left red pointer" ng-click="syn_yfcode(item.send_id,item.order_id)">向左同步</i>
+              计算运费：{{item.all_yfmoney}}
+            </td>
+          </tr>
+          <tr ng-show="item.order_line==6">
+            <td class="s_gray">订单配送信息</td>
+            <td class="red">{{item.express_day}} / {{item.express_company}} / {{item.send_method}} / {{item.repo_status}} / {{item.oms_order_express_num}} 
             </td>
           </tr>
           <tr>
@@ -160,6 +167,19 @@
             <td class="green" ng-class="{'danger red':item2.yfcode_ok==2}">{{item2.yfcode}}
               <i class="fa fa-lightbulb-o fa-fw pointer blue" ng-hide="item.order_line>3" ng-click="read_yfcode(item2.yfcode,item2.station,item2.order_id,item2.id);open_yf=1"></i>
               <span ng-show="open_yf==1" class="blue">{{item2.yf_info}}</span>
+              <i ng-click="aa_yfcode=!aa_yfcode;read_yfcode_list();yf_change=''" 
+                class="fa fa-edit fa-fw pointer"
+                ng-hide="item.order_line>2"
+                ></i>
+              <div ng-show="aa_yfcode" class="btn-group ml20">
+                <button type="button" class="btn btn-default btn-sm">
+                  <select id="yfcode_{{$index}}" class="selecter" ng-model="yf_change">
+                    <option value="">更改为...</option>
+                    <option ng-value="item.yf_code_name" ng-repeat="item in yfcode_list track by $index">{{item.yf_code_name}}</option>
+                  </select>
+                </button>
+                <button class="btn btn-default btn-danger" ng-disabled="yf_change==''" type="button" ng-click="change_info_field(item2.id,'yfcode',$index,item2.order_id);aa_yfcode=!aa_yfcode">确定</button>
+              </div>
             </td>
           </tr>
           <tr>
@@ -231,10 +251,6 @@
           <tr>
             <td class="s_gray">子订单价格</td>
             <td class="yellow">{{item2.item_price}}</td>
-          </tr>
-          <tr>
-            <td class="s_gray">运费金额</td>
-            <td>{{item2.yf_money}}</td>
           </tr>
           <tr ng-show="item2.cod_money>1">
             <td class="s_gray">COD Money</td>

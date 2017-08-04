@@ -37,7 +37,12 @@ if(isset($_GET['read_yfcode'])){
 	}else{
 		$status = '已关闭';
 	}
-	$yf_info = $status.' / 优先级：'.$level.' / 配送方式：'.$send_method;
+	if(empty($res)){
+		$yf_info = "无此运费代码！";
+	}else{
+		// $yf_info = $status.' / 优先级：'.$level.' / 配送方式：'.$send_method;	
+		$yf_info = $send_method;	
+	}
 	$sql = "UPDATE $response_info SET yf_info = '{$yf_info}' WHERE id = '{$info_id}'";
 	$res = $db->execute($sql);
 	echo 'ok';
@@ -310,12 +315,38 @@ if(isset($_GET['check_all_field'])){
 		$sql = "UPDATE $response_list SET yfcode_ok=1 WHERE yfcode_ok = 0";
 		$res = $db->execute($sql);
 	}else{
-		$sql = "SELECT order_id FROM $response_list WHERE store = '{$store}' AND yfcode_ok = 0 ORDER BY id";
+		// 合单ID进行计算
+		$sql = "SELECT send_id FROM $response_list WHERE store = '{$store}' AND yfcode_ok = 0 ORDER BY id";
 		$res = $db->getAll($sql);
 		foreach ($res as $value) {
-			$now_order_id = $value['order_id'];
-			play_yf_code($station,$response_list,$response_info,$now_order_id);
+			$now_send_id = $value['send_id'];
+			// 因为合单要调用此函数，故取合单号计算
+			play_yf_code($station,$response_list,$response_info,$now_send_id);
+
+			//计算后再卡
+			$sql = "SELECT order_id FROM $response_list WHERE send_id = '{$now_send_id}'";
+			$res = $db->getOne($sql); //第一次，所以订单号与send_id 一一对应。
+			$now_order_id = $res['order_id'];
+			// 查询总item 数
+			$sql = "SELECT count(1) as ycm FROM $response_info WHERE order_id = '{$now_order_id}'";
+			$res = $db->getOne($sql);
+			$item_count = $res['ycm'];
+			// 查询yfcode_ok item数
+			$sql = "SELECT count(1) as bcd FROM $response_info WHERE order_id = '{$now_order_id}' AND yfcode_ok = 1";
+			$res1 = $db->getOne($sql);
+			$sku_ok_count = $res1['bcd'];
+			if($item_count == $sku_ok_count){
+				//更新list yfcode_ok = 1  通过
+				$sql = "UPDATE $response_list SET yfcode_ok = 1 WHERE order_id = '{$now_order_id}'";
+				$res = $db->execute($sql);
+			}else{
+				//更新list yfcode_ok = 2  不通过
+				$sql = "UPDATE $response_list SET yfcode_ok = 2 WHERE order_id = '{$now_order_id}'";
+				$res = $db->execute($sql);
+			}
+
 		}
+
 	}
 // 44444444444444444444 运费代码验证结束 44444444444444444444
 	echo 'ok';

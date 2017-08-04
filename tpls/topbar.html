@@ -8,8 +8,8 @@
 				<option>Yahoo</option>
 				<option>Rakuten</option>
 			</select>
-			<i ng-show="now_station!==''" class="fa fa-fw am-flip-x" ng-class="{'green_light fa-exchange':now_store_bar!='','red_light fa-long-arrow-right':now_store_bar==''}"></i>
-			<select ng-show="now_station!==''" ng-change="change_now_store()" ng-model='now_store_bar' ng-class="{'green':now_store_bar!='','red':now_store_bar==''}" class="selecter am-flip-x">
+			<i ng-show="now_station!==''" class="fa fa-fw am-fade-and-slide-left" ng-class="{'green_light fa-exchange':now_store_bar!='','red_light fa-long-arrow-right':now_store_bar==''}"></i>
+			<select ng-show="now_station!==''" ng-change="change_now_store()" ng-model='now_store_bar' ng-class="{'green':now_store_bar!='','red':now_store_bar==''}" class="selecter am-fade-and-slide-left">
 				<option value="">选择店铺 ..</option>
 				<option ng-repeat="item in now_store track by $index">{{item}}</option>
 			</select>

@@ -7,7 +7,7 @@
 	<div id="side_bar" ng-class="{'side_bar_1':side_bar_open,'side_bar_2':!side_bar_open}">
 		<uib-accordion close-others="oneAtATime" >
 			<!-- 亚马逊平台 -->
-			<div ng-mouseenter="side_info(now_store_bar)" ng-show="now_station=='Amazon' && now_store_bar!=''" uib-accordion-group is-open="status.isopen1" ng-class="{'open_down':status.isopen1}" class="panel-default hover no_store">
+			<div ng-mouseenter="side_info(now_store_bar)" ng-show="now_station=='Amazon' && now_store_bar!=''" uib-accordion-group is-open="status.isopen1" ng-class="{'open_down':status.isopen1}" class="panel-default hover no_store am-fade-and-slide-left">
 				<uib-accordion-heading>
 				<i class="fa fa-fw fa-amazon"></i>
 				<span class="am-fade" ng-show="side_bar"> {{now_store_bar}}</span>
@@ -27,22 +27,22 @@
 				</div>
 			</div>
 			<!-- 乐天平台 -->
-			<div ng-show="now_station=='Rakuten' && now_store_bar!=''" uib-accordion-group is-open="status.isopen2" ng-class="{'open_down':status.isopen2}" class="panel-default hover">
+			<div ng-mouseenter="side_info(now_store_bar)" ng-show="now_station=='Rakuten' && now_store_bar!=''" uib-accordion-group is-open="status.isopen2" ng-class="{'open_down':status.isopen2}" class="panel-default hover am-fade-and-slide-left">
 				<uib-accordion-heading>
 	        		<i class="fa fa-fw fa-registered"></i>
 	        		<span class="am-fade" ng-show="side_bar"> 乐天</span><i class="pull-right fa fa-angle-right weight" ng-class="{'scroll_90': status.isopen2,'scroll_0': !status.isopen2}"></i>
 	     	 	</uib-accordion-heading>
-	     	 	<div ui-sref="site.rakuten_order" ui-sref-active="active" class="list-group-item">
+	     	 	<div ng-mouseenter="side_info('订单操作')" ui-sref="site.rakuten_order" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-file-text-o ml5"></i>
-					<span class="am-fade" ng-show="side_bar"> 订单操作</span>
+					<span class="am-fade"  ng-show="side_bar"> 订单操作</span>
 				</div>
-				<div ui-sref="site.rakuten_syn_express" ui-sref-active="active" class="list-group-item">
+				<div ng-mouseenter="side_info('上传快递单')" ui-sref="site.rakuten_syn_express" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-cloud-upload ml5"></i>
-					<span class="am-fade" ng-show="side_bar"> 上传快递单</span>
+					<span class="am-fade"  ng-show="side_bar"> 上传快递单</span>
 				</div>
 			</div>
 			<!-- 雅虎平台 -->
-			<div ng-show="now_station=='Yahoo' && now_store_bar!=''" uib-accordion-group is-open="status.isopen3" ng-class="{'open_down':status.isopen3}" class="panel-default hover">
+			<div ng-show="now_station=='Yahoo' && now_store_bar!=''" uib-accordion-group is-open="status.isopen3" ng-class="{'open_down':status.isopen3}" class="panel-default hover am-fade-and-slide-left">
 				<uib-accordion-heading>
 	        		<i class="fa fa-fw fa-yahoo"></i>
 	        		<span class="am-fade" ng-show="side_bar"> 雅虎</span><i class="pull-right fa fa-angle-right weight" ng-class="{'scroll_90': status.isopen3,'scroll_0': !status.isopen3}"></i>

@@ -311,6 +311,10 @@ if(isset($_GET['packing'])){
 	$sql = "UPDATE send_table SET express_company ='佐川急便' WHERE express_company ='' or express_company ='无' AND has_pack = '0'";
 	$res = $db->execute($sql);
 
+	// 如果是乐天,客人指定的配送方式
+	$sql = "UPDATE send_table SET express_company = 'ヤマト運輸',send_method = 'DM便' WHERE send_method = 'メール便' AND station = 'rakuten'";
+	$res = $db->execute($sql);
+
 	//地址分配配送公司，更新黑猫地址	（神奈川県，埼玉県，茨城県，群馬県，山梨県）
 	$sql = "UPDATE send_table SET express_company = 'ヤマト運輸',send_method = '宅急便' WHERE has_pack = '0' AND send_method = '宅配便' AND (who_house LIKE '%神奈川県%' OR who_house LIKE '%埼玉県%' OR who_house LIKE '%茨城県%' OR who_house LIKE '%群馬県%' OR who_house LIKE '%山梨県%')";
 	$res = $db->execute($sql);

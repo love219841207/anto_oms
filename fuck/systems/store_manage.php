@@ -394,7 +394,7 @@ $pin_book = '
 		</td>
 	</tr>
 	<tr>
-		<td>桑原 竜也 様</td>
+		<td>'.$buyer_name.' 様</td>
 		<td colspan="2" style="text-align: right;">
 			<span style="color:#009688;">お届け方法：</span>
 			<span style="width:150px;text-align:left;display: inline-block;">'.$send_method.'</span>

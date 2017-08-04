@@ -2,6 +2,7 @@
 require_once("../header.php");
 require_once("../log.php");
 require_once("./play_price.php");
+require_once("./play_yfcode.php");
 $dir = dirname(__FILE__);
 
 set_time_limit(0);
@@ -81,9 +82,19 @@ if(isset($_GET['onekey_common_order'])){
 	$station = strtolower($_GET['station']);
 	$response_list = $station.'_response_list';
 	$response_info = $station.'_response_info';
+	$response_info = $station.'_response_info';
+	if($station == 'amazon'){
+		$cct = 'amz';
+	}
+	if($station == 'rakuten'){
+		$cct = 'rku';
+	}
+	if($station == 'yahoo'){
+		$cct = 'yho';
+	}
 
 	//	重置单号
-	$sql = "UPDATE $response_list SET all_total_money = order_total_money,send_id = concat('amz',id) WHERE order_line in (1,2)";
+	$sql = "UPDATE $response_list SET all_total_money = order_total_money,send_id = concat('{$cct}',id) WHERE order_line in (1,2)";
 	$res = $db->execute($sql);
 
 	$sql = "
@@ -106,7 +117,7 @@ if(isset($_GET['onekey_common_order'])){
 		$sql = "SELECT id FROM $response_list WHERE send_id = '{$now_send_id}' LIMIT 1";
 		$res = $db->getOne($sql);
 		$id = $res['id'];
-		$sql = "UPDATE $response_list SET send_id = concat('Hamz',$id) WHERE send_id = '{$now_send_id}'";
+		$sql = "UPDATE $response_list SET send_id = concat('H','{$cct}',$id) WHERE send_id = '{$now_send_id}'";
 		$res = $db->execute($sql);
 	}
 
@@ -127,12 +138,20 @@ if(isset($_GET['onekey_common_order'])){
 	}
 
 	// 查询所有订单号并计算价格
-	$sql = "SELECT order_id FROM $response_list WHERE store='{$store}' AND order_line = '2'";
+	$sql = "SELECT order_id,send_id FROM $response_list WHERE store='{$store}' AND order_line = '2'";
 	$res4 = $db->getAll($sql);
 
 	foreach ($res4 as $value) {
 		$order_id = $value['order_id'];
 		play_order_price($station,$response_list,$response_info,$order_id);
+	}
+
+	//查询所有合单号,运费计算
+	$sql = "SELECT send_id FROM $response_list WHERE store='{$store}' AND send_id LIKE 'H%' AND order_line = '2' GROUP BY send_id";
+	$res5 = $db->getAll($sql);
+	foreach ($res5 as $value) {
+		$send_id = $value['send_id'];
+		play_yf_code($station,$response_list,$response_info,$send_id);
 	}
 
 	// 日志
@@ -177,18 +196,36 @@ if(isset($_GET['break_common_order'])){
 	$station = strtolower($_GET['station']);
 	$response_list = $station.'_response_list';
 	$response_info = $station.'_response_info';
+	if($station == 'amazon'){
+		$cct = 'amz';
+	}
+	if($station == 'rakuten'){
+		$cct = 'rku';
+	}
+	if($station == 'yahoo'){
+		$cct = 'yho';
+	}
 
-	$sql = "SELECT order_id FROM $response_list WHERE send_id = '{$send_id}'";
+	$sql = "SELECT id,order_id FROM $response_list WHERE send_id = '{$send_id}'";
 	$res = $db->getAll($sql);
 
 	// 单号回执
-	$sql = "UPDATE $response_list SET send_id = concat('amz',id) WHERE send_id = '{$send_id}'";
+	$sql = "UPDATE $response_list SET send_id = concat('{$cct}',id) WHERE send_id = '{$send_id}'";
 	$res2 = $db->execute($sql);
 
 	// 计算金额
 	foreach ($res as $value) {
+		$id = $value['id'];
 		$order_id = $value['order_id'];
 		play_order_price($station,$response_list,$response_info,$order_id);
+
+		// 查询新的send_id
+		$sql = "SELECT send_id FROM $response_list WHERE id = '{$id}'";
+		$res = $db->getOne($sql);
+		$send_id = $res['send_id'];
+
+		// 运费回滚
+		play_yf_code($station,$response_list,$response_info,$send_id);
 	}
 
 	//日志
@@ -416,16 +453,67 @@ if(isset($_POST['sub_repo'])){
 		'{$today}' from amazon_response_list list,amazon_response_info info where list.order_id = info.order_id AND list.order_line = '4'";
 	$res = $db->execute($sql);
 
-	// 雅虎转入发货表
+	// 雅虎转入发货表 !!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 	// 乐天转入发货表
+	$sql = "INSERT INTO send_table (
+		station,
+		order_id,
+		send_id,	#合单发货ID
+		oms_id,	#OMS-ID
+		info_id, #info-ID
+		sku, 	#sku，客人看
+		goods_code,	#商品代码，仓库看
+		out_num,	#商品数量
+		pause_jp,	#押日本
+		pause_ch,	#押中国
+		repo_status,    #出仓方式
+		who_tel,	#配送电话
+		who_post,	#邮编
+		who_house,	#地址
+		who_name,	#收货人
+		is_cod,		#是否代引
+		due_money,	#代引金额，写出全部的item金额，根据cod，更新是否是代引
+		send_method,
+		who_email,	#邮编
+		store_name,	#店铺名
+		holder,		#担当者
+		want_date,	#指定配送日
+		want_time,	#指定配送时间
+		import_day) SELECT	#导入日期 
+		'{$station}',
+		list.order_id,
+		list.send_id,
+		list.id,
+		info.id,
+		info.sku,
+		info.goods_code,
+		info.goods_num,
+		info.pause_jp,
+		info.pause_ch,
+		list.repo_status,
+		list.phone,
+		list.post_code,
+		list.address,
+		list.receive_name,
+		list.payment_method,
+		list.pay_money,	#带引金额
+		list.buyer_send_method,
+		list.buyer_email,
+		list.store,
+		'{$u_name}',
+		want_date,
+		want_time,
+		'{$today}' from rakuten_response_list list,rakuten_response_info info where list.order_id = info.order_id AND list.order_line = '4'";
+	$res = $db->execute($sql);
 
 	// 更新order_line
 	$sql = "UPDATE amazon_response_list SET order_line = '5' WHERE order_line = '4'";
 	$res = $db->execute($sql);
 	// $sql = "UPDATE yahoo_response_list SET order_line = '5' WHERE order_line = '4'";
 	// $res = $db->execute($sql);
-	// $sql = "UPDATE rakuten_response_list SET order_line = '5' WHERE order_line = '4'";
-	// $res = $db->execute($sql);
+	$sql = "UPDATE rakuten_response_list SET order_line = '5' WHERE order_line = '4'";
+	$res = $db->execute($sql);
 	echo 'ok';
 
 }
