@@ -36,6 +36,40 @@ if(isset($_GET['cc_com_order'])){
 	$res = $db->execute($sql);
 	$sql = "TRUNCATE com_name_error";
 	$res = $db->execute($sql);
+	$sql = "TRUNCATE com_date_error";
+	$res = $db->execute($sql);
+	$sql = "TRUNCATE com_time_error";
+	$res = $db->execute($sql);
+
+	#查询插入错误日期
+	$sql = "INSERT INTO com_date_error SELECT id,send_id,want_date from $response_list where order_line in(1,2) and send_id LIKE 'H%' group by want_date";
+	$res = $db->execute($sql);
+
+	#删除不是错的
+	$sql = "SELECT send_id,count(send_id) as c_num FROM com_date_error GROUP BY send_id";
+	$res = $db->getAll($sql);
+	foreach ($res as $val) {
+		$send_id = $val['send_id'];
+		if($val['c_num'] == 1){
+			$sql = "DELETE FROM com_date_error WHERE send_id = '{$send_id}'";
+			$res = $db->execute($sql);
+		}
+	}
+
+	#查询插入错误时间
+	$sql = "INSERT INTO com_time_error SELECT id,send_id,want_time from $response_list where order_line in(1,2) and send_id LIKE 'H%' group by want_time";
+	$res = $db->execute($sql);
+
+	#删除不是错的
+	$sql = "SELECT send_id,count(send_id) as c_num FROM com_time_error GROUP BY send_id";
+	$res = $db->getAll($sql);
+	foreach ($res as $val) {
+		$send_id = $val['send_id'];
+		if($val['c_num'] == 1){
+			$sql = "DELETE FROM com_time_error WHERE send_id = '{$send_id}'";
+			$res = $db->execute($sql);
+		}
+	}
 
 	#查询插入错误地址
 	$sql = "INSERT INTO com_addr_error SELECT id,send_id,address from $response_list where order_line in(1,2) and send_id LIKE 'H%' group by address";
@@ -71,8 +105,14 @@ if(isset($_GET['cc_com_order'])){
 	$res1 = $db->getAll($sql);
 	$sql = "SELECT * FROM com_name_error";
 	$res2 = $db->getAll($sql);
+	$sql = "SELECT * FROM com_date_error";
+	$res3 = $db->getAll($sql);
+	$sql = "SELECT * FROM com_time_error";
+	$res4 = $db->getAll($sql);
 	$final_res['addr'] = $res1;
 	$final_res['name'] = $res2;
+	$final_res['date'] = $res3;
+	$final_res['time'] = $res4;
 	echo json_encode($final_res);
 }
 
@@ -220,7 +260,7 @@ if(isset($_GET['break_common_order'])){
 		play_order_price($station,$response_list,$response_info,$order_id);
 
 		// 查询新的send_id
-		$sql = "SELECT send_id FROM $response_list WHERE id = '{$id}'";
+	 	$sql = "SELECT send_id FROM $response_list WHERE id = '{$id}'";
 		$res = $db->getOne($sql);
 		$send_id = $res['send_id'];
 

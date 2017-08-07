@@ -37,7 +37,7 @@ if(isset($_POST['order_table'])){
     $objSheet->freezePane('A2');//冻结表头
     // $objPHPExcel->getActiveSheet()->getStyle('A')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);//左对齐
 
-    if($station == 'amazon'){
+    // if($station == 'amazon'){
         $objSheet->setCellValue("A1","OMS-ID")
             ->setCellValue("B1","平台")
             ->setCellValue("C1","店铺")
@@ -85,7 +85,7 @@ if(isset($_POST['order_table'])){
                 list.address,   #配送地址
                 list.receive_name,  #收件人
                 info.goods_title,   #品名
-                info.yf_money,  #运费
+                list.shipping_price,  #运费
                 info.sku,   #商品SKU
                 info.goods_code,    #商品代码
                 info.goods_num, #数量
@@ -117,7 +117,7 @@ if(isset($_POST['order_table'])){
                     ->setCellValue("O".$j,$value['address'])
                     ->setCellValue("P".$j,$value['receive_name'])
                     ->setCellValue("Q".$j,$value['goods_title'])
-                    ->setCellValue("R".$j,$value['yf_money'])
+                    ->setCellValue("R".$j,$value['shipping_price'])
                     ->setCellValue("S".$j,$value['sku'])
                     ->setCellValue("T".$j,$value['goods_code'])
                     ->setCellValue("U".$j,$value['goods_num'])
@@ -130,7 +130,7 @@ if(isset($_POST['order_table'])){
                     ->setCellValue("AB".$j,$value['syn_day']);
             $j++;
         }
-    }
+    // }
     
     
 

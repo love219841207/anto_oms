@@ -212,6 +212,9 @@ if(isset($_POST['save_mail_custom'])){
 if(isset($_POST['demo_mail'])){
 	$value = $_POST['demo_mail'];
 	$method = $_POST['method'];
+	$station = strtolower($_GET['station']);
+	$response_list = $station.'_response_list';
+	$response_info = $station.'_response_info';
 
 	if($method == 'tpl'){
 		$mail_tpl = $_POST['to_mail_tpl'];
@@ -232,7 +235,7 @@ if(isset($_POST['demo_mail'])){
 	}
 
 	//读取邮箱、收件人等信息
-	$sql = "SELECT * FROM amazon_response_list WHERE order_id = {$value}";
+	$sql = "SELECT * FROM $response_list WHERE order_id = {$value}";
 	$res = $db->getOne($sql);
 
 	$purchase_date = $res['purchase_date'];	#付款日期
@@ -261,7 +264,7 @@ if(isset($_POST['demo_mail'])){
  	$cod_money = '';
 
  	// 读取购买信息
- 	$sql = "SELECT * FROM amazon_response_info WHERE order_id = {$value}";
+ 	$sql = "SELECT * FROM $response_info WHERE order_id = {$value}";
 	$res = $db->getAll($sql);
 	foreach ($res as $val) {
 		$goods_title = $val['goods_title'];
@@ -281,8 +284,7 @@ if(isset($_POST['demo_mail'])){
 	}
 	$order_total_money = $order_total_money - $cod_money;
 			
-
-
+	if($station == 'amazon'){
 $order_info = '
 <table width="100%" border="1" bordercolor="no" cellspacing="1" cellpadding="6" style="border-collapse: collapse;font-size:12px;border-color: #ddd;width:100%; font-family: Meiryo;">
 	<tr style="background: #009688;color: #FFF;">
@@ -470,6 +472,12 @@ $pin_book = '
 	</tr>
 </table>
 ';
+	}
+
+	if($station == 'rakuten'){
+		$order_info = '333';
+		$pin_book = '888';
+	}
 
 	//替换信件变量
 	$mail_topic = str_replace('#buyer_name#', $buyer_name, $mail_topic);

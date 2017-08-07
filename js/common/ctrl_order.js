@@ -632,8 +632,13 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
                 new_key:new_key}
         }).success(function(data) {
             if(data == 'ok'){
-                $scope.to_page($scope.now_page);
-                $scope.show_one_info(order_id);
+                if($scope.list_type == 'list'){
+                    $scope.to_page($scope.now_page);
+                    $scope.show_one_info(order_id);
+                }
+                if($scope.list_type == 'common'){
+                    $scope.get_common_order($scope.common_send_id);
+                }
             }else{
                 $scope.plug_alert('danger','修改失败。','fa fa-ban');
                 $log.info(data);
@@ -654,8 +659,13 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             }
         }).success(function(data) {
             if(data == 'ok'){
-                $scope.to_page($scope.now_page);
-                $scope.show_one_info(order_id);
+                if($scope.list_type == 'list'){
+                    $scope.to_page($scope.now_page);
+                    $scope.show_one_info(order_id);
+                }
+                if($scope.list_type == 'common'){
+                    $scope.get_common_order($scope.common_send_id);
+                }
             }else{
                 $scope.plug_alert('danger',data,'fa fa-ban');
             }
@@ -705,8 +715,6 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         }).success(function(data) {
             if(data == 'ok'){
                 $scope.play_price(order_id);    // 价格计算
-                $scope.to_page($scope.now_page);
-                $scope.show_one_info(order_id);
             }else{
                 $scope.plug_alert('danger',data,'fa fa-ban');
             }
@@ -1125,6 +1133,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
 
     //获取某个合单
     $scope.get_common_order = function(send_id){
+        $scope.common_send_id = send_id;
         $scope.get_order_list_data = '';
         $scope.loading_shadow('open'); //打开loading
         $http.get('/fuck/common/list_order.php', {
@@ -1170,6 +1179,8 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         }).success(function(data) {
             $scope.com_error_addr = data.addr;
             $scope.com_error_name = data.name;
+            $scope.com_error_date = data.date;
+            $scope.com_error_time = data.time;
         }).error(function(data) {
             alert("系统错误，请联系管理员核对。");
         });
@@ -1294,6 +1305,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         var post_data = {
                 demo_mail:order_id,
                 method:'tpl',
+                station:$now_station,
                 to_mail_tpl:$scope.to_mail_tpl
             };
 
@@ -1382,7 +1394,12 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             }
         }).success(function(data) {
             if(data == 'ok'){
-                $scope.to_page($scope.now_page);
+                if($scope.list_type == 'list'){
+                    $scope.to_page($scope.now_page);
+                }
+                if($scope.list_type == 'common'){
+                    $scope.get_common_order($scope.common_send_id);
+                }
                 $scope.plug_alert('success','指定完成。','fa fa-smile-o');
             }else{
                 $scope.plug_alert('danger','系统出错，请联系管理员。','fa fa-ban');

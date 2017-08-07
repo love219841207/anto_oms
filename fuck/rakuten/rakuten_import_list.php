@@ -83,6 +83,7 @@ if(isset($_GET['import_add_list'])){
 
 			if(empty($res)){
 				$order_payment_method = $strs[2];
+				$want_date = $strs[6];
 				$buyer_others = $strs[14];
 				$purchase_date = $strs[15];
 				$item_total_money = $strs[19];
@@ -111,7 +112,27 @@ if(isset($_GET['import_add_list'])){
 
 				// 客人备注（配送)
 				$buyer_others = str_replace('[配送日時指定:]','',$buyer_others);
+				$buyer_others = str_replace('~','～',$buyer_others);
+				$buyer_others = str_replace('〜','～',$buyer_others);
 				$buyer_others = trim($buyer_others);
+				$time_index = strpos($buyer_others, '～');
+				$want_time = substr($buyer_others, $time_index,$time_index+4);
+				$want_time = trim($want_time);
+				if($want_time == '～12:00'){
+					$want_time = '09:00～12:00';
+				}else if($want_time == '～14:00'){
+					$want_time = '12:00～14:00';
+				}else if($want_time == '～16:00'){
+					$want_time = '14:00～16:00';
+				}else if($want_time == '～18:00'){
+					$want_time = '16:00～18:00';
+				}else if($want_time == '～20:00'){
+					$want_time = '18:00～20:00';
+				}else if($want_time == '～21:00'){
+					$want_time = '20:00～21:00';
+				}else{
+					$want_time = '';
+				}
 
 				// 代金引換转COD
 				$payment_method = str_replace('代金引換','COD',$payment_method);
@@ -173,7 +194,9 @@ if(isset($_GET['import_add_list'])){
 					payment_method,	#支付方式
 					buyer_send_method,	#客人要求配送方式
 					coupon,
-					yfcode
+					yfcode,
+					want_date,
+					want_time
 				)VALUES(
 					'{$store}',	#店铺名
 					'{$order_id}',	#订单号
@@ -203,7 +226,9 @@ if(isset($_GET['import_add_list'])){
 					'{$payment_method}',	#支付方式
 					'{$buyer_send_method}',	#客人要求配送方式
 					'{$coupon}',	#优惠券
-					'{$yfcode}'
+					'{$yfcode}',
+					'{$want_date}',
+					'{$want_time}'
 				)";
 				$res = $db->execute($sql);
 
@@ -244,7 +269,9 @@ if(isset($_GET['import_add_list'])){
 							payment_method,	#支付方式
 							buyer_send_method,	#客人要求配送方式
 							coupon,
-							yfcode
+							yfcode,
+							want_date,
+							want_time
 						)VALUES(
 							'{$store}',	#店铺名
 							'{$order_id}',	#订单号
@@ -274,7 +301,9 @@ if(isset($_GET['import_add_list'])){
 							'{$payment_method}',	#支付方式
 							'{$buyer_send_method}',	#客人要求配送方式
 							'{$coupon}',	#优惠券
-							'{$yfcode}'
+							'{$yfcode}',
+							'{$want_date}',
+							'{$want_time}'
 						)";
 						$res = $db->execute($sql);
 					// }
@@ -330,7 +359,9 @@ if(isset($_GET['import_add_list'])){
 		address,	#配送地址
 		receive_name,	#收件人
 		oms_order_info_status,
-		send_id
+		send_id,
+		want_date,
+		want_time
     ) SELECT 
     	store,
 		'{$today}',
@@ -356,7 +387,9 @@ if(isset($_GET['import_add_list'])){
 		address,	#配送地址
 		receive_name,	#收件人
 		'ok',
-		'ready'
+		'ready',
+		want_date,
+		want_time
 	FROM rakuten_import_list GROUP BY order_id";
 	$res = $db->execute($sql);
 

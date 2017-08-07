@@ -70,6 +70,7 @@
 							tool_1 = false;
 							tool_2 = false;
 							tool_3 = false;
+							list_type = 'list';
 							is_active('active_tools','4')
 						">
 						<i class="fa fa-list-ol fa-fw s_gray"></i> 列表
@@ -111,6 +112,7 @@
 							open_info_btn = true;
 							open_filter_btn = false;
 							open_page_btn = false;
+							list_type = 'common';
 							is_active('active_tools','5')"
 						ng-hide="tool_1 || tool_2 || tool_3">
 						<i class="fa fa-inbox fa-fw"></i> 合单扣库
@@ -290,6 +292,26 @@
 				<tr class="white" ng-repeat="s_item in com_error_name track by $index">
 					<td>{{s_item.send_id}}</td>
 					<td>{{s_item.receive_name}}</td>
+				</tr>
+			</table>
+			<table class="table table-condensed table-bordered table-hover f12">
+				<tr class="danger red">
+					<td>合单号</td>
+					<td>错误指定日期</td>
+				</tr>
+				<tr class="white" ng-repeat="c_item in com_error_date track by $index">
+					<td>{{c_item.send_id}}</td>
+					<td>{{c_item.want_date}}</td>
+				</tr>
+			</table>
+			<table class="table table-condensed table-bordered table-hover f12">
+				<tr class="danger red">
+					<td>合单号</td>
+					<td>错误指定时间</td>
+				</tr>
+				<tr class="white" ng-repeat="c_item in com_error_time track by $index">
+					<td>{{c_item.send_id}}</td>
+					<td>{{c_item.want_time}}</td>
 				</tr>
 			</table>
 		</div>

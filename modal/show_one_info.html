@@ -62,7 +62,7 @@
               </div>
             </td>
           </tr>
-          <tr ng-hide="now_station == Amazon">
+          <tr ng-hide="now_station == 'Amazon'">
             <td class="s_gray">运费</td>
             <td class="s_gray" ng-class="{'danger red':item.shipping_price!=item.all_yfmoney}">{{item.shipping_price}}
               <!-- <i ng-click="aa_shipping_price=!aa_shipping_price" 
@@ -84,7 +84,7 @@
             <td class="red">{{item.express_day}} / {{item.express_company}} / {{item.send_method}} / {{item.repo_status}} / {{item.oms_order_express_num}} 
             </td>
           </tr>
-          <tr>
+          <tr ng-hide="now_station == 'Amazon'">
             <td class="s_gray">客人指定配送</td>
             <td class="s_gray">{{item.buyer_send_method}}
             </td>
