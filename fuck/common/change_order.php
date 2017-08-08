@@ -158,6 +158,12 @@ if(isset($_GET['syn_yfcode'])){
 
 	// 计算运费代码
 	play_yf_code($station,$response_list,$response_info,$send_id);
+	$sql = "SELECT order_id FROM $response_list WHERE send_id = '{$send_id}'";
+	$res = $db->getOne($sql);
+	$order_id = $res['order_id'];
+	
+	// 计算订单金额
+	play_order_price($station,$response_list,$response_info,$order_id);
 
 	// 日志
 	$do = '同步运费代码【'.$o_key.'】为【'.$new_key.'】';
@@ -232,8 +238,8 @@ if(isset($_GET['change_info_field'])){
 		$res = $db->execute($sql);
 		echo 'ok';
 	}
-	// 如果是运费代码，计算
-	if($field_name == 'yfcode'){
+	// 如果是运费代码或者是数量，计算运费代码
+	if($field_name == 'yfcode' or $field_name == 'goods_num'){
 		// 查询send_id
 		$sql = "SELECT send_id FROM $response_list WHERE order_id = '{$order_id}'";
 		$res = $db->getOne($sql);
@@ -468,9 +474,6 @@ if(isset($_POST['add_item'])){
 	$response_list = $station.'_response_list';
 	$response_info = $station.'_response_info';
 
-	//运费金额计算 ###############
-	$add_yf_money = '0';	//暂时为0
-
 	// 当前时间戳
 	$now_time = time();
 
@@ -483,7 +486,6 @@ if(isset($_POST['add_item'])){
 		sku_ok,
 		yfcode_ok,
 		yfcode,
-		yf_money,
 		sku,
 		goods_code,
 		goods_num,
@@ -497,7 +499,6 @@ if(isset($_POST['add_item'])){
 		'1',
 		'1',
 		'{$add_yfcode}',
-		'{$add_yf_money}',
 		'{$add_item}',
 		'{$add_item}',
 		'{$add_goods_num}',
@@ -507,20 +508,22 @@ if(isset($_POST['add_item'])){
 		) ";
 	$res = $db->execute($sql);
 
+	// 查询send_id，计算运费代码
+	$sql = "SELECT id,send_id FROM $response_list WHERE order_id = '{$order_id}'";
+	$res = $db->getOne($sql);
+	$oms_id = $res['id'];
+	$send_id = $res['send_id'];
+	play_yf_code($station,$response_list,$response_info,$send_id);
+
 	// 如果COD_money大于0，则为代引
 	if($add_cod_money > 0){
 		//日志
-		$do = ' [新增一单]：订单号【'.$order_id.'】商品代码【'.$add_item.'】数量【'.$add_goods_num.'】单价【'.$add_unit_price.'】运费代码【'.$add_yfcode.'】运费金额【'.$add_yf_money.'】代引金额【'.$add_cod_money.'】';
+		$do = ' [新增一单]：订单号【'.$order_id.'】商品代码【'.$add_item.'】数量【'.$add_goods_num.'】单价【'.$add_unit_price.'】运费代码【'.$add_yfcode.'】代引金额【'.$add_cod_money.'】';
 
 	}else{
 		//日志
-		$do = ' [新增一单]：订单号【'.$order_id.'】商品代码【'.$add_item.'】数量【'.$add_goods_num.'】单价【'.$add_unit_price.'】运费代码【'.$add_yfcode.'】运费金额【'.$add_yf_money.'】';
+		$do = ' [新增一单]：订单号【'.$order_id.'】商品代码【'.$add_item.'】数量【'.$add_goods_num.'】单价【'.$add_unit_price.'】运费代码【'.$add_yfcode.'】';
 	}
-
-	//查询OMS-ID
-	$sql = "SELECT id FROM $response_list WHERE order_id = '{$order_id}'";
-	$res = $db->getOne($sql);
-	$oms_id = $res['id'];
 
 	oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
 	echo 'ok';
@@ -543,12 +546,14 @@ if(isset($_POST['del_item'])){
 	$sql1 = "DELETE FROM $response_info WHERE id = '{$id}'";
 	$res1 = $db->execute($sql1);
 
-	//查询OMS-ID
-	$sql = "SELECT id FROM $response_list WHERE order_id = '{$order_id}'";
+	// 查询send_id，计算运费代码
+	$sql = "SELECT id,send_id FROM $response_list WHERE order_id = '{$order_id}'";
 	$res2 = $db->getOne($sql);
 	$oms_id = $res2['id'];
+	$send_id = $res2['send_id'];
+	play_yf_code($station,$response_list,$response_info,$send_id);
 
-	$do = '[删除一单]：订单号【'.$res['order_id'].'】商品代码【'.$res['goods_code'].'】数量【'.$res['goods_num'].'】单价【'.$res['unit_price'].'】运费代码【'.$res['yfcode'].'】运费金额【'.$res['yf_money'].'】代引金额【'.$res['cod_money'].'】';
+	$do = '[删除一单]：订单号【'.$res['order_id'].'】商品代码【'.$res['goods_code'].'】数量【'.$res['goods_num'].'】单价【'.$res['unit_price'].'】运费代码【'.$res['yfcode'].'】代引金额【'.$res['cod_money'].'】';
 
 	oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
 	echo 'ok';

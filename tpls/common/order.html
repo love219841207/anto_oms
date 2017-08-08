@@ -163,6 +163,7 @@
 						<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="search_field" ng-change="change_search_field()">
 							<option value="">字段筛选 ..</option>
 							<option value="id">ID</option>
+							<option value="send_id">合单ID</option>
 							<option value="order_id">订单号</option>
 							<option value="buyer_email">邮箱</option>
 							<option value="buyer_name">购买人</option>
@@ -391,7 +392,8 @@
 							<i ng-show="open_check" class="fa red fa-lg fa-fw" ng-class="{'fa-square-o':item.is_click==false,'fa-check-square':item.is_click==true}"></i>
 							<!-- {{item.is_click}} -->
 							<i>{{item.id}}</i>
-							<i ng-show="item.is_mark==1" class="fa yellow fa-fw" ng-class="{'fa-star':item.is_mark==1}"></i>
+							<i ng-show="item.is_mark==1" class="fa yellow" ng-class="{'fa-star':item.is_mark==1}"></i>
+							<i ng-show="item.send_id.indexOf('H')==0" ng-class="{'fa fa-shopping-bag red fa-fw':item.send_id.indexOf('H')==0}"> {{item.send_id}}</i>
 						</td>
 						<td style="width:17%" class="blue"><span class="s_gray">订单号：</span>{{item.order_id}}</td>
 						<td style="width:15%" class="green"><span class="s_gray">同步日期：</span>{{item.syn_day}}</td>

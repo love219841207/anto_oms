@@ -157,7 +157,8 @@ if(isset($_GET['import_add_list'])){
 				$yfcode = substr($sku,0,1);
 
 				// 拆分赠品开始 - - - - - - - - - - - - - - - - 
-				$sku_copy = str_replace($yfcode.'-', '', $sku);
+				// $sku_copy = str_replace($yfcode.'-', '', $sku);
+				$sku_copy = preg_replace('/'.$yfcode.'-'.'/', '', $sku, 1); 
 				$res_sku = explode('_', $sku_copy);	
 
 				// 主商品代码	

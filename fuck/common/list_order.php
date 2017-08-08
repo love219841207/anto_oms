@@ -538,7 +538,7 @@ if(isset($_POST['sub_repo'])){
 		list.receive_name,
 		list.payment_method,
 		list.pay_money,	#带引金额
-		list.buyer_send_method,
+		list.send_method,
 		list.buyer_email,
 		list.store,
 		'{$u_name}',
