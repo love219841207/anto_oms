@@ -415,7 +415,7 @@
 								<span ng-show="item.payment_method!='COD'" class="s_gray">支 </span>
 								<span ng-class="{'red bg_yellow':item.payment_method=='COD'}">{{item.pay_money}}</span>
 								<span class="s_gray">分 </span>{{item.points}}
-								<span class="s_gray">卡 </span>{{item.coupon}}
+								<span class="s_gray">券 </span>{{item.coupon}}
 							</span>
 						</td>
 						<td style="width:11%" class="red tagr">
@@ -550,6 +550,11 @@
 				<a class="pg_e">Page {{selPage}} / {{pages}}</a>
 				<a>共 {{all_num}} 条
 				<!-- 错误数统计 -->
+					<!-- ing -->
+					/
+				<span class="pointer blue" ng-click="jump_cut('ing')">
+					ing
+				</span>
 					<!-- 标记 -->
 				<span ng-hide="now_list_order_count.mark_count==0">/</span>
 				<span class="pointer" ng-click="jump_cut('mark')">
@@ -584,6 +589,7 @@
 					{{now_list_order_count.no_sku_count}}</span> 
 				</span>
 					<!-- 卡运代 -->
+				<span ng-hide="now_list_order_count.no_yfcode_count==0">/</span>
 				<span class="pointer" ng-click="jump_cut('yfcode_ok')">
 					<i class="fa fa-code red fa-fw" ng-hide="now_list_order_count.no_yfcode_count==0"></i>
 					<span class="red" ng-hide="now_list_order_count.no_yfcode_count==0">{{now_list_order_count.no_yfcode_count}}</span>
