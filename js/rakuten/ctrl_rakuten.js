@@ -1,4 +1,4 @@
-app.controller('amazonCtrl', ['$scope','$state','$http','$log','$timeout', function($scope,$state,$http,$log,$timeout){
+app.controller('rakutenCtrl', ['$scope','$state','$http','$log','$timeout', function($scope,$state,$http,$log,$timeout){
 	//赋日期
     var myDate = new Date();
     var today = myDate.toLocaleDateString().replace("/","-");
@@ -66,10 +66,10 @@ app.controller('amazonCtrl', ['$scope','$state','$http','$log','$timeout', funct
 
     //check_items 选择项
     $scope.check_items = function(){
-        var my_checked = new Array();
+        var my_checked = [];
         angular.forEach($scope.express_list, function(value, index){
             if($scope.express_list[index].is_click == true){
-                my_checked.push("'"+$scope.express_list[index].amazon_order_id+"'");
+                my_checked.push("'"+$scope.express_list[index].rakuten_order_id+"'");
             }
         });
         $scope.my_checked = my_checked;
@@ -80,7 +80,7 @@ app.controller('amazonCtrl', ['$scope','$state','$http','$log','$timeout', funct
 	//	获取快递列表
 	$scope.get_express_list = function(){
 		$scope.loading_shadow('open'); //打开loading
-        $http.get('/fuck/amazon/amazon_send_express.php', {
+        $http.get('/fuck/rakuten/rakuten_send_express.php', {
             params:{
             	get_express_list:'get',
                 store:$scope.now_store_bar,
@@ -97,25 +97,6 @@ app.controller('amazonCtrl', ['$scope','$state','$http','$log','$timeout', funct
         });
 	};
 
-	// 上传快递单号
-	$scope.amz_send_express = function(){
-		$scope.shadow('open','ss_syn','正在上传 '+$scope.now_store_bar+' 快递单');
-
-        var post_data = {
-            amz_send_express:$scope.now_store_bar,
-            my_checked_items:$scope.my_checked_items
-        };
-
-        $http.post('/fuck/amazon/amazon_send_express.php', post_data).success(function(data) {
-            $log.info(data);
-            $scope.get_express_list();
-            $timeout(function(){$scope.shadow('close');},1000); //关闭shadow
-        }).error(function(data) {
-            alert("系统错误，请联系管理员。");
-            $log.info("error:下载上传快递单失败。");
-        });
-	};
-
 	// 下载xlsx
 	$scope.down_express_xlsx = function(){
         $scope.shadow('open','ss_read','正在导出');
@@ -125,9 +106,9 @@ app.controller('amazonCtrl', ['$scope','$state','$http','$log','$timeout', funct
             my_checked_items:$scope.my_checked_items
         };
 
-        $http.post('/fuck/amazon/amazon_send_express.php', post_data).success(function(data) {
+        $http.post('/fuck/rakuten/rakuten_send_express.php', post_data).success(function(data) {
             if(data == 'ok'){
-                window.location="/down/amz_uploads_express.xlsx";
+                window.location="/down/RkutenExpress.csv";
             }else{
                 $log.info(data);
                 $scope.plug_alert('danger','下载失败。','fa fa-ban');
@@ -144,14 +125,14 @@ app.controller('amazonCtrl', ['$scope','$state','$http','$log','$timeout', funct
         $scope.shadow('open','ss_read','正在发送');
 
         var post_data = {
-            send_mail:'amazon',
+            send_mail:'rakuten',
             station:$scope.now_station,
             store:$scope.now_store_bar,
             mail_tpl:'send_express',
             my_checked_items:$scope.my_checked_items
         };
 
-        $http.post('/fuck/mail/amazon_send_mail.php', post_data).success(function(data) {
+        $http.post('/fuck/mail/rakuten_send_mail.php', post_data).success(function(data) {
             if(data.status == 'ok'){
                 $scope.send_error_num = data.error_num;
                 $scope.send_ok_num = data.ok_num;

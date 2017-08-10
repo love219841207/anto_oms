@@ -8,12 +8,14 @@
 		<table ng-show="pause_table" class="table-responsive table table-bordered table-condensed table-hover table-striped mt20 f12">
 		<tr class="blue info animate slide-right">
 			<td class="tagc"><i class="fa-sort-numeric-asc fa fa-fw"></i></td>
+			<td class="tagc">平台</td>
 			<td>商品代码</td>
 			<td>冻结数</td>
 			<td class="tagc">冻结时间</td>
 		</tr>
 		<tr ng-dblclick="bg_yellow=!bg_yellow" ng-class="{'bg_yellow':bg_yellow}" class="am-fade-and-slide-right" ng-repeat="item in pause_table track by $index">
 			<td class="tagc">{{$index+1}}</td>
+			<td class="tagc">{{item.station}}</td>
 			<td>{{item.goods_code}}</td>
 			<td class="tagr">{{item.pause_num}}</td>
 			<td class="tagc">{{item.pause_time}}</td>

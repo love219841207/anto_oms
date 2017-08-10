@@ -17,7 +17,7 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log','$timeout', functi
             alert("发货通知信开关失败。");
             $log.info(data);
         });
-    }
+    };
 
     // 获取发货通知信
     $scope.over_send = function(station,store){
@@ -28,8 +28,8 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log','$timeout', functi
             alert("获取发货通知信失败。");
             $log.info(data);
         });
-    }
-    $scope.over_send($scope.now_station,$scope.now_store_bar)
+    };
+    $scope.over_send($scope.now_station,$scope.now_store_bar);
 
     //查询所有店铺
     $scope.get_store = function(){
@@ -40,14 +40,14 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log','$timeout', functi
             alert("严重！店铺读取失败。");
             $log.info(data);
         });
-    }
+    };
     $scope.get_store();
 
     //删除传值
     $scope.del_store_modal = function(store_id,store_name){
         $scope.del_store_id = store_id;
         $scope.del_store_name = store_name;
-    }
+    };
 
     //删除店铺
     $scope.del_store = function(){
@@ -61,7 +61,7 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log','$timeout', functi
             alert("严重！删除店铺失败。");
             $log.info(data);
         });
-    }
+    };
 
 	//新增店铺
     $scope.add_store = function(){
@@ -81,7 +81,7 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log','$timeout', functi
             alert("严重！新增店铺失败。");
             $log.info(data);
         });
-    }
+    };
 
     //店铺配置传值 & 获取配置详情
     $scope.conf_store_modal = function(station,store_name){
@@ -107,16 +107,28 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log','$timeout', functi
             if(station == 'Yahoo'){
                 $scope.mail_over_send = data.mail_over_send;
                 $scope.use_yfcode = data.use_yfcode;
+                $scope.mail_name = data.mail_name;
+                $scope.mail_id = data.mail_id;
+                $scope.mail_pwd = data.mail_pwd;
+                $scope.mail_smtp = data.mail_smtp;
+                $scope.mail_port = data.mail_port;
+                $scope.mail_answer_addr = data.mail_answer_addr;
             }
             if(station == 'Rakuten'){
                 $scope.mail_over_send = data.mail_over_send;
                 $scope.use_yfcode = data.use_yfcode;
+                $scope.mail_name = data.mail_name;
+                $scope.mail_id = data.mail_id;
+                $scope.mail_pwd = data.mail_pwd;
+                $scope.mail_smtp = data.mail_smtp;
+                $scope.mail_port = data.mail_port;
+                $scope.mail_answer_addr = data.mail_answer_addr;
             }
         }).error(function(data) {
             alert("严重！店铺配置读取失败。");
             $log.info(data);
         });
-    }
+    };
 
     //保存亚马逊店铺配置
     $scope.save_amazone_conf = function(){
@@ -148,7 +160,7 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log','$timeout', functi
             alert("严重！保存店铺配置失败。");
             $log.info(data);
         });
-    }
+    };
 
     // 保存雅虎店铺配置
     $scope.save_yahoo_conf = function(){
@@ -156,11 +168,6 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log','$timeout', functi
             params:{
                 update_conf:$scope.conf_store_station,
                 store_name:$scope.conf_store_modal_title,
-                // awsaccesskeyid:$scope.awsaccesskeyid,
-                // sellerid:$scope.sellerid,
-                // signatureversion:$scope.signatureversion,
-                // secret:$scope.secret,
-                // marketplaceid_id_1:$scope.marketplaceid_id_1,
                 // mail_name:$scope.mail_name,
                 // mail_id:$scope.mail_id,
                 // mail_pwd:$scope.mail_pwd,
@@ -171,39 +178,34 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log','$timeout', functi
                 use_yfcode:$scope.use_yfcode
             }
         }).success(function(data) {
-            $log.info(data)
+            $log.info(data);
         }).error(function(data) {
             alert("严重！保存店铺配置失败。");
             $log.info(data);
         });
-    }
+    };
     // 保存乐天店铺配置
     $scope.save_rakuten_conf = function(){
         $http.get('/fuck/systems/store_manage.php', {
             params:{
                 update_conf:$scope.conf_store_station,
                 store_name:$scope.conf_store_modal_title,
-                // awsaccesskeyid:$scope.awsaccesskeyid,
-                // sellerid:$scope.sellerid,
-                // signatureversion:$scope.signatureversion,
-                // secret:$scope.secret,
-                // marketplaceid_id_1:$scope.marketplaceid_id_1,
-                // mail_name:$scope.mail_name,
-                // mail_id:$scope.mail_id,
-                // mail_pwd:$scope.mail_pwd,
-                // mail_smtp:$scope.mail_smtp,
-                // mail_port:$scope.mail_port,
-                // mail_answer_addr:$scope.mail_answer_addr,
+                mail_name:$scope.mail_name,
+                mail_id:$scope.mail_id,
+                mail_pwd:$scope.mail_pwd,
+                mail_smtp:$scope.mail_smtp,
+                mail_port:$scope.mail_port,
+                mail_answer_addr:$scope.mail_answer_addr,
                 mail_over_send:$scope.mail_over_send,
                 use_yfcode:$scope.use_yfcode
             }
         }).success(function(data) {
-            $log.info(data)
+            $log.info(data);
         }).error(function(data) {
             alert("严重！保存店铺配置失败。");
             $log.info(data);
         });
-    }
+    };
 
     //店铺发货通知信传值 & 详情
     $scope.express_mail_modal = function(station,store_name){
@@ -218,7 +220,7 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log','$timeout', functi
             alert("严重！邮件模板获取失败。");
             $log.info(data);
         });
-    }
+    };
 
     //保存发货通知信
     $scope.save_express_mail = function(){
@@ -237,27 +239,27 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log','$timeout', functi
                 $log.info(data);
             }
         }).error(function(data) {  
-            alert('系统错误，请联系管理员。')
+            alert('系统错误，请联系管理员。');
             $log.info('保存发货通知信失败。');
         });  
-    }
+    };
 
     //店铺信件模板 & 详情
     $scope.mail_tpl = function(station,store_name){
         $scope.mail_tpl_station = station;
         $scope.mail_tpl_store = store_name;
         $scope.read_mail_tpl();
-    }
+    };
 
     // 点击添加信件变量
     $scope.add_var = function(e){
         $scope.express_mail_html = $scope.express_mail_html + e;
         $scope.express_mail_txt = $scope.express_mail_txt + e;
-    }
+    };
     $scope.add_var2 = function(e){
         $scope.mail_tpl_html = $scope.mail_tpl_html + e;
         $scope.mail_tpl_txt = $scope.mail_tpl_txt + e;
-    }
+    };
 
     //新增店铺邮件模板
     $scope.add_mail_tpl = function(){
@@ -271,7 +273,7 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log','$timeout', functi
             alert("严重！新增店铺邮件模板失败。");
             $log.info(data);
         });
-    }
+    };
 
     //读取店铺邮件模板
     $scope.read_mail_tpl = function(){
@@ -284,7 +286,7 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log','$timeout', functi
             alert("严重！新增店铺邮件模板失败。");
             $log.info(data);
         });
-    }
+    };
 
     //邮件模板重命名
     $scope.rename_mail_tpl = function(id){
@@ -305,7 +307,7 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log','$timeout', functi
             alert("严重！邮件模板重命名失败。");
             $log.info(data);
         });
-    }
+    };
 
     //删除邮件模板
     $scope.del_mail_tpl = function(id){
@@ -323,7 +325,7 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log','$timeout', functi
             alert("严重！删除邮件模板失败。");
             $log.info(data);
         });
-    }
+    };
 
     //编辑邮件模板
     $scope.edit_tpl = function(id){
@@ -340,7 +342,7 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log','$timeout', functi
             alert("严重！编辑邮件模板读取失败。");
             $log.info(data);
         });
-    }
+    };
 
     //保存邮件模板
     $scope.save_mail_tpl = function(){
@@ -359,10 +361,10 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log','$timeout', functi
                 $log.info(data);
             }
         }).error(function(data) {  
-            alert('系统错误，请联系管理员。')
+            alert('系统错误，请联系管理员。');
             $log.info('保存邮件模板失败。');
         });  
-    }
+    };
 
     //保存邮件自定义模板
     $scope.save_mail_custom = function(){
@@ -381,10 +383,10 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log','$timeout', functi
                 $log.info(data);
             }
         }).error(function(data) {  
-            alert('系统错误，请联系管理员。')
+            alert('系统错误，请联系管理员。');
             $log.info('保存自定义模板失败。');
         });  
-    }
+    };
 
     //邮件测试
     $scope.test_send_mail = function(method){
@@ -430,10 +432,10 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log','$timeout', functi
                 $log.info(data);
             }
         }).error(function(data) {  
-            alert('系统错误，请联系管理员。')
+            alert('系统错误，请联系管理员。');
             $log.info('邮件测试失败。');
         });  
-    }
+    };
 
     // 邮件预览
     $scope.demo_mail_custom = function(order_id){
@@ -456,7 +458,7 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log','$timeout', functi
             $log.info("error:邮件内容读取失败。");
         }); 
 
-    }
+    };
 
     // 发信
     $scope.amz_mail_custom_items = function(){
@@ -486,5 +488,5 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log','$timeout', functi
             alert("系统错误，请联系管理员。");
             $log.info("error:发信失败。");
         });
-    }
-}])
+    };
+}]);

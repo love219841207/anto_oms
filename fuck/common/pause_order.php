@@ -10,7 +10,11 @@ ini_set("memory_limit", "1024M");
 if(isset($_GET['pause_order'])){
 	//	获取所有平台 ******************** select * (select * from t1 union all select * from t2) tmp order by tmp.createDate时间戳
 	$sql = "SELECT info.id,info.station,list.pause_time,info.store,info.order_id,info.goods_code,info.goods_num,info.pause_ch,info.pause_jp,info.unit_price,info.item_price,info.cod_money,info.import_time FROM amazon_response_list list,amazon_response_info info WHERE list.order_id = info.order_id AND info.is_pause = 'pause' ORDER BY list.pause_time";
-	$res = $db->getAll($sql);
+	$res1 = $db->getAll($sql);
+    //  获取所有平台 ******************** select * (select * from t1 union all select * from t2) tmp order by tmp.createDate时间戳
+    $sql = "SELECT info.id,info.station,list.pause_time,info.store,info.order_id,info.goods_code,info.goods_num,info.pause_ch,info.pause_jp,info.unit_price,info.item_price,info.cod_money,info.import_time FROM rakuten_response_list list,rakuten_response_info info WHERE list.order_id = info.order_id AND info.is_pause = 'pause' ORDER BY list.pause_time";
+    $res2 = $db->getAll($sql);
+    $res = array_merge($res1, $res2); 
 
 	echo json_encode($res);
 }
@@ -19,8 +23,10 @@ if(isset($_GET['pause_order'])){
 if(isset($_GET['back_order'])){
     //  获取所有平台 ******************** select * (select * from t1 union all select * from t2) tmp order by tmp.createDate时间戳
     $sql = "SELECT info.id,info.station,list.pause_time,info.store,info.order_id,info.goods_code,info.goods_num,info.pause_ch,info.pause_jp,info.unit_price,info.item_price,info.cod_money,info.import_time FROM amazon_response_list list,amazon_response_info info WHERE list.order_id = info.order_id AND info.is_pause = 'back' ORDER BY list.pause_time";
-    $res = $db->getAll($sql);
-
+    $res1 = $db->getAll($sql);
+    $sql = "SELECT info.id,info.station,list.pause_time,info.store,info.order_id,info.goods_code,info.goods_num,info.pause_ch,info.pause_jp,info.unit_price,info.item_price,info.cod_money,info.import_time FROM rakuten_response_list list,rakuten_response_info info WHERE list.order_id = info.order_id AND info.is_pause = 'back' ORDER BY list.pause_time";
+    $res2 = $db->getAll($sql);
+    $res = array_merge($res1, $res2); 
     echo json_encode($res);
 }
 
@@ -265,7 +271,10 @@ if(isset($_GET['down_pause_orders_table'])){
 
     //SQL
     $sql = "SELECT FROM_UNIXTIME(list.pause_time, '%Y-%m-%d %H:%I:%S') as pause_time,list.order_id,list.id,info.goods_code,(info.goods_num-info.pause_ch-info.pause_jp) as pause_num,list.receive_name,list.store FROM amazon_response_list list,amazon_response_info info WHERE list.order_id = info.order_id AND info.is_pause = 'pause' ORDER BY pause_time";
-	$res = $db->getAll($sql);
+	$res1 = $db->getAll($sql);
+    $sql = "SELECT FROM_UNIXTIME(list.pause_time, '%Y-%m-%d %H:%I:%S') as pause_time,list.order_id,list.id,info.goods_code,(info.goods_num-info.pause_ch-info.pause_jp) as pause_num,list.receive_name,list.store FROM rakuten_response_list list,rakuten_response_info info WHERE list.order_id = info.order_id AND info.is_pause = 'pause' ORDER BY pause_time";
+    $res2 = $db->getAll($sql);
+    $res = array_merge($res1,$res2);
     $j=2;
     foreach ($res as $key => $value) {
         $objSheet->setCellValue("A".$j,$value['pause_time'])

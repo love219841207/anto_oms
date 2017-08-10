@@ -89,7 +89,13 @@ if(isset($_GET['update_conf'])){
 		$sql = "UPDATE conf_Yahoo SET mail_over_send = '{$mail_over_send}',use_yfcode = '{$use_yfcode}' WHERE store_name = '{$store_name}'";
 	}
 	if($station == 'Rakuten'){
-		$sql = "UPDATE conf_Rakuten SET mail_over_send = '{$mail_over_send}',use_yfcode = '{$use_yfcode}' WHERE store_name = '{$store_name}'";
+		$mail_name = $_GET['mail_name'];
+		$mail_id = $_GET['mail_id'];
+		$mail_pwd = $_GET['mail_pwd'];
+		$mail_smtp = $_GET['mail_smtp'];
+		$mail_port = $_GET['mail_port'];
+		$mail_answer_addr = $_GET['mail_answer_addr'];
+		$sql = "UPDATE conf_Rakuten SET mail_name = '{$mail_name}',mail_id = '{$mail_id}',mail_pwd = '{$mail_pwd}',mail_smtp = '{$mail_smtp}',mail_port = '{$mail_port}',mail_answer_addr = '{$mail_answer_addr}' WHERE store_name = '{$store_name}'";
 	}
     $res = $db->execute($sql);
     echo 'ok';

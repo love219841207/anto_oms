@@ -7,7 +7,7 @@ $shdb = new RepairPdoMySQL();
 // 查看售后详情
 if(isset($_GET['repair_info'])){
 	$order_id = $_GET['repair_info'];
-	$sql = "SELECT * FROM repair_list WHERE order_id = '{$order_id}'";
+	$sql = "SELECT * FROM repair_list WHERE order_id like '%{$order_id}%'";
 	$res = $shdb->getOne($sql);
 	echo json_encode($res);
 }

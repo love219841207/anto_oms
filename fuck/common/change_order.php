@@ -341,7 +341,7 @@ if(isset($_POST['del_items'])){
 	$res = $db->getAll($sql);
 	foreach ($res as $val) {
 		$order_line = $val['order_line'].'|';
-		if($order_line > 2){	//如果包含冻结以上，不能删除
+		if($order_line > 2 AND $order_line < 6){	//如果包含冻结以上，不能删除
 			$can_stop = 0;
 		}
 	}
