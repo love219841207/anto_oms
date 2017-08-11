@@ -1,0 +1,21 @@
+<div class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" style="width:500px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <i class="fa fa-close f20 close" ng-click="$hide()"></i>
+        <h4 class="modal-title yellow"><i class="fa fa-fw fa-jpy"></i> 确认入金</h4>
+      </div>
+      <div class="modal-body">
+        <div ng-show="my_checked!=''" class="blue">确定以下订单入金？</div>
+        <table ng-show="my_checked!=''" class="table table-bordered table-condensed mt20 red">
+          <tr class="f12"><td class="tagc danger">序号</td><td class="tagc danger">订单号</td></tr>
+          <tr ng-repeat="(key,val) in my_checked track by $index"><td class="tagc blue warning">{{$index+1}}</td><td class="tagc warning">{{val}}</td></tr>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" ng-disabled="my_checked==''" class="btn btn-warning" ng-click="pay_ok();$hide()"><i class="fa fa-fw fa-jpy"></i>确认入金</button>
+        <button type="button" class="btn btn-default" ng-click="$hide()">关 闭</button>
+      </div>
+    </div>
+  </div>
+</div>

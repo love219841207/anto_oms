@@ -367,7 +367,7 @@ if(isset($_GET['import_add_list'])){
     	store,
 		'{$today}',
 		order_id,
-		'1',
+		CASE WHEN payment_method = 'COD' THEN '1' ELSE '-2' END,
 		order_payment_method,
 		buyer_others,
 		buyer_send_method,

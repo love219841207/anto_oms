@@ -284,7 +284,7 @@ if(isset($_POST['sub_repo'])){
 	if($now_station == 'all_station'){
 		$my_checked_items = $_POST['my_checked_items'];
 		// 如果是所有平台扣库存，即冻结表
-		$sql = "SELECT id,station,send_id FROM amazon_response_list WHERE order_line = 3 AND order_id in ($my_checked_items) UNION ALL SELECT id,station,send_id FROM yahoo_response_list WHERE order_line = 3 GROUP BY send_id ORDER BY id";
+		$sql = "SELECT id,station,send_id FROM amazon_response_list WHERE order_line = 3 AND order_id in ($my_checked_items) UNION ALL SELECT id,station,send_id FROM rakuten_response_list WHERE order_line = 3 AND order_id in ($my_checked_items)";
 
 	}else{
 		// 单个平台正常店铺发货

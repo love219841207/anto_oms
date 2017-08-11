@@ -9,8 +9,13 @@ if(isset($_GET['list_order_count'])){
     $store = $_GET['list_order_count'];
     $station = strtolower($_GET['station']);
     $response_list = $station.'_response_list';
+    // 查询待支付数
+    $sql = "SELECT count(1) as pay_count FROM $response_list WHERE store = '{$store}' AND order_line = '-2'";
+    $res = $db->getOne($sql);
+    $pay_count = $res['pay_count'];
+
     // 查询标记数
-    $sql = "SELECT count(1) as mark_count FROM $response_list WHERE store = '{$store}' AND is_mark = 1 AND order_line>0";
+    $sql = "SELECT count(1) as mark_count FROM $response_list WHERE store = '{$store}' AND is_mark = 1";
     $res = $db->getOne($sql);
     $mark_count = $res['mark_count'];
 
@@ -20,26 +25,27 @@ if(isset($_GET['list_order_count'])){
     $no_info_count = $res['no_info_count'];
 
     // 查询卡邮编数
-    $sql = "SELECT count(1) as no_post_count FROM $response_list WHERE store = '{$store}' AND post_ok = 2 AND order_line>0";
+    $sql = "SELECT count(1) as no_post_count FROM $response_list WHERE store = '{$store}' AND post_ok = 2 AND (order_line>0 OR order_line = '-2')";
     $res = $db->getOne($sql);
     $no_post_count = $res['no_post_count'];
 
     // 查询卡电话数
-    $sql = "SELECT count(1) as no_tel_count FROM $response_list WHERE store = '{$store}' AND tel_ok = 2 AND order_line>0";
+    $sql = "SELECT count(1) as no_tel_count FROM $response_list WHERE store = '{$store}' AND tel_ok = 2 AND (order_line>0 OR order_line = '-2')";
     $res = $db->getOne($sql);
     $no_tel_count = $res['no_tel_count'];
 
     // 查询卡sku数
-    $sql = "SELECT count(1) as no_sku_count FROM $response_list WHERE store = '{$store}' AND sku_ok = 2 AND order_line>0";
+    $sql = "SELECT count(1) as no_sku_count FROM $response_list WHERE store = '{$store}' AND sku_ok = 2 AND (order_line>0 OR order_line = '-2')";
     $res = $db->getOne($sql);
     $no_sku_count = $res['no_sku_count'];
 
     // 查询卡运费代码数
-    $sql = "SELECT count(1) as no_yfcode_count FROM $response_list WHERE store = '{$store}' AND yfcode_ok = 2 AND order_line>0";
+    $sql = "SELECT count(1) as no_yfcode_count FROM $response_list WHERE store = '{$store}' AND yfcode_ok = 2 AND (order_line>0 OR order_line = '-2')";
     $res = $db->getOne($sql);
     $no_yfcode_count = $res['no_yfcode_count'];
 
     //final_res
+    $final_res['pay_count'] = $pay_count;
     $final_res['mark_count'] = $mark_count;
     $final_res['no_info_count'] = $no_info_count;
     $final_res['no_post_count'] = $no_post_count;
@@ -57,6 +63,7 @@ if(isset($_POST['items_count'])){
     $start_date = $_POST['start_date'];
     $end_date = $_POST['end_date'];
     $search_order_line = $_POST['search_order_line'];
+    $search_pay_method = $_POST['search_pay_method'];
     $search_field = $_POST['search_field'];
     $search_key = addslashes($_POST['search_key']);
 
@@ -65,19 +72,19 @@ if(isset($_POST['items_count'])){
     // 标记订单查询
     if($search_order_line == 'mark' or $search_order_line == 'post_ok' or $search_order_line == 'tel_ok' or $search_order_line == 'sku_ok' or $search_order_line == 'yfcode_ok'){
     	if($search_order_line == 'mark'){
-    		$sql = "SELECT count(1) as cc FROM $response_list WHERE is_mark = '1' AND store = '{$store}' AND order_line>0";
+    		$sql = "SELECT count(1) as cc FROM $response_list WHERE is_mark = '1' AND store = '{$store}' AND (order_line>0 OR order_line = '-2')";
     	}
     	if($search_order_line == 'post_ok'){
-    		$sql = "SELECT count(1) as cc FROM $response_list WHERE post_ok = 2 AND store = '{$store}' AND order_line>0";
+    		$sql = "SELECT count(1) as cc FROM $response_list WHERE post_ok = 2 AND store = '{$store}' AND (order_line>0 OR order_line = '-2')";
     	}
     	if($search_order_line == 'tel_ok'){
-    		$sql = "SELECT count(1) as cc FROM $response_list WHERE tel_ok = 2 AND store = '{$store}' AND order_line>0";
+    		$sql = "SELECT count(1) as cc FROM $response_list WHERE tel_ok = 2 AND store = '{$store}' AND (order_line>0 OR order_line = '-2')";
     	}
     	if($search_order_line == 'sku_ok'){
-    		$sql = "SELECT count(1) as cc FROM $response_list WHERE sku_ok = 2 AND store = '{$store}' AND order_line>0";
+    		$sql = "SELECT count(1) as cc FROM $response_list WHERE sku_ok = 2 AND store = '{$store}' AND (order_line>0 OR order_line = '-2')";
     	}
     	if($search_order_line == 'yfcode_ok'){
-    		$sql = "SELECT count(1) as cc FROM $response_list WHERE yfcode_ok = 2 AND store = '{$store}' AND order_line>0";
+    		$sql = "SELECT count(1) as cc FROM $response_list WHERE yfcode_ok = 2 AND store = '{$store}' AND (order_line>0 OR order_line = '-2')";
     	}
     }else{
     	if($search_field == ''){   //0没有筛选条件
@@ -95,11 +102,22 @@ if(isset($_POST['items_count'])){
                     $sql = "SELECT count(1) as cc FROM $response_list WHERE store = '{$store}' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}' AND order_line<6 AND order_line>0";
                 }
             }else{
-    			if($start_date =='' or $end_date ==''){
-		            $sql = "SELECT count(1) as cc FROM $response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}'";
-		        }else{
-		            $sql = "SELECT count(1) as cc FROM $response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}'";
-		        }
+                // 如果待支付
+                if($search_order_line = '-2'){
+                    if($search_pay_method == 'all'){
+                        $sql = "SELECT count(1) as cc FROM $response_list WHERE order_line = '-2' AND store = '{$store}'";
+                    }else{
+                        $sql = "SELECT count(1) as cc FROM $response_list WHERE order_line = '-2' AND store = '{$store}' AND payment_method = '{$search_pay_method}'";
+                    }
+                }else{
+                    // 正常 order_line
+                    if($start_date =='' or $end_date ==''){
+                    $sql = "SELECT count(1) as cc FROM $response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}'";
+                }else{
+                    $sql = "SELECT count(1) as cc FROM $response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}'";
+                }
+                }
+    			
     		}
 	    }else{
 	    	//是否是全部订单
@@ -116,11 +134,21 @@ if(isset($_POST['items_count'])){
                     $sql = "SELECT count(1) as cc FROM $response_list WHERE store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}' AND order_line<6 AND order_line>0";
                 }
             }else{
-    			if($start_date =='' or $end_date ==''){
-		            $sql = "SELECT count(1) as cc FROM $response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' AND {$search_field} LIKE '%{$search_key}%'";
-		        }else{
-		            $sql = "SELECT count(1) as cc FROM $response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}'";
-		        }
+                // 如果待支付
+                if($search_order_line = '-2'){
+                    if($search_pay_method == 'all'){
+                        $sql = "SELECT count(1) as cc FROM $response_list WHERE order_line = '-2' AND store = '{$store}' AND {$search_field} LIKE '%{$search_key}%'";
+                    }else{
+                        $sql = "SELECT count(1) as cc FROM $response_list WHERE order_line = '-2' AND store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' AND payment_method = '{$search_pay_method}'";
+                    }
+                }else{
+                    // 正常 order_line
+                    if($start_date =='' or $end_date ==''){
+                        $sql = "SELECT count(1) as cc FROM $response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' AND {$search_field} LIKE '%{$search_key}%'";
+                    }else{
+                        $sql = "SELECT count(1) as cc FROM $response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}'";
+                    }
+                }
     		}
 	    }
     }
@@ -137,6 +165,7 @@ if(isset($_POST['get_order_list'])){
     $page_size = $_POST['page_size'];
     $start = $_POST['start'];
     $search_order_line = $_POST['search_order_line'];
+    $search_pay_method = $_POST['search_pay_method'];
     $search_date = $_POST['search_date'];
     $start_date = $_POST['start_date'];
     $end_date = $_POST['end_date'];
@@ -148,19 +177,19 @@ if(isset($_POST['get_order_list'])){
     // 标记订单查询
     if($search_order_line == 'mark' or $search_order_line == 'post_ok' or $search_order_line == 'tel_ok' or $search_order_line == 'sku_ok' or $search_order_line == 'yfcode_ok'){
     	if($search_order_line == 'mark'){
-    		$sql = "SELECT * FROM $response_list WHERE is_mark = '1' AND store = '{$store}' AND order_line>0 ORDER BY id DESC limit {$start},{$page_size}";
+    		$sql = "SELECT * FROM $response_list WHERE is_mark = '1' AND store = '{$store}' AND (order_line>0 OR order_line = '-2') ORDER BY id DESC limit {$start},{$page_size}";
     	}
     	if($search_order_line == 'post_ok'){
-    		$sql = "SELECT * FROM $response_list WHERE post_ok = 2 AND store = '{$store}' AND order_line>0 ORDER BY id DESC limit {$start},{$page_size}";
+    		$sql = "SELECT * FROM $response_list WHERE post_ok = 2 AND store = '{$store}' AND (order_line>0 OR order_line = '-2') ORDER BY id DESC limit {$start},{$page_size}";
     	}
     	if($search_order_line == 'tel_ok'){
-    		$sql = "SELECT * FROM $response_list WHERE tel_ok = 2 AND store = '{$store}' AND order_line>0 ORDER BY id DESC limit {$start},{$page_size}";
+    		$sql = "SELECT * FROM $response_list WHERE tel_ok = 2 AND store = '{$store}' AND (order_line>0 OR order_line = '-2') ORDER BY id DESC limit {$start},{$page_size}";
     	}
     	if($search_order_line == 'sku_ok'){
-    		$sql = "SELECT * FROM $response_list WHERE sku_ok = 2 AND store = '{$store}' AND order_line>0 ORDER BY id DESC limit {$start},{$page_size}";
+    		$sql = "SELECT * FROM $response_list WHERE sku_ok = 2 AND store = '{$store}' AND (order_line>0 OR order_line = '-2') ORDER BY id DESC limit {$start},{$page_size}";
     	}
     	if($search_order_line == 'yfcode_ok'){
-    		$sql = "SELECT * FROM $response_list WHERE yfcode_ok = 2 AND store = '{$store}' AND order_line>0 ORDER BY id DESC limit {$start},{$page_size}";
+    		$sql = "SELECT * FROM $response_list WHERE yfcode_ok = 2 AND store = '{$store}' AND (order_line>0 OR order_line = '-2') ORDER BY id DESC limit {$start},{$page_size}";
     	}
     }else{
     	if($search_field == ''){   //0没有筛选条件
@@ -178,11 +207,19 @@ if(isset($_POST['get_order_list'])){
                     $sql = "SELECT * FROM $response_list WHERE store = '{$store}' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}'  AND order_line>0 AND order_line<6 ORDER BY id DESC limit {$start},{$page_size}";
                 }
             }else{
-    			if($start_date =='' or $end_date ==''){
-		            $sql = "SELECT * FROM $response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' ORDER BY id DESC limit {$start},{$page_size}";
-		        }else{
-		            $sql = "SELECT * FROM $response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}' ORDER BY id DESC limit {$start},{$page_size}";
-		        }
+                if($search_order_line == '-2'){
+                    if($search_pay_method == 'all'){
+                        $sql = "SELECT * FROM $response_list WHERE order_line = '-2' AND store = '{$store}' ORDER BY id DESC limit {$start},{$page_size}";
+                    }else{
+                        $sql = "SELECT * FROM $response_list WHERE order_line = '-2' AND store = '{$store}' AND payment_method = '{$search_pay_method}' ORDER BY id DESC limit {$start},{$page_size}";
+                    }
+                }else{
+                    if($start_date =='' or $end_date ==''){
+                        $sql = "SELECT * FROM $response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' ORDER BY id DESC limit {$start},{$page_size}";
+                    }else{
+                        $sql = "SELECT * FROM $response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}' ORDER BY id DESC limit {$start},{$page_size}";
+                    }
+                }
     		}
 	    }else{
 	    	//是否是全部订单
@@ -199,11 +236,19 @@ if(isset($_POST['get_order_list'])){
                     $sql = "SELECT * FROM $response_list WHERE store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}' AND order_line<6 AND order_line>0 ORDER BY id DESC limit {$start},{$page_size}";
                 }
             }else{
-    			if($start_date =='' or $end_date ==''){
-		            $sql = "SELECT * FROM $response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' ORDER BY id DESC limit {$start},{$page_size}";
-		        }else{
-		            $sql = "SELECT * FROM $response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}' ORDER BY id DESC limit {$start},{$page_size}";
-		        }
+                if($search_order_line == '-2'){
+                    if($search_pay_method == 'all'){
+                        $sql = "SELECT * FROM $response_list WHERE order_line = '-2' AND store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' ORDER BY id DESC limit {$start},{$page_size}";
+                    }else{
+                        $sql = "SELECT * FROM $response_list WHERE order_line = '-2' AND store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' AND payment_method = '{$search_pay_method}' ORDER BY id DESC limit {$start},{$page_size}";
+                    }
+                }else{
+                    if($start_date =='' or $end_date ==''){
+                    $sql = "SELECT * FROM $response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' ORDER BY id DESC limit {$start},{$page_size}";
+                    }else{
+                        $sql = "SELECT * FROM $response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' AND {$search_field} LIKE '%{$search_key}%' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}' ORDER BY id DESC limit {$start},{$page_size}";
+                    }
+                }
     		}
 	        
 	    }

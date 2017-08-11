@@ -225,6 +225,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             start_date:$scope.s_date,
             end_date:$scope.e_date,
             search_order_line:$scope.search_order_line,
+            search_pay_method:$scope.search_pay_method,
             search_field:$scope.search_field,
             search_key:$scope.search_key
         };
@@ -267,7 +268,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
                 }else{
                     $scope.selectPage($scope.selectOption);
                 }
-            }
+            };
 
             //打印当前选中页索引
             $scope.selectPage = function (page) {
@@ -283,7 +284,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
                 }
 
                 //跳页响应
-                $scope.selectOption=page
+                $scope.selectOption=page;
 
                 //提示到头了
                 if(page < 2){
@@ -346,7 +347,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             //上一页
             $scope.Previous = function () {
                 $scope.selectPage($scope.selPage - 1);
-            }
+            };
             //下一页
             $scope.Next = function () {
                 $scope.selectPage($scope.selPage + 1);
@@ -354,7 +355,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         }).error(function(data) {  
             alert("系统错误，请联系管理员。");
         });         
-    }
+    };
     //获取序列内容_分页查询
     $scope.to_page = function(page){
         $scope.loading_shadow('open'); //打开loading
@@ -369,6 +370,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             station:$scope.now_station,
             start:start,
             search_order_line:$scope.search_order_line,
+            search_pay_method:$scope.search_pay_method,
             page_size:$scope.pageSize,
             search_date:$scope.search_date,
             start_date:$scope.s_date,
@@ -385,10 +387,16 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         }).error(function(data) {  
             alert("系统错误，请联系管理员。");
         });           
-    }
+    };
 
     //修改search_order_line
     $scope.change_search_line = function(){
+        $scope.get_count();
+        $scope.to_page(1);
+    };
+
+    // 修改支付方式，确认入金
+    $scope.change_pay_method = function(){
         $scope.get_count();
         $scope.to_page(1);
     }
@@ -889,6 +897,29 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
             $log.info("error:订单标记失败。");
+        });
+    }
+
+    // 确认入金
+    $scope.pay_ok = function(){
+        $scope.shadow('open','ss_make','正在确认，请稍后。');
+
+        var post_data = {pay_ok:$scope.my_checked_items,station:$scope.now_station,store:$scope.now_store_bar};
+
+        $http.post('/fuck/common/change_order.php', post_data).success(function(data) {
+            if(data == 'ok'){
+                $scope.get_count();
+                $scope.to_page($scope.now_page);
+                
+                $timeout(function(){$scope.shadow('close');},500); //关闭shadow
+                $scope.plug_alert('success','确认入金完成。','fa fa-smile-o');
+            }else{
+                $log.info(data);
+                $scope.plug_alert('danger','操作失败，请联系管理员。','fa fa-ban');
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:确认入金失败。");
         });
     }
 

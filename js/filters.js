@@ -79,6 +79,9 @@ myFilters.filter('order_line', function(){
         if(item == '-1'){
             return '回收站';
         }
+        if(item == '-2'){
+            return '待支付';   // 待支付
+        }
         if(item == '-3'){   // 冻结退单
             return '已退押';   
         }

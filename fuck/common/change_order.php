@@ -376,6 +376,35 @@ if(isset($_POST['del_items'])){
 	}
 }
 
+// 确认入金，实则修改order_id=1 返回到订单验证前，同步后状态
+if(isset($_POST['pay_ok'])){
+	$pay_ok = $_POST['pay_ok'];
+	$pay_ok = '('.$pay_ok.')';
+	$res_log_items = addslashes($_POST['pay_ok']);
+	$station = strtolower($_POST['station']);
+	$store = $_POST['store'];
+
+	$response_list = $station.'_response_list';
+
+	// 还原response_list
+	$sql = "UPDATE $response_list SET order_line = '1' WHERE order_id IN $pay_ok";
+	$res = $db->execute($sql);
+
+	//日志
+	$res_log_items = explode(',', $_POST['pay_ok']);
+	foreach ($res_log_items as $value) {
+		$value = str_replace('\'', '', $value);
+		$sql = "SELECT id FROM $response_list WHERE order_id = '{$value}'";
+		$res = $db->getOne($sql);
+		$oms_id = $res['id'];
+		$do = ' [确认入金]：'.$value;
+		oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
+	}
+	
+
+	echo 'ok';
+}
+
 // 还原订单，实则修改order_id=1 返回到订单验证前，同步后状态
 if(isset($_POST['return_items'])){
 	$return_items = $_POST['return_items'];
