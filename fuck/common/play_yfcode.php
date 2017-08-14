@@ -2,83 +2,85 @@
 require_once("../header.php");
 
 function play_yf_code($station,$response_list,$response_info,$send_id){
-	$db = new PdoMySQL();
-	// 检测是否为COD订单，客人指定配送方式
-	$sql = "SELECT payment_method,buyer_send_method,address FROM $response_list WHERE send_id = '{$send_id}'";
-	$res = $db->getOne($sql);
-	if($res['payment_method'] == 'COD'){
-		$is_cod = 1;
+	if($station == 'amazon'){
+
 	}else{
-		$is_cod = 0;
-	}
-	$buyer_send_method = $res['buyer_send_method'];
-	$address = $res['address'];
-
-	$sql = "SELECT order_id FROM $response_list WHERE send_id = '{$send_id}'";
-	$res = $db->getAll($sql);
-
-	$order_ids = '';
-	foreach ($res as $value) {
-		$order_ids = $order_ids.',\''.$value['order_id'].'\'';
-	}
-	$order_ids = substr($order_ids, 1);	//移除逗号
-	$order_ids = trim($order_ids);	//空白
-		
-	// 提取该订单的所有子订单的运费代码
-	$has_all_yf = 1; //默认全部存在且全部开启
-	$yf_strs = '';	//初始化该单运费代码集
-	$sql = "SELECT id,yfcode FROM $response_info WHERE order_id in ({$order_ids})";
-	$res = $db->getAll($sql);
-	foreach ($res as $value) {
-		$now_info_id = $value['id'];
-		$now_yf_code = $value['yfcode'];
-		$yf_strs = $yf_strs.',\''.$now_yf_code.'\'';
-
-		// 检测运费代码是否存在
-		$sql = "SELECT count(1) as count FROM yf_code WHERE yf_code_name = '{$now_yf_code}' AND status = 1";
+		$db = new PdoMySQL();
+		// 检测是否为COD订单，客人指定配送方式
+		$sql = "SELECT payment_method,buyer_send_method,address FROM $response_list WHERE send_id = '{$send_id}'";
 		$res = $db->getOne($sql);
-		if($res['count'] == 0){
-			//如果不存在或者状态关闭，报错
-			$sql = "UPDATE $response_info SET yfcode_ok = 2 WHERE id = '{$now_info_id}'";
-			$res = $db->execute($sql);
-			$has_all_yf = 0;
+		if($res['payment_method'] == 'COD'){
+			$is_cod = 1;
+		}else{
+			$is_cod = 0;
 		}
-	}
+		$buyer_send_method = $res['buyer_send_method'];
+		$address = $res['address'];
 
-	$yf_strs = substr($yf_strs, 1);	//移除逗号
-	$yf_strs = trim($yf_strs);	//空白
+		$sql = "SELECT order_id FROM $response_list WHERE send_id = '{$send_id}'";
+		$res = $db->getAll($sql);
 
-	// 优先级检测
-	if($has_all_yf == 1){	// 运费代码都存在且开启
-		$sql = "SELECT MAX(level) as max_level FROM yf_code WHERE yf_code_name in ($yf_strs)";
-		$res = $db->getOne($sql);
-		$max_level = $res['max_level'];
-		$sql = "SELECT need_cod,yf_code_name,send_method,default_yf,default_one_yf FROM yf_code WHERE level = '{$max_level}'";
-		$res = $db->getOne($sql);
-		$need_cod = $res['need_cod'];
-		$max_code = $res['yf_code_name'];
-		$send_method = $res['send_method'];
-		$default_yf = $res['default_yf'];
-		$default_one_yf = $res['default_one_yf'];
+		$order_ids = '';
+		foreach ($res as $value) {
+			$order_ids = $order_ids.',\''.$value['order_id'].'\'';
+		}
+		$order_ids = substr($order_ids, 1);	//移除逗号
+		$order_ids = trim($order_ids);	//空白
+			
+		// 提取该订单的所有子订单的运费代码
+		$has_all_yf = 1; //默认全部存在且全部开启
+		$yf_strs = '';	//初始化该单运费代码集
+		$sql = "SELECT id,yfcode FROM $response_info WHERE order_id in ({$order_ids})";
+		$res = $db->getAll($sql);
+		foreach ($res as $value) {
+			$now_info_id = $value['id'];
+			$now_yf_code = $value['yfcode'];
+			$yf_strs = $yf_strs.',\''.$now_yf_code.'\'';
 
-		// 判断COD
-		if($is_cod == 1){
-			//如果是COD订单查看是否支持此运费代码
-			if($need_cod == 0){	//如果不支持COD订单，此订单中最大的运费代码，报错
-				$sql = "UPDATE $response_info SET yfcode_ok = 2 WHERE order_id in ({$order_ids}) AND yfcode = '{$max_code}'";
+			// 检测运费代码是否存在
+			$sql = "SELECT count(1) as count FROM yf_code WHERE yf_code_name = '{$now_yf_code}' AND status = 1";
+			$res = $db->getOne($sql);
+			if($res['count'] == 0){
+				//如果不存在或者状态关闭，报错
+				$sql = "UPDATE $response_info SET yfcode_ok = 2 WHERE id = '{$now_info_id}'";
 				$res = $db->execute($sql);
+				$has_all_yf = 0;
+			}
+		}
+
+		$yf_strs = substr($yf_strs, 1);	//移除逗号
+		$yf_strs = trim($yf_strs);	//空白
+
+		// 优先级检测
+		if($has_all_yf == 1){	// 运费代码都存在且开启
+			$sql = "SELECT MAX(level) as max_level FROM yf_code WHERE yf_code_name in ($yf_strs)";
+			$res = $db->getOne($sql);
+			$max_level = $res['max_level'];
+			$sql = "SELECT need_cod,yf_code_name,send_method,default_yf,default_one_yf FROM yf_code WHERE level = '{$max_level}'";
+			$res = $db->getOne($sql);
+			$need_cod = $res['need_cod'];
+			$max_code = $res['yf_code_name'];
+			$send_method = $res['send_method'];
+			$default_yf = $res['default_yf'];
+			$default_one_yf = $res['default_one_yf'];
+
+			// 判断COD
+			if($is_cod == 1){
+				//如果是COD订单查看是否支持此运费代码
+				if($need_cod == 0){	//如果不支持COD订单，此订单中最大的运费代码，报错
+					$sql = "UPDATE $response_info SET yfcode_ok = 2 WHERE order_id in ({$order_ids}) AND yfcode = '{$max_code}'";
+					$res = $db->execute($sql);
+				}else{
+					gogogo($station,$response_list,$response_info,$send_id,$need_cod,$max_code,$max_code,$send_method,$default_yf,$default_one_yf,$buyer_send_method,$order_ids,$address);
+				}
 			}else{
 				gogogo($station,$response_list,$response_info,$send_id,$need_cod,$max_code,$max_code,$send_method,$default_yf,$default_one_yf,$buyer_send_method,$order_ids,$address);
 			}
-		}else{
-			gogogo($station,$response_list,$response_info,$send_id,$need_cod,$max_code,$max_code,$send_method,$default_yf,$default_one_yf,$buyer_send_method,$order_ids,$address);
+
+
+
 		}
-
-
-
 	}
-
-
 }
 
 function gogogo($station,$response_list,$response_info,$send_id,$need_cod,$max_code,$max_code,$send_method,$default_yf,$default_one_yf,$buyer_send_method,$order_ids,$address){
@@ -87,7 +89,7 @@ function gogogo($station,$response_list,$response_info,$send_id,$need_cod,$max_c
 	if($buyer_send_method !== $send_method){	// 如果不一致，更新为运费代码相同的配送方式，并过
 		$sql = "UPDATE $response_list SET send_method = '{$send_method}' WHERE order_id in ({$order_ids})";
 		$res = $db->execute($sql);
-		$sql = "UPDATE $response_info SET yfcode_ok = 1 WHERE order_id in ({$order_ids}) AND yfcode = '{$max_code}'";
+		$sql = "UPDATE $response_info SET yfcode_ok = 1 WHERE order_id in ({$order_ids})";
 		$res = $db->execute($sql);
 	}else{
 		// 分配配送方式
@@ -130,9 +132,9 @@ function gogogo($station,$response_list,$response_info,$send_id,$need_cod,$max_c
 		$res = $db->execute($sql);
 
 		// 最终运费与获取的订单运费对比，不一致报错
-		$sql = "SELECT all_yfmoney - shipping_price as yf_pass FROM $response_list WHERE order_id in ({$order_ids})";
+	echo	$sql = "SELECT all_yfmoney - shipping_price as yf_pass FROM $response_list WHERE order_id in ({$order_ids})";
 		$res = $db->getOne($sql);
-		$yf_pass = $res['yf_pass'];
+	echo	$yf_pass = $res['yf_pass'];
 
 		if($yf_pass == 0){
 			$sql = "UPDATE $response_list SET yfcode_ok = 1 WHERE order_id in ({$order_ids})";

@@ -5,7 +5,7 @@ require_once("../header.php");
 $mail = new PHPMailer;
 $mail->CharSet = "UTF-8";
 // $mail->SMTPDebug = true; 
-// $mail->SMTPDebug = 4;    
+// $mail->SMTPDebug = 2;    
 if(isset($_POST['send_mail'])){
 	// 测试店铺
 	if($_POST['send_mail'] == 'test_mail'){
@@ -329,10 +329,18 @@ table th {
 		$mail->SMTPAuth = true;                               // 开启SMTP验证
 		$mail->Username = $mail_id;                 // SMTP 账号
 		$mail->Password = $mail_pwd;                           // SMTP 密码
-		$mail->SMTPSecure = 'ssl';                            // Enable TLS encryption, `ssl` also accepted
-		$mail->Port = $mail_port;                                    // 邮件端口
 
-		$mail->setFrom($mail_id, $mail_name);
+		
+		if($mail_port == '465'){
+			$mail->SMTPSecure = 'ssl';                            // Enable TLS encryption, `ssl` also accepted
+		}else{
+			// 587
+			$mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
+		}
+
+		$mail->Port = $mail_port;                                    // 邮件端口
+		// $mail->setFrom($mail_id, $mail_name);
+		$mail->setFrom($mail_answer_addr, $mail_name);		// 发件箱与收件箱相同
 		$mail->addAddress($to_mail, 'test');     // 收件人
 		// $mail->addAddress('ellen@example.com');               // 另一个收件人
 		$mail->addReplyTo($mail_answer_addr, '');	//邮件回复地址

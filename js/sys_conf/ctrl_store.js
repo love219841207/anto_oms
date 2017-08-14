@@ -254,11 +254,11 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log','$timeout', functi
     // 点击添加信件变量
     $scope.add_var = function(e){
         $scope.express_mail_html = $scope.express_mail_html + e;
-        $scope.express_mail_txt = $scope.express_mail_txt + e;
+        // $scope.express_mail_txt = $scope.express_mail_txt + e;
     };
     $scope.add_var2 = function(e){
         $scope.mail_tpl_html = $scope.mail_tpl_html + e;
-        $scope.mail_tpl_txt = $scope.mail_tpl_txt + e;
+        // $scope.mail_tpl_txt = $scope.mail_tpl_txt + e;
     };
 
     //新增店铺邮件模板
