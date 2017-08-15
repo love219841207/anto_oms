@@ -276,7 +276,15 @@ if(isset($_GET['down_pause_orders_table'])){
     $res2 = $db->getAll($sql);
     $res = array_merge($res1,$res2);
     $j=2;
+    $now_order_id = '';
     foreach ($res as $key => $value) {
+        if($now_order_id == $value['order_id']){
+            $value['pause_time'] = '';
+            $value['order_id'] = '';
+            $value['receive_name'] = '';
+        }else{
+            $now_order_id = $value['order_id'];
+        }
         $objSheet->setCellValue("A".$j,$value['pause_time'])
         		->setCellValue("B".$j,$value['order_id'])
                 ->setCellValue("C".$j,$value['id'])

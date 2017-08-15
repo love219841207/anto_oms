@@ -132,9 +132,9 @@ function gogogo($station,$response_list,$response_info,$send_id,$need_cod,$max_c
 		$res = $db->execute($sql);
 
 		// 最终运费与获取的订单运费对比，不一致报错
-	echo	$sql = "SELECT all_yfmoney - shipping_price as yf_pass FROM $response_list WHERE order_id in ({$order_ids})";
+		$sql = "SELECT all_yfmoney - shipping_price as yf_pass FROM $response_list WHERE order_id in ({$order_ids})";
 		$res = $db->getOne($sql);
-	echo	$yf_pass = $res['yf_pass'];
+		$yf_pass = $res['yf_pass'];
 
 		if($yf_pass == 0){
 			$sql = "UPDATE $response_list SET yfcode_ok = 1 WHERE order_id in ({$order_ids})";

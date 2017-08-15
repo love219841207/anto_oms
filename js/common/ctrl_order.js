@@ -814,6 +814,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
                 my_checked.push("'"+$scope.get_order_list_data[index].order_id+"'");
             }
         })
+        $scope.check_all_num = my_checked.length;
         $scope.my_checked = my_checked;
         $scope.my_checked_items = my_checked.join(',');
     }
@@ -1336,11 +1337,13 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         var post_data = {
                 demo_mail:order_id,
                 method:'tpl',
-                station:$now_station,
+                station:$scope.now_station,
                 to_mail_tpl:$scope.to_mail_tpl
             };
+            $log.info(post_data)
 
         $http.post('/fuck/systems/store_manage.php', post_data).success(function(data) {  
+            $log.info(data)
             document.getElementById('mail_info_topic').innerHTML = data.mail_topic;
             document.getElementById('mail_info_html').innerHTML = data.mail_html;
         }).error(function(data) {  

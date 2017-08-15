@@ -169,6 +169,26 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
             }
         })
 
+        // 邮件模板
+        .state('site.mail_tpl2',{
+            url: '/mail_tpl/{data}',
+            views:{
+                'show@site':{
+                    templateUrl: 'tpls/common/mail_tpl.html',
+                    controller: function($scope){
+                        $scope.status.isopen1 = false;
+                        $scope.status.isopen2 = true;
+                        $scope.status.isopen3 = false;
+                        $scope.status.isopen4 = false;
+                        $scope.status.isopen5 = false;
+                        $scope.status.isopen6 = false;
+                        $scope.status.isopen7 = false;
+                    }
+                }
+            }
+        })
+
+
     // 雅虎
         // 雅虎订单操作
         .state('site.yahoo_order',{

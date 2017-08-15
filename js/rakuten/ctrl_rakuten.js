@@ -152,7 +152,7 @@ app.controller('rakutenCtrl', ['$scope','$state','$http','$log','$timeout', func
 
     //读取错误邮件info
     $scope.read_error_mail = function(){
-        $http.get('/fuck/mail/amazon_send_mail.php', {
+        $http.get('/fuck/mail/rakuten_send_mail.php', {
             params:{
                 read_error_mail:'read'
             }

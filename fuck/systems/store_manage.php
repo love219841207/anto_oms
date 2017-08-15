@@ -218,7 +218,7 @@ if(isset($_POST['save_mail_custom'])){
 if(isset($_POST['demo_mail'])){
 	$value = $_POST['demo_mail'];
 	$method = $_POST['method'];
-	$station = strtolower($_GET['station']);
+	$station = strtolower($_POST['station']);
 	$response_list = $station.'_response_list';
 	$response_info = $station.'_response_info';
 
@@ -276,8 +276,6 @@ if(isset($_POST['demo_mail'])){
 		$goods_title = $val['goods_title'];
 		$sku = $val['sku'];
 		$goods_num = $val['goods_num'];
-		$shipping_price = $val['shipping_price'];
-		$shipping_tax = $val['shipping_tax'];
 		$unit_price = $val['unit_price'];
 		$item_price = $val['item_price'];
 		$cod_money = $val['cod_money'];

@@ -444,6 +444,7 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log','$timeout', functi
 
         var post_data = {
                 demo_mail:order_id,
+                station:$scope.now_station,
                 method:'custom',
                 mail_tpl_topic:$scope.mail_tpl_topic,
                 mail_tpl_html:$scope.mail_tpl_html,
@@ -451,6 +452,7 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log','$timeout', functi
             };
 
         $http.post('/fuck/systems/store_manage.php', post_data).success(function(data) {
+            $log.info(data)
             document.getElementById('mail_info_topic').innerHTML = data.mail_topic;
             document.getElementById('mail_info_html').innerHTML = data.mail_html;
         }).error(function(data) {  

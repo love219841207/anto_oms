@@ -42,10 +42,10 @@ if(isset($_GET['import_add_list'])){
 	//清空导入表
     $sql = "TRUNCATE rakuten_import_list";
     $res = $db->execute($sql);
-    $sql = "TRUNCATE rakuten_response_list";
-    $res = $db->execute($sql);
-    $sql = "TRUNCATE rakuten_response_info";
-    $res = $db->execute($sql);
+    // $sql = "TRUNCATE rakuten_response_list";
+    // $res = $db->execute($sql);
+    // $sql = "TRUNCATE rakuten_response_info";
+    // $res = $db->execute($sql);
 
     //所有oms_has状态变成0
  	$sql = "UPDATE rakuten_response_list SET oms_has_me = '0'";
