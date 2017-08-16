@@ -41,7 +41,7 @@ function play_order_price($station,$response_list,$response_info,$order_id){
 		$total_money = $res['total_money'] + $shipping_price;
 
 		//更新total_money
-		$sql = "UPDATE $response_list SET all_total_money = '{$total_money}',order_total_money = '{$total_money}',pay_money = '0'  WHERE order_id='{$order_id}'";
+		$sql = "UPDATE $response_list SET all_total_money = '{$total_money}',order_total_money = '{$total_money}'  WHERE order_id='{$order_id}'";
 		$res = $db->execute($sql);
 	}
 

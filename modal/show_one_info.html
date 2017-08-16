@@ -12,8 +12,17 @@
             <td>ID <span class="blue">{{item.id}}</span> </td>
           </tr>
           <tr ng-show="item.payment_method=='COD'">
-            <td class="red warning">代引金额</td>
-            <td class="red warning">{{item.pay_money}}</td>
+            <td class="red bg_yellow">代引金额</td>
+            <td class="red bg_yellow">{{item.pay_money}}</td>
+          </tr>
+          <tr>
+            <td>
+                <span class="s_gray">订单金额：</span>
+            </td>
+            <td>
+              <span ng-class="{'red bg_yellow':item.payment_method=='COD'}">{{item.payment_method}}</span>
+              <span class="blue">{{item.order_total_money}}</span>
+            </td>
           </tr>
           <tr>
             <td class="s_gray">购买人信息</td>

@@ -413,27 +413,26 @@
 						<td style="width:30%">
 							<span class="s_gray">注文时间：</span>{{item.purchase_date}}
 							<span class="pull-right">
-								<span class="s_gray">订单金额：
-									<span ng-class="{'red bg_yellow':item.payment_method=='COD'}">{{item.payment_method}}</span>
-								</span>
-								<span class="blue">{{item.order_total_money}}</span>
+								<span ng-class="{'red bg_yellow':item.payment_method=='COD'}" class="s_gray">({{item.payment_method}})</span>
+								<span ng-show="item.payment_method=='COD'" class="s_gray">代 </span>
+								<span ng-show="item.payment_method!='COD'" class="s_gray">支 </span>
+								<span ng-class="{'red bg_yellow':item.payment_method=='COD'}" class="red">{{item.pay_money}}</span>
 							</span>
 						</td>
 						<td style="width:11%" class="yellow tagr">
 							<span ng-hide="!item.payment_method">
-								<span ng-hide="now_station=='Amazon'" class="s_gray">
+								<span ng-hide="item.shipping_price=='' || item.shipping_price == '0'" class="s_gray">
 									运 <span ng-class="{'dark bg_yellow':item.shipping_price!='0'}">{{item.shipping_price}}</span>
+								</span>	
+								<span ng-hide="item.points=='' || item.points == '0'"  class="s_gray">分 <span class="green">{{item.points}}</span>
 								</span>
-								<span ng-show="item.payment_method=='COD'" class="s_gray">代 </span>
-								<span ng-show="item.payment_method!='COD'" class="s_gray">支 </span>
-								<span ng-class="{'red bg_yellow':item.payment_method=='COD'}">{{item.pay_money}}</span>
-								<span class="s_gray">分 </span>{{item.points}}
-								<span class="s_gray">券 </span>{{item.coupon}}
+								<span  ng-hide="item.coupon=='' || item.coupon == '0'"  class="s_gray">券 <span class="green">{{item.coupon}}</span>
 							</span>
 						</td>
-						<td style="width:11%" class="red tagr">
+						<td style="width:11%" class="red tagr" ng-hide="item.all_total_money==NULL || item.all_total_money=='' || item.all_total_money == '0'">
 							<span class="s_gray">总金额：</span>
-						{{item.all_total_money}}</td>
+							{{item.all_total_money}}
+						</td>
 						<td style="width:8%" class="tagc">
 							<button data-animation="am-fade-and-slide-top" data-template-url="/modal/show_one_info.html" bs-modal="modal" class="btn btn-xs btn-primary mr5" ng-click="show_one_info(item.order_id)">
 							详单</button>
