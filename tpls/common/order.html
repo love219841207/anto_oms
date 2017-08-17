@@ -486,13 +486,13 @@
 						<td class="tagc">
 							<span class="s_gray">物流栏</span>
 						</td>
-						<td colspan="2">
+						<td>
 							<span ng-show="now_station=='Rakuten' && item.buyer_others!=''" class="s_gray">客人指定：</span><span class="red bg_yellow">{{item.buyer_others}}</span>
-
+			            </td>
+			            <td>
 			            	<span class="s_gray">指定配送时间：</span>
 							<i class="fa fa-fw fa-clock-o yellow pointer" data-animation="am-fade-and-slide-top" data-template-url="/modal/want_date.html" bs-modal="modal" ng-click="change_want_date(item.order_id)"></i>
 			            	<span class="bg_yellow red">{{item.want_date}} {{item.want_time}}</span>
-							
 			            </td>
 						<td>
 			            	<span class="s_gray">物流快递单号：</span>{{item.oms_order_express_num}}
@@ -581,6 +581,13 @@
 					<span class="yellow" ng-hide="now_list_order_count.mark_count==0">
 					{{now_list_order_count.mark_count}}</span>
 				</span>
+					<!-- 冻结 -->
+				<span ng-hide="now_list_order_count.pause_count==0">/</span>
+				<span class="pointer" ng-click="jump_cut('3')">
+					<i class="fa fa-snowflake-o blue fa-fw" ng-hide="now_list_order_count.pause_count==0"></i>
+					<span class="blue" ng-hide="now_list_order_count.pause_count==0">
+					{{now_list_order_count.pause_count}}</span>
+				</span>
 					<!-- 无详单 -->
 				<span ng-hide="now_list_order_count.no_info_count==0">/</span>
 				<span class="pointer" ng-click="jump_cut('0')">
@@ -612,6 +619,13 @@
 				<span class="pointer" ng-click="jump_cut('yfcode_ok')">
 					<i class="fa fa-code red fa-fw" ng-hide="now_list_order_count.no_yfcode_count==0"></i>
 					<span class="red" ng-hide="now_list_order_count.no_yfcode_count==0">{{now_list_order_count.no_yfcode_count}}</span>
+				</span>
+					<!-- 回收站 -->
+				<span ng-hide="now_list_order_count.trash_count==0">/</span>
+				<span class="pointer" ng-click="jump_cut('-1')">
+					<i class="fa fa-trash-o red fa-fw" ng-hide="now_list_order_count.trash_count==0"></i>
+					<span class="red" ng-hide="now_list_order_count.trash_count==0">
+					{{now_list_order_count.trash_count}}</span>
 				</span>
 				</a>
 			</li>

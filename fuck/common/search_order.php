@@ -19,6 +19,11 @@ if(isset($_GET['list_order_count'])){
     $res = $db->getOne($sql);
     $mark_count = $res['mark_count'];
 
+    // 查询冻结数
+    $sql = "SELECT count(1) as pause_count FROM $response_list WHERE store = '{$store}' AND order_line = 3";
+    $res = $db->getOne($sql);
+    $pause_count = $res['pause_count'];
+
     // 查询无详单数
     $sql = "SELECT count(1) as no_info_count FROM $response_list WHERE store = '{$store}' AND order_line = 0";
     $res = $db->getOne($sql);
@@ -44,14 +49,21 @@ if(isset($_GET['list_order_count'])){
     $res = $db->getOne($sql);
     $no_yfcode_count = $res['no_yfcode_count'];
 
+    // 查询回收站
+    $sql = "SELECT count(1) as trash_count FROM $response_list WHERE store = '{$store}' AND order_line = '-1'";
+    $res = $db->getOne($sql);
+    $trash_count = $res['trash_count'];
+
     //final_res
     $final_res['pay_count'] = $pay_count;
     $final_res['mark_count'] = $mark_count;
+    $final_res['pause_count'] = $pause_count;
     $final_res['no_info_count'] = $no_info_count;
     $final_res['no_post_count'] = $no_post_count;
     $final_res['no_tel_count'] = $no_tel_count;
     $final_res['no_sku_count'] = $no_sku_count;
     $final_res['no_yfcode_count'] = $no_yfcode_count;
+    $final_res['trash_count'] = $trash_count;
     echo json_encode($final_res);
 }
 

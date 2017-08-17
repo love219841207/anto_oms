@@ -33,6 +33,15 @@ myApp.run(function($rootScope, $state, $stateParams) {
     });
 });
 
+// 禁用缓存
+myApp.run(function($rootScope, $templateCache) {  
+    $rootScope.$on('$routeChangeStart', function(event, next, current) {  
+        if (typeof(current) !== 'undefined'){  
+            $templateCache.remove(current.templateUrl);  
+        }  
+    });  
+});  
+
 //为post而设
 myApp.config(function($httpProvider){
     $httpProvider.defaults.transformRequest=function(obj){
@@ -76,6 +85,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
         // 亚马逊订单操作
         .state('site.amazon_order',{
             url: '/amazon_order/{data}',
+            cache: false,
             views:{
                 'show@site':{
                     templateUrl: 'tpls/common/order.html',
@@ -95,6 +105,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
         // 亚马逊上传快递单
         .state('site.amazon_syn_express',{
             url: '/amazon_syn_express/{data}',
+            cache: false,
             views:{
                 'show@site':{
                     templateUrl: 'tpls/amazon/amazon_syn_express.html',
@@ -114,6 +125,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
         // 邮件模板
         .state('site.mail_tpl',{
             url: '/mail_tpl/{data}',
+            cache: false,
             views:{
                 'show@site':{
                     templateUrl: 'tpls/common/mail_tpl.html',
@@ -134,6 +146,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
         // 乐天订单操作
         .state('site.rakuten_order',{
             url: '/rakuten_order/{data}',
+            cache: false,
             views:{
                 'show@site':{
                     templateUrl: 'tpls/common/order.html',
@@ -153,6 +166,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
         // 乐天上传快递单
         .state('site.rakuten_syn_express',{
             url: '/rakuten_syn_express/{data}',
+            cache: false,
             views:{
                 'show@site':{
                     templateUrl: 'tpls/rakuten/rakuten_syn_express.html',
@@ -172,6 +186,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
         // 邮件模板
         .state('site.mail_tpl2',{
             url: '/mail_tpl/{data}',
+            cache: false,
             views:{
                 'show@site':{
                     templateUrl: 'tpls/common/mail_tpl.html',
@@ -193,6 +208,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
         // 雅虎订单操作
         .state('site.yahoo_order',{
             url: '/yahoo_order/{data}',
+            cache: false,
             views:{
                 'show@site':{
                     templateUrl: 'tpls/common/order.html',
@@ -212,6 +228,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
         // 雅虎上传快递单
         .state('site.yahoo_syn_express',{
             url: '/yahoo_syn_express/{data}',
+            cache: false,
             views:{
                 'show@site':{
                     templateUrl: 'tpls/amazon/amazon_syn_express.html',
@@ -232,6 +249,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
         // 已冻结
         .state('site.pause_orders',{
             url: '/pause_orders/{data}',
+            cache: false,
             views:{
                 'show@site':{
                     templateUrl: 'tpls/common/pause_orders.html',
@@ -251,6 +269,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
         // 待出单
         .state('site.ready_send',{
             url: '/ready_send/{data}',
+            cache: false,
             views:{
                 'show@site':{
                     templateUrl: 'tpls/common/ready_send.html',
@@ -270,6 +289,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
         // 待回单
         .state('site.wait_back',{
             url: '/wait_back/{data}',
+            cache: false,
             views:{
                 'show@site':{
                     templateUrl: 'tpls/common/wait_back.html',
@@ -289,6 +309,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
         //佐川发货单
         .state('site.make_send',{
             url: '/make_send/{data}',
+            cache: false,
             views:{
                 'show@site':{
                     templateUrl: 'tpls/common/make_send.html',
@@ -308,6 +329,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
         //黑猫发货单
         .state('site.make_send2',{
             url: '/make_send2/{data}',
+            cache: false,
             views:{
                 'show@site':{
                     templateUrl: 'tpls/common/make_send2.html',
@@ -327,6 +349,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
         //已出单+转售后
         .state('site.history',{
             url: '/history/{data}',
+            cache: false,
             views:{
                 'show@site':{
                     templateUrl: 'tpls/common/history.html',
@@ -346,6 +369,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
         //更新快递单
         .state('site.refresh_express',{
             url: '/refresh_express/{data}',
+            cache: false,
             views:{
                 'show@site':{
                     templateUrl: 'tpls/common/refresh_express.html',
@@ -365,6 +389,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
         // 退单
         .state('site.back',{
             url: '/back/{data}',
+            cache: false,
             views:{
                 'show@site':{
                     templateUrl: 'tpls/common/back.html',
@@ -384,6 +409,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
         //冻结表
         .state('site.pause_table',{
             url: '/pause_table',
+            cache: false,
             views:{
                 'show@site':{
                     templateUrl: 'tpls/table/pause_table.html',
@@ -402,6 +428,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
         //出库统计
         .state('site.out_table',{
             url: '/out_table',
+            cache: false,
             views:{
                 'show@site':{
                     templateUrl: 'tpls/table/out_table.html',
@@ -420,6 +447,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
         //销售统计
         .state('site.sell_table',{
             url: '/sell_table',
+            cache: false,
             views:{
                 'show@site':{
                     templateUrl: 'tpls/table/sell_table.html',
@@ -438,6 +466,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
         //历史订单
         .state('site.history_order',{
             url: '/history_order',
+            cache: false,
             views:{
                 'show@site':{
                     templateUrl: 'tpls/table/history_order.html',
@@ -458,6 +487,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
         //PageSize
         .state('site.page_size',{
             url: '/page_size',
+            cache: false,
             views:{
                 'show@site':{
                     templateUrl: 'tpls/user_conf/page_size.html',
@@ -477,6 +507,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
         //密码修改
         .state('site.change_pwd',{
             url: '/change_pwd',
+            cache: false,
             views:{
                 'show@site':{
                     templateUrl: 'tpls/user_conf/change_pwd.html',
@@ -496,6 +527,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
         //我的日志
         .state('site.my_logs',{
             url: '/my_logs/{data}',
+            cache: false,
             views:{
                 'show@site':{
                     templateUrl: 'tpls/user_conf/my_logs.html',
@@ -516,6 +548,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
         //员工管理
         .state('site.users_manage',{
             url: '/users_manage/{data}',
+            cache: false,
             views:{
                 'show@site':{
                     templateUrl: 'tpls/sys_conf/users_manage.html',
@@ -535,6 +568,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
         //店铺管理
         .state('site.store_manage',{
             url: '/store_manage/{data}',
+            cache: false,
             views:{
                 'show@site':{
                     templateUrl: 'tpls/sys_conf/store_manage.html',
@@ -554,6 +588,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
         //运动代码管理
         .state('site.yf_code',{
             url: '/yf_code/{data}',
+            cache: false,
             views:{
                 'show@site':{
                     templateUrl: 'tpls/sys_conf/yf_code.html',
@@ -573,6 +608,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
         //邮编管理
         .state('site.sys_post',{
             url: '/sys_post/{data}',
+            cache: false,
             views:{
                 'show@site':{
                     templateUrl: 'tpls/sys_conf/sys_post.html',
@@ -592,6 +628,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
         //亚马逊mail
         .state('site.amz_mail',{
             url: '/amz_mail/{data}',
+            cache: false,
             views:{
                 'show@site':{
                     templateUrl: 'tpls/sys_conf/amz_mail.html',
@@ -611,6 +648,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
         //店铺sku更正
         .state('site.true_sku',{
             url: '/true_sku/{data}',
+            cache: false,
             views:{
                 'show@site':{
                     templateUrl: 'tpls/sys_conf/true_sku.html',
@@ -631,6 +669,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
         //系统日志
         .state('site.sys_logs',{
             url: '/sys_logs/{data}',
+            cache: false,
             views:{
                 'show@site':{
                     templateUrl: 'tpls/sys_conf/sys_logs.html',
@@ -650,6 +689,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
         //系统版本
         .state('site.sys_version',{
             url: '/sys_version/{data}',
+            cache: false,
             views:{
                 'show@site':{
                     templateUrl: 'tpls/sys_conf/sys_version.html',

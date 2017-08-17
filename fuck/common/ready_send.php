@@ -115,6 +115,10 @@ function reset_express(){
 	$sql = "UPDATE send_table SET send_method = '宅配便' WHERE send_method = '宅急便' AND has_pack = '0'";
 	$res = $db->execute($sql);
 
+	// 如果是乐天重置配送方式
+	$sql = "UPDATE send_table SET send_method = 'メール便' WHERE send_method = 'DM便' AND station = 'rakuten'";
+	$res = $db->execute($sql);
+
 	// item_line
 	$sql = "UPDATE send_table SET item_line = '0' WHERE has_pack = '0'";
 	$res = $db->execute($sql);
@@ -273,6 +277,10 @@ function make_bags(){
 
 // 打包
 if(isset($_GET['packing'])){
+	// 代引金额过滤
+	$sql = "UPDATE send_table SET due_money = 0 WHERE is_cod <> 'COD'";
+	$res = $db->execute($sql);
+
 	reset_express();	// 重置
 
 	// 亚马逊分配

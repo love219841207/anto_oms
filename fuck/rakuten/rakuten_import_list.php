@@ -331,6 +331,9 @@ if(isset($_GET['import_add_list'])){
 	} 
 
  	fclose($file);  
+ 	// 删除订单 オーソリNG
+ 	$sql = "DELETE FROM rakuten_import_list WHERE order_payment_method = 'オーソリNG'";
+ 	$sql = $db->execute($sql);
 
     //获取当前日期
     $today = date('y-m-d',time());
