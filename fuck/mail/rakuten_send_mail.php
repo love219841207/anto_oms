@@ -13,12 +13,12 @@ if(isset($_GET['read_error_mail'])){
 	echo json_encode($res);
 }
 
-// 亚马逊发信
+// 乐天发信
 if(isset($_POST['send_mail'])){
-	// amazon发信
-	if($_POST['send_mail'] == 'amazon'){
+	// rakuten发信
+	if($_POST['send_mail'] == 'rakuten'){
 		$conf = 'conf_'.$_POST['station'];
-		$station = 'amazon';
+		$station = 'rakuten';
 		$store = $_POST['store'];
 		$mail_tpl = $_POST['mail_tpl'];
 		$my_checked_items = $_POST['my_checked_items'];
@@ -64,7 +64,7 @@ if(isset($_POST['send_mail'])){
 			$mail_txt = $res['mail_txt'];
 
 			//读取邮箱、收件人等信息
-			$sql = "SELECT * FROM amazon_response_list WHERE order_id = '{$value}'";
+			$sql = "SELECT * FROM rakuten_response_list WHERE order_id = '{$value}'";
 			$res = $db->getOne($sql);
 
 			$purchase_date = $res['purchase_date'];	#付款日期
@@ -81,25 +81,18 @@ if(isset($_POST['send_mail'])){
 		 	$all_total_money = $res['all_total_money'];	
 		 	$order_total_money = $res['order_total_money'];	
 		 	$payment_method = $res['payment_method'];	
-		 	if($payment_method == 'COD'){
-		 		$payment_method = "DirectPayment";
-		 	}else{
-		 		$payment_method = "Amazon決済（前払い）";
-		 	}
 
 		 	// 初始化title
 		 	$u_info = '';
 		 	$cod_money = '';
 
 		 	// 读取购买信息
-		 	$sql = "SELECT * FROM amazon_response_info WHERE order_id = '{$value}'";
+		 	$sql = "SELECT * FROM rakuten_response_info WHERE order_id = '{$value}'";
 			$res = $db->getAll($sql);
 			foreach ($res as $val) {
 				$goods_title = $val['goods_title'];
 				$sku = $val['sku'];
 				$goods_num = $val['goods_num'];
-				$shipping_price = $val['shipping_price'];
-				$shipping_tax = $val['shipping_tax'];
 				$unit_price = $val['unit_price'];
 				$item_price = $val['item_price'];
 				$cod_money = $val['cod_money'];
@@ -196,7 +189,7 @@ $pin_book = '
 		<td style="text-align:right;">木833-15</td>
 	</tr>
 	<tr>
-		<td colspan="3" style="line-height: 18px;">この度は、「gtx-amazon」にてお買い上げいただきまして、誠にありがとうございました。
+		<td colspan="3" style="line-height: 18px;">この度は、「'.$store.'」にてお買い上げいただきまして、誠にありがとうございました。
 お買い上げ明細書を送付いたしますので、ご確認いただけますようお願い申し上げます。</td>
 	</tr>
 	<tr style="line-height:30px;border-bottom: 2px solid #009688;color:#009688;font-size: 14px;text-align: center;">
@@ -329,11 +322,11 @@ $pin_book = '
 			$mail->SMTPAuth = true;                               // 开启SMTP验证
 			$mail->Username = $mail_id;                 // SMTP 账号
 			$mail->Password = $mail_pwd;                           // SMTP 密码
-			$mail->SMTPSecure = 'ssl';                            // Enable TLS encryption, `ssl` also accepted
+			$mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
 			$mail->Port = $mail_port;                                    // 邮件端口
-			$mail->setFrom($mail_id, $mail_name);
+			$mail->setFrom($mail_answer_addr, $mail_name);		// 发件箱与收件箱相同
 			$mail->addAddress($to_mail, $buyer_name);     // 收件人
-			$mail->addBCC('329331097@qq.com');	//秘密抄送
+			$mail->addBCC('15a164aed67a3ee717c029e69231d593s1@pc.fw.rakuten.ne.jp');	//秘密抄送
 			$mail->addReplyTo($mail_answer_addr, '');	//邮件回复地址
 			$mail->isHTML(true);                                  // Set email format to HTML
 			$mail->Subject = $mail_topic;	//邮件标题
@@ -367,7 +360,7 @@ $pin_book = '
 
 		if($mail_tpl == 'send_express'){
 			// 标记状态
-		    $sql = "UPDATE amazon_express SET over_mail = 1 WHERE amazon_order_id IN ($my_checked_items)";
+		    $sql = "UPDATE rakuten_express SET over_mail = 1 WHERE rakuten_order_id IN ($my_checked_items)";
 		    $res = $db->execute($sql);
 		    $sql = "UPDATE history_send SET over_mail = 1 WHERE order_id IN ($my_checked_items)";
 		    $res = $db->execute($sql);

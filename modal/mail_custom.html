@@ -5,7 +5,7 @@
         <i class="fa fa-close f20 close" ng-click="$hide()"></i>
         <h4 class="modal-title blue"><i class="fa fa-fw fa-envelope"></i> 发 信</h4>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" ng-hide="error_mail">
         <div ng-show="my_checked!=''" class="blue">发信至以下订单：</div>
           <table ng-show="my_checked!=''" class="table table-bordered table-condensed mt10">
             <tr class="f12 info"><td class="tagc blue">序号</td><td class="tagc blue">订单号</td></tr>
@@ -59,10 +59,28 @@
 
         <div class="mt20">
           <button type="button" class="btn btn-default pull-right btn-sm" ng-click="$hide()">关 闭</button>
-          <button type="button" ng-disabled="!mail_tpl_topic" class="btn btn-info pull-right btn-sm mr10" ng-click="save_mail_custom();amz_mail_custom_items()"><i class="fa fa-fw fa-save"></i> 发 送</button>
+          <button type="button" ng-hide="send_ok_num || now_station!='Amazon'" ng-disabled="!mail_tpl_topic" class="btn btn-info pull-right btn-sm mr10" ng-click="save_mail_custom();amz_mail_custom_items()"><i class="fa fa-fw fa-save"></i> Amazon发 送</button>
+           <button type="button" ng-hide="send_ok_num || now_station!='Rakuten'" ng-disabled="!mail_tpl_topic" class="btn btn-info pull-right btn-sm mr10" ng-click="save_mail_custom();rku_mail_custom_items()"><i class="fa fa-fw fa-save"></i> Rakuten发 送</button>
           <div class="clearfix"></div>
         </div>
         <div class="mt20"></div>
+      </div>
+      <div class="modal-body ml20" ng-show="error_mail">
+          <!-- 反馈结果 -->
+          <div>发送成功数：<span class="green">{{send_ok_num}}</span></div>
+          <div>发送失败数：<span class="red">{{send_error_num}}</span></div>
+          <table ng-show="send_error_num" class="table table-bordered table-condensed table-striped mt10">
+            <tr class="danger red">
+              <td class="tagc"><i class="fa-sort-numeric-asc fa fa-fw"></i></td>
+              <td>发件失败订单号</td>
+              <td>错误详情</td>
+            </tr>
+            <tr ng-repeat="item in error_mail track by $index">
+              <td class="tagc green">{{$index+1}}</td>
+              <td class="blue">{{item.error_order_id}}</td>
+              <td class="red">{{item.error_info}}</td>
+            </tr>
+          </table>
       </div>
     </div>
   </div>

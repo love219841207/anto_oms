@@ -76,18 +76,16 @@ function play_yf_code($station,$response_list,$response_info,$send_id){
 			}else{
 				gogogo($station,$response_list,$response_info,$send_id,$need_cod,$max_code,$max_code,$send_method,$default_yf,$default_one_yf,$buyer_send_method,$order_ids,$address);
 			}
-
-
-
 		}
 	}
 }
 
 function gogogo($station,$response_list,$response_info,$send_id,$need_cod,$max_code,$max_code,$send_method,$default_yf,$default_one_yf,$buyer_send_method,$order_ids,$address){
 	$db = new PdoMySQL();
+
 	// 客人指定配送方式判断
 	if($buyer_send_method !== $send_method){	// 如果不一致，更新为运费代码相同的配送方式，并过
-		$sql = "UPDATE $response_list SET send_method = '{$send_method}' WHERE order_id in ({$order_ids})";
+		$sql = "UPDATE $response_list SET send_method = '{$send_method}',yfcode_ok = 1 WHERE order_id in ({$order_ids})";
 		$res = $db->execute($sql);
 		$sql = "UPDATE $response_info SET yfcode_ok = 1 WHERE order_id in ({$order_ids})";
 		$res = $db->execute($sql);
@@ -116,7 +114,7 @@ function gogogo($station,$response_list,$response_info,$send_id,$need_cod,$max_c
 			$sql = "UPDATE $response_info info,yf_code SET info.yf_add = yf_code.default_one_yf WHERE info.yfcode = yf_code.yf_code_name AND order_id in ({$order_ids})";
 			$res = $db->execute($sql);
 		}
-
+				
 		// 求叠加运费
 		$sql = "SELECT sum(yf_add * goods_num) AS all_add FROM $response_info WHERE order_id in ({$order_ids})";
 		$res = $db->getOne($sql);

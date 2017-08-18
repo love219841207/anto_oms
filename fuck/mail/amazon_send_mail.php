@@ -196,7 +196,7 @@ $pin_book = '
 		<td style="text-align:right;">木833-15</td>
 	</tr>
 	<tr>
-		<td colspan="3" style="line-height: 18px;">この度は、「gtx-amazon」にてお買い上げいただきまして、誠にありがとうございました。
+		<td colspan="3" style="line-height: 18px;">この度は、「'.$store.'」にてお買い上げいただきまして、誠にありがとうございました。
 お買い上げ明細書を送付いたしますので、ご確認いただけますようお願い申し上げます。</td>
 	</tr>
 	<tr style="line-height:30px;border-bottom: 2px solid #009688;color:#009688;font-size: 14px;text-align: center;">
