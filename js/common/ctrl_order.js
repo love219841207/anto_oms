@@ -924,6 +924,31 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         });
     }
 
+    // 转回待支付
+    $scope.pay_ok_back = function(){
+        $scope.shadow('open','ss_make','正在转回待支付，请稍后。');
+
+        var post_data = {pay_ok_back:$scope.my_checked_items,station:$scope.now_station,store:$scope.now_store_bar};
+
+        $http.post('/fuck/common/change_order.php', post_data).success(function(data) {
+            if(data == 'ok'){
+                $scope.get_count();
+                $scope.to_page($scope.now_page);
+                
+                $scope.plug_alert('success','转回完成。','fa fa-smile-o');
+            }else if(data == 'cut'){
+                $scope.plug_alert('danger','勾选不合理。','fa fa-ban');
+            }else{
+                $log.info(data);
+                $scope.plug_alert('danger','操作失败，请联系管理员。','fa fa-ban');
+            }
+            $timeout(function(){$scope.shadow('close');},500); //关闭shadow
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:转回待支付失败。");
+        });
+    }
+
     // 删除订单
     $scope.del_items = function(method){
         $scope.shadow('open','ss_make','正在删除，请稍后。');

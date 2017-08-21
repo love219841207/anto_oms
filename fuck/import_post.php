@@ -46,3 +46,12 @@ function look_post(){
 if(isset($_GET['look_post'])){
 	look_post();
 }
+
+// 邮编替换
+if(isset($_GET['replace_post'])){
+	$from_post = addslashes($_GET['replace_post']);
+	@$to_post = addslashes($_GET['to_post']);
+	$sql = "UPDATE oms_post SET post_name = REPLACE( post_name,'{$from_post}','{$to_post}' )";
+	$db->execute($sql);
+	echo 'ok';
+}

@@ -126,6 +126,10 @@ if(isset($_GET['change_list_field'])){
 		$ch_field = '运费';
 		$sql = "UPDATE $response_list SET $field_name = '{$new_key}' WHERE order_id = '{$order_id}'";
 	}
+	if($field_name == 'payment_method'){
+		$ch_field = '支付方式';
+		$sql = "UPDATE $response_list SET $field_name = '{$new_key}' WHERE order_id = '{$order_id}'";
+	}
 	
 	$res = $db->execute($sql);
 
@@ -198,6 +202,9 @@ if(isset($_GET['change_info_field'])){
 	if($field_name == 'yfcode'){
 		$ch_field = '运费代码';
 	}
+	if($field_name == 'cod_money'){
+		$ch_field = '代引手续费';
+	}
 
 	//查询原字段值
 	$sql = "SELECT $field_name as o_key FROM $response_info WHERE id = '{$id}'";
@@ -239,7 +246,7 @@ if(isset($_GET['change_info_field'])){
 		echo 'ok';
 	}
 	// 如果是运费代码或者是数量，计算运费代码
-	if($field_name == 'yfcode' or $field_name == 'goods_num'){
+	if($field_name == 'yfcode' or $field_name == 'goods_num' or $field_name == 'cod_money'){
 		// 查询send_id
 		$sql = "SELECT send_id FROM $response_list WHERE order_id = '{$order_id}'";
 		$res = $db->getOne($sql);
@@ -403,6 +410,49 @@ if(isset($_POST['pay_ok'])){
 	
 
 	echo 'ok';
+}
+
+// 转回待支付
+if(isset($_POST['pay_ok_back'])){
+	$stop_order = $_POST['pay_ok_back'];
+	$stop_order = '('.$stop_order.')';
+	$pay_ok = $_POST['pay_ok_back'];
+	$pay_ok = '('.$pay_ok.')';
+	$res_log_items = addslashes($_POST['pay_ok_back']);
+	$station = strtolower($_POST['station']);
+	$store = $_POST['store'];
+
+	$response_list = $station.'_response_list';
+
+	$can_stop = 1;	//默认可以stop
+	// 查询是否可以转回待支付
+	$sql = "SELECT order_line FROM $response_list WHERE order_id IN $stop_order";
+	$res = $db->getAll($sql);
+	foreach ($res as $val) {
+		$order_line = $val['order_line'].'|';
+		if($order_line > 2){
+			$can_stop = 0;
+		}
+	}
+	if($can_stop == 0){
+		echo 'cut';
+	}else{
+		// 转入待支付response_list
+		$sql = "UPDATE $response_list SET order_line = '-2' WHERE order_id IN $pay_ok";
+		$res = $db->execute($sql);
+		//日志
+		$res_log_items = explode(',', $_POST['pay_ok_back']);
+		foreach ($res_log_items as $value) {
+			$value = str_replace('\'', '', $value);
+			$sql = "SELECT id FROM $response_list WHERE order_id = '{$value}'";
+			$res = $db->getOne($sql);
+			$oms_id = $res['id'];
+			$do = ' [转回待支付]：'.$value;
+			oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
+		}
+
+		echo 'ok';
+	}
 }
 
 // 还原订单，实则修改order_id=1 返回到订单验证前，同步后状态

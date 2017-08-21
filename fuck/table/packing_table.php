@@ -175,6 +175,9 @@ if(isset($_GET['down_packing'])){
         $j++;
         $ppk = $value['pack_count'];
     }
+     $ee = $jj + 1;
+    $objPHPExcel->getActiveSheet()->getStyle('A'.$ee.':H'.$ee)->getBorders()->getBottom()->getColor()->setARGB('1d9c73');
+    $objPHPExcel->getActiveSheet()->getStyle('A'.$ee.':H'.$ee)->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
     // sheet3
     $objPHPExcel->createSheet();

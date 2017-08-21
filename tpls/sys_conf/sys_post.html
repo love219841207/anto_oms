@@ -54,11 +54,25 @@
 								</table> 
 							</div>
 						</form>
-						
+						<div>
+							<hr>
+							<div class="col-lg-3">
+								<input type="text" placeholder="把我" ng-model="from_replace_key" class="form-control"> 
+							</div>
+							<div class="col-lg-2">
+								<button ng-click="replace_post()" class="btn btn-warning btn-block"> > 替换为 >></button>
+							</div>
+							<div class="col-lg-3">
+								<input type="text" placeholder="替换成" ng-model="to_replace_key" class="form-control"> 
+							</div>
+						</div>
 					</div>
 
 				</div>
-				<div class="panel-footer">上传覆盖邮编地址库，从 .csv 文件的第二行导入数据。<br><span class="red">文件A列为自增ID，B列为邮编，C列为地址。存为 .csv 文件后请用记事本打开再另存为 UTF-8 编码导入，否则会乱码。 </span><br>点击检测检测导入的数据格式是否乱码（展示5条）。</div>
+				<div class="panel-footer">上传覆盖邮编地址库，从 .csv 文件的第二行导入数据。<br><span class="red">文件A列为自增ID，B列为邮编，C列为地址。存为 .csv 文件后请用记事本打开再另存为 UTF-8 编码导入，否则会乱码。 </span><br>点击检测检测导入的数据格式是否乱码（展示5条）。
+					<br>
+					替换为功能为替换邮编对应地址的多余项，比如：以下に掲載がない場合。重新导入后需要重新替换操作。
+				</div>
 			</div>
 		</div>
 	</div>

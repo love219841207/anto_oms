@@ -17,10 +17,37 @@
           </tr>
           <tr>
             <td>
+              <span class="s_gray">支付方式：</span>
+            </td> 
+            <td class="s_gray">
+              <span ng-class="{'red bg_yellow':item.payment_method=='COD'}">{{item.payment_method}}</span>
+              <i ng-click="aa_payment_method=!aa_payment_method" 
+                class="fa fa-edit fa-fw pointer"
+                ng-hide="item.order_line>3"
+                ></i>
+              <div ng-show="aa_payment_method" class="input-group">
+                <div ng-show="aa_payment_method" class="btn-group ml20">
+                <button type="button" class="btn btn-default btn-sm">
+                  <select id="payment_method" class="selecter" ng-model="payment_method">
+                    <option value="">更改为...</option>
+                    <option value="クレジットカード">クレジットカード</option>
+                    <option value="楽天バンク決済">楽天バンク決済</option>
+                    <option value="銀行振込">銀行振込</option>
+                    <option value="楽天Edy決済">楽天Edy決済</option>
+                    <option value="COD">COD</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </button>
+                <button class="btn btn-default btn-danger" ng-disabled="payment_method==''" type="button" ng-click="need_check_list('payment_method',item.order_id);aa_payment_method=!aa_payment_method">确定</button>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
                 <span class="s_gray">订单金额：</span>
             </td>
             <td>
-              <span ng-class="{'red bg_yellow':item.payment_method=='COD'}">{{item.payment_method}}</span>
               <span class="blue">{{item.order_total_money}}</span>
             </td>
           </tr>
@@ -208,7 +235,7 @@
                 ng-hide="item.order_line>2"
                 ></i>
               <div ng-show="aa_goods_code" class="input-group">
-                <input class="form-control input-sm" placeholder="商品代码 更改为..." type="text" id="goods_code_{{$index}}">
+                <input class="form-control input-sm" ng-value="item2.goods_code" placeholder="商品代码 更改为..." type="text" id="goods_code_{{$index}}">
                 <span class="input-group-btn">
                   <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="change_info_field(item2.id,'goods_code',$index,item2.order_id);aa_goods_code=!aa_goods_code">确定</button>
                 </span>
@@ -261,9 +288,20 @@
             <td class="s_gray">子订单价格</td>
             <td class="yellow">{{item2.item_price}}</td>
           </tr>
-          <tr ng-show="item2.cod_money>1">
-            <td class="s_gray">COD Money</td>
-            <td class="yellow">{{item2.cod_money}}</td>
+          <tr>
+            <td class="s_gray">代引手续费</td>
+            <td class="yellow">{{item2.cod_money}}
+              <i ng-click="aa_cod_money=!aa_cod_money" 
+                class="fa fa-edit fa-fw pointer"
+                ng-hide="item.order_line>2"
+                ></i>
+              <div ng-show="aa_cod_money" class="input-group">
+                <input ng-blur="check_int('cod_money_'+$index)" class="form-control input-sm" placeholder="代引手续费 更改为..." type="number" id="cod_money_{{$index}}">
+                <span class="input-group-btn">
+                  <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="change_info_field(item2.id,'cod_money',$index,item2.order_id);aa_cod_money=!aa_cod_money">确定</button>
+                </span>
+              </div>
+            </td>
           </tr>
         </table>
         <div class="clearfix"></div>

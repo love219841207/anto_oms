@@ -167,6 +167,7 @@
 							<option value="send_id">合单ID</option>
 							<option value="order_id">订单号</option>
 							<option value="buyer_email">邮箱</option>
+							<option value="payment_method">支付方式</option>
 							<option value="buyer_name">购买人</option>
 							<option value="receive_name">收件人</option>
 							<option value="order_note">备注</option>
@@ -368,7 +369,7 @@
 		      	<button ng-disabled="my_checked==''" type="button" ng-click="check_items();del_true='false'" data-animation="am-fade-and-slide-top" data-template-url="/modal/down_item.html" bs-modal="modal" class="btn btn-default btn-sm green">
 		      		<i class="fa fa-download fa-fw"></i>下载
 		      	</button>
-		      	<button ng-show="search_order_line=='ing' || search_order_line == '6' || search_order_line == '-2'" ng-disabled="my_checked==''" type="button" ng-click="check_items();del_true='false'" data-animation="am-fade-and-slide-top" data-template-url="/modal/del_item.html" bs-modal="modal" class="btn btn-default btn-sm red">
+		      	<button ng-show="search_order_line=='yfcode_ok' || search_order_line=='ing' || search_order_line == '6' || search_order_line == '-2'" ng-disabled="my_checked==''" type="button" ng-click="check_items();del_true='false'" data-animation="am-fade-and-slide-top" data-template-url="/modal/del_item.html" bs-modal="modal" class="btn btn-default btn-sm red">
 		      		<i class="fa fa-trash-o fa-fw"></i>删除
 		      	</button>
 		      	<button class="btn btn_fff btn-xs" style="height: 30px;" ng-show="search_order_line == '-2'">
@@ -388,6 +389,9 @@
 		      	</button>
 		      	<button ng-show="search_order_line=='9'" ng-disabled="my_checked==''" type="button" ng-click="check_items();del_true='false';stop_back_order();" class="btn btn-default btn-sm yellow">
 		      		<i class="fa fa-undo fa-fw"></i>取回
+		      	</button>
+		      	<button ng-show="search_order_line=='ing'" ng-disabled="my_checked==''" type="button" data-animation="am-fade-and-slide-right" data-template-url="/modal/pay_ok_back.html" bs-modal="modal"  ng-click="check_items();del_true='false';" class="btn btn-default btn-sm yellow">
+		      		<i class="fa fa-jpy fa-fw"></i>转回待支付
 		      	</button>
 		    </div>
 			<div ng-repeat="item in get_order_list_data track by $index" class="animate slide-left">
@@ -453,7 +457,7 @@
 						</td>
 						<td class="green"><span class="s_gray">电话：</span>{{item.phone}}</td>
 						<td class="blue"><span class="s_gray">邮箱：</span>{{item.buyer_email}}</td>
-						<td colspan="4"><textarea ng-show="item.order_note" rows="1" style="width: 100%; border: none; background: none; resize: vertical;" readonly class="f12 red">备注：{{item.order_note}}</textarea></td>
+						<td colspan="4"><textarea ng-show="item.order_note" rows="1" style="width: 100%; border: none; background: #5cab07; resize: vertical;color:#FFF" readonly class="f12">备注：{{item.order_note}}</textarea></td>
 					</tr>
 					<tr ng-show="info_box" class="white am-fade-and-slide-right" ng-class="{'ready_color':item.order_line=='5',
 							'close_color':item.order_line=='6',
