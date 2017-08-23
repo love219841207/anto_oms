@@ -240,8 +240,13 @@ if(isset($_POST['demo_mail'])){
         $mail_txt = $_POST['mail_tpl_txt'];
 	}
 
+	// 查询send_id
+	$sql = "SELECT send_id FROM $response_list WHERE order_id = {$value}";
+	$res = $db->getOne($sql);
+	$send_id = $res['send_id'];
+
 	//读取邮箱、收件人等信息
-	$sql = "SELECT * FROM $response_list WHERE order_id = {$value}";
+	$sql = "SELECT * FROM $response_list WHERE send_id = '{$send_id}'";
 	$res = $db->getOne($sql);
 
 	$purchase_date = $res['purchase_date'];	#付款日期
@@ -269,9 +274,35 @@ if(isset($_POST['demo_mail'])){
  	$u_info = '';
  	$cod_money = '';
 
- 	// 读取购买信息
- 	$sql = "SELECT * FROM $response_info WHERE order_id = {$value}";
+ 	// 查询send_id
+ 	$sql = "SELECT send_id FROM $response_list WHERE order_id = '{$order_id}'";
+	$res = $db->getOne($sql);
+	$send_id = $res['send_id'];
+
+	$sql = "SELECT sum(order_tax) as order_tax,sum(points) as points,sum(coupon) as coupon,sum(shipping_price) as shipping_price FROM $response_list WHERE send_id = '{$send_id}'";
+	$res = $db->getOne($sql);
+
+ 	$order_tax = $res['order_tax'];	
+ 	$points = $res['points'];	
+ 	$coupon = $res['coupon'];	
+ 	$shipping_price = $res['shipping_price'];	
+ 	if($coupon == ''){
+ 		$coupon = 0;
+ 	}
+
+ 	// 查询该send_id下的订单
+ 	$sql = "SELECT order_id FROM $response_list WHERE send_id = '{$send_id}'";
+ 	$res = $db->getAll($sql);
+ 	$now_order_id = '';
+ 	foreach ($res as $value) {
+ 		$now_order_id = $now_order_id.'\''.$value['order_id'].'\',';
+ 	}
+ 	$now_order_ids = rtrim($now_order_id, ",");
+	// 读取购买信息
+ 	$sql = "SELECT * FROM $response_info WHERE order_id IN ({$now_order_ids})";
 	$res = $db->getAll($sql);
+
+	$goods_money = 0;
 	foreach ($res as $val) {
 		$goods_title = $val['goods_title'];
 		$sku = $val['sku'];
@@ -285,10 +316,9 @@ if(isset($_POST['demo_mail'])){
 			<td>'.$sku.'</td>
 			<td style="text-align: right;font-family: monospace;">'.$unit_price.' * '.$goods_num.' = '.$item_price.'円</td>
 		</tr>';
+		$goods_money = $goods_money + $item_price;
 	}
-	$order_total_money = $order_total_money - $cod_money;
 			
-	if($station == 'amazon'){
 $order_info = '
 <table width="100%" border="1" bordercolor="no" cellspacing="1" cellpadding="6" style="border-collapse: collapse;font-size:12px;border-color: #ddd;width:100%; font-family: Meiryo;">
 	<tr style="background: #009688;color: #FFF;">
@@ -302,31 +332,31 @@ $order_info = '
 		</td>
 		<td colspan="2" style="text-align: right;">
 			<span style="color:#009688;">商品金額合計:</span>
-			<span style="width:80px;display: inline-block;">'.$order_total_money.'円</span>
+			<span style="width:80px;display: inline-block;">'.$goods_money.'円</span>
 		</td>
 	</tr>
 	<tr>
 		<td colspan="2" style="text-align: right;">
 			<span style="color:#009688;">消费税:</span>
-			<span style="width:80px;display: inline-block;">0円</span>
+			<span style="width:80px;display: inline-block;">'.$order_tax.'円</span>
 		</td>
 	</tr>
 	<tr>
 		<td colspan="2" style="text-align: right;">
 			<span style="color:#009688;">送料:</span>
-			<span style="width:80px;display: inline-block;">0円</span>
+			<span style="width:80px;display: inline-block;">'.$shipping_price.'円</span>
 		</td>
 	</tr>
 	<tr>
 		<td colspan="2" style="text-align: right;">
 			<span style="color:#009688;">値引き:</span>
-			<span style="width:80px;display: inline-block;">0円</span>
+			<span style="width:80px;display: inline-block;">'.$coupon.'円</span>
 		</td>
 	</tr>
 	<tr>
 		<td colspan="2" style="text-align: right;">
 			<span style="color:#009688;">ポイント利用分:</span>
-			<span style="width:80px;display: inline-block;">0</span>
+			<span style="width:80px;display: inline-block;">'.$points.'</span>
 		</td>
 	</tr>
 	<tr>
@@ -389,7 +419,7 @@ $pin_book = '
 		<td></td>
 		<td colspan="2" style="text-align: right;">
 			<span style="color:#009688;">ご注文番号：</span>
-			<span style="width:150px;text-align:left;display: inline-block;">'.$value.'</span>
+			<span style="width:150px;text-align:left;display: inline-block;">'.$now_order_ids.'</span>
 		</td>
 	</tr>
 	<tr>
@@ -435,31 +465,31 @@ $pin_book = '
 		</td>
 		<td colspan="2" style="text-align: right;">
 			<span style="color:#009688;">商品金額合計:</span>
-			<span style="width:80px;display: inline-block;">'.$order_total_money.'円</span>
+			<span style="width:80px;display: inline-block;">'.$goods_money.'円</span>
 		</td>
 	</tr>
-	<tr>
+<tr>
 		<td colspan="2" style="text-align: right;">
 			<span style="color:#009688;">消费税:</span>
-			<span style="width:80px;display: inline-block;">0円</span>
+			<span style="width:80px;display: inline-block;">'.$order_tax.'円</span>
 		</td>
 	</tr>
 	<tr>
 		<td colspan="2" style="text-align: right;">
 			<span style="color:#009688;">送料:</span>
-			<span style="width:80px;display: inline-block;">0円</span>
+			<span style="width:80px;display: inline-block;">'.$shipping_price.'円</span>
 		</td>
 	</tr>
 	<tr>
 		<td colspan="2" style="text-align: right;">
 			<span style="color:#009688;">値引き:</span>
-			<span style="width:80px;display: inline-block;">0円</span>
+			<span style="width:80px;display: inline-block;">'.$coupon.'円</span>
 		</td>
 	</tr>
 	<tr>
 		<td colspan="2" style="text-align: right;">
 			<span style="color:#009688;">ポイント利用分:</span>
-			<span style="width:80px;display: inline-block;">0</span>
+			<span style="width:80px;display: inline-block;">'.$points.'</span>
 		</td>
 	</tr>
 	<tr>
@@ -476,17 +506,11 @@ $pin_book = '
 	</tr>
 </table>
 ';
-	}
-
-	if($station == 'rakuten'){
-		$order_info = '333';
-		$pin_book = '888';
-	}
 
 	//替换信件变量
 	$mail_topic = str_replace('#buyer_name#', $buyer_name, $mail_topic);
 	$mail_topic = str_replace('#receive_name#', $receive_name, $mail_topic);
-	$mail_topic = str_replace('#order_id#', $order_id, $mail_topic);
+	$mail_topic = str_replace('#order_id#', $now_order_ids, $mail_topic);
 	$mail_topic = str_replace('#express_company#', $express_company, $mail_topic);
 	$mail_topic = str_replace('#send_method#', $send_method, $mail_topic);
 	$mail_topic = str_replace('#express_num#', $express_num, $mail_topic);
@@ -495,7 +519,7 @@ $pin_book = '
 
 	$mail_html = str_replace('#buyer_name#', $buyer_name, $mail_html);
 	$mail_html = str_replace('#receive_name#', $receive_name, $mail_html);
-	$mail_html = str_replace('#order_id#', $order_id, $mail_html);
+	$mail_html = str_replace('#order_id#', $now_order_ids, $mail_html);
 	$mail_html = str_replace('#express_company#', $express_company, $mail_html);
 	$mail_html = str_replace('#send_method#', $send_method, $mail_html);
 	$mail_html = str_replace('#express_num#', $express_num, $mail_html);

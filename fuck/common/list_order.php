@@ -192,6 +192,14 @@ if(isset($_GET['onekey_common_order'])){
 	foreach ($res5 as $value) {
 		$send_id = $value['send_id'];
 		play_yf_code($station,$response_list,$response_info,$send_id);
+		//日志
+		$sql = "SELECT id FROM $response_list WHERE send_id = '{$send_id}'";
+		$res = $db->getAll($sql);
+		foreach ($res as $value) {
+			$oms_id = $value['id'];
+			$do = '[本单合单]：'.$send_id;
+			oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
+		}
 	}
 
 	// 日志
@@ -266,12 +274,14 @@ if(isset($_GET['break_common_order'])){
 
 		// 运费回滚
 		play_yf_code($station,$response_list,$response_info,$send_id);
+
+		// 日志
+		$oms_id = $id;
+		$do = '[拆单]：'.$_GET['break_common_order'];
+		oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
+
 	}
 
-	//日志
-	$do = '[拆单]：'.$send_id;
-	$play = $station.'_order';
-	oms_log($u_name,$do,$play,$station,$store,'-');
 	echo 'ok';
 }
 
@@ -382,7 +392,6 @@ if(isset($_POST['sub_repo'])){
 				// 可发货
 				$sql = "UPDATE $response_info SET is_pause = 'pass' WHERE id = '{$info_id}'";
 				$res = $db->execute($sql);
-
 			}else{
 				// 不可发货
 				$can_send = 0;
@@ -409,10 +418,26 @@ if(isset($_POST['sub_repo'])){
 				$sql = "UPDATE $response_list SET pause_time = '{$now_time}' WHERE send_id = '{$send_id}'";
 				$res = $db->execute($sql);
 			}
+			//日志
+			$sql = "SELECT id FROM $response_list WHERE send_id = '{$send_id}'";
+			$res = $db->getAll($sql);
+			foreach ($res as $value) {
+				$oms_id = $value['id'];
+				$do = '[订单冻结]：'.$send_id;
+				oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
+			}
 		}else if($can_send == 1){
 			// 更新order_line
 			$sql = "UPDATE $response_list SET order_line = '4' WHERE send_id = '{$send_id}'";
 			$res = $db->execute($sql);
+			//日志
+			$sql = "SELECT id FROM $response_list WHERE send_id = '{$send_id}'";
+			$res = $db->getAll($sql);
+			foreach ($res as $value) {
+				$oms_id = $value['id'];
+				$do = '[订单到发货区]：'.$send_id;
+				oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
+			}
 		}	
 
 		$order_ids = rtrim($order_ids,",");

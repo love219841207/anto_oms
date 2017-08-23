@@ -172,6 +172,11 @@ if(isset($_GET['back_order'])){
 	$station = $_GET['back_station'];
 	$response_list = $station.'_response_list';
 
+	$sql = "SELECT id,store FROM $response_list WHERE order_id = '{$back_order}'";
+	$res = $db->getOne($sql);
+	$oms_id = $res['id'];
+	$store = $res['store'];
+
 	// 标记 history 表退单
  	$sql = "UPDATE history_send SET back_status = '正在退单' WHERE station = '{$station}' AND order_id = '{$back_order}'";
  	$res = $db->execute($sql);
@@ -188,7 +193,7 @@ if(isset($_GET['back_order'])){
 		$res = $rdb->execute($sql);
 		// 日志
 		$do = '[退单] '.$back_order.' <商品代码> '.$goods_code.' <还中国> '.$pause_ch.' <还日本> '.$pause_jp;
-		oms_log($_SESSION['oms_u_name'],$do,'change_order','-','-','-');
+		oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
 	}
 
 	// 标记 list 表退单

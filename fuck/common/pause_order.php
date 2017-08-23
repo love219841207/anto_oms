@@ -73,6 +73,15 @@ if(isset($_GET['back_pause'])){
     $sql = "UPDATE $response_info SET pause_jp = 0,pause_ch = 0,is_pause = 'back' WHERE id = '{$info_id}'";
     $res = $db->execute($sql);
 
+    // 查询OMS-ID
+    $sql = "SELECT id FROM $response_list WHERE order_id = '{$order_id}'";
+    $res = $db->getOne($sql);
+
+    // 日志
+    $oms_id = $res['id'];
+    $do = '[退押]：'.$order_id;
+    oms_log($u_name,$do,'change_order',$station,$store,$oms_id); 
+
     echo 'ok';
 }
 

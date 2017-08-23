@@ -23,7 +23,7 @@ if(isset($_POST['send_mail'])){
 		$mail_tpl = $_POST['mail_tpl'];
 		$my_checked_items = $_POST['my_checked_items'];
 		$order_items = $_POST['my_checked_items'];
-		$order_items = str_replace('\'', '', $order_items);// 去掉order_items引号
+		// $order_items = str_replace('\'', '', $order_items);// 去掉order_items引号
 
 		//读取店铺配置
 		$sql = "SELECT * FROM $conf WHERE store_name = '{$store}'";
@@ -37,14 +37,20 @@ if(isset($_POST['send_mail'])){
 		$mail_over_send = $res['mail_over_send'];
 
 		// 遍历order_id
-		$order_ids = explode(',', $order_items);
+		// $order_ids = explode(',', $order_items);
+
+		// 按照合单号发送
+		$sql = "SELECT send_id FROM amazon_response_list WHERE order_id IN ({$order_items})";
+		$res = $db->getAll($sql);
+		$send_ids = @array_unique($res);
 
 		// 清空邮件错误表
 	    $sql = "TRUNCATE mail_error";
 	    $res = $db->execute($sql);
 		$error_num = 0;
 		$ok_num = 0;
-		foreach ($order_ids as $value) {
+		foreach ($send_ids as $keyvalue) {
+			$value = $keyvalue['send_id'];
 			//读取信件内容
 			if($mail_tpl == 'send_express'){
 				$sql = "SELECT * FROM mail_tpl WHERE store_name = '{$store}' AND model_name = 'send_express'";
@@ -64,7 +70,7 @@ if(isset($_POST['send_mail'])){
 			$mail_txt = $res['mail_txt'];
 
 			//读取邮箱、收件人等信息
-			$sql = "SELECT * FROM amazon_response_list WHERE order_id = '{$value}'";
+			$sql = "SELECT * FROM amazon_response_list WHERE send_id = '{$value}'";
 			$res = $db->getOne($sql);
 
 			$purchase_date = $res['purchase_date'];	#付款日期
@@ -87,13 +93,34 @@ if(isset($_POST['send_mail'])){
 		 		$payment_method = "Amazon決済（前払い）";
 		 	}
 
+		 // 	$sql = "SELECT sum(order_tax) as order_tax,sum(points) as points,sum(coupon) as coupon,sum(shipping_price) as shipping_price FROM amazon_response_list WHERE send_id = '{$value}'";
+			// $res = $db->getOne($sql);
+
+		 // 	$order_tax = $res['order_tax'];	
+		 // 	$points = $res['points'];	
+		 // 	$coupon = $res['coupon'];	
+		 // 	$shipping_price = $res['shipping_price'];	
+		 // 	if($coupon == ''){
+		 // 		$coupon = 0;
+		 // 	}
+
 		 	// 初始化title
 		 	$u_info = '';
 		 	$cod_money = '';
 
 		 	// 读取购买信息
-		 	$sql = "SELECT * FROM amazon_response_info WHERE order_id = '{$value}'";
+		 	// 查询该send_id下的订单
+		 	$sql = "SELECT order_id FROM amazon_response_list WHERE send_id = '{$value}'";
+		 	$res = $db->getAll($sql);
+		 	$now_order_id = '';
+		 	foreach ($res as $value) {
+		 		$now_order_id = $now_order_id.'\''.$value['order_id'].'\',';
+		 	}
+		 	$now_order_ids = rtrim($now_order_id, ",");
+
+		 	$sql = "SELECT * FROM amazon_response_info WHERE order_id IN ({$now_order_ids})";
 			$res = $db->getAll($sql);
+			$goods_money = 0;
 			foreach ($res as $val) {
 				$goods_title = $val['goods_title'];
 				$sku = $val['sku'];
@@ -109,6 +136,7 @@ if(isset($_POST['send_mail'])){
 					<td>'.$sku.'</td>
 					<td style="text-align: right;font-family: monospace;">'.$unit_price.' * '.$goods_num.' = '.$item_price.'円</td>
 				</tr>';
+				$goods_money = $goods_money + $item_price;
 			}
 			$order_total_money = $order_total_money - $cod_money;
 			
@@ -127,7 +155,7 @@ $order_info = '
 		</td>
 		<td colspan="2" style="text-align: right;">
 			<span style="color:#009688;">商品金額合計:</span>
-			<span style="width:80px;display: inline-block;">'.$order_total_money.'円</span>
+			<span style="width:80px;display: inline-block;">'.$goods_money.'円</span>
 		</td>
 	</tr>
 	<tr>
@@ -214,7 +242,7 @@ $pin_book = '
 		<td></td>
 		<td colspan="2" style="text-align: right;">
 			<span style="color:#009688;">ご注文番号：</span>
-			<span style="width:150px;text-align:left;display: inline-block;">'.$value.'</span>
+			<span style="width:150px;text-align:left;display: inline-block;">'.$now_order_ids.'</span>
 		</td>
 	</tr>
 	<tr>
@@ -260,7 +288,7 @@ $pin_book = '
 		</td>
 		<td colspan="2" style="text-align: right;">
 			<span style="color:#009688;">商品金額合計:</span>
-			<span style="width:80px;display: inline-block;">'.$order_total_money.'円</span>
+			<span style="width:80px;display: inline-block;">'.$goods_money.'円</span>
 		</td>
 	</tr>
 	<tr>
@@ -305,7 +333,7 @@ $pin_book = '
 			//替换信件变量
 			$mail_topic = str_replace('#buyer_name#', $buyer_name, $mail_topic);
 			$mail_topic = str_replace('#receive_name#', $receive_name, $mail_topic);
-			$mail_topic = str_replace('#order_id#', $order_id, $mail_topic);
+			$mail_topic = str_replace('#order_id#', $now_order_ids, $mail_topic);
 			$mail_topic = str_replace('#express_company#', $express_company, $mail_topic);
 			$mail_topic = str_replace('#send_method#', $send_method, $mail_topic);
 			$mail_topic = str_replace('#express_num#', $express_num, $mail_topic);
@@ -314,7 +342,7 @@ $pin_book = '
 
 			$mail_html = str_replace('#buyer_name#', $buyer_name, $mail_html);
 			$mail_html = str_replace('#receive_name#', $receive_name, $mail_html);
-			$mail_html = str_replace('#order_id#', $order_id, $mail_html);
+			$mail_html = str_replace('#order_id#', $now_order_ids, $mail_html);
 			$mail_html = str_replace('#express_company#', $express_company, $mail_html);
 			$mail_html = str_replace('#send_method#', $send_method, $mail_html);
 			$mail_html = str_replace('#express_num#', $express_num, $mail_html);

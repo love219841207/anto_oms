@@ -126,7 +126,7 @@ app.controller('siteCtrl', ['$rootScope','$scope','$state','$stateParams','$http
         return {'x':e.clientX,'y':e.clientY};
     }
 
-}])
+}]);
 
 app.controller('topCtrl', ['$rootScope','$scope','$state','$stateParams','$http','$log','$timeout', function($rootScope,$scope,$state,$stateParams,$http,$log,$timeout){
     $rootScope.now_station = '';    //初始化员工选择的平台
@@ -156,7 +156,7 @@ app.controller('topCtrl', ['$rootScope','$scope','$state','$stateParams','$http'
                 $scope.ping_repo();
             },1000);
         });
-    }
+    };
     $scope.ping_repo();
 
     // 连接售后系统

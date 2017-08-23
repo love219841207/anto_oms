@@ -390,7 +390,7 @@
 		      	<button ng-show="search_order_line=='9'" ng-disabled="my_checked==''" type="button" ng-click="check_items();del_true='false';stop_back_order();" class="btn btn-default btn-sm yellow">
 		      		<i class="fa fa-undo fa-fw"></i>取回
 		      	</button>
-		      	<button ng-show="search_order_line=='ing'" ng-disabled="my_checked==''" type="button" data-animation="am-fade-and-slide-right" data-template-url="/modal/pay_ok_back.html" bs-modal="modal"  ng-click="check_items();del_true='false';" class="btn btn-default btn-sm yellow">
+		      	<button ng-show="search_order_line=='ing' && now_station!='Amazon'" ng-disabled="my_checked==''" type="button" data-animation="am-fade-and-slide-right" data-template-url="/modal/pay_ok_back.html" bs-modal="modal"  ng-click="check_items();del_true='false';" class="btn btn-default btn-sm yellow">
 		      		<i class="fa fa-jpy fa-fw"></i>转回待支付
 		      	</button>
 		    </div>
@@ -424,13 +424,17 @@
 							</span>
 						</td>
 						<td style="width:11%" class="yellow tagr">
-							<span ng-hide="!item.payment_method">
-								<span ng-hide="item.shipping_price=='' || item.shipping_price == '0'" class="s_gray">
-									运 <span ng-class="{'dark bg_yellow':item.shipping_price!='0'}">{{item.shipping_price}}</span>
-								</span>	
-								<span ng-hide="item.points=='' || item.points == '0'"  class="s_gray">分 <span class="green">{{item.points}}</span>
-								</span>
-								<span  ng-hide="item.coupon=='' || item.coupon == '0'"  class="s_gray">券 <span class="green">{{item.coupon}}</span>
+							<span ng-hide="item.shipping_price=='' || item.shipping_price == '0'" class="s_gray">
+								运 <span ng-class="{'dark bg_yellow':item.shipping_price!='0'}">{{item.shipping_price}}</span>
+							</span>	
+							<span ng-hide="item.points=='' || item.points == '0'"  class="s_gray">
+								分 <span class="green">{{item.points}}</span>
+							</span>
+							<span ng-hide="item.coupon=='' || item.coupon == '0'"  class="s_gray">
+								券 <span class="green">{{item.coupon}}</span>
+						    </span>
+							<span ng-hide="item.order_tax =='' || item.order_tax == '0'"  class="s_gray">
+								税 <span class="red">{{item.order_tax}}</span>
 							</span>
 						</td>
 						<td style="width:11%" class="red tagr" ng-hide="item.all_total_money==NULL || item.all_total_money=='' || item.all_total_money == '0'">

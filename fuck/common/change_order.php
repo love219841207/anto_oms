@@ -407,7 +407,6 @@ if(isset($_POST['pay_ok'])){
 		$do = ' [确认入金]：'.$value;
 		oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
 	}
-	
 
 	echo 'ok';
 }
@@ -505,9 +504,17 @@ if(isset($_POST['stop_order'])){
 		$sql = "UPDATE $response_list SET order_line = '9' WHERE order_id IN $stop_order";
 		$res = $db->execute($sql);
 
-		//日志
-		$do = ' [保留订单]：【'.$del_log_items.'】';
-		oms_log($u_name,$do,'change_order',$station,$store,'-');
+		$log_items = str_replace('\'', '', $del_log_items);
+		$log_items = str_replace('\\', '', $log_items);
+		$arr = explode(',', $log_items);
+		foreach ($arr as $value) {
+			$sql = "SELECT id FROM $response_list WHERE order_id = '{$value}'";
+			$res = $db->getOne($sql);
+			$oms_id = $res['id'];
+			//日志
+			$do = ' [保留订单]：'.$value;
+			oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
+		}
 		echo 'ok';
 	}
 }
@@ -532,9 +539,18 @@ if(isset($_POST['stop_back_order'])){
 	$sql = "UPDATE $response_info SET is_pause = '' WHERE order_id IN $stop_order";
 	$res = $db->execute($sql);
 
-	//日志
-	$do = ' [取回订单]：【'.$del_log_items.'】';
-	oms_log($u_name,$do,'change_order',$station,$store,'-');
+	$log_items = str_replace('\'', '', $del_log_items);
+	$log_items = str_replace('\\', '', $log_items);
+	$arr = explode(',', $log_items);
+	foreach ($arr as $value) {
+		$sql = "SELECT id FROM $response_list WHERE order_id = '{$value}'";
+		$res = $db->getOne($sql);
+		$oms_id = $res['id'];
+		//日志
+		$do = ' [取回订单]：'.$value;
+		oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
+	}
+
 	echo 'ok';
 }
 

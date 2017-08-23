@@ -42,10 +42,10 @@ if(isset($_GET['import_add_list'])){
 	//清空导入表
     $sql = "TRUNCATE rakuten_import_list";
     $res = $db->execute($sql);
-    // $sql = "TRUNCATE rakuten_response_list";
-    // $res = $db->execute($sql);
-    // $sql = "TRUNCATE rakuten_response_info";
-    // $res = $db->execute($sql);
+    $sql = "TRUNCATE rakuten_response_list";
+    $res = $db->execute($sql);
+    $sql = "TRUNCATE rakuten_response_info";
+    $res = $db->execute($sql);
 
     //所有oms_has状态变成0
  	$sql = "UPDATE rakuten_response_list SET oms_has_me = '0'";
@@ -356,6 +356,7 @@ if(isset($_GET['import_add_list'])){
 		coupon,	#优惠券
 		points,	#积分
 		shipping_price,	#运费
+		order_tax,	#消费税
 		payment_method,	#付款方式
 		pay_money,	#代引金额
 		phone,	#配送手机
@@ -384,6 +385,7 @@ if(isset($_GET['import_add_list'])){
 		coupon,	#优惠券
 		points,	#积分
 		shipping_price,	#运费
+		item_tax,	#消费税
 		payment_method,	#付款方式
 		pay_money,	#代引金额
 		receive_phone,	#配送手机

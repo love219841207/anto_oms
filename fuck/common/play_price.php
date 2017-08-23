@@ -5,12 +5,13 @@ function play_order_price($station,$response_list,$response_info,$order_id){
 	$db = new PdoMySQL();
 
 	//查询该订单是否是COD订单
-	$sql = "SELECT payment_method,send_id,order_line,shipping_price FROM $response_list WHERE order_id = '{$order_id}'";
+	$sql = "SELECT payment_method,send_id,order_line,shipping_price,order_tax FROM $response_list WHERE order_id = '{$order_id}'";
 	$res = $db->getOne($sql);
 	$payment_method = $res['payment_method'];
 	$send_id = $res['send_id'];
 	$order_line = $res['order_line'];
 	$shipping_price = $res['shipping_price'];
+	$order_tax = $res['order_tax'];
 	
 	// 更新子订单价格 = 数量 * 单价
 	$sql = "UPDATE $response_info SET item_price = unit_price * goods_num WHERE order_id = '{$order_id}'";
@@ -28,7 +29,7 @@ function play_order_price($station,$response_list,$response_info,$order_id){
 		$cod_money = $res['cod_money'];
 
 		// 客人代引金额
-		$pay_money = $pay_money + $cod_money +$shipping_price;
+		$pay_money = $pay_money + $cod_money +$shipping_price + $order_tax;
 
 		// 更新客人代引金额到 LIST , all_total_money 为合单后金额，order_total_money 为订单金额
 		$sql = "UPDATE $response_list SET all_total_money = '{$pay_money}',order_total_money = '{$pay_money}',pay_money = '{$pay_money}'-points-coupon  WHERE order_id = '{$order_id}'";
@@ -38,7 +39,7 @@ function play_order_price($station,$response_list,$response_info,$order_id){
 		//查询出订单额，计算金额
 		$sql = "SELECT sum(item_price) as total_money FROM $response_info WHERE order_id='{$order_id}'";
 		$res = $db->getOne($sql);
-		$total_money = $res['total_money'] + $shipping_price;
+		$total_money = $res['total_money'] + $shipping_price + $order_tax;
 
 		//更新total_money
 		$sql = "UPDATE $response_list SET all_total_money = '{$total_money}',order_total_money = '{$total_money}'  WHERE order_id='{$order_id}'";
