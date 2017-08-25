@@ -5,16 +5,111 @@ $dir = dirname(__FILE__);
 
 set_time_limit(0);
 ini_set("memory_limit", "1024M");
+
+function look_sell_table($s_date,$e_date,$sell_store){
+    $db = new PdoMySQL();
+    $sql = "truncate table look_sell";
+    $res = $db->execute($sql);
+
+    if($sell_store == 'all'){
+        $sql_line = "SELECT * FROM history_send WHERE express_day BETWEEN '{$s_date}' AND '{$e_date}' ORDER BY send_id";
+    }else{
+        $sql_line = "SELECT * FROM history_send WHERE express_day BETWEEN '{$s_date}' AND '{$e_date}' AND store_name = '{$sell_store}' ORDER BY send_id";
+    }
+    $res = $db->getAll($sql_line);
+
+    $o_who_name = '';
+    $o_receive_name = '';
+    $o_order_id = '';
+    foreach ($res as $key => $value) {
+        if($value['order_id'] == '0'){
+            continue;
+        }
+        $k = $value['buy_money'];
+        $j = $value['total_money'];
+        if($value['who_name'] == $o_who_name){
+            $value['who_name'] = '';
+            $value['ems_money'] = '';
+            $value['bill'] = '';
+            $k = '';
+            $j = '';
+        }else{
+            $o_who_name = $value['who_name'];
+        }
+
+        if($value['order_id'] == $o_order_id){
+            $value['point'] = '';
+            $value['cheap'] = '';
+            $value['tax'] = '';
+        }else{
+            $o_order_id = $value['order_id'];
+        }
+        
+        if($value['receive_name'] == $o_receive_name){
+            $value['receive_name'] = '';
+            $value['ems_money'] = '';
+            $value['bill'] = '';
+            $k = '';
+            $j = '';
+        }else{
+            $o_receive_name = $value['receive_name'];
+        }
+        $sql = "INSERT INTO look_sell (
+                who_name,
+                receive_name,
+                goods_code,
+                out_num,
+                unit_price,
+                ems_money,
+                bill,
+                tax,
+                point,
+                cheap,
+                total_money,
+                all_total_money,
+                send_day,
+                holder,
+                store_name,
+                oms_order_express_num,
+                pack_id,
+                order_id
+                )VALUES(
+                '{$value['who_name']}',
+                '{$value['receive_name']}',
+                '{$value['goods_code']}',
+                '{$value['out_num']}',
+                '{$value['unit_price']}',
+                '{$value['ems_money']}',
+                '{$value['bill']}',
+                '{$value['tax']}',
+                '{$value['point']}',
+                '{$value['cheap']}',
+                '{$k}',
+                '{$j}',
+                '{$value['express_day']}',
+                '{$value['holder']}',
+                '{$value['store_name']}',
+                '{$value['oms_order_express_num']}',
+                '{$value['pack_id']}',
+                '{$value['order_id']}'
+            )";
+        $res = $db->execute($sql);
+    }
+}
+
 // 查看销售额
 if(isset($_GET['look_sell'])){
 	$s_date = $_GET['s_date'];
-	$e_date = $_GET['e_date'];
+    $e_date = $_GET['e_date'];
+	$sell_store = $_GET['sell_store'];
 
-	$sql = "SELECT sum(total_money) AS sum_total_money,sum(ems_money) AS sum_ems_money,sum(bill) AS sum_bill,sum(point) AS sum_point,sum(cheap) AS sum_cheap,sum(tax) AS sum_tax,sum(buy_money)-sum(ems_money)-sum(bill)-sum(point)-sum(cheap)-sum(tax) AS sum_buy_money FROM history_send WHERE express_day BETWEEN '{$s_date}' AND '{$e_date}'";
+    look_sell_table($s_date,$e_date,$sell_store);
+
+	$sql = "SELECT sum(all_total_money) AS sum_total_money,sum(ems_money) AS sum_ems_money,sum(bill) AS sum_bill,sum(point) AS sum_point,sum(cheap) AS sum_cheap,sum(tax) AS sum_tax,sum(total_money) AS sum_buy_money FROM look_sell";
 	$res = $db->getAll($sql);
 	$final_res['table'] = $res; 
 
-	$sql = "SELECT express_day,sum(total_money) AS sum_total_money,sum(ems_money) AS sum_ems_money,sum(bill) AS sum_bill,sum(point) AS sum_point,sum(cheap) AS sum_cheap,sum(tax) AS sum_tax,sum(buy_money)-sum(ems_money)-sum(bill)-sum(point)-sum(cheap)-sum(tax) AS sum_buy_money FROM history_send WHERE express_day BETWEEN '{$s_date}' AND '{$e_date}' GROUP BY express_day";
+	$sql = "SELECT send_day,sum(all_total_money) AS sum_total_money,sum(ems_money) AS sum_ems_money,sum(bill) AS sum_bill,sum(point) AS sum_point,sum(cheap) AS sum_cheap,sum(tax) AS sum_tax,sum(total_money) AS sum_buy_money FROM look_sell  GROUP BY send_day";
 	$res = $db->getAll($sql);
 	$final_res['chart'] = $res; 
 
@@ -29,7 +124,7 @@ if(isset($_GET['look_sell'])){
 	$sum_buy_money = array();
 
 	foreach ($res as $val) {
-		array_push($labels, $val['express_day']);
+		array_push($labels, $val['send_day']);
 		array_push($sum_total_money, $val['sum_total_money']);
 		array_push($sum_ems_money, $val['sum_ems_money']);
 		array_push($sum_bill, $val['sum_bill']);
@@ -110,53 +205,26 @@ if(isset($_GET['sell_detail_table'])){
         ->setCellValue("S1",$s_date)
         ->setCellValue("U1",$e_date);
 
-	$sql_line = "SELECT * FROM history_send WHERE express_day BETWEEN '{$s_date}' AND '{$e_date}' ORDER BY send_id";
+    look_sell_table($s_date,$e_date,'all');
+	$sql_line = "SELECT * FROM look_sell";
 	$res = $db->getAll($sql_line);
 
     $j=2;
-    $o_who_name = '';
-    $o_receive_name = '';
+
     foreach ($res as $key => $value) {
-        if($value['order_id'] == '0'){
-            continue;
-        }
-        $k = $value['total_money'] - $value['point'] - $value['cheap'];
-        if($value['who_name'] == $o_who_name){
-            $value['who_name'] = '';
-            $value['ems_money'] = '';
-            $value['bill'] = '';
-            $value['tax'] = '';
-            $value['point'] = '';
-            $value['cheap'] = '';
-            $k = '';
-        }else{
-            $o_who_name = $value['who_name'];
-        }
-        
-        if($value['receive_name'] == $o_receive_name){
-            $value['receive_name'] = '';
-            $value['ems_money'] = '';
-            $value['bill'] = '';
-            $value['tax'] = '';
-            $value['point'] = '';
-            $value['cheap'] = '';
-            $k = '';
-        }else{
-            $o_receive_name = $value['receive_name'];
-        }
 
         $objSheet->setCellValue("A".$j,$value['who_name'])
                 ->setCellValue("B".$j,$value['receive_name'])
                 ->setCellValueExplicit("C".$j,$value['goods_code'],PHPExcel_Cell_DataType::TYPE_STRING)
                 ->setCellValue("D".$j,$value['out_num'])
                 ->setCellValue("E".$j,$value['unit_price'])
-                ->setCellValueExplicit("F".$j,$value['ems_money'],PHPExcel_Cell_DataType::TYPE_STRING)
-                ->setCellValueExplicit("G".$j,$value['bill'],PHPExcel_Cell_DataType::TYPE_STRING)
-                ->setCellValueExplicit("H".$j,$value['tax'],PHPExcel_Cell_DataType::TYPE_STRING)
-                ->setCellValueExplicit("I".$j,$value['point'],PHPExcel_Cell_DataType::TYPE_STRING)
-                ->setCellValueExplicit("J".$j,$value['cheap'],PHPExcel_Cell_DataType::TYPE_STRING)
-                ->setCellValueExplicit("K".$j,$k,PHPExcel_Cell_DataType::TYPE_STRING)
-                ->setCellValue("L".$j,$value['express_day'])
+                ->setCellValue("F".$j,$value['ems_money'])
+                ->setCellValue("G".$j,$value['bill'])
+                ->setCellValue("H".$j,$value['tax'])
+                ->setCellValue("I".$j,$value['point'])
+                ->setCellValue("J".$j,$value['cheap'])
+                ->setCellValue("K".$j,$value['total_money'])
+                ->setCellValue("L".$j,$value['send_day'])
                 ->setCellValue("M".$j,'新規')
                 ->setCellValue("N".$j,$value['holder'])
                 ->setCellValue("O".$j,$value['store_name'])

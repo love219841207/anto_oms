@@ -46,12 +46,13 @@ function play_order_price($station,$response_list,$response_info,$order_id){
 		$res = $db->execute($sql);
 	}
 
+	// 查询该单有几个
+	$sql = "SELECT count(1) as count_h FROM $response_list WHERE send_id = '{$send_id}'";
+	$res = $db->getOne($sql);
+	$count_H = $res['count_h']-1;
+
 	// // 查询是否是合单
-	if(strstr($send_id, 'H') == true){
-		// 查询该单有几个
-		$sql = "SELECT count(1) as count_h FROM $response_list WHERE send_id = '{$send_id}'";
-		$res = $db->getOne($sql);
-		$count_H = $res['count_h']-1;
+	if(strstr($send_id, 'H') == true){	
 
 		// 总合单金额计算 = 合单金额计算 - COD订单数 * COD费用 + 一个COD费用 （以后涉及运费代码问题）
 		// 查询有合单中有几单是合单的费用
@@ -82,12 +83,12 @@ function play_order_price($station,$response_list,$response_info,$order_id){
 		//	合单并代引
 		if($payment_method == 'COD'){
 			// 算出非代引总价
-			$sql = "SELECT sum(order_total_money) as normal_sum FROM amazon_response_list WHERE send_id = '{$send_id}' AND payment_method <> 'COD'";
+			$sql = "SELECT sum(order_total_money) as normal_sum FROM $response_list WHERE send_id = '{$send_id}' AND payment_method <> 'COD'";
 			$res = $db->getOne($sql);
 			$normal_sum = $res['normal_sum'];
 
 			// 算出代引总价
-			$sql = "SELECT sum(points+coupon) as has_pay,all_yfmoney FROM amazon_response_list WHERE send_id = '{$send_id}' AND payment_method = 'COD'";
+			$sql = "SELECT sum(points+coupon) as has_pay,all_yfmoney FROM $response_list WHERE send_id = '{$send_id}' AND payment_method = 'COD'";
 			$res = $db->getOne($sql);
 			$has_pay = $res['has_pay'];
 			$all_yfmoney = $res['all_yfmoney'];
@@ -95,12 +96,32 @@ function play_order_price($station,$response_list,$response_info,$order_id){
 			// 客人最终需要付款 = 合单金额 - 正常订单总价 - 已经付过的积分（优惠券）- 运费
 			$pay_money = $all_fee - $normal_sum - $has_pay - ($all_yfmoney * $count_H);
 
-			$sql = "UPDATE $response_list SET pay_money = '{$pay_money}' WHERE send_id='{$send_id}'";
-			$res = $db->execute($sql);
-
-		}else{
 			
+		}else{
+			// 正常订单客人支付计算 
+			$sql = "SELECT sum(points+coupon) as has_pay,all_yfmoney FROM $response_list WHERE send_id = '{$send_id}'";
+			$res = $db->getOne($sql);
+			$has_pay = $res['has_pay'];
+			$all_yfmoney = $res['all_yfmoney'];
+			// 客人最终需要付款 = 合单金额 - 已经付过的积分（优惠券）- 运费
+			$pay_money = $all_fee - $has_pay - ($all_yfmoney * $count_H);
 		}
+		$sql = "UPDATE $response_list SET pay_money = '{$pay_money}' WHERE send_id='{$send_id}'";
+		$res = $db->execute($sql);
+
 		
+	}else{
+		// 不是合单或者拆单
+		// 正常订单客人支付计算 
+		$sql = "SELECT order_total_money,sum(points+coupon) as has_pay,all_yfmoney FROM $response_list WHERE send_id = '{$send_id}'";
+		$res = $db->getOne($sql);
+		$order_total_money = $res['order_total_money'];
+		$has_pay = $res['has_pay'];
+		$all_yfmoney = $res['all_yfmoney'];
+		// 客人最终需要付款 = 合单金额 - 已经付过的积分（优惠券）- 运费
+		$pay_money = $order_total_money - $has_pay - ($all_yfmoney * $count_H);
+		$sql = "UPDATE $response_list SET pay_money = '{$pay_money}' WHERE send_id='{$send_id}'";
+		$res = $db->execute($sql);
+
 	}
 }

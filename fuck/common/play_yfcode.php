@@ -26,6 +26,7 @@ function play_yf_code($station,$response_list,$response_info,$send_id){
 		}
 		$order_ids = substr($order_ids, 1);	//移除逗号
 		$order_ids = trim($order_ids);	//空白
+
 			
 		// 提取该订单的所有子订单的运费代码
 		$has_all_yf = 1; //默认全部存在且全部开启
@@ -87,10 +88,13 @@ function gogogo($station,$response_list,$response_info,$send_id,$need_cod,$max_c
 	if($buyer_send_method !== $send_method){	// 如果不一致，更新为运费代码相同的配送方式，并过
 		$sql = "UPDATE $response_list SET send_method = '{$send_method}',yfcode_ok = 1 WHERE order_id in ({$order_ids})";
 		$res = $db->execute($sql);
-		$sql = "UPDATE $response_info SET yfcode_ok = 1 WHERE order_id in ({$order_ids})";
-		$res = $db->execute($sql);
+		// $sql = "UPDATE $response_info SET yfcode_ok = 1 WHERE order_id in ({$order_ids})";
+		// $res = $db->execute($sql);
 	}else{
-		// 分配配送方式
+		
+	}
+
+	// 分配配送方式
 		$sql = "UPDATE $response_list SET send_method = '{$send_method}' WHERE order_id in ({$order_ids})";
 		$res = $db->execute($sql);
 		$sql = "UPDATE $response_info SET yfcode_ok = 1 WHERE order_id in ({$order_ids}) AND yfcode = '{$max_code}'";
@@ -145,5 +149,8 @@ function gogogo($station,$response_list,$response_info,$send_id,$need_cod,$max_c
 			$sql = "UPDATE $response_info SET yfcode_ok = 2 WHERE order_id in ({$order_ids})";
 			$res = $db->execute($sql);
 		}	
-	}
+
+		// 卡掉合单
+		$sql = "UPDATE $response_list SET order_line = 1 WHERE yfcode_ok = 2 AND order_line = 2";
+		$res = $db->execute($sql);
 }

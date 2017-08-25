@@ -1,5 +1,17 @@
 var app=angular.module('myApp');
 app.controller('tableCtrl', ['$rootScope','$scope','$state','$http','$log','$timeout','$compile', function($rootScope,$scope,$state,$http,$log,$timeout,$compile){
+    //查询所有店铺
+    $scope.get_store = function(){
+        $http.get('/fuck/systems/store_manage.php', {params:{get_store:'all'}
+        }).success(function(data) {
+            $scope.all_store = data;
+        }).error(function(data) {
+            alert("严重！店铺读取失败。");
+            $log.info(data);
+        });
+    };
+    $scope.get_store();
+
     // 销售额查看
     $scope.look_sell = function(){
         $scope.shadow('open','ss_make','正在生成图表');
@@ -8,8 +20,10 @@ app.controller('tableCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
                 look_sell:'get',
                 s_date:$scope.s_date,
                 e_date:$scope.e_date,
+                sell_store:$scope.sell_store
             }
         }).success(function(data) {
+            $log.info(data)
             $scope.sell_data = data.table;
             $timeout(function(){$scope.shadow('close');},1000); //关闭shadow
 
