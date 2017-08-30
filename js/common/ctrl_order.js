@@ -693,18 +693,12 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
                 station:$scope.now_station}
         }).success(function(data) {
             if(data == 'ok'){
-                if($scope.list_type == 'list'){
-                    $scope.to_page($scope.now_page);
-                    $scope.show_one_info(order_id);
-                }
-                if($scope.list_type == 'common'){
-                    $scope.get_common_order($scope.common_send_id);
-                }
+                $scope.to_page($scope.now_page);
+                $scope.show_one_info(order_id);
             }else{
                 $scope.plug_alert('danger','修改失败。','fa fa-ban');
                 $log.info(data);
             }
-
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
             $log.info("error:同步运费代码失败。");
