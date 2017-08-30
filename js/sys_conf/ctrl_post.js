@@ -27,7 +27,7 @@ app.controller('postCtrl', ['$scope','$state','$http','$log', function($scope,$s
 
     // 下载 amz_mail
     $scope.down_amz_mail = function(){
-        window.location='/uploads/amz_mail.xlsx';
+        window.location='/uploads/mail_table.xlsx';
     };
 
     //  查看 true_sku

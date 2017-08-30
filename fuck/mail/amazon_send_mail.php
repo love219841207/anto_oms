@@ -42,15 +42,23 @@ if(isset($_POST['send_mail'])){
 		// 按照合单号发送
 		$sql = "SELECT send_id FROM amazon_response_list WHERE order_id IN ({$order_items})";
 		$res = $db->getAll($sql);
-		$send_ids = @array_unique($res);
+		$sss = array();
+		foreach ($res as $value) {
+			if (in_array($value['send_id'], $sss)) {
+			    
+			}else{
+				array_push($sss,$value['send_id']);
+			}
+		}
 
+		// var_dump($sss);
 		// 清空邮件错误表
 	    $sql = "TRUNCATE mail_error";
 	    $res = $db->execute($sql);
 		$error_num = 0;
 		$ok_num = 0;
-		foreach ($send_ids as $keyvalue) {
-			$value = $keyvalue['send_id'];
+		foreach ($sss as $keyvalue) {
+			$value = $keyvalue;
 			//读取信件内容
 			if($mail_tpl == 'send_express'){
 				$sql = "SELECT * FROM mail_tpl WHERE store_name = '{$store}' AND model_name = 'send_express'";

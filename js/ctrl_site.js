@@ -313,7 +313,7 @@ app.controller('FileController', ['$rootScope','$scope','$state', 'Upload' , '$t
                 $log.info(file_name+" 导入失败");
             });
 
-        }else if(file_name == 'amz_mail'){    //导入亚马逊mail
+        }else if(file_name == 'mail_table'){    //导入亚马逊mail
             $http.get('/fuck/import_mail_bian.php', {params:{import_file:file_name}
             }).success(function(data) {
                 // console.log(data)

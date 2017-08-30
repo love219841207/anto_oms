@@ -585,7 +585,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
             }
         })
 
-        //运动代码管理
+        //运费代码管理
         .state('site.yf_code',{
             url: '/yf_code/{data}',
             cache: false,
@@ -632,6 +632,26 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
             views:{
                 'show@site':{
                     templateUrl: 'tpls/sys_conf/amz_mail.html',
+                    controller: function($scope){
+                        $scope.status.isopen1 = false;
+                        $scope.status.isopen2 = false;
+                        $scope.status.isopen3 = false;
+                        $scope.status.isopen4 = false;
+                        $scope.status.isopen5 = false;
+                        $scope.status.isopen6 = false;
+                        $scope.status.isopen7 = true;
+                    }
+                }
+            }
+        })
+
+        //乃口pos
+        .state('site.big_mail',{
+            url: '/big_mail/{data}',
+            cache: false,
+            views:{
+                'show@site':{
+                    templateUrl: 'tpls/sys_conf/big_mail.html',
                     controller: function($scope){
                         $scope.status.isopen1 = false;
                         $scope.status.isopen2 = false;

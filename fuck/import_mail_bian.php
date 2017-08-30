@@ -9,14 +9,14 @@ if(isset($_GET['import_file'])){
     $file_name = $_GET['import_file'];
 
 	//导入亚马逊mail表
-	if($file_name == 'amz_mail'){
+	if($file_name == 'mail_table'){
 
 		//清空amz_mail表
 	    $sql = "TRUNCATE amz_mail;";
 	    $res = $db->execute($sql);
 
 		//开始读取xlsx文件并导入
-		$filename=$dir."/../uploads/amz_mail.xlsx";		
+		$filename=$dir."/../uploads/mail_table.xlsx";		
 		$objPHPExcel=PHPExcel_IOFactory::Load($filename);
 		$sheet = $objPHPExcel->getSheet(0); //只读取第一个表
 		//开始读取表格
@@ -42,7 +42,7 @@ if(isset($_GET['import_file'])){
 
             if($res['c_count'] == 1){
             	//插入
-		 		$sql = "INSERT INTO amz_mail (goods_code,own_key) VALUES('{$strs[0]}','{$strs[1]}')";
+		 		$sql = "INSERT INTO amz_mail (goods_code,own_key,mail_type) VALUES('{$strs[0]}','{$strs[1]}','{$strs[2]}')";
 		 		$res = $db->execute($sql);
             	
             }else{
