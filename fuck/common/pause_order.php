@@ -284,6 +284,8 @@ if(isset($_GET['down_pause_orders_table'])){
     $sql = "SELECT FROM_UNIXTIME(list.pause_time, '%Y-%m-%d %H:%I:%S') as pause_time,list.order_id,list.id,info.goods_code,(info.goods_num-info.pause_ch-info.pause_jp) as pause_num,list.receive_name,list.store FROM rakuten_response_list list,rakuten_response_info info WHERE list.order_id = info.order_id AND info.is_pause = 'pause' ORDER BY pause_time";
     $res2 = $db->getAll($sql);
     $res = array_merge($res1,$res2);
+    sort($res);
+
     $j=2;
     $now_order_id = '';
     foreach ($res as $key => $value) {
