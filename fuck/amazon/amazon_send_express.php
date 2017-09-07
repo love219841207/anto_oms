@@ -62,7 +62,7 @@ if(isset($_POST['down_express_xlsx'])){
     $objPHPExcel->getActiveSheet()->getStyle('A')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);//左对齐
 
     //SQL
-    $sql = "SELECT * FROM amazon_express WHERE u_num = '{$u_num}' AND amazon_order_id in ($my_checked_items)";
+    $sql = "SELECT * FROM amazon_express WHERE u_num = '{$u_num}' AND amazon_order_id in ($my_checked_items) GROUP BY amazon_order_id";
     $res = $db->getAll($sql);
     $j=2;
     foreach ($res as $key => $value) {

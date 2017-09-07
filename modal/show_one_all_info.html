@@ -1,0 +1,160 @@
+<div class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" style="width:680px;">
+    <div class="modal-content">
+      <div class="modal-header modal-drag">
+        <i class="fa fa-close f20 close" ng-click="$hide()"></i>
+        <h4 class="modal-title blue">合单号：<span class="red">{{item.send_id}}</span></h4>
+      </div>
+      <div class="modal-body">
+        
+        <table class="tagl table table-hover table-condensed table-bordered" ng-repeat="item2 in one_res_info track by $index">
+          <tr class="bg-info blue">
+            <td style="width:20%;">订单信息</td>
+            <td>订单号 <span class="yellow">{{item2.order_id}}</span>
+                <div class="pull-right" ng-hide="item.order_line>2">
+                  <div ng-show="del_btn" class="btn btn-xs btn-danger" ng-click="del_item(item2.order_id,item2.id)">删除</div>
+                  <i ng-click="del_btn=!del_btn" class="fa fa-trash-o red pointer fa-fw"></i>
+                </div>
+            </td>
+          </tr>
+          <tr>
+            <td width="20%" class="s_gray">品名</td>
+            <td class="s_gray">{{item2.goods_title}}
+            <!-- <i ng-click="aa_goods_title=!aa_goods_title" 
+                class="fa fa-edit fa-fw pointer"
+                ></i>
+              <div ng-show="aa_goods_title" class="input-group">
+                <input class="form-control input-sm" placeholder="品名 更改为..." type="text" id="goods_title_{{$index}}">
+                <span class="input-group-btn">
+                  <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="change_info_field(item2.id,'goods_title',$index,item2.order_id);aa_goods_title=!aa_goods_title">确定</button>
+                </span>
+              </div> -->
+            </td>
+          </tr>
+          <tr ng-hide="now_station=='Amazon'">
+            <td class="s_gray">运费代码</td>
+            <td class="green" ng-class="{'danger red':item2.yfcode_ok==2}">{{item2.yfcode}}
+              <i class="fa fa-lightbulb-o fa-fw pointer blue" ng-hide="item.order_line>3" ng-click="read_yfcode(item2.yfcode,item2.station,item2.order_id,item2.id);open_yf=1"></i>
+              <span ng-show="open_yf==1" class="blue">{{item2.yf_info}}</span>
+              <i ng-click="aa_yfcode=!aa_yfcode;read_yfcode_list();yf_change=''" 
+                class="fa fa-edit fa-fw pointer"
+                ng-hide="item.order_line>2"
+                ></i>
+              <div ng-show="aa_yfcode" class="btn-group ml20">
+                <button type="button" class="btn btn-default btn-sm">
+                  <select id="yfcode_{{$index}}" class="selecter" ng-model="yf_change">
+                    <option value="">更改为...</option>
+                    <option ng-value="item.yf_code_name" ng-repeat="item in yfcode_list track by $index">{{item.yf_code_name}}</option>
+                  </select>
+                </button>
+                <button class="btn btn-default btn-danger" ng-disabled="yf_change==''" type="button" ng-click="change_info_field(item2.id,'yfcode',$index,item2.order_id);aa_yfcode=!aa_yfcode">确定</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="s_gray">SKU</td>
+            <td class="green">{{item2.sku}}</td>
+          </tr>
+          <tr>
+            <td class="s_gray">商品代码</td>
+            <td class="green" ng-class="{'danger red':item2.sku_ok==2}">{{item2.goods_code}}
+              <i ng-click="check_repo(item2.goods_code,item2.id,item2.order_id);open_repo='1'" 
+                class="fa fa-cubes fa-fw pointer"
+                ng-hide="item.order_line>2"
+                ></i>
+                <span class="blue" ng-show="open_repo=='1'">(日{{item2.b_repo_num}}+中{{item2.a_repo_num}}) </span>
+              <i ng-click="aa_goods_code=!aa_goods_code" 
+                class="fa fa-edit fa-fw pointer"
+                ng-hide="item.order_line>2"
+                ></i>
+              <div ng-show="aa_goods_code" class="input-group">
+                <input class="form-control input-sm" ng-value="item2.goods_code" placeholder="商品代码 更改为..." type="text" id="goods_code_{{$index}}">
+                <span class="input-group-btn">
+                  <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="change_info_field(item2.id,'goods_code',$index,item2.order_id);aa_goods_code=!aa_goods_code">确定</button>
+                </span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="s_gray">数量</td>
+            <td class="blue">{{item2.goods_num}}
+              <i ng-click="aa_goods_num=!aa_goods_num" 
+                class="fa fa-edit fa-fw pointer"
+                ng-hide="item.order_line>2"
+                ></i>
+              <div ng-show="aa_goods_num" class="input-group">
+                <input ng-blur="check_int('goods_num_'+$index)" class="form-control input-sm" placeholder="数量 更改为..." type="number" id="goods_num_{{$index}}">
+                <span class="input-group-btn">
+                  <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="change_info_field(item2.id,'goods_num',$index,item2.order_id);aa_goods_num=!aa_goods_num">确定</button>
+                </span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="s_gray">已扣日本</td>
+            <td class="red">{{item2.pause_jp}}</td>
+          </tr>
+          <tr>
+            <td class="s_gray">已扣中国</td>
+            <td class="red">{{item2.pause_ch}}</td>
+          </tr>
+          <tr>
+            <td class="s_gray">扣货状态</td>
+            <td class="red">{{item2.is_pause | is_pause}}</td>
+          </tr>
+          <tr>
+            <td class="s_gray">单价</td>
+            <td class="yellow">{{item2.unit_price}}
+              <i ng-click="aa_unit_price=!aa_unit_price" 
+                class="fa fa-edit fa-fw pointer"
+                ng-hide="item.order_line>2"
+                ></i>
+              <div ng-show="aa_unit_price" class="input-group">
+                <input ng-blur="check_int('unit_price_'+$index)" class="form-control input-sm" placeholder="单价 更改为..." type="number" id="unit_price_{{$index}}">
+                <span class="input-group-btn">
+                  <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="change_info_field(item2.id,'unit_price',$index,item2.order_id);aa_unit_price=!aa_unit_price">确定</button>
+                </span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="s_gray">子订单价格</td>
+            <td class="yellow">{{item2.item_price}}</td>
+          </tr>
+          <tr>
+            <td class="s_gray">代引手续费</td>
+            <td class="yellow">{{item2.cod_money}}
+              <i ng-click="aa_cod_money=!aa_cod_money" 
+                class="fa fa-edit fa-fw pointer"
+                ng-hide="item.order_line>2"
+                ></i>
+              <div ng-show="aa_cod_money" class="input-group">
+                <input ng-blur="check_int('cod_money_'+$index)" class="form-control input-sm" placeholder="代引手续费 更改为..." type="number" id="cod_money_{{$index}}">
+                <span class="input-group-btn">
+                  <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="change_info_field(item2.id,'cod_money',$index,item2.order_id);aa_cod_money=!aa_cod_money">确定</button>
+                </span>
+              </div>
+            </td>
+          </tr>
+        </table>
+        <div class="clearfix"></div>
+        <table ng-show="one_res_logs!=''" class="tagl table table-hover table-condensed table-bordered mt20">
+          <tr class="warning">
+            <td style="width:50px;" class="tagc">操作人</td>
+            <td>操作日志</td>
+            <td style="width:138px;">时 间</td>
+          </tr>
+          <tr style="color: #8a6d3b;" ng-repeat="item_log in one_res_logs track by $index">
+            <td class="tagc">{{item_log.who_name}}</td>
+            <td>{{item_log.who_do}}</td>
+            <td class="tagc">{{item_log.do_time}}</td>
+          </tr>
+        </table>
+        <div class="clearfix"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="$hide()">关 闭</button>
+      </div>
+    </div>
+  </div>
+</div>

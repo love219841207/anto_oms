@@ -2,6 +2,8 @@
 require_once("../header.php");
 require_once("../log.php");
 require_once("./play_yfcode.php");
+require_once("./play_price.php");
+
 $dir = dirname(__FILE__);
 
 set_time_limit(0);
@@ -103,6 +105,7 @@ if(isset($_GET['check_all_field'])){
 
 	foreach ($res as $value) {
 		$now_order_id = $value['order_id'];
+		play_order_price($station,$response_list,$response_info,$now_order_id);
 		// 查询客人填写的post和addr
 		$sql = "SELECT post_code,address FROM $response_list WHERE order_id = '{$now_order_id}'";
 		$res = $db->getOne($sql);

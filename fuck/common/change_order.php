@@ -66,12 +66,50 @@ if(isset($_GET['show_one_info'])){
    	$oms_id = $res['id'];
 
 	//查询操作日志
-	$sql = "SELECT * FROM oms_log WHERE oms_id = '{$oms_id}' AND station='{$station}' AND store = '{$store}' ORDER BY id DESC";
+	$sql = "SELECT * FROM oms_log WHERE oms_id = '{$oms_id}' AND station='{$station}' ORDER BY id DESC";
 	$res_logs = $db->getAll($sql);
 
 	//final_res
 	$final_res['status'] = 'ok';
 	$final_res['res_list'] = $res_list;
+	$final_res['res_info'] = $res_info;
+	$final_res['res_logs'] = $res_logs;
+	echo json_encode($final_res);
+}
+
+//查看合单详单
+if(isset($_GET['show_one_all_info'])){
+	$store = $_GET['store'];
+    $station = strtolower($_GET['station']);
+	$send_id = $_GET['show_one_all_info'];
+
+	$response_list = $station.'_response_list';
+	$response_info = $station.'_response_info';
+
+	//查询订单号
+	$sql = "SELECT order_id FROM $response_list WHERE send_id = '{$send_id}'";
+	$res_list = $db->getAll($sql);
+	$order_ids = '';
+	foreach ($res_list as $value) {
+		$order_ids = $order_ids.',\''.$value['order_id'].'\'';
+	}
+	$order_ids = substr($order_ids, 1);
+
+	//查询子订单	
+	$sql = "SELECT * FROM $response_info WHERE order_id in ({$order_ids})";
+	$res_info = $db->getAll($sql);
+
+	// 查询 OMS-ID
+	$sql = "SELECT id FROM $response_list WHERE send_id = '{$send_id}'";
+   	$res = $db->getOne($sql);
+   	$oms_id = $res['id'];
+
+	//查询操作日志
+	$sql = "SELECT * FROM oms_log WHERE oms_id = '{$oms_id}' AND station='{$station}' ORDER BY id DESC";
+	$res_logs = $db->getAll($sql);
+
+	//final_res
+	$final_res['status'] = 'ok';
 	$final_res['res_info'] = $res_info;
 	$final_res['res_logs'] = $res_logs;
 	echo json_encode($final_res);

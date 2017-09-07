@@ -450,6 +450,8 @@
 						<td style="width:8%" class="tagc">
 							<button data-animation="am-fade-and-slide-top" data-template-url="/modal/show_one_info.html" bs-modal="modal" class="btn btn-xs btn-primary mr5" ng-click="show_one_info(item.order_id)">
 							详单</button>
+							<button data-animation="am-fade-and-slide-top" data-template-url="/modal/show_one_all_info.html" bs-modal="modal" class="btn btn-xs btn-warning mr5" ng-click="show_one_all_info(item.send_id)">
+							合单</button>
 						</td>
 					</tr>
 					<tr ng-show="info_box" class="white am-fade-and-slide-right" ng-class="{'ready_color':item.order_line=='5',

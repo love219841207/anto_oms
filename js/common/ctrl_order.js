@@ -550,7 +550,35 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:查看单个详情失败。");
         });
-    }
+    };
+
+    //查看单个合单详情
+    $scope.show_one_all_info = function(send_id){
+        $scope.open_repo = '0';
+        $scope.sku_pass = false;
+        $scope.now_yfcode = false; 
+        $scope.loading_shadow('open'); //打开loading
+        $scope.now_post_name = '';  // 初始化参考地域
+        $http.get('/fuck/common/change_order.php', {
+            params:{
+                store:$scope.now_store_bar,
+                station:$scope.now_station,
+                show_one_all_info:send_id
+            }
+        }).success(function(data) {
+            if(data.status=='ok'){
+                $timeout(function(){$scope.loading_shadow('close');},300); //关闭loading 
+                $scope.one_res_info = data.res_info;
+                $scope.one_res_logs = data.res_logs;
+            }else{
+                $log.info(data);
+                $scope.plug_alert('danger','系统错误，请联系管理员。','fa fa-ban');
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:查看单个详情失败。");
+        });
+    };
 
     // 查看库存数
     $scope.check_repo = function(goods_code,id,order_id){
