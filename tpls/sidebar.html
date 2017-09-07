@@ -60,6 +60,25 @@
 					<span class="am-fade" ng-show="side_bar"> 上传快递单</span>
 				</div>
 			</div>
+			<!-- 雅虎拍卖店平台 -->
+			<div ng-mouseenter="side_info(now_store_bar)" ng-show="now_station=='P_Yahoo' && now_store_bar!=''" uib-accordion-group is-open="status.isopen6" ng-class="{'open_down':status.isopen8}" class="panel-default hover am-fade-and-slide-left">
+				<uib-accordion-heading>
+	        		<i class="fa fa-fw fa-product-hunt"></i>
+	        		<span class="am-fade" ng-show="side_bar"> 雅虎拍卖</span><i class="pull-right fa fa-angle-right weight" ng-class="{'scroll_90': status.isopen8,'scroll_0': !status.isopen8}"></i>
+	     	 	</uib-accordion-heading>
+	     	 	<div ng-mouseenter="side_info('订单操作')" ui-sref="site.pyahoo_order" ui-sref-active="active" class="list-group-item">
+					<i class="fa fa-fw fa-file-text-o ml5"></i>
+					<span class="am-fade"  ng-show="side_bar"> 订单操作</span>
+				</div>
+				<div ng-mouseenter="side_info('下载快递单')" ui-sref="site.pyahoo_syn_express" ui-sref-active="active" class="list-group-item">
+					<i class="fa fa-fw fa-cloud-download ml5"></i>
+					<span class="am-fade"  ng-show="side_bar"> 下载快递单</span>
+				</div>
+				<div ng-mouseenter="side_info('邮件模板')" ui-sref="site.mail_tpl3" ui-sref-active="active" class="list-group-item">
+					<i class="fa fa-fw fa-envelope-o ml5"></i>
+					<span class="am-fade" ng-show="side_bar"> 邮件模板</span>
+				</div>
+			</div>
 			<!-- 发货模块 -->
 			<div ng-mouseenter="side_info('发货操作')" ng-hide="ucan_send=='0'" uib-accordion-group is-open="status.isopen4" ng-class="{'open_down':status.isopen4}" class="panel-default hover">
 				<uib-accordion-heading>

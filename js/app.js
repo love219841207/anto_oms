@@ -97,6 +97,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = false;
                         $scope.status.isopen7 = false;
+                        $scope.status.isopen8 = false;
                     }
                 }
             }
@@ -117,6 +118,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = false;
                         $scope.status.isopen7 = false;
+                        $scope.status.isopen8 = false;
                     }
                 }
             }
@@ -137,6 +139,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = false;
                         $scope.status.isopen7 = false;
+                        $scope.status.isopen8 = false;
                     }
                 }
             }
@@ -158,6 +161,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = false;
                         $scope.status.isopen7 = false;
+                        $scope.status.isopen8 = false;
                     }
                 }
             }
@@ -178,6 +182,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = false;
                         $scope.status.isopen7 = false;
+                        $scope.status.isopen8 = false;
                     }
                 }
             }
@@ -198,6 +203,70 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = false;
                         $scope.status.isopen7 = false;
+                        $scope.status.isopen8 = false;
+                    }
+                }
+            }
+        })
+    // 雅虎拍卖
+        // 雅虎拍卖订单操作
+        .state('site.pyahoo_order',{
+            url: '/pyahoo_order/{data}',
+            cache: false,
+            views:{
+                'show@site':{
+                    templateUrl: 'tpls/common/order.html',
+                    controller: function($scope){
+                        $scope.status.isopen1 = false;
+                        $scope.status.isopen2 = false;
+                        $scope.status.isopen3 = false;
+                        $scope.status.isopen4 = false;
+                        $scope.status.isopen5 = false;
+                        $scope.status.isopen6 = false;
+                        $scope.status.isopen7 = false;
+                        $scope.status.isopen8 = true;
+                    }
+                }
+            }
+        })
+
+        // 雅虎拍卖上传快递单
+        .state('site.pyahoo_syn_express',{
+            url: '/pyahoo_syn_express/{data}',
+            cache: false,
+            views:{
+                'show@site':{
+                    templateUrl: 'tpls/rakuten/pyahoo_syn_express.html',
+                    controller: function($scope){
+                        $scope.status.isopen1 = false;
+                        $scope.status.isopen2 = false;
+                        $scope.status.isopen3 = false;
+                        $scope.status.isopen4 = false;
+                        $scope.status.isopen5 = false;
+                        $scope.status.isopen6 = false;
+                        $scope.status.isopen7 = false;
+                        $scope.status.isopen8 = true;
+                    }
+                }
+            }
+        })
+
+        // 雅虎拍卖邮件模板
+        .state('site.mail_tpl3',{
+            url: '/mail_tpl/{data}',
+            cache: false,
+            views:{
+                'show@site':{
+                    templateUrl: 'tpls/common/mail_tpl.html',
+                    controller: function($scope){
+                        $scope.status.isopen1 = false;
+                        $scope.status.isopen2 = false;
+                        $scope.status.isopen3 = false;
+                        $scope.status.isopen4 = false;
+                        $scope.status.isopen5 = false;
+                        $scope.status.isopen6 = false;
+                        $scope.status.isopen7 = false;
+                        $scope.status.isopen8 = true;
                     }
                 }
             }
@@ -220,6 +289,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = false;
                         $scope.status.isopen7 = false;
+                        $scope.status.isopen8 = false;
                     }
                 }
             }
@@ -240,6 +310,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = false;
                         $scope.status.isopen7 = false;
+                        $scope.status.isopen8 = false;
                     }
                 }
             }
@@ -261,6 +332,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = false;
                         $scope.status.isopen7 = false;
+                        $scope.status.isopen8 = false;
                     }
                 }
             }
@@ -281,6 +353,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = false;
                         $scope.status.isopen7 = false;
+                        $scope.status.isopen8 = false;
                     }
                 }
             }
@@ -301,6 +374,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = false;
                         $scope.status.isopen7 = false;
+                        $scope.status.isopen8 = false;
                     }
                 }
             }
@@ -321,6 +395,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = false;
                         $scope.status.isopen7 = false;
+                        $scope.status.isopen8 = false;
                     }
                 }
             }
@@ -341,6 +416,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = false;
                         $scope.status.isopen7 = false;
+                        $scope.status.isopen8 = false;
                     }
                 }
             }
@@ -361,6 +437,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = false;
                         $scope.status.isopen7 = false;
+                        $scope.status.isopen8 = false;
                     }
                 }
             }
@@ -381,6 +458,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = false;
                         $scope.status.isopen7 = false;
+                        $scope.status.isopen8 = false;
                     }
                 }
             }
@@ -401,6 +479,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = false;
                         $scope.status.isopen7 = false;
+                        $scope.status.isopen8 = false;
                     }
                 }
             }
@@ -421,6 +500,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = true;
                         $scope.status.isopen7 = false;
+                        $scope.status.isopen8 = false;
                     }
                 }
             }
@@ -440,6 +520,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = true;
                         $scope.status.isopen7 = false;
+                        $scope.status.isopen8 = false;
                     }
                 }
             }
@@ -459,6 +540,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = true;
                         $scope.status.isopen7 = false;
+                        $scope.status.isopen8 = false;
                     }
                 }
             }
@@ -478,6 +560,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = true;
                         $scope.status.isopen7 = false;
+                        $scope.status.isopen8 = false;
                     }
                 }
             }
@@ -499,6 +582,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen5 = true;
                         $scope.status.isopen6 = false;
                         $scope.status.isopen7 = false;
+                        $scope.status.isopen8 = false;
                     }
                 }
             }
@@ -519,6 +603,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen5 = true;
                         $scope.status.isopen6 = false;
                         $scope.status.isopen7 = false;
+                        $scope.status.isopen8 = false;
                     }
                 }
             }
@@ -539,6 +624,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen5 = true;
                         $scope.status.isopen6 = false;
                         $scope.status.isopen7 = false;
+                        $scope.status.isopen8 = false;
                     }
                 }
             }
@@ -560,6 +646,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = false;
                         $scope.status.isopen7 = true;
+                        $scope.status.isopen8 = false;
                     }
                 }
             }
@@ -580,6 +667,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = false;
                         $scope.status.isopen7 = true;
+                        $scope.status.isopen8 = false;
                     }
                 }
             }
@@ -600,6 +688,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = false;
                         $scope.status.isopen7 = true;
+                        $scope.status.isopen8 = false;
                     }
                 }
             }
@@ -620,6 +709,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = false;
                         $scope.status.isopen7 = true;
+                        $scope.status.isopen8 = false;
                     }
                 }
             }
@@ -640,6 +730,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = false;
                         $scope.status.isopen7 = true;
+                        $scope.status.isopen8 = false;
                     }
                 }
             }
@@ -660,6 +751,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = false;
                         $scope.status.isopen7 = true;
+                        $scope.status.isopen8 = false;
                     }
                 }
             }
@@ -680,6 +772,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = false;
                         $scope.status.isopen7 = true;
+                        $scope.status.isopen8 = false;
                     }
                 }
             }
@@ -701,6 +794,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = false;
                         $scope.status.isopen7 = true;
+                        $scope.status.isopen8 = false;
                     }
                 }
             }
@@ -721,6 +815,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
                         $scope.status.isopen5 = false;
                         $scope.status.isopen6 = false;
                         $scope.status.isopen7 = true;
+                        $scope.status.isopen8 = false;
                     }
                 }
             },

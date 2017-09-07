@@ -1,6 +1,6 @@
 <div class="container-fluid mt20" ng-controller="usersCtrl">
 	<div class="row">
-		<div class="col-lg-10 col-md-10 col-sm-10">
+		<div class="col-lg-12 col-md-12 col-sm-12">
 			<div class="panel panel-primary">
 				<div class="panel-heading"><i class="fa fa-fw fa-users"></i> 员工管理</div>
 				<div class="panel-body">
@@ -26,6 +26,7 @@
 									<td><i class="fa fa-amazon fa-fw"></i> 亚马逊</td>
 									<td><i class="fa fa-registered fa-fw"></i> 乐 天</td>
 									<td><i class="fa fa-yahoo fa-fw"></i> 雅 虎</td>
+									<td><i class="fa fa-fw fa-product-hunt"></i> 雅虎拍卖</td>
 									<td><i class="fa fa-cog fa-fw fa-spin"></i> 操 作</td>
 								</tr>
 								<tr class="s_gray" ng-repeat="item in all_users track by $index">
@@ -41,6 +42,9 @@
 									</td>
 									<td class="tagl green">
 										&nbsp;{{item.u_yahoo | replace_symbol}} <i ng-hide="item.u_num<1001" data-animation="am-fade-and-slide-top" data-template-url="/modal/change_user_store.html" bs-modal="modal" ng-click="change_usaer_store_modal('Yahoo',item.u_num)" class="fa fa-edit pointer s_gray"></i>
+									</td>
+									<td class="tagl green">
+										&nbsp;{{item.u_p_yahoo | replace_symbol}} <i ng-hide="item.u_num<1001" data-animation="am-fade-and-slide-top" data-template-url="/modal/change_user_store.html" bs-modal="modal" ng-click="change_usaer_store_modal('P_Yahoo',item.u_num)" class="fa fa-edit pointer s_gray"></i>
 									</td>
 									<td>
 										<div ng-hide="item.u_num<1000" data-animation="am-fade-and-slide-top" data-template-url="/modal/re_pwd_user.html" bs-modal="modal" ng-click="re_pwd_modal(item.u_num,item.u_name)" class="btn btn-xs btn-warning mr20"><i class="fa-undo fa fa-fw"></i>重置密码</div>

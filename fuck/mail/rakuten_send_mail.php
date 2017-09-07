@@ -58,7 +58,7 @@ if(isset($_POST['send_mail'])){
 		$error_num = 0;
 		$ok_num = 0;
 		foreach ($sss as $keyvalue) {
-			$value = $keyvalue['send_id'];
+			$value = $keyvalue;
 			//读取信件内容
 			if($mail_tpl == 'send_express'){
 				$sql = "SELECT * FROM mail_tpl WHERE store_name = '{$store}' AND model_name = 'send_express'";
@@ -103,6 +103,7 @@ if(isset($_POST['send_mail'])){
 		 	$points = $res['points'];	
 		 	$coupon = $res['coupon'];	
 		 	$shipping_price = $res['shipping_price'];	
+		 	$all_total_money = $all_total_money - $points - $coupon;
 		 	if($coupon == ''){
 		 		$coupon = 0;
 		 	}

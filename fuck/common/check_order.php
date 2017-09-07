@@ -400,7 +400,7 @@ if(isset($_GET['change_post_addr'])){
 	}
 	
 	if($pass == 0){
-		echo '邮编不存在。';
+		echo '邮编/地址不匹配。';
 	}else{
 		// 邮编和地址匹配
 		if($pass == 1){

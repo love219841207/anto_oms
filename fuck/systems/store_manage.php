@@ -285,6 +285,7 @@ if(isset($_POST['demo_mail'])){
  	$order_tax = $res['order_tax'];	
  	$points = $res['points'];	
  	$coupon = $res['coupon'];	
+ 	$all_total_money = $all_total_money - $points - $coupon;
  	$shipping_price = $res['shipping_price'];	
  	if($coupon == ''){
  		$coupon = 0;

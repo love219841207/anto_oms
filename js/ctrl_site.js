@@ -85,7 +85,7 @@ app.controller('siteCtrl', ['$rootScope','$scope','$state','$stateParams','$http
             alert("系统错误，请联系管理员。");
             $log.info("side_bar 切换失败");
         });
-    }
+    };
     $scope.side_bar_status();
 
     //更新员工侧栏开关
@@ -101,7 +101,7 @@ app.controller('siteCtrl', ['$rootScope','$scope','$state','$stateParams','$http
             alert("系统错误，请联系管理员。");
             $log.info("side_bar 切换失败");
         });
-    }
+    };
 
     // 侧栏提示
     $scope.side_info = function(name){
@@ -114,11 +114,11 @@ app.controller('siteCtrl', ['$rootScope','$scope','$state','$stateParams','$http
         
         var dom = document.querySelector('#side_hover_info');
         angular.element(dom).css({'top':final_yy});
-    }
+    };
 
     $scope.leave_info = function(){
         $scope.side_hover_info = 0;
-    }
+    };
 
     // 获取鼠标位置
     function getMousePos(event) {             
@@ -182,7 +182,7 @@ app.controller('topCtrl', ['$rootScope','$scope','$state','$stateParams','$http'
                 $scope.ping_repair();
             },1000);
         });
-    }
+    };
     $scope.ping_repair();
 
     //平台切换
@@ -209,7 +209,7 @@ app.controller('topCtrl', ['$rootScope','$scope','$state','$stateParams','$http'
         $scope.status.isopen3 = false;
         $scope.status.isopen4 = false;
         $scope.status.isopen5 = false;
-    }
+    };
 
     //店铺切换
     $scope.change_now_store = function(){
@@ -220,7 +220,7 @@ app.controller('topCtrl', ['$rootScope','$scope','$state','$stateParams','$http'
         $scope.status.isopen3 = false;
         $scope.status.isopen4 = false;
         $scope.status.isopen5 = false;
-    }
+    };
 
     //版本号查询
     $http.get('/fuck/topbar.php', {params:{get_version:"get"}
@@ -235,7 +235,7 @@ app.controller('topCtrl', ['$rootScope','$scope','$state','$stateParams','$http'
     $scope.logout = function(){
         $http.get('/fuck/login.php', {params:{logout:"bye"}
         }).success(function(data) {
-            $log.info(data)
+            $log.info(data);
             if(data == 'bye'){
                 $state.go('login',{respond:'logout'});  //跳转到首页登录
             }
@@ -243,8 +243,8 @@ app.controller('topCtrl', ['$rootScope','$scope','$state','$stateParams','$http'
             alert("系统错误，请联系管理员。");
             $log.info("系统登出失败。");
         });
-    }
-}]) 
+    };
+}]);
 
 app.controller('FileController', ['$rootScope','$scope','$state', 'Upload' , '$timeout','$http','$log', function($rootScope,$scope,$state,Upload,$timeout,$http,$log) {
     $scope.uploadImg = '';
@@ -254,13 +254,13 @@ app.controller('FileController', ['$rootScope','$scope','$state', 'Upload' , '$t
         $scope.upload_store = '';
         $scope.upload_file = '';
         $scope.count_order = false;
-    }
+    };
 
     //选择文件
     $scope.chose_file = function(){
         $scope.upload_ok = false;
         $scope.progress_bar = 0;
-    }
+    };
     //提交，此处只分快递公司，不分中国、日本
     $scope.submit = function (file_name,file_type,station) {
         $scope.upload($scope.upload_file,file_name,file_type,station);
@@ -281,13 +281,16 @@ app.controller('FileController', ['$rootScope','$scope','$state', 'Upload' , '$t
                     //保存数据
                     $scope.shadow('open','ss_write','正在保存数据');
                     if(station == 'amazon'){
-                        $timeout(function(){$scope.amazon_import_file(file_name)},1000);    
+                        $timeout(function(){$scope.amazon_import_file(file_name);},1000);    
                     }
                     if(station == 'express'){
-                        $timeout(function(){$scope.express_import_file(file_name)},1000);
+                        $timeout(function(){$scope.express_import_file(file_name);},1000);
                     }
                     if(station == 'rakuten'){
-                        $timeout(function(){$scope.rakuten_import_file(file_name)},1000);    
+                        $timeout(function(){$scope.rakuten_import_file(file_name);},1000);    
+                    }
+                    if(station == 'p_yahoo'){
+                        $timeout(function(){$scope.p_yahoo_import_file(file_name);},1000);   
                     }
                 },1000);
             }
@@ -331,7 +334,7 @@ app.controller('FileController', ['$rootScope','$scope','$state', 'Upload' , '$t
         }else if(file_name == 'oms'){     //导入快递单
             $http.get('/fuck/amazon/amazon_import_express.php', {params:{import_file:file_name}
             }).success(function(data) {
-                console.log(data)
+                console.log(data);
                 $scope.ems_response = data;
                 if($scope.ems_response.status=='ok'){
                     $timeout(function(){$scope.shadow('close');},1000);
@@ -341,7 +344,7 @@ app.controller('FileController', ['$rootScope','$scope','$state', 'Upload' , '$t
                 $log.info(file_name+" 快递单导入失败");
             });
         }else if(file_name == 'post'){  //导入邮编
-            console.log('update_post')
+            console.log('update_post');
             $http.get('/fuck/import_post.php', {params:{import_file:file_name}
             }).success(function(data) {
                 // console.log(data)
@@ -357,7 +360,7 @@ app.controller('FileController', ['$rootScope','$scope','$state', 'Upload' , '$t
         }else if(file_name == 'amazon_add_list'){   //导入订单
             $http.get('/fuck/amazon/amazon_import_list.php', {params:{import_add_list:file_name,store:$scope.upload_store}
             }).success(function(data) {
-                console.log(data)
+                console.log(data);
                 $scope.count_order = data.count_order;
                 $scope.insert_count = data.insert_count;
                 $scope.has_count = data.has_count;
@@ -373,13 +376,13 @@ app.controller('FileController', ['$rootScope','$scope','$state', 'Upload' , '$t
                 $log.info(file_name+" 亚马逊订单导入失败");
             });
         }  
-    }
+    };
 
     //乐天订单导入
     $scope.rakuten_import_file = function(file_name){
         $http.get('/fuck/rakuten/rakuten_import_list.php', {params:{import_add_list:file_name,store:$scope.upload_store}
         }).success(function(data) {
-            console.log(data)
+            console.log(data);
             $scope.count_order = data.count_order;
             $scope.insert_count = data.insert_count;
             $scope.has_count = data.has_count;
@@ -395,13 +398,35 @@ app.controller('FileController', ['$rootScope','$scope','$state', 'Upload' , '$t
             alert("系统错误，请联系管理员。");
             $log.info(file_name+" 乐天订单导入失败");
         });
-    }
+    };
+
+    //雅虎拍卖订单导入
+    $scope.p_yahoo_import_file = function(file_name){
+        $http.get('/fuck/p_yahoo/p_yahoo_import_list.php', {params:{import_add_list:file_name,store:$scope.upload_store}
+        }).success(function(data) {
+            console.log(data);
+            $scope.count_order = data.count_order;
+            $scope.insert_count = data.insert_count;
+            $scope.has_count = data.has_count;
+            if(data.status == 'ok'){
+                $scope.plug_alert('success','数据导入完成。','fa fa-smile-o');
+                
+                // 刷新
+                var time=new Date().getTime();
+                $state.go('site.rakuten_order',{data:time});
+            }
+            $timeout(function(){$scope.shadow('close');},1000);
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info(file_name+" 雅虎拍卖订单导入失败");
+        });
+    };
 
     //快递单文件导入
     $scope.express_import_file = function(file_name){
         $http.get('/fuck/common/import_express.php', {params:{import_express:file_name}
         }).success(function(data) {
-            console.log(data)
+            console.log(data);
             $scope.e_import = data;
             if($scope.e_import.status=='ok'){
                 $timeout(function(){$scope.shadow('close');},1000);
@@ -411,7 +436,7 @@ app.controller('FileController', ['$rootScope','$scope','$state', 'Upload' , '$t
             alert("系统错误，请联系管理员。");
             $log.info(file_name+" 快递单导入失败");
         });
-    }
+    };
 }]);
 
 app.controller('logCtrl', ['$scope','$state','$stateParams','$http','$log','$timeout', function($scope,$state,$stateParams,$http,$log,$timeout){
@@ -429,7 +454,7 @@ app.controller('logCtrl', ['$scope','$state','$stateParams','$http','$log','$tim
             alert("严重！员工列表读取失败。");
             $log.info(data);
         });
-    }
+    };
     $scope.get_user_list();
 
     $scope.log_page = 0;
@@ -473,7 +498,7 @@ app.controller('logCtrl', ['$scope','$state','$stateParams','$http','$log','$tim
                 $log.info(data);
             });
         }
-    }
+    };
 
     $scope.more_logs = function(e){
         $scope.log_page = $scope.log_page +1;
@@ -484,5 +509,5 @@ app.controller('logCtrl', ['$scope','$state','$stateParams','$http','$log','$tim
         if(e == 'my'){
             $scope.load_logs(e,$scope.log_user);
         }
-    }
+    };
 }]);

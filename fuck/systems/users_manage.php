@@ -19,7 +19,7 @@ if(isset($_GET['add_user'])){
 	    $sql = "SELECT Max(u_num) as max_num FROM user_oms";
 	    $res = $db->getOne($sql);
 	    $new_num = $res['max_num']+1;
-		$sql = "INSERT INTO user_oms (u_num,u_name,u_pwd,u_side_bar,u_amazon,u_rakuten,u_yahoo) VALUES ('{$new_num}','{$add_user}','123456','1','-','-','-')";
+		$sql = "INSERT INTO user_oms (u_num,u_name,u_pwd,u_side_bar,u_amazon,u_rakuten,u_yahoo,u_p_yahoo) VALUES ('{$new_num}','{$add_user}','123456','1','-','-','-','-')";
 		$res = $db->execute($sql);
 		echo 'ok';
 	}else{

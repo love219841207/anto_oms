@@ -11,7 +11,7 @@
 						id="active_tools1"
 						class="btn btn-default active_tools" 
 						ng-class="{'active':active_tools_1}"
-						ng-hide="now_station=='Rakuten'"
+						ng-hide="now_station=='Rakuten' || now_station=='P_Yahoo'"
 						ng-dblclick="
 							list_orders();
 							upload_list = false;
@@ -243,6 +243,10 @@
 							<div class="col-lg-12" ng-show="now_station=='Rakuten'">
 								<button class="btn btn-primary btn-sm" ng-disabled="!fileForm.$valid || upload_store!=now_store_bar" ng-click="submit('rakuten_add_list','csv','rakuten')"><i class="fa fa-upload fa-fw"></i> 导入 {{now_store_bar}}</button>
 							</div>
+							<!-- 雅虎拍卖导入 -->
+							<div class="col-lg-12" ng-show="now_station=='P_Yahoo'">
+								<button class="btn btn-primary btn-sm" ng-disabled="!fileForm.$valid || upload_store!=now_store_bar" ng-click="submit('p_yahoo_add_list','xlsx','p_yahoo')"><i class="fa fa-upload fa-fw"></i> 导入 {{now_store_bar}}</button>
+							</div>
 						</div>
 						<div class="row mt10">
 							<div class="col-lg-11">
@@ -272,6 +276,7 @@
 			<div class="panel-footer">
 				<span ng-show="now_station=='Amazon'">导入 <span class="red">.txt</span> 格式的亚马逊订单。</span>
 				<span ng-show="now_station=='Rakuten'">导入 <span class="red">.csv</span> 格式的乐天订单。</span>
+				<span ng-show="now_station=='P_Yahoo'">导入 <span class="red">.xlsx</span> 格式的雅虎拍卖订单。</span>
 			</div>
 		</div>
 	</div>
@@ -375,10 +380,11 @@
 		      	<button class="btn btn_fff btn-xs" style="height: 30px;" ng-show="search_order_line == '-2'">
 					<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="search_pay_method" ng-change="change_pay_method()">
 						<option value="all">- 支付方式 -</option>
-						<option value="クレジットカード">クレジットカード</option>
-						<option value="楽天バンク決済">楽天バンク決済</option>
-						<option value="銀行振込">銀行振込</option>
-						<option value="楽天Edy決済">楽天Edy決済</option>
+						<option ng-show="now_station == 'Rakuten'" value="クレジットカード">クレジットカード</option>
+						<option ng-show="now_station == 'Rakuten'" value="楽天バンク決済">楽天バンク決済</option>
+						<option ng-show="now_station == 'Rakuten'" value="銀行振込">銀行振込</option>
+						<option ng-show="now_station == 'Rakuten'" value="楽天Edy決済">楽天Edy決済</option>
+						<option ng-show="now_station == 'P_Yahoo'" value="Yahoo!かんたん">Yahoo!かんたん</option>
 					</select>
 				</button>
 		      	<button ng-show="search_order_line == '-2'" ng-disabled="my_checked==''" type="button" ng-click="check_items();del_true='false'" data-animation="am-fade-and-slide-top" data-template-url="/modal/pay_ok.html" bs-modal="modal" class="btn btn-default btn-sm yellow">
@@ -454,7 +460,7 @@
 							<span ng-show="now_station=='Amazon'" class="s_gray">
 								购买人：<span>{{item.buyer_name}}</span>
 							</span>
-							<span ng-show="now_station=='Rakuten'">
+							<span ng-show="now_station=='Rakuten' || now_station == 'P_Yahoo'">
 								<span class="s_gray">购：</span>{{item.buyer_name}} | 
 								<span class="s_gray">收：</span><span class="yellow">{{item.receive_name}}</span>
 							</span>
@@ -472,9 +478,14 @@
 								收件人：<span class="yellow">{{item.receive_name}}</span>
 							</span>
 							<span ng-show="now_station=='Rakuten'">结算状态：<span class="blue">{{item.order_payment_method}}</span></span>
+							<span ng-show="now_station=='P_Yahoo'">结算状态：<span class="blue">{{item.order_payment_method}}</span></span>
 						</td>
 						<td class="blue"><span class="s_gray">邮编：</span>{{item.post_code}}</td>
-						<td class="green"><span class="s_gray">地址：</span>{{item.address}}</td>
+						<td class="green"><span class="s_gray">地址：</span>{{item.address}} <br>
+							<span ng-show="now_station=='P_Yahoo' && item.buyer_send_method!=''" class="s_gray">
+								客人指定配送：<span class="blue">{{item.buyer_send_method}}</span>
+							</span>
+						</td>
 						<td>
 							<!-- <span class="s_gray">国家/货币：</span>{{item.country}}/{{item.order_total_currency}} -->
 							<span class="s_gray">{{item.express_company}}：</span>{{item.send_method}}

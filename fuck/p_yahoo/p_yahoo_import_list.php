@@ -6,45 +6,35 @@ require_once("../log.php");
 set_time_limit(0); 
 ini_set("memory_limit", "1024M"); 
 
-//导入乐天订单 = 手动
+//导入雅虎拍卖订单 = 手动
 if(isset($_GET['import_add_list'])){
-	$filename = $dir."/../uploads/rakuten_add_list.csv";
 
-	function fgetcsv_reg(& $handle, $length = null, $d = ',', $e = '"') {
-	$d = preg_quote($d);
-	$e = preg_quote($e);
-	$_line = "";
-	$eof=false;
-	while ($eof != true) {
-	$_line .= (empty ($length) ? fgets($handle) : fgets($handle, $length));
-	$itemcnt = preg_match_all('/' . $e . '/', $_line, $dummy);
-	if ($itemcnt % 2 == 0)
-	$eof = true;
-	}
-	$_csv_line = preg_replace('/(?: |[ ])?$/', $d, trim($_line));
-	$_csv_pattern = '/(' . $e . '[^' . $e . ']*(?:' . $e . $e . '[^' . $e . ']*)*' . $e . '|[^' . $d . ']*)' . $d . '/';
-	preg_match_all($_csv_pattern, $_csv_line, $_csv_matches);
-	$_csv_data = $_csv_matches[1];
-	for ($_csv_i = 0; $_csv_i < count($_csv_data); $_csv_i++) {
-	$_csv_data[$_csv_i] = preg_replace('/^' . $e . '(.*)' . $e . '$/s', '$1', $_csv_data[$_csv_i]);
-	$_csv_data[$_csv_i] = str_replace($e . $e, $e, $_csv_data[$_csv_i]);
-	}
-	return empty ($_line) ? false : $_csv_data;
-	}
+	//开始读取xlsx文件并导入
+	$filename = $dir."/../uploads/p_yahoo_add_list.xlsx";
+	$objPHPExcel=PHPExcel_IOFactory::Load($filename);
+	$sheet = $objPHPExcel->getSheet(0); //只读取第一个表
+	//开始读取表格
+	$highestRow = $sheet->getHighestRow();           //取得总行数 
+	$highestColumn = $sheet->getHighestColumn(); // 取得总列数
+	++$highestColumn;
 
 	//获取店铺
     $store = addslashes($_GET['store']);
 
     //日志
 	$do = '[START] 导入订单：'.$store;
-	oms_log($u_name,$do,'rakuten_import','rakuten',$store,'-');
+	oms_log($u_name,$do,'p_yahoo_import','p_yahoo',$store,'-');
 
 	//清空导入表
-    $sql = "TRUNCATE rakuten_import_list";
+    $sql = "TRUNCATE p_yahoo_import_list";
+    $res = $db->execute($sql);
+    $sql = "TRUNCATE p_yahoo_response_list";
+    $res = $db->execute($sql);
+    $sql = "TRUNCATE p_yahoo_response_info";
     $res = $db->execute($sql);
 
     //所有oms_has状态变成0
- 	$sql = "UPDATE rakuten_response_list SET oms_has_me = '0'";
+ 	$sql = "UPDATE p_yahoo_response_list SET oms_has_me = '0'";
     $res = $db->execute($sql);
 
     //初始化数
@@ -52,106 +42,60 @@ if(isset($_GET['import_add_list'])){
 	$insert_count = 0;
 	$has_count = 0;
 
-	$file = fopen($filename,'r'); 
-	while ($data = fgetcsv_reg($file)) {
-		$goods_list[] = $data;
-	}
-	array_shift($goods_list);
-	foreach ($goods_list as $arr){
-		// var_dump($arr);
-		// echo count($arr);echo ' # ';
-		if(is_array($arr) && !empty($arr)){
-			$str = '';
-			for($i=0; $i<126; $i++){
-				// echo $arr[$i]."<br>";
-				$str .= $arr[$i]."|*|";
-			}
-			$str=mb_convert_encoding($str,"UTF-8","shift-jis");
-			$strs = explode("|*|",$str);
-			$order_id = $strs[0];
+	for($j=2;$j<=$highestRow;$j++){    //从第2行开始读取数据
+    	$str="";
+        for($k='A';$k!= $highestColumn;$k++)    //从A列读取数据
+		{ 
+			$str .=$objPHPExcel->getActiveSheet()->getCell("$k$j")->getValue().'|*|';//读取单元格
+		} 
+        $str=mb_convert_encoding($str,'utf8','auto');//根据自己编码修改
+        $strs = explode("|*|",$str);
 
-			// 查询是否存在此订单
-			$sql = "SELECT * from rakuten_response_list WHERE order_id = '{$order_id}'";
-			$res = $db->getOne($sql);
+        $order_id = $strs[0];
+		$purchase_date = $strs[3];
+		$buyer_phone = $strs[75];
+		$buyer_post_code = $strs[70];
+		$buyer_address = addslashes($strs[71].$strs[73]);
+		$buyer_name = $strs[66];
+        $order_payment_method = $strs[15];
+		$buyer_others = $strs[16];
+		$goods_title = $strs[21].'@'.$strs[20];
+		$sku = $strs[20];
+		$goods_num = $strs[18];
+		$unit_price = $strs[22];
+		$item_total_money = $strs[24];
+		$shipping_price = $strs[25];
+		$cod_money = $strs[26];
+		$want_date = $strs[29];
+		$want_time = $strs[30];
+		$buyer_email = $strs[33];
+		$address = addslashes($strs[6].$strs[8]);
+		$receive_name = $strs[12];
+		$receive_phone = $strs[4];
+		$post_code = $strs[5];
+		$buyer_send_method = $strs[85];
+		$pay_money = $strs[19];
+		$order_total_money = $strs[19];
+		$payment_method = $strs[15];
+		$payment_method = str_replace('商品代引','COD',$payment_method);
+        
+		$item_tax = '';
+		$points = '';
+		$coupon = '';
 
-			//计算总数
-    		$count_order = $count_order + 1;
+		// 提取运费代码
+		$yfcode = substr($sku,0,1);
 
-			if(empty($res)){
-				$order_payment_method = $strs[2];
-				$want_date = $strs[6];
-				$buyer_others = $strs[14];
-				$purchase_date = $strs[15];
-				$item_total_money = $strs[19];
-				$item_tax = $strs[20];
-				$shipping_price = $strs[21];
-				$cod_money = $strs[22];
-				$pay_money = $strs[23];
-				$order_total_money = $strs[24];
-				$points = $strs[68];
-				$goods_title = $strs[101].'@'.$strs[102];
-				$sku = $strs[102];
-				$goods_num = $strs[105];
-				$unit_price = $strs[104];
-				$payment_method = $strs[59];
-				$coupon = $strs[118];
-				$buyer_post_code = $strs[44].'-'.$strs[45];
-				$buyer_address = addslashes($strs[46].$strs[47].$strs[48]);
-				$buyer_name = $strs[49].$strs[50];
-				$buyer_email = $strs[56];
-				$buyer_phone = $strs[53].$strs[54].$strs[55];
-				$post_code = $strs[88].'-'.$strs[89];
-				$address = addslashes($strs[90].$strs[91].$strs[92]);
-				$receive_name = $strs[93].$strs[94];
-				$receive_phone = $strs[97].$strs[98].$strs[99];
-				$buyer_send_method = $strs[66];
 
-				// 客人备注（配送)
-				$buyer_others = str_replace('[配送日時指定:]','',$buyer_others);
-				$buyer_others = str_replace('~','～',$buyer_others);
-				$buyer_others = str_replace('〜','～',$buyer_others);
-				$buyer_others = trim($buyer_others);
-				$time_index = strpos($buyer_others, '～');
-				$want_time = substr($buyer_others, $time_index,$time_index+4);
-				$want_time = trim($want_time);
-				if($want_time == '～12:00'){
-					$want_time = '09:00～12:00';
-				}else if($want_time == '～14:00'){
-					$want_time = '12:00～14:00';
-				}else if($want_time == '～16:00'){
-					$want_time = '14:00～16:00';
-				}else if($want_time == '～18:00'){
-					$want_time = '16:00～18:00';
-				}else if($want_time == '～20:00'){
-					$want_time = '18:00～20:00';
-				}else if($want_time == '～21:00'){
-					$want_time = '20:00～21:00';
-				}else{
-					$want_time = '';
-				}
+        //计算总数
+    	$count_order = $count_order + 1;
 
-				// 代金引換转COD
-				$payment_method = str_replace('代金引換','COD',$payment_method);
+    	// 查询是否存在此订单
+		$sql = "SELECT * from p_yahoo_response_list WHERE order_id = '{$order_id}'";
+		$res = $db->getOne($sql);
 
-				// 修改手机格式
-				$by3 = substr ($buyer_phone,-4,4);
-				$by2 = substr ($buyer_phone,-8,4);
-				$by1 = str_replace ($by2.$by3, '',$buyer_phone);
-				$buyer_phone = $by1.'-'.$by2.'-'.$by3;
-
-				$re3 = substr($receive_phone,-4,4);//从后往前截取4位
-				$re2 = substr($receive_phone,-8,4);//从后往前截取4位
-				$re1 = str_replace($re2.$re3, '', $receive_phone);//截取前几位
-				$receive_phone = $re1.'-'.$re2.'-'.$re3;
-
-				// 修改 佐川急便メール便（規定：厚さ2ｃｍ以内）の商品は「代引き」できません。 为 メール便
-				if($buyer_send_method == '佐川急便メール便（規定：厚さ2ｃｍ以内）の商品は「代引き」できません。' or $buyer_send_method == 'ネコポス便'){
-					$buyer_send_method = 'メール便';
-				}
-
-				// 提取运费代码
-				$yfcode = substr($sku,0,1);
-
+		if(empty($res)){
+				
 				// 拆分赠品开始 - - - - - - - - - - - - - - - - 
 				// $sku_copy = str_replace($yfcode.'-', '', $sku);
 				$sku_copy = preg_replace('/'.$yfcode.'-'.'/', '', $sku, 1); 
@@ -162,7 +106,7 @@ if(isset($_GET['import_add_list'])){
 				$goods_code_main = trim($res_sku[$count_goods_code-1]);
 
 				// if($strs[1]==='新規受付'){	//只导入新规订单
-				$sql = "INSERT INTO rakuten_import_list(
+				$sql = "INSERT INTO p_yahoo_import_list(
 					store,			#店铺名
 					order_id,			#订单号
 					order_payment_method,	#信用卡结算状态
@@ -237,7 +181,7 @@ if(isset($_GET['import_add_list'])){
 					for($i=0; $i<$count_goods_code-1; $i++){
 						$now_goods_code = trim($res_sku[$i]);
 						// if($strs[1]==='新規受付'){	//只导入新规订单
-						$sql = "INSERT INTO rakuten_import_list(
+						$sql = "INSERT INTO p_yahoo_import_list(
 							store,			#店铺名
 							order_id,			#订单号
 							order_payment_method,	#信用卡结算状态
@@ -313,28 +257,22 @@ if(isset($_GET['import_add_list'])){
 
 		    	//日志
 				$do = '[ING] 导入订单：'.$order_id.' | 收件人：'.$receive_name.' | 商品：'.$sku.'*'.$goods_num;
-				oms_log($u_name,$do,'rakuten_import','rakuten',$store,'-');
+				oms_log($u_name,$do,'p_yahoo_import','p_yahoo',$store,'-');
 				// }
 
 			}else{
-				$sql = "UPDATE rakuten_response_list SET oms_has_me = 'has' WHERE order_id = '{$order_id}'";
+				$sql = "UPDATE p_yahoo_response_list SET oms_has_me = 'has' WHERE order_id = '{$order_id}'";
 		    	$res = $db->execute($sql);
 		    	$has_count = $has_count + 1;
 		    	usleep(50000);
 		    	continue;
 			}
-		}
-	} 
-
- 	fclose($file);  
- 	// 删除订单 オーソリNG
- 	$sql = "DELETE FROM rakuten_import_list WHERE order_payment_method = 'オーソリNG'";
- 	$sql = $db->execute($sql);
+	}
 
     //获取当前日期
     $today = date('y-m-d',time());
     //插入主response_list订单表
-    $sql = "INSERT INTO rakuten_response_list (
+    $sql = "INSERT INTO p_yahoo_response_list (
     	store,
     	syn_day,	#同步日期（导入日期）
 		order_id,	#订单号
@@ -392,18 +330,18 @@ if(isset($_GET['import_add_list'])){
 		'ready',
 		want_date,
 		want_time
-	FROM rakuten_import_list GROUP BY order_id";
+	FROM p_yahoo_import_list GROUP BY order_id";
 	$res = $db->execute($sql);
 
 	//更新send_id
-	$sql = "UPDATE rakuten_response_list SET send_id = concat('rku',id) WHERE send_id = 'ready'";
+	$sql = "UPDATE p_yahoo_response_list SET send_id = concat('pya',id) WHERE send_id = 'ready'";
 	$res = $db->execute($sql);
 
 	// 当前时间戳
 	$now_time = time();
 
 	//插入详情
-	$sql = "INSERT INTO rakuten_response_info (
+	$sql = "INSERT INTO p_yahoo_response_info (
 		store,
 		order_id,
 		goods_title,
@@ -429,7 +367,7 @@ if(isset($_GET['import_add_list'])){
 		cod_money,
 		{$now_time},
 		yfcode
-	FROM rakuten_import_list";
+	FROM p_yahoo_import_list";
 	$res = $db->execute($sql);
 
     //final_res
@@ -440,7 +378,7 @@ if(isset($_GET['import_add_list'])){
 
 	//日志
 	$do = '[END] 导入订单：'.$store.' 总单数：'.$count_order.' | 导入数：'.$insert_count.' | 已存在：'.$has_count;
-	oms_log($u_name,$do,'rakuten_import','rakuten',$store,'-');
+	oms_log($u_name,$do,'p_yahoo_import','p_yahoo',$store,'-');
 
 	echo json_encode($final_res);
 }
