@@ -1310,6 +1310,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             if(data=='ok'){
                 $scope.plug_alert('success','扣库完成。','fa fa-smile-o');
             }else{
+                $log.info(data);
                 $scope.plug_alert('danger','扣库失败。','fa fa-ban');
             }
             $timeout(function(){$scope.shadow('close');},500); //关闭shadow

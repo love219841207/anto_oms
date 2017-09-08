@@ -106,6 +106,10 @@ if(isset($_GET['up_express_order'])){
 	$sql = "DELETE FROM import_express WHERE express_status = 1";
 	$res = $db->execute($sql);
 
+	//删除 history的bag
+	$sql = "DELETE FROM history_send WHERE order_id = 0";
+	$res = $db->execute($sql);
+
 	// table_status = 2 的订单进行原信息匹配
 		// 亚马逊匹配
 		$sql = "UPDATE history_send history,amazon_response_list list SET history.buy_method = list.payment_method,history.who_name = list.buyer_name,history.total_money = list.all_total_money,history.buy_money = list.all_total_money WHERE history.order_id = list.order_id AND history.table_status = '2' AND history.station = 'amazon'";

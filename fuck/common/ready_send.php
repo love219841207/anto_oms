@@ -173,6 +173,41 @@ function make_bags(){
 		}
 	}
 
+	// 同捆中存在mail便和宅配则改为宅配
+	$sql = "SELECT pack_id,count(1) as cct FROM send_table WHERE has_pack = '0' GROUP BY pack_id";
+	$res = $db->getAll($sql);
+	foreach ($res as $val) {
+		$cct = $val['cct'];
+		$pid = $val['pack_id'];
+
+		if($cct > 1){	//如果订单数大于1
+			// echo $pid.' ';
+			$sql = "SELECT count(1) as zpb FROM send_table WHERE send_method = '宅配便' AND pack_id = '{$pid}'";
+			$res = $db->getOne($sql);
+			$zpb = $res['zpb'];
+			if($zpb > 0){	//如果至少有一单宅配
+				$sql = "SELECT count(1) as dmb FROM send_table WHERE send_method = 'メール便' AND pack_id = '{$pid}'";
+				$res = $db->getOne($sql);
+				$dmb = $res['dmb'];
+				if($dmb > 0){	//如果至少有一单DM便
+					$sql = "UPDATE send_table SET send_method = '宅配便',express_company = '' WHERE pack_id = '{$pid}'";
+					$res = $db->execute($sql);
+				}
+			}	
+		}
+	}
+
+	// mail便更新DM便
+	$sql = "SELECT goods_code FROM amz_mail WHERE mail_type = 'DM便' ORDER BY ID";
+	$res = $db->getAll($sql);
+	$amz_mail = array();
+	foreach ($res as $value) {
+		array_push($amz_mail, "'".$value['goods_code']."'");
+	}
+	$amz_mail = implode(',', $amz_mail);
+	$sql = "UPDATE send_table SET send_method = 'DM便',express_company = 'ヤマト運輸' WHERE goods_code in ($amz_mail) AND has_pack = '0' AND send_method='メール便'";
+	$res = $db->execute($sql);
+
 	// 更新乃口pos
 	$sql = "SELECT goods_code FROM amz_mail WHERE mail_type = 'ネコポス' ORDER BY ID";
 	$res = $db->getAll($sql);

@@ -309,6 +309,7 @@ if(isset($_POST['sub_repo'])){
 	if(empty($res)){
 		echo 'ok';die;
 	}
+
 	foreach ($res as $val) {
 		$station = $val['station'];
 		$response_list = $val['station'].'_response_list';
@@ -316,12 +317,13 @@ if(isset($_POST['sub_repo'])){
 		$send_id = $val['send_id'];
 
 		// 查询出每个 send_id 对应的 order_id 的 商品代码
-		$sql = "SELECT info.order_id as order_id,info.id as info_id,info.goods_code as goods_code,info.pause_ch as pause_ch,info.pause_jp as pause_jp,info.goods_num as goods_num FROM $response_info info,$response_list list WHERE list.order_id = info.order_id AND list.send_id = '{$send_id}'";
+		$sql = "SELECT info.store,info.order_id as order_id,info.id as info_id,info.goods_code as goods_code,info.pause_ch as pause_ch,info.pause_jp as pause_jp,info.goods_num as goods_num FROM $response_info info,$response_list list WHERE list.order_id = info.order_id AND list.send_id = '{$send_id}'";
 		$res2 = $db->getAll($sql);
 
 		// 默认可发货
 		$can_send = 1;
 		$order_ids = '';
+		$store = '';
 		//遍历出订单
 		foreach ($res2 as $val2) {
 			$now_order_id = $val2['order_id'];
@@ -329,6 +331,7 @@ if(isset($_POST['sub_repo'])){
 			$u_goods_num = $val2['goods_num'];
 			$pause_ch = $val2['pause_ch'];
 			$pause_jp = $val2['pause_jp'];
+			$store = $val2['store'];
 
 			$goods_num = $u_goods_num - $pause_ch - $pause_jp;	//实际需要库存数 = 购买数 - 押中国 - 押日本
 			$info_id = $val2['info_id'];
@@ -492,7 +495,7 @@ if(isset($_POST['sub_repo'])){
 		want_date,	#指定配送日
 		want_time,	#指定配送时间
 		import_day) SELECT	#导入日期 
-		'{$station}',
+		'amazon',
 		list.order_id,
 		list.send_id,
 		list.id,
@@ -546,7 +549,7 @@ if(isset($_POST['sub_repo'])){
 		want_date,	#指定配送日
 		want_time,	#指定配送时间
 		import_day) SELECT	#导入日期 
-		'{$station}',
+		'rakuten',
 		list.order_id,
 		list.send_id,
 		list.id,
