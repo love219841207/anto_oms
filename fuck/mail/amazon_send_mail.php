@@ -2,7 +2,9 @@
 require_once("../PHPMailer/PHPMailerAutoload.php");
 require_once("../header.php");
 require_once("../log.php");
-
+//加大响应
+set_time_limit(0); 
+ini_set("memory_limit", "1024M"); 
 
 // $mail->SMTPDebug = true; 
 // $mail->SMTPDebug = 4;   

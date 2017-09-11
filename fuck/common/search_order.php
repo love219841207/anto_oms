@@ -99,6 +99,7 @@ if(isset($_POST['items_count'])){
     		$sql = "SELECT count(1) as cc FROM $response_list WHERE yfcode_ok = 2 AND store = '{$store}' AND (order_line>0 OR order_line = '-2')";
     	}
     }else{
+
     	if($search_field == ''){   //0没有筛选条件
     		//是否是全部订单
     		if($search_order_line == 'all'){  //所有单不包括回收站的
@@ -115,19 +116,20 @@ if(isset($_POST['items_count'])){
                 }
             }else{
                 // 如果待支付
-                if($search_order_line = '-2'){
+                if($search_order_line == '-2'){
                     if($search_pay_method == 'all'){
                         $sql = "SELECT count(1) as cc FROM $response_list WHERE order_line = '-2' AND store = '{$store}'";
                     }else{
                         $sql = "SELECT count(1) as cc FROM $response_list WHERE order_line = '-2' AND store = '{$store}' AND payment_method = '{$search_pay_method}'";
                     }
                 }else{
+
                     // 正常 order_line
                     if($start_date =='' or $end_date ==''){
-                    $sql = "SELECT count(1) as cc FROM $response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}'";
-                }else{
+                        $sql = "SELECT count(1) as cc FROM $response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}'";
+                    }else{
                     $sql = "SELECT count(1) as cc FROM $response_list WHERE order_line = '{$search_order_line}' AND store = '{$store}' AND $search_date >= '{$start_date}' AND $search_date <'{$end_date}'";
-                }
+                    }
                 }
     			
     		}
@@ -147,7 +149,7 @@ if(isset($_POST['items_count'])){
                 }
             }else{
                 // 如果待支付
-                if($search_order_line = '-2'){
+                if($search_order_line == '-2'){
                     if($search_pay_method == 'all'){
                         $sql = "SELECT count(1) as cc FROM $response_list WHERE order_line = '-2' AND store = '{$store}' AND {$search_field} LIKE '%{$search_key}%'";
                     }else{

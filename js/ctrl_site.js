@@ -148,7 +148,7 @@ app.controller('topCtrl', ['$rootScope','$scope','$state','$stateParams','$http'
             $timeout(function(){
                 $scope.repo_status = false;
                 $scope.ping_repo();
-            },10000);
+            },60000);
             
         }).error(function(data) {
             alert("连接库存系统失败。");
@@ -174,7 +174,7 @@ app.controller('topCtrl', ['$rootScope','$scope','$state','$stateParams','$http'
             $timeout(function(){
                 $scope.repair_status = false;
                 $scope.ping_repair();
-            },15000);
+            },65000);
             
         }).error(function(data) {
             alert("连接售后系统失败。");
