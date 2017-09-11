@@ -150,7 +150,22 @@ app.controller('pauseorderCtrl', ['$rootScope','$scope','$state','$http','$log',
             alert("系统错误，请联系管理员。");
             $log.info("error:退押失败。");
         });
-    }
+    };
+
+    // 查看上次冻结订单
+    $scope.show_pause_order = function(){
+        // 查询单个详情
+        $http.get('/fuck/common/pause_order.php', {
+            params:{
+                show_pause_order:'get'
+            }
+        }).success(function(data) {
+            $scope.pause_order_table = data;
+            // $log.info(data)
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+        });
+    };
 
     // pause_modal
     $scope.pause_modal = function(id,store,station){
@@ -167,9 +182,8 @@ app.controller('pauseorderCtrl', ['$rootScope','$scope','$state','$http','$log',
             // $log.info(data)
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
-            $log.info("error:删除失败。");
         });
-    }
+    };
 
     // 删除
     $scope.del_pause = function(id,store,station,order_id){

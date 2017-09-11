@@ -30,6 +30,14 @@ if(isset($_GET['back_order'])){
     echo json_encode($res);
 }
 
+// 查看上次冻结
+if(isset($_GET['show_pause_order'])){
+    $sql = "SELECT * FROM repo_pause";
+    $res = $db->getAll($sql);
+
+    echo json_encode($res);
+}
+
 // 读取一个info
 if(isset($_GET['one_pause'])){
     $store = $_GET['store'];

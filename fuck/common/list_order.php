@@ -291,6 +291,10 @@ if(isset($_POST['sub_repo'])){
 	
 	$now_station = strtolower($_POST['station']);
 
+	// 清空冻结订单表
+	$sql = "TRUNCATE repo_pause";
+	$res = $db->execute($sql);
+
 	if($now_station == 'all_station'){
 		$my_checked_items = $_POST['my_checked_items'];
 		// 如果是所有平台扣库存，即冻结表
@@ -421,6 +425,16 @@ if(isset($_POST['sub_repo'])){
 				$sql = "UPDATE $response_list SET pause_time = '{$now_time}' WHERE send_id = '{$send_id}'";
 				$res = $db->execute($sql);
 			}
+
+			// 冻结订单表
+			$sql = "SELECT order_id FROM $response_list WHERE send_id = '{$send_id}'";
+			$res = $db->getAll($sql);
+			foreach ($res as $value) {
+				$order_id = $value['order_id'];
+				$sql = "INSERT INTO repo_pause (pause_order) values ('{$order_id}')";
+				$res = $db->execute($sql);
+			}
+
 			//日志
 			$sql = "SELECT id FROM $response_list WHERE send_id = '{$send_id}'";
 			$res = $db->getAll($sql);
