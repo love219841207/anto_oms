@@ -519,12 +519,8 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log','$timeout', functi
             my_checked_items:$scope.my_checked_items};
 
         $http.post('/fuck/mail/rakuten_send_mail.php', post_data).success(function(data) {
-            if(data.status == 'ok'){
-                $scope.send_error_num = data.error_num;
-                $scope.send_ok_num = data.ok_num;
-
-                //读取错误信件info
-                $scope.read_error_mail();
+            if(data == 'ok'){
+                $scope.plug_alert('success','已经提交发信。','fa fa-smile-o');
             }else{
                 $log.info(data);
                 $scope.plug_alert('danger','发信失败，请联系管理员。','fa fa-ban');
@@ -535,4 +531,24 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log','$timeout', functi
             $log.info("error:发信失败。");
         });
     };
+
+    // 读取mail历史
+    $scope.mail_history = function(){
+        $scope.loading_shadow('open'); //打开loading
+        $http.get('/fuck/systems/store_manage.php', {
+            params:{
+                mail_history:$scope.now_store_bar
+            }
+        }).success(function(data) {
+            $scope.mail_ok = data;
+            // $log.info(data);
+            $timeout(function(){$scope.loading_shadow('close');},300); //关闭loading
+            $timeout(function(){$scope.mail_history();},10000); //关闭loading
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:邮件内容读取失败。");
+        });
+    };
+
+    $scope.mail_history();
 }]);

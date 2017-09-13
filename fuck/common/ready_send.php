@@ -104,6 +104,14 @@ if(isset($_GET['reset_express'])){
 	echo 'ok';
 }
 
+// 删除bag
+if(isset($_GET['del_bag'])){
+	$del_bag = $_GET['del_bag'];
+	$sql = "DELETE FROM send_table WHERE id = '{$del_bag}'";
+    $res = $db->execute($sql);
+    echo 'ok';
+}
+
 //重置功能
 function reset_express(){
 	$db = new PdoMySQL();

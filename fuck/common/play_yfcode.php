@@ -71,16 +71,16 @@ function play_yf_code($station,$response_list,$response_info,$send_id){
 					$sql = "UPDATE $response_info SET yfcode_ok = 2 WHERE order_id in ({$order_ids}) AND yfcode = '{$max_code}'";
 					$res = $db->execute($sql);
 				}else{
-					gogogo($station,$response_list,$response_info,$send_id,$need_cod,$max_code,$max_code,$send_method,$default_yf,$default_one_yf,$buyer_send_method,$order_ids,$address);
+					gogogo($station,$response_list,$response_info,$send_id,$need_cod,$max_code,$send_method,$default_yf,$default_one_yf,$buyer_send_method,$order_ids,$address);
 				}
 			}else{
-				gogogo($station,$response_list,$response_info,$send_id,$need_cod,$max_code,$max_code,$send_method,$default_yf,$default_one_yf,$buyer_send_method,$order_ids,$address);
+				gogogo($station,$response_list,$response_info,$send_id,$need_cod,$max_code,$send_method,$default_yf,$default_one_yf,$buyer_send_method,$order_ids,$address);
 			}
 		}
 	}
 }
 
-function gogogo($station,$response_list,$response_info,$send_id,$need_cod,$max_code,$max_code,$send_method,$default_yf,$default_one_yf,$buyer_send_method,$order_ids,$address){
+function gogogo($station,$response_list,$response_info,$send_id,$need_cod,$max_code,$send_method,$default_yf,$default_one_yf,$buyer_send_method,$order_ids,$address){
 	$db = new PdoMySQL();
 
 	// 客人指定配送方式判断

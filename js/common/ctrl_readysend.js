@@ -20,7 +20,23 @@ app.controller('readysendCtrl', ['$rootScope','$scope','$state','$http','$log','
             alert("系统错误，请联系管理员。");
             $log.info("error:修改快递公司。");
         });
-    }
+    };
+
+    // del_bag
+    $scope.del_bag = function(id){
+        $http.get('/fuck/common/ready_send.php', {
+            params:{
+                del_bag:id,
+            }
+        }).success(function(data) {
+            if(data=='ok'){
+                $scope.get_count();
+                $scope.to_page($scope.now_page);
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+        });
+    };
 
     // 修改快递公司
     $scope.change_company = function(order_id,store,station,oms_id){

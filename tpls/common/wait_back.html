@@ -78,6 +78,7 @@
 			<td class="tagc">
 				<i popover-placement="top-right" uib-popover="【 {{item.want_date}} 】{{item.want_time}}" popover-trigger="'mouseenter'" ng-show="item.want_date!==null || item.want_time!==null" class="fa fa-fw fa-clock-o pointer yellow"></i>
 				<i ng-hide="item.order_id==0" class="fa fa-undo red fa-fw pointer" ng-click="back_to_ready(item.id)"></i>
+				<i ng-show="item.order_id==0" class="fa fa-trash red fa-fw pointer" ng-click="del_bag(item.id)"></i>
 			</td>
 			<!-- <td>{{item.item_line}}</td> -->
 		</tr>

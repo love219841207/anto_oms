@@ -22,6 +22,9 @@ myFilters.filter('over_mail', function(){
         if(item == 0){
             return '-';
         }
+        if(item == 'ing'){
+            return '正在发送中...'
+        }
         if(item == 1){
             return '已发送';
         }
