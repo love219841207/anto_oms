@@ -11,8 +11,7 @@ if(isset($_GET['toggle_send'])){
 
 // 获取邮件成功历史
 if(isset($_GET['mail_history'])){
-	$store = $_GET['mail_history'];
-	$sql = "SELECT * FROM mail_history WHERE store = '{$store}' ORDER BY id DESC LIMIT 1000";
+	$sql = "SELECT * FROM mail_history ORDER BY id DESC LIMIT 1000";
     $res = $db->getAll($sql);
     echo json_encode($res);
 }

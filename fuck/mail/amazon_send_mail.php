@@ -30,6 +30,13 @@ if(isset($_GET['read_error_mail'])){
 	echo json_encode($res);
 }
 
+// 清空错误邮件
+if(isset($_GET['truncate_error_mail'])){
+	$sql = "TRUNCATE mail_error";
+	$res = $db->execute($sql);
+	echo 'ok';
+}
+
 // 亚马逊发信
 if(isset($_POST['send_mail'])){
 	// rakuten发信

@@ -147,19 +147,4 @@ app.controller('rakutenCtrl', ['$scope','$state','$http','$log','$timeout', func
         });
     };
 
-    //读取错误邮件info
-    $scope.read_error_mail = function(){
-        $http.get('/fuck/mail/rakuten_send_mail.php', {
-            params:{
-                read_error_mail:'read'
-            }
-        }).success(function(data) {
-            $scope.error_mail = data;
-            $scope.get_express_list();
-            $scope.plug_alert('success','发信完成。','fa fa-smile-o');
-        }).error(function(data) {
-            alert("系统错误，请联系管理员。");
-            $log.info("error:邮件内容读取失败。");
-        });
-    };
 }]);

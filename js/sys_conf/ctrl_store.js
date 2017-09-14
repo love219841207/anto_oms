@@ -475,7 +475,7 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log','$timeout', functi
             alert("系统错误，请联系管理员。");
             $log.info("error:邮件内容读取失败。");
         });
-    }
+    };
 
     // 发信
     $scope.amz_mail_custom_items = function(){
@@ -528,23 +528,4 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log','$timeout', functi
         });
     };
 
-    // 读取mail历史
-    $scope.mail_history = function(){
-        $scope.loading_shadow('open'); //打开loading
-        $http.get('/fuck/systems/store_manage.php', {
-            params:{
-                mail_history:$scope.now_store_bar
-            }
-        }).success(function(data) {
-            $scope.mail_ok = data;
-            // $log.info(data);
-            $timeout(function(){$scope.loading_shadow('close');},300); //关闭loading
-            $timeout(function(){$scope.mail_history();},10000); //关闭loading
-        }).error(function(data) {
-            alert("系统错误，请联系管理员。");
-            $log.info("error:邮件内容读取失败。");
-        });
-    };
-
-    $scope.mail_history();
 }]);

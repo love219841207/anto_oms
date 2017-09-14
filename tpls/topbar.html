@@ -14,6 +14,9 @@
 				<option value="">选择店铺 ..</option>
 				<option ng-repeat="item in now_store track by $index">{{item}}</option>
 			</select>
+<!-- 			<a href="/tpls/common/mail_status.html" target="_blank">
+				<button class="btn btn-default btn-xs ml10"><i class="fa fa-fw fa-info-circle green"></i>发信状态</button>
+			</a> -->
 		</div>
 		<ol class="breadcrumb bdr_no pull-right">
 			<li>
@@ -22,6 +25,10 @@
 				<span class="ml10 fa" ng-class="{'green_light fa-wifi':repair_status,'yellow_light fa-spinner fa-pulse':!repair_status}"></span>
 				<span ng-class="{'green_light':repair_status,'yellow_light':!repair_status}">售后</span>
 			</li>
+			<li class="yellow_light"> <i class="fa fa-fw fa-info-circle"></i>
+				<a class="yellow_light" href="/tpls/common/mail_status.html" target="_blank">邮件状态</a>
+			</li>
+				
 			<li class="green_light"> <i class="fa fa-fw fa-hdd-o"></i>
 				System v{{sys_version}}
 			</li>

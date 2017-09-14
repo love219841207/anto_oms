@@ -405,6 +405,7 @@ if(isset($_GET['get_order_info'])){
 		//更新状态已经获取完毕。更新order_line。
 		$sql = "UPDATE amazon_response_list SET oms_order_info_status='ok',order_line = '1' where order_id='{$arr_order_id[$i]}'";
 		$res = $db->execute($sql);
+		usleep(1000000);
 	}		
  	$final_res['status'] = 'info_ok';
 
