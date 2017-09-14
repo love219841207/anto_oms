@@ -9,6 +9,14 @@ if(isset($_GET['toggle_send'])){
     echo 'ok';
 }
 
+// 获取邮件成功历史
+if(isset($_GET['mail_history'])){
+	$store = $_GET['mail_history'];
+	$sql = "SELECT * FROM mail_history WHERE store = '{$store}' ORDER BY id DESC LIMIT 1000";
+    $res = $db->getAll($sql);
+    echo json_encode($res);
+}
+
 // 获取发货通知信
 if(isset($_GET['over_send'])){
 	$conf = 'conf_'.$_GET['station'];

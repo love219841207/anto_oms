@@ -1420,12 +1420,8 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
 
         $http.post('/fuck/mail/amazon_send_mail.php', post_data).success(function(data) {
             $timeout(function(){$scope.shadow('close');},500); //关闭shadow
-            if(data.status == 'ok'){
-                $scope.send_error_num = data.error_num;
-                $scope.send_ok_num = data.ok_num;
-
-                //读取错误信件info
-                $scope.read_error_mail();
+            if(data == 'ok'){
+                $scope.plug_alert('success','已经提交发信。','fa fa-smile-o');
             }else{
                 $log.info(data);
                 $scope.plug_alert('danger','发信失败，请联系管理员。','fa fa-ban');
@@ -1449,12 +1445,8 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
 
         $http.post('/fuck/mail/rakuten_send_mail.php', post_data).success(function(data) {
             $timeout(function(){$scope.shadow('close');},500); //关闭shadow
-            if(data.status == 'ok'){
-                $scope.send_error_num = data.error_num;
-                $scope.send_ok_num = data.ok_num;
-
-                //读取错误信件info
-                $scope.read_error_mail();
+            if(data == 'ok'){
+                $scope.plug_alert('success','已经提交发信。','fa fa-smile-o');
             }else{
                 $log.info(data);
                 $scope.plug_alert('danger','发信失败，请联系管理员。','fa fa-ban');

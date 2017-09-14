@@ -133,12 +133,9 @@ app.controller('rakutenCtrl', ['$scope','$state','$http','$log','$timeout', func
         };
 
         $http.post('/fuck/mail/rakuten_send_mail.php', post_data).success(function(data) {
-            if(data.status == 'ok'){
-                $scope.send_error_num = data.error_num;
-                $scope.send_ok_num = data.ok_num;
-
-                //读取错误信件info
-                $scope.read_error_mail();
+            if(data == 'ok'){
+                $scope.plug_alert('success','已经提交发信，点击【查看】刷新进度。','fa fa-smile-o');
+                $scope.get_express_list();
             }else{
                 $log.info(data);
                 $scope.plug_alert('danger','发信失败，请联系管理员。','fa fa-ban');

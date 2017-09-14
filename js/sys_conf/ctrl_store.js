@@ -490,12 +490,8 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log','$timeout', functi
             my_checked_items:$scope.my_checked_items};
 
         $http.post('/fuck/mail/amazon_send_mail.php', post_data).success(function(data) {
-            if(data.status == 'ok'){
-                $scope.send_error_num = data.error_num;
-                $scope.send_ok_num = data.ok_num;
-
-                //读取错误信件info
-                $scope.read_error_mail();
+            if(data == 'ok'){
+                $scope.plug_alert('success','已经提交发信。','fa fa-smile-o');
             }else{
                 $log.info(data);
                 $scope.plug_alert('danger','发信失败，请联系管理员。','fa fa-ban');
