@@ -156,8 +156,16 @@ if(isset($_GET['change_list_field'])){
 		$ch_field = '收件人';
 		$sql = "UPDATE $response_list SET $field_name = '{$new_key}' WHERE order_id = '{$order_id}'";
 	}
+	if($field_name == 'order_tax'){
+		$ch_field = '消费税';
+		$sql = "UPDATE $response_list SET $field_name = '{$new_key}' WHERE order_id = '{$order_id}'";
+	}
 	if($field_name == 'buyer_email'){
 		$ch_field = '邮箱';
+		$sql = "UPDATE $response_list SET $field_name = '{$new_key}' WHERE order_id = '{$order_id}'";
+	}
+	if($field_name == 'pay_money'){
+		$ch_field = '支付金额';
 		$sql = "UPDATE $response_list SET $field_name = '{$new_key}' WHERE order_id = '{$order_id}'";
 	}
 	if($field_name == 'shipping_price'){

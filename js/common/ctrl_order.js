@@ -614,6 +614,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         }).success(function(data) {
             if(data == 'ok'){
                 $scope.change_list_field(field_name,order_id,new_key);
+                $scope.play_price(order_id);    // 价格计算
             }else{
                 $scope.plug_alert('danger',data,'fa fa-ban');
             }

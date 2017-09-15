@@ -125,7 +125,7 @@ myApp.controller('MailCtrl', ['$scope','$http','$timeout','$log', function ($sco
 							<td>时间</td>
 							<td>去信人</td>
 						</tr>
-						<tr ng-repeat="item in mail_ok | filter:gogogo track by $index">
+						<tr ng-repeat="item in mail_ok | filter:gogogo track by $index" ng-class="{'success':loading_is_open}">
 							<td>{{ item.id }}</td>
 							<td>{{ item.store }}</td>
 							<td>{{ item.order_id }}</td>
