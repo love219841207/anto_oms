@@ -45,6 +45,7 @@ if(isset($_POST['send_mail'])){
 	$order_items = $_POST['my_checked_items'];
 
 	// 发信
-	_curl('http://192.168.0.17:6620/fuck/mail/amazon_back_mail.php',$store,$order_items,$u_name,$u_num,$mail_tpl);
+	// _curl('http://192.168.0.17:6620/fuck/mail/amazon_back_mail.php',$store,$order_items,$u_name,$u_num,$mail_tpl);
+	// _curl('http://oms.cc/fuck/mail/amazon_back_mail.php',$store,$order_items,$u_name,$u_num,$mail_tpl);
 	echo 'ok';
 }

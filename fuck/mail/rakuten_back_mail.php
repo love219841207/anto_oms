@@ -80,6 +80,8 @@ if(isset($_POST['store'])){
 	 	$order_id = $res['order_id'];	#订单号
 	 	$express_company = $res['express_company'];	#快递公司
 	 	$send_method = $res['send_method'];	#配送方式
+	 	$post_code = $res['post_code'];	#客人邮编
+	 	$address = $res['address'];	#配送地址
 	 	$express_num = $res['oms_order_express_num'];	#快递单号
 	 	$express_day = $res['express_day'];	#快递日期
 	 	$all_total_money = $res['all_total_money'];	
@@ -198,15 +200,15 @@ if(isset($_POST['store'])){
 	 	</table>
 	 	<table width="100%" border="1" bordercolor="no" cellspacing="1" cellpadding="6" style="border-collapse: collapse;font-size:12px;border-color: #FFF;width:100%;line-height: 10px; font-family: Meiryo;">
 	 	<tr>
-	 	<td>'.$buyer_name.' 様</td>
+	 	<td>〒'.$post_code.'</td>
 	 	<td style="text-align:right;">'.$store.'</td>
 	 	</tr>
 	 	<tr>
-	 	<td></td>
+	 	<td>'.$address.'</td>
 	 	<td style="text-align:right;">〒270-1437</td>
 	 	</tr>
 	 	<tr>
-	 	<td></td>
+	 	<td>'.$buyer_name.' 様</td>
 	 	<td style="text-align:right;">千葉県 白井市</td>
 	 	</tr>
 	 	<tr>
@@ -229,14 +231,14 @@ if(isset($_POST['store'])){
 	 	</td>
 	 	</tr>
 	 	<tr>
-	 	<td></td>
+	 	<td>〒'.$post_code.'</td>
 	 	<td colspan="3" style="text-align: right;">
 	 	<span style="color:#009688;">ご注文番号：</span>
 	 	<span style="width:150px;text-align:left;display: inline-block;">'.$now_order_ids.'</span>
 	 	</td>
 	 	</tr>
 	 	<tr>
-	 	<td></td>
+	 	<td>'.$address.'</td>
 	 	<td colspan="3" style="text-align: right;">
 	 	<span style="color:#009688;">お支払方法：</span>
 	 	<span style="width:150px;text-align:left;display: inline-block;">'.$payment_method.'</span>
@@ -361,9 +363,9 @@ if(isset($_POST['store'])){
 		if(!$mail->send()) {
 		    // echo '邮件发送失败.';
 			$error_info = $mail->ErrorInfo;
-			$error_info = date("Y-m-d H'i's").$mail_topic.$error_info;
+			$error_info = date("Y-m-d H-i-s").$mail_topic.$error_info;
 		    // 发信失败，记录在案
-			$sql = "INSERT INTO mail_error (error_order_id,error_info) VALUES ('{$value}','{$error_info}')";
+			$sql = "INSERT INTO mail_error (error_order_id,error_info) VALUES ('{$now_order_ids}','{$error_info}')";
 			$res = $db->execute($sql);
 		} else {
 			if($mail_tpl == 'send_express'){
