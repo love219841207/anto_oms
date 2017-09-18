@@ -16,7 +16,7 @@ if(isset($_GET['repair_info'])){
 if(isset($_GET['onekey_repair'])){
 	$sql = "SELECT 
 			who_email,
-			group_concat(order_id) as order_id,
+			group_concat(distinct order_id) as order_id,
 			group_concat(goods_id) as goods_id,
 			store_name,
 			who_id,

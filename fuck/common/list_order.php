@@ -144,7 +144,7 @@ if(isset($_GET['onekey_common_order'])){
 		FROM $response_list WHERE store='{$store}' AND post_ok = '1' AND tel_ok = '1' AND sku_ok = '1' AND yfcode_ok='1' AND order_line in (1,2)
 		group by phone,post_code
 		having num>1) b
-		WHERE a.phone = b.phone and a.post_code = b.post_code) b
+		WHERE a.phone = b.phone and a.post_code = b.post_code and a.order_line in(1,2)) b
 		SET a.send_id = concat('H',a.phone)
 		WHERE a.id = b.id";
 	$res = $db->execute($sql);

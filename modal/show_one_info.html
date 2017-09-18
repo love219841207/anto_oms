@@ -180,7 +180,6 @@
             <td class="s_gray" ng-class="{'danger red':item.post_ok==2}">{{item.post_code}}
                 <i ng-click="aa_post_addr=!aa_post_addr" 
                 class="fa fa-edit fa-fw pointer"
-                ng-hide="item.order_line>3"
                 ></i>
                 <i class="fa fa-lightbulb-o fa-fw pointer blue" ng-hide="item.order_line>3" ng-click="read_oms_post(item.post_code)"></i>
                 <input ng-show="aa_post_addr" type="text" id="new_post_code" style="width:80px;padding-left: 4px;" placeholder=".. 新的邮编" value="{{item.post_code}}">
