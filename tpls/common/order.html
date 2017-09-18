@@ -150,6 +150,7 @@
 						<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="search_date" ng-change="change_search_date()">
 							<option value="">日期筛选 ..</option>
 							<option value="syn_day">同步/导入日期</option>
+							<option value="money_time">入金日期</option>
 							<option value="purchase_date">购买日期</option>
 							<!-- <option value="latest_ship_date">最后发货日期</option> -->
 							<option value="express_day">快递日期</option>
@@ -498,8 +499,8 @@
 							<span ng-show="now_station=='Amazon' && item.latest_ship_date!=''" class="s_gray">
 								最后出货时间：<span class="blue">{{item.latest_ship_date}}</span>
 							</span>
-							<span ng-show="now_station=='Rakuten' && item.buyer_send_method!=''" class="s_gray">
-								客人指定配送：<span class="blue">{{item.buyer_send_method}}</span>
+							<span ng-show="item.money_time!=NULL && now_station!='Amazon'" class="s_gray">
+								入金日期：<span class="blue">{{item.money_time}}</span>
 							</span>
 						</td>
 					</tr>

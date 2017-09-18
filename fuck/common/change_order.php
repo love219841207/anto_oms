@@ -438,9 +438,9 @@ if(isset($_POST['pay_ok'])){
 	$store = $_POST['store'];
 
 	$response_list = $station.'_response_list';
-
+	$money_time = date("Y-m-d H:i:s");
 	// 还原response_list
-	$sql = "UPDATE $response_list SET order_line = '1' WHERE order_id IN $pay_ok";
+	$sql = "UPDATE $response_list SET order_line = '1',money_time = '{$money_time}' WHERE order_id IN $pay_ok";
 	$res = $db->execute($sql);
 
 	//日志

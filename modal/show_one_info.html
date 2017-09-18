@@ -152,7 +152,12 @@
           </tr>
           <tr ng-hide="now_station == 'Amazon'">
             <td class="s_gray">运费代码配送</td>
-            <td class="s_gray">{{item.send_method}}
+            <td class="s_gray blue">{{item.send_method}}
+            </td>
+          </tr>
+          <tr ng-hide="now_station == 'Amazon'">
+            <td class="s_gray">客人指定配送</td>
+            <td class="s_gray">{{item.buyer_send_method}}</span>
             </td>
           </tr>
           <tr>
