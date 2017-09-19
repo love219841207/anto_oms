@@ -54,7 +54,7 @@ if(isset($_GET['import_add_list'])){
 			$goods_title = $new_arr[8];	#商品名
 			$goods_num = $new_arr[9];	#购买数量
 			$currency = $new_arr[10];	#货币种类
-			$unit_price = $new_arr[11];	#金额
+			$unit_price = $new_arr[11]/$goods_num;	#金额
 			$item_tax = $new_arr[12];	#税
 			$shipping_price = $new_arr[13];	#运费
 			$shipping_tax = $new_arr[14];	#运费税

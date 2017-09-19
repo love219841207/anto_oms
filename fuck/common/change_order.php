@@ -4,7 +4,7 @@ require_once("../log.php");
 require_once("./play_price.php");
 require_once("./play_yfcode.php");
 $dir = dirname(__FILE__);
-
+date_default_timezone_set("Asia/Shanghai");
 set_time_limit(0);
 // 指定配送日期时间
 if(isset($_GET['want_date'])){

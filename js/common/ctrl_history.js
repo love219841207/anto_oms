@@ -1,6 +1,34 @@
 var app=angular.module('myApp');
 app.controller('historyCtrl', ['$rootScope','$scope','$state','$http','$log','$timeout', function($rootScope,$scope,$state,$http,$log,$timeout){
     $scope.search_field = '';
+    $scope.change_express_panel = function(station,send_id,express_num,express_day){
+        $scope.express_station = station;
+        $scope.express_send_id = send_id;
+        $scope.express_num = express_num;
+        $scope.express_day = express_day;
+    };
+
+    // 修改保存
+    $scope.save_change_express =function(){
+        $http.get('/fuck/common/history_order.php', {
+            params:{
+                save_change_express:$scope.express_send_id,
+                station:$scope.express_station,
+                express_num:$scope.express_num,
+                express_day:$scope.express_day
+            }
+        }).success(function(data) {
+            // $log.info(data);
+            if(data == 'ok'){
+                $scope.plug_alert('success','修改完成。','fa fa-smile-o');
+            }
+            $scope.send_table ='';
+            $scope.filter_bar_submit();
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("退单查询失败");
+        });
+    };
 
 // 查看售后数据
     $scope.repair_info = function(order_id){
@@ -18,7 +46,7 @@ app.controller('historyCtrl', ['$rootScope','$scope','$state','$http','$log','$t
             alert("系统错误，请联系管理员。");
             $log.info("退单查询失败");
         });
-    }
+    };
 
 // 一键转入售后
     $scope.onekey_repair = function(){
@@ -37,7 +65,7 @@ app.controller('historyCtrl', ['$rootScope','$scope','$state','$http','$log','$t
             alert("系统错误，请联系管理员。");
             $log.info("退单查询失败");
         });
-    }
+    };
 
 // 退单查询
     $scope.search_back_order = function(){
@@ -54,7 +82,7 @@ app.controller('historyCtrl', ['$rootScope','$scope','$state','$http','$log','$t
             alert("系统错误，请联系管理员。");
             $log.info("退单查询失败");
         });
-    }
+    };
 
 // 可退单查询 按钮
     $scope.can_back = function(){
@@ -70,7 +98,7 @@ app.controller('historyCtrl', ['$rootScope','$scope','$state','$http','$log','$t
             alert("系统错误，请联系管理员。");
             $log.info("可退单查询失败");
         });
-    }
+    };
 
 // 退单
     $scope.back_order = function(){
@@ -91,13 +119,13 @@ app.controller('historyCtrl', ['$rootScope','$scope','$state','$http','$log','$t
             alert("系统错误，请联系管理员。");
             $log.info("退单失败");
         });
-    }
+    };
 
 //数据分页查询开始
 	//筛选查询字段改变
     $scope.change_search_field = function(){
         $scope.search_key = '';
-    }
+    };
 
 	$http.get('/fuck/common/list_order.php', {
     	params:{
@@ -157,7 +185,7 @@ app.controller('historyCtrl', ['$rootScope','$scope','$state','$http','$log','$t
                 }else{
                     $scope.selectPage($scope.selectOption);
                 }
-            }
+            };
 
             //打印当前选中页索引
             $scope.selectPage = function (page) {
@@ -173,7 +201,7 @@ app.controller('historyCtrl', ['$rootScope','$scope','$state','$http','$log','$t
                 }
 
                 //跳页响应
-                $scope.selectOption=page
+                $scope.selectOption=page;
 
                 //提示到头了
                 if(page < 2){
@@ -236,7 +264,7 @@ app.controller('historyCtrl', ['$rootScope','$scope','$state','$http','$log','$t
             //上一页
             $scope.Previous = function () {
                 $scope.selectPage($scope.selPage - 1);
-            }
+            };
             //下一页
             $scope.Next = function () {
                 $scope.selectPage($scope.selPage + 1);
@@ -244,7 +272,7 @@ app.controller('historyCtrl', ['$rootScope','$scope','$state','$http','$log','$t
         }).error(function(data) {  
             alert("系统错误，请联系管理员。");
         });         
-    }
+    };
     //获取序列内容_分页查询
     $scope.to_page = function(page){
         $scope.loading_shadow('open'); //打开loading
@@ -269,7 +297,7 @@ app.controller('historyCtrl', ['$rootScope','$scope','$state','$http','$log','$t
         }).error(function(data) {  
             alert("系统错误，请联系管理员。");
         });           
-    }
+    };
 
     //修改分页参数
     $scope.change_pageSize = function(){
@@ -281,7 +309,7 @@ app.controller('historyCtrl', ['$rootScope','$scope','$state','$http','$log','$t
             $scope.get_count();     //分配页码
             $scope.to_page('1');   //再次初始化数据
         }
-    }
+    };
 
     //筛选组确定按钮
     $scope.filter_bar_submit = function(){
@@ -292,7 +320,7 @@ app.controller('historyCtrl', ['$rootScope','$scope','$state','$http','$log','$t
         
         $scope.get_count();     //分配页码
         $scope.to_page('1');   //再次初始化数据
-    }
+    };
 //数据分页查询结束
 
 }]);

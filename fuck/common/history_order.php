@@ -12,6 +12,23 @@ if(isset($_GET['repair_info'])){
 	echo json_encode($res);
 }
 
+//修改快递单
+if(isset($_GET['save_change_express'])){
+	$send_id = $_GET['save_change_express'];
+	$station = $_GET['station'];
+	$express_num = $_GET['express_num'];
+	$express_day = $_GET['express_day'];
+	$response_list = $station.'_response_list';
+	//history_send
+	$sql = "UPDATE history_send SET oms_order_express_num = '{$express_num}',express_day = '{$express_day}' WHERE send_id = '{$send_id}'";
+	$res = $db->execute($sql);
+	//list
+	$sql = "UPDATE $response_list SET oms_order_express_num = '{$express_num}',express_day = '{$express_day}' WHERE send_id = '{$send_id}'";
+	$res = $db->execute($sql);
+	echo 'ok';
+}
+
+
 //	一键转入售后
 if(isset($_GET['onekey_repair'])){
 	$sql = "SELECT 

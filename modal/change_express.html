@@ -1,0 +1,32 @@
+<div class="modal" tabindex="-1" role="dialog" ng-controller="historyCtrl">
+  <div class="modal-dialog" style="width:600px;">
+    <div class="modal-content">
+      <div class="modal-header modal-drag">
+        <i class="fa fa-close f20 close" ng-click="$hide()"></i>
+        <h4 class="modal-title blue"><i class="fa fa-fw fa-plane"></i> 修改快递 <span class="red">{{item.express_send_id}}</span> </h4>
+      </div>
+      <div class="modal-body">
+        <table class="tagl table table-hover table-bordered table-condensed">
+          <tr>
+            <td class="s_gray" style="width:30%">快递单号</td>
+            <td class="s_gray">
+             	<input type="text" class="blue" ng-model="express_num">
+            </td>
+          </tr>
+          <tr>
+            <td class="s_gray">
+              快递日期</td>
+            <td class="s_gray">
+            	<input placeholder="快递日期" class="date_icon blue" readonly="readonly" type="text" name="express_day" ng-flat-datepicker datepicker-config="datepickerConfig" ng-model="express_day">
+            </td>
+          </tr>
+        </table>
+        <div class="clearfix"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="save_change_express();$hide()"><i class="fa fa-save"></i> 保 存</button>
+        <button type="button" class="btn btn-default" ng-click="$hide()">关 闭</button>
+      </div>
+    </div>
+  </div>
+</div>
