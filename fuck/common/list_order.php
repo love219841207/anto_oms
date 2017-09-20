@@ -444,6 +444,43 @@ if(isset($_POST['sub_repo'])){
 				oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
 			}
 		}else if($can_send == 1){
+			// 新需求：如果中国能发，则都从中国发 ---------------------------------------------------
+			$order_ids = rtrim($order_ids,",");
+			// 先检测这单是否有日本和中国订单
+			$sql = "SELECT sum(pause_ch) AS sum_ch,sum(pause_jp) AS sum_jp FROM $response_info WHERE order_id in ($order_ids)";
+			$res = $db->getOne($sql);
+			$sum_ch = $res['sum_ch'];
+			$sum_jp = $res['sum_jp'];
+			if($sum_jp > 0 AND $sum_ch >0){	// 如果押中国，同时也押日本
+				// 遍历所有购买日本的商品、数量
+				$sql = "SELECT id,goods_code,pause_jp FROM $response_info WHERE order_id in ($order_ids)";
+				$res = $db->getAll($sql);
+				foreach ($res as $value) {
+					$pp_id = $value['id'];
+					$pp_goods_code = $value['goods_code'];
+					$pp_pause_jp = $value['pause_jp'];
+					if($pp_pause_jp == 0){
+						// 如果该单押库存为0，跳过
+					}else{
+						// 查询中国是否有库存数
+						$sql = "SELECT a_repo FROM goods_type WHERE goods_code = '{$pp_goods_code}'";
+						$res = $rdb->getOne($sql);
+						$pp_a_repo = $res['a_repo'];
+						// 如果中国有库存
+						if($pp_a_repo > $pp_pause_jp){
+							// 消耗掉中国库存
+							$sql = "UPDATE goods_type SET a_repo = a_repo - $pp_pause_jp WHERE goods_code = '{$pp_goods_code}'";
+							$res = $rdb->execute($sql);
+							// 还日本库存
+							$sql = "UPDATE goods_type SET b_repo = b_repo + $pp_pause_jp WHERE goods_code = '{$pp_goods_code}'";
+							$res = $rdb->execute($sql);
+							// 押中国，押日本0
+							$sql = "UPDATE $response_info SET pause_ch = pause_ch + $pp_pause_jp,pause_jp = 0 WHERE id = '{$pp_id}'";
+							$res = $db->execute($sql);
+						}
+					}
+				}
+			}
 			// 更新order_line
 			$sql = "UPDATE $response_list SET order_line = '4' WHERE send_id = '{$send_id}'";
 			$res = $db->execute($sql);
