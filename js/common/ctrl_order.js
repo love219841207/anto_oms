@@ -1520,4 +1520,63 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         });
     }
 
+    // 合单检测
+    $scope.check_common = function(){
+        var post_data = {
+            station:$scope.now_station,
+            store:$scope.now_store_bar,
+            check_common:'check_common'};
+
+        $http.post('/fuck/common/change_order.php', post_data).success(function(data) {
+            $scope.can_common_orders = data;
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:合单检测。");
+        });
+    }
+
+    // 手动合单
+    $scope.hand_common = function(){
+        var post_data = {
+            station:$scope.now_station,
+            store:$scope.now_store_bar,
+            hand_common:'hand_common',
+            my_checked_items:$scope.my_checked_items};
+
+        $http.post('/fuck/common/change_order.php', post_data).success(function(data) {
+            if(data == 'ok'){
+                $scope.plug_alert('success','合单完成。','fa fa-smile-o');
+                $scope.to_page($scope.now_page);
+            }else{
+                $log.info(data);
+                $scope.plug_alert('danger',data,'fa fa-ban');
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:手动合单。");
+        });
+    }
+
+    // 手动拆单
+    $scope.hand_break = function(){
+        var post_data = {
+            station:$scope.now_station,
+            store:$scope.now_store_bar,
+            hand_break:'hand_break',
+            my_checked_items:$scope.my_checked_items};
+
+        $http.post('/fuck/common/change_order.php', post_data).success(function(data) {
+            if(data == 'ok'){
+                $scope.plug_alert('success','拆单完成。','fa fa-smile-o');
+                $scope.to_page($scope.now_page);
+            }else{
+                $log.info(data);
+                $scope.plug_alert('danger',data,'fa fa-ban');
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:手动拆单。");
+        });
+    }
+
 }])

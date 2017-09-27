@@ -240,15 +240,19 @@
 						<div class="row mt10">
 							<!-- 亚马逊导入 -->
 							<div class="col-lg-12" ng-show="now_station=='Amazon'">
-								<button class="btn btn-primary btn-sm" ng-disabled="!fileForm.$valid || upload_store!=now_store_bar" ng-click="submit('amazon_add_list','txt','amazon')"><i class="fa fa-upload fa-fw"></i> 导入 {{now_store_bar}}</button>
+								<button class="btn btn-primary btn-sm" ng-disabled="!fileForm.$valid || upload_store!=now_store_bar" ng-click="submit('amazon_add_list','txt','amazon')"><i class="fa fa-upload fa-fw"></i> 导入 {{now_store_bar}}.txt</button>
 							</div>
 							<!-- 乐天导入 -->
 							<div class="col-lg-12" ng-show="now_station=='Rakuten'">
-								<button class="btn btn-primary btn-sm" ng-disabled="!fileForm.$valid || upload_store!=now_store_bar" ng-click="submit('rakuten_add_list','csv','rakuten')"><i class="fa fa-upload fa-fw"></i> 导入 {{now_store_bar}}</button>
+								<button class="btn btn-primary btn-sm" ng-disabled="!fileForm.$valid || upload_store!=now_store_bar" ng-click="submit('rakuten_add_list','csv','rakuten')"><i class="fa fa-upload fa-fw"></i> 导入 {{now_store_bar}}.csv</button>
 							</div>
 							<!-- 雅虎拍卖导入 -->
-							<div class="col-lg-12" ng-show="now_station=='P_Yahoo'">
-								<button class="btn btn-primary btn-sm" ng-disabled="!fileForm.$valid || upload_store!=now_store_bar" ng-click="submit('p_yahoo_add_list','xlsx','p_yahoo')"><i class="fa fa-upload fa-fw"></i> 导入 {{now_store_bar}}</button>
+							<div class="col-lg-12" ng-show="now_station=='P_Yahoo' && data_type == 'xlsx'">
+								<button class="btn btn-primary btn-sm" ng-disabled="!fileForm.$valid || upload_store!=now_store_bar" ng-click="submit('p_yahoo_add_list','xlsx','p_yahoo')"><i class="fa fa-upload fa-fw"></i> 导入 {{now_store_bar}}.xlsx</button>
+							</div>
+							<!-- 雅虎拍卖导入 -->
+							<div class="col-lg-12 mt10" ng-show="now_station=='P_Yahoo' && data_type == 'csv'">
+								<button class="btn btn-warning btn-sm" ng-disabled="!fileForm.$valid || upload_store!=now_store_bar" ng-click="submit('p_yahoo_add_info','csv','p_yahoo')"><i class="fa fa-upload fa-fw"></i> 导入 {{now_store_bar}}.csv</button>
 							</div>
 						</div>
 						<div class="row mt10">
@@ -371,11 +375,14 @@
 		      	<button ng-show="search_order_line=='-1'" ng-disabled="my_checked==''" ng-click="amz_return()" class="btn btn-success btn-sm">
 		      		<i class="fa fa-undo fa-fw"></i>还原
 		      	</button>
-		      	<button ng-show="search_order_line=='-1'" ng-disabled="my_checked==''" ng-click="check_items();del_true='true'" data-animation="am-fade-and-slide-top" data-template-url="/modal/del_item.html" bs-modal="modal" class="btn btn-danger btn-sm">
-		      		<i class="fa fa-trash-o fa-fw"></i>彻底删除
-		      	</button>
 		      	<button ng-disabled="my_checked==''" type="button" ng-click="check_items();del_true='false'" data-animation="am-fade-and-slide-top" data-template-url="/modal/down_item.html" bs-modal="modal" class="btn btn-default btn-sm green">
 		      		<i class="fa fa-download fa-fw"></i>下载
+		      	</button>
+		      	<button ng-show="now_station=='P_Yahoo' && search_order_line == 'ing'" type="button" ng-click="check_common();del_true='false'" data-animation="am-fade-and-slide-top" data-template-url="/modal/hand_common.html" bs-modal="modal" class="btn btn-default btn-sm green">
+		      		<i class="fa fa-inbox fa-fw"></i>手动合单
+		      	</button>
+		      	<button ng-show="search_order_line=='-1'" ng-disabled="my_checked==''" ng-click="check_items();del_true='true'" data-animation="am-fade-and-slide-top" data-template-url="/modal/del_item.html" bs-modal="modal" class="btn btn-danger btn-sm">
+		      		<i class="fa fa-trash-o fa-fw"></i>彻底删除
 		      	</button>
 		      	<button ng-show="search_order_line=='9' || search_order_line=='yfcode_ok' || search_order_line=='ing' || search_order_line == '6' || search_order_line == '0' || search_order_line == '-2'" ng-disabled="my_checked==''" type="button" ng-click="check_items();del_true='false'" data-animation="am-fade-and-slide-top" data-template-url="/modal/del_item.html" bs-modal="modal" class="btn btn-default btn-sm red">
 		      		<i class="fa fa-trash-o fa-fw"></i>删除

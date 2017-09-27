@@ -700,3 +700,127 @@ if(isset($_POST['del_item'])){
 	echo 'ok';
 
 }
+
+// 合单检测
+if(isset($_POST['check_common'])){
+	$station = strtolower($_POST['station']);
+	$store = $_POST['store'];
+	$response_list = $station.'_response_list';
+
+	// 检测ing区是否可以合单
+	$sql = "SELECT count(1) as cc,receive_name FROM $response_list WHERE order_line = '1' GROUP BY phone,post_code,receive_name";
+	$res =  $db->getAll($sql);
+	foreach ($res as $key => $value) {
+		if($value['cc'] == 1){
+			unset($res[$key]);
+		}
+	}
+	echo json_encode($res);
+}
+
+// 手动合单
+if(isset($_POST['hand_common'])){
+	$my_checked_items = $_POST['my_checked_items'];
+	$station = strtolower($_POST['station']);
+	$store = $_POST['store'];
+	$response_list = $station.'_response_list';
+
+	// 检测是否可以合单
+	$sql = "SELECT id,receive_name,phone,address FROM $response_list WHERE order_id IN ($my_checked_items) AND store = '{$store}'";
+	$res = $db->getAll($sql);
+
+	$s1 = 'ycmbcd';
+	$s2 = 'ycmbcd';
+	$s3 = 'ycmbcd';
+	$status = 0;
+	$ids = '';
+	foreach ($res as $value) {
+		$ids = $ids.','.$value['id'];
+
+		if($s1 == 'ycmbcd'){
+			$s1 = $value['receive_name'];
+		}else{
+			if($s1 == $value['receive_name']){
+			
+			}else{
+				echo '收件人不同不能合单。';
+				$status = 1;
+			}
+		}
+
+		if($s2 == 'ycmbcd'){
+			$s2 = $value['phone'];
+		}else{
+			if($s2 == $value['phone']){
+			
+			}else{
+				echo '收件人电话不同不能合单。';
+				$status = 1;
+			}
+		}
+		
+		if($s3 == 'ycmbcd'){
+			$s3 = $value['address'];
+		}else{
+			if($s3 == $value['address']){
+			
+			}else{
+				echo '配送地址不同不能合单。';
+				$status = 1;
+			}
+		}
+
+		if($status == 1){
+			break;
+		}
+	}
+	$ids = trim($ids,',');
+	$id_arr = explode(',', $ids);
+
+	// 如果可以合单
+	if($status == 0){
+		// 查询出第一个单子的send_id当做合单号
+		$sql = "SELECT send_id FROM $response_list WHERE order_id IN ($my_checked_items) AND store = '{$store}'";
+		$res = $db->getOne($sql);
+		$send_id = str_replace('H', '', $res['send_id']);
+		$send_id = 'H'.$send_id;
+		$sql = "UPDATE $response_list SET send_id = '{$send_id}' WHERE order_id IN ($my_checked_items) AND store = '{$store}'";
+		$res = $db->execute($sql);
+
+		//日志
+		$do = '[手动合单]：'.$send_id;
+		foreach ($id_arr as $oms_id) {
+			oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
+		}
+
+		echo "ok";
+	}
+}
+
+// 手动拆单
+if(isset($_POST['hand_break'])){
+	$my_checked_items = $_POST['my_checked_items'];
+	$station = strtolower($_POST['station']);
+	$store = $_POST['store'];
+	$response_list = $station.'_response_list';
+	if($station == 'p_yahoo'){
+		$sql = "UPDATE $response_list SET send_id = concat('pya',id) WHERE order_id IN ($my_checked_items) AND store = '{$store}'";
+		$res = $db->execute($sql);
+
+		$sql = "SELECT id FROM $response_list WHERE order_id IN ($my_checked_items) AND store = '{$store}'";
+		$res = $db->getAll($sql);
+		$ids = '';
+		foreach ($res as $value) {
+			$ids = $ids.','.$value['id'];
+		}
+		$ids = trim($ids,',');
+		$id_arr = explode(',', $ids);
+		//日志
+		foreach ($id_arr as $oms_id) {
+			$do = '[手动拆单]：'.'pya'.$oms_id;
+			oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
+		}
+
+		echo "ok";
+	}
+}

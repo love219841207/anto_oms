@@ -256,6 +256,18 @@ app.controller('FileController', ['$rootScope','$scope','$state', 'Upload' , '$t
         $scope.count_order = false;
     };
 
+    $scope.$watch('upload_file',  function(newValue, oldValue) {
+        if (newValue === oldValue) { return; }
+        var file_type = new RegExp('csv').test($scope.upload_file.name);
+        if(file_type == 1){
+            $scope.data_type = 'csv';
+        }
+        var file_type2 = new RegExp('xlsx').test($scope.upload_file.name);
+        if(file_type2 == 1){
+            $scope.data_type = 'xlsx';
+        }
+    });
+
     //选择文件
     $scope.chose_file = function(){
         $scope.upload_ok = false;
@@ -317,7 +329,7 @@ app.controller('FileController', ['$rootScope','$scope','$state', 'Upload' , '$t
             });
 
         }else if(file_name == 'mail_table'){    //导入亚马逊mail
-            $http.get('/fuck/import_mail_bian.php', {params:{import_file:file_name}
+            $http.get('/fuck/import_mail_bian.php', {params:{import_file:file_name,data_type:$scope.radioModel}
             }).success(function(data) {
                 // console.log(data)
                 

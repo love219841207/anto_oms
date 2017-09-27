@@ -28,10 +28,10 @@ if(isset($_GET['import_add_list'])){
 	//清空导入表
     $sql = "TRUNCATE p_yahoo_import_list";
     $res = $db->execute($sql);
-    $sql = "TRUNCATE p_yahoo_response_list";
-    $res = $db->execute($sql);
-    $sql = "TRUNCATE p_yahoo_response_info";
-    $res = $db->execute($sql);
+    // $sql = "TRUNCATE p_yahoo_response_list";
+    // $res = $db->execute($sql);
+    // $sql = "TRUNCATE p_yahoo_response_info";
+    // $res = $db->execute($sql);
 
     //所有oms_has状态变成0
  	$sql = "UPDATE p_yahoo_response_list SET oms_has_me = '0'";
@@ -369,6 +369,56 @@ if(isset($_GET['import_add_list'])){
 		yfcode
 	FROM p_yahoo_import_list";
 	$res = $db->execute($sql);
+
+	// 更新info.csv
+	$filename2 = $dir."/../uploads/p_yahoo_add_info.csv";
+
+	function fgetcsv_reg(& $handle, $length = null, $d = ',', $e = '"') {
+	$d = preg_quote($d);
+	$e = preg_quote($e);
+	$_line = "";
+	$eof=false;
+	while ($eof != true) {
+	$_line .= (empty ($length) ? fgets($handle) : fgets($handle, $length));
+	$itemcnt = preg_match_all('/' . $e . '/', $_line, $dummy);
+	if ($itemcnt % 2 == 0)
+	$eof = true;
+	}
+	$_csv_line = preg_replace('/(?: |[ ])?$/', $d, trim($_line));
+	$_csv_pattern = '/(' . $e . '[^' . $e . ']*(?:' . $e . $e . '[^' . $e . ']*)*' . $e . '|[^' . $d . ']*)' . $d . '/';
+	preg_match_all($_csv_pattern, $_csv_line, $_csv_matches);
+	$_csv_data = $_csv_matches[1];
+	for ($_csv_i = 0; $_csv_i < count($_csv_data); $_csv_i++) {
+	$_csv_data[$_csv_i] = preg_replace('/^' . $e . '(.*)' . $e . '$/s', '$1', $_csv_data[$_csv_i]);
+	$_csv_data[$_csv_i] = str_replace($e . $e, $e, $_csv_data[$_csv_i]);
+	}
+	return empty ($_line) ? false : $_csv_data;
+	}
+
+	$file = fopen($filename2,'r'); 
+	while ($data = fgetcsv_reg($file)) {
+		$goods_list[] = $data;
+	}
+	array_shift($goods_list);
+	foreach ($goods_list as $arr){
+		// var_dump($arr);
+		// echo count($arr);echo ' # ';
+		if(is_array($arr) && !empty($arr)){
+			$str = '';
+			for($i=0; $i<35; $i++){
+				// echo $arr[$i]."<br>";
+				$str .= $arr[$i]."|*|";
+			}
+			$str=mb_convert_encoding($str,"UTF-8","shift-jis");
+			$strs = explode("|*|",$str);
+			$order_id = $strs[0].'-'.$strs[1];
+			$buyer_others = $strs[31];
+
+			// 查询是否存在此订单
+			$sql = "UPDATE p_yahoo_response_list SET buyer_others = '{$buyer_others}' WHERE order_id = '{$order_id}'";
+			$res = $db->execute($sql);
+		}
+	}
 
     //final_res
 	$final_res['status'] = 'ok';

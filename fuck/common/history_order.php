@@ -78,9 +78,9 @@ if(isset($_GET['onekey_repair'])){
 		$goods = $val['goods'];
 		$receive_phone = $val['receive_phone'];
 		$receive_code = $val['receive_code'];
-		$receive_house = $val['receive_house'];
-		$receive_house1 = $val['receive_house1'];
-		$receive_house2 = $val['receive_house2'];
+		$receive_house = addslashes($val['receive_house']);
+		$receive_house1 = addslashes($val['receive_house1']);
+		$receive_house2 = addslashes($val['receive_house2']);
 		$receive_name = $val['receive_name'];
 		$total_money = $val['total_money'];
 		$ems_money = $val['ems_money'];

@@ -1,0 +1,37 @@
+<div class="modal op_yellow" tabindex="-1" role="dialog">
+  <div class="modal-dialog" style="width:500px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <i class="fa fa-close f20 close" ng-click="$hide()"></i>
+        <h4 class="modal-title green"><i class="fa fa-fw fa-inbox"></i> 手动合单</h4>
+      </div>
+      <div>
+        检测到以下客人的订单可以合并：
+        <button ng-repeat="item in can_common_orders" class="btn btn-warning btn-sm" ng-click="item.receive_name">{{ item.receive_name }}</button>
+        <!-- <table class="table table-bordered table-hover">
+          <tr>
+            <td></td>
+          </tr>
+          <tr >
+            <td>{{ item.order_id }}</td>
+            <td>{{ item.phone }}</td>
+            <td>{{ item.post_code }}</td>
+            <td></td>
+          </tr>
+        </table> -->
+      </div>
+      <div class="modal-body">
+        <div ng-show="my_checked!=''" class="blue">确定合并以下订单？ <span class="green f20">已选择：{{check_all_num}}</span></div>
+        <table ng-show="my_checked!=''" class="table table-bordered table-condensed mt20 red">
+          <tr class="f12"><td class="tagc danger">序号</td><td class="tagc danger">订单号</td></tr>
+          <tr ng-repeat="(key,val) in my_checked track by $index"><td class="tagc blue warning">{{$index+1}}</td><td class="tagc warning">{{val}}</td></tr>
+        </table>
+      </div>
+      <div class="modal-footer">
+      	<button type="button" ng-disabled="my_checked=='' || check_all_num == 1" class="btn btn-primary" ng-click="hand_break();$hide()"><i class="fa fa-fw fa-undo"></i>拆单</button>
+        <button type="button" ng-disabled="my_checked=='' || check_all_num == 1" class="btn btn-success" ng-click="hand_common();$hide()"><i class="fa fa-fw fa-check-square-o"></i>确定合单</button>
+        <button type="button" class="btn btn-default" ng-click="$hide()">关 闭</button>
+      </div>
+    </div>
+  </div>
+</div>

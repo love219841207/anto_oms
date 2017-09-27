@@ -269,7 +269,7 @@ function make_bags(){
 		$res = $db->getOne($sql);
 		
 		$send_id = $res['send_id'];
-		$who_house = $res['who_house'];
+		$who_house = addslashes($res['who_house']);
 		$who_tel = $res['who_tel'];
 		$who_post = $res['who_post'];
 		$express_company = $res['express_company'];

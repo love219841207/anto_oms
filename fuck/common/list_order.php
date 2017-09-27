@@ -133,32 +133,37 @@ if(isset($_GET['onekey_common_order'])){
 		$cct = 'yho';
 	}
 
-	//	重置单号
-	$sql = "UPDATE $response_list SET all_total_money = order_total_money,send_id = concat('{$cct}',id) WHERE order_line in (1,2)";
-	$res = $db->execute($sql);
-
-	$sql = "
-		UPDATE $response_list a,
-		(SELECT a.id FROM $response_list a,
-		(SELECT phone,post_code,count(id) as num
-		FROM $response_list WHERE store='{$store}' AND post_ok = '1' AND tel_ok = '1' AND sku_ok = '1' AND yfcode_ok='1' AND order_line in (1,2)
-		group by phone,post_code
-		having num>1) b
-		WHERE a.phone = b.phone and a.post_code = b.post_code and a.order_line in(1,2)) b
-		SET a.send_id = concat('H',a.phone)
-		WHERE a.id = b.id";
-	$res = $db->execute($sql);
-
-	//修正合单号
-	$sql = "SELECT send_id FROM $response_list WHERE store='{$store}' AND order_line in (1,2) AND send_id LIKE 'H%' GROUP BY send_id";
-	$res = $db->getAll($sql);
-	foreach ($res as $value) {
-		$now_send_id = $value['send_id'];
-		$sql = "SELECT id FROM $response_list WHERE send_id = '{$now_send_id}' LIMIT 1";
-		$res = $db->getOne($sql);
-		$id = $res['id'];
-		$sql = "UPDATE $response_list SET send_id = concat('H','{$cct}',$id) WHERE send_id = '{$now_send_id}'";
+	if($store == 'p_yahoo'){
+		// 拍卖店手动合单
+		
+	}else{
+		//	重置单号
+		$sql = "UPDATE $response_list SET all_total_money = order_total_money,send_id = concat('{$cct}',id) WHERE order_line in (1,2)";
 		$res = $db->execute($sql);
+
+		$sql = "
+			UPDATE $response_list a,
+			(SELECT a.id FROM $response_list a,
+			(SELECT phone,post_code,count(id) as num
+			FROM $response_list WHERE store='{$store}' AND post_ok = '1' AND tel_ok = '1' AND sku_ok = '1' AND yfcode_ok='1' AND order_line in (1,2)
+			group by phone,post_code
+			having num>1) b
+			WHERE a.phone = b.phone and a.post_code = b.post_code and a.order_line in(1,2)) b
+			SET a.send_id = concat('H',a.phone)
+			WHERE a.id = b.id";
+		$res = $db->execute($sql);
+
+		//修正合单号
+		$sql = "SELECT send_id FROM $response_list WHERE store='{$store}' AND order_line in (1,2) AND send_id LIKE 'H%' GROUP BY send_id";
+		$res = $db->getAll($sql);
+		foreach ($res as $value) {
+			$now_send_id = $value['send_id'];
+			$sql = "SELECT id FROM $response_list WHERE send_id = '{$now_send_id}' LIMIT 1";
+			$res = $db->getOne($sql);
+			$id = $res['id'];
+			$sql = "UPDATE $response_list SET send_id = concat('H','{$cct}',$id) WHERE send_id = '{$now_send_id}'";
+			$res = $db->execute($sql);
+		}
 	}
 
 	//order_line
