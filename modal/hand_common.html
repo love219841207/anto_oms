@@ -1,35 +1,124 @@
 <div class="modal op_yellow" tabindex="-1" role="dialog">
-  <div class="modal-dialog" style="width:500px;">
+  <div class="modal-dialog" style="width:1100px;">
     <div class="modal-content">
       <div class="modal-header">
         <i class="fa fa-close f20 close" ng-click="$hide()"></i>
-        <h4 class="modal-title green"><i class="fa fa-fw fa-inbox"></i> 手动合单</h4>
+        <h4 class="modal-title green"><i class="fa fa-fw fa-inbox"></i> 手动合单 <span class="dark f12">检测到以下客人可以合单：</span></h4>
       </div>
-      <div>
-        检测到以下客人的订单可以合并：
-        <button ng-repeat="item in can_common_orders" class="btn btn-warning btn-sm" ng-click="item.receive_name">{{ item.receive_name }}</button>
-        <!-- <table class="table table-bordered table-hover">
-          <tr>
-            <td></td>
+      <div class="mt10 ml10 mr10">
+        <div class="btn-group">
+            <div ng-click="read_check_common(item.receive_name,$index);"  class="btn btn-default btn-sm active_common ac_{{$index}}" ng-repeat="item in can_common_orders">{{ item.receive_name }}</div>
+        </div>
+        <table class="tagl table table-hover table-condensed table-bordered f12 mt20" ng-show="one_res_info">
+          <tr class="info blue">
+            <td>订单号</td>
+            <td>品名</td>
+            <td>运费代码 / 叠加运费</td>
+            <td>SKU</td>
+            <td>商品代码</td>
+            <td>数量</td>
+            <td>单价</td>
+            <td>子订单价格</td>
+            <td>代引手续费</td>
           </tr>
-          <tr >
+          <tr ng-repeat="item2 in one_res_info track by $index">
+            <!-- 品名 -->
+            <td class="s_gray tagc">
+              <i class="fa fa-apple pointer" popover-placement="top-left" uib-popover="【 {{item2.goods_title}} 】" popover-trigger="'click'"></i>
+            </td>
+            <!-- 订单号 -->
+            <td class="red">{{item2.order_id}}</td>
+            <!-- 运费代码 -->
+            <td class="green" ng-class="{'danger red':item2.yfcode_ok==2}">{{item2.yfcode}} / {{item2.yf_add}}
+            </td>
+            <!-- sku -->
+            <td>{{item2.sku}}</td>
+            <td class="green" ng-class="{'danger red':item2.sku_ok==2}">{{item2.goods_code}}
+              <i ng-click="aa_goods_code=!aa_goods_code" 
+                class="fa fa-edit fa-fw pointer"
+                ng-hide="item.order_line>2"
+                ></i>
+              <div ng-show="aa_goods_code" class="input-group">
+                <input class="form-control input-sm" ng-value="item2.goods_code" placeholder="商品代码 更改为..." type="text" id="goods_code_{{$index}}">
+                <span class="input-group-btn">
+                  <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="change_info_field(item2.id,'goods_code',$index,item2.order_id);aa_goods_code=!aa_goods_code">确定</button>
+                </span>
+              </div>
+            </td>
+            <!-- 个数 -->
+            <td class="blue tagr">{{item2.goods_num}}
+            </td>
+            <!-- 单价 -->
+            <td class="yellow tagr">{{item2.unit_price}}
+            </td>
+            <!-- 子订单价格 -->
+            <td class="yellow tagr">{{item2.item_price}}</td>
+            <!-- 代引手续费 -->
+            <td class="yellow tagr">{{item2.cod_money}}
+            </td>
+          </tr>
+        </table>
+        <hr>
+        <table class="table table-bordered table-hover table-responsive table-striped table-condensed mt20 f12 am-flip-x" ng-show="now_common_order">
+          <tr class="success green">
+            <td><i class="fa fa-fw fa-sort-numeric-asc"></i></td>
+            <td>订单号</td>
+            <td>手机号</td>
+            <td>邮编地址</td>
+            <td>收件人</td>
+            <td>客人要求</td>
+            <td>金额区</td>
+            <td class="tagc">合单</td>
+          </tr>
+          <tr ng-repeat="item in now_common_order">
+            <td style="width:8%" class="green pointer" ng-click="item.is_click=!item.is_click;check_items1()">
+              <i class="fa red fa-lg fa-fw" ng-class="{'fa-square-o':item.is_click==false,'fa-check-square':item.is_click==true}"></i>
+              <!-- {{item.is_click}} -->
+              <i>{{ $index+1 }}</i>
+              <i ng-show="item.send_id.indexOf('H')==0" ng-class="{'fa fa-shopping-bag red fa-fw':item.send_id.indexOf('H')==0}"> {{item.send_id}}</i>
+            </td>
             <td>{{ item.order_id }}</td>
             <td>{{ item.phone }}</td>
-            <td>{{ item.post_code }}</td>
-            <td></td>
+            <td>{{ item.post_code }} <span class="green">{{ item.address | limitTo:3}}</span></td>
+            <td>{{ item.receive_name }}</td>
+            <td>{{ item.buyer_others }}</td>
+            <td class="tagr red">
+              <span>
+                <span ng-class="{'red bg_yellow':item.payment_method=='COD'}" class="s_gray">({{item.payment_method}})</span>
+                <span ng-show="item.payment_method=='COD'" class="s_gray">代 </span>
+                <span ng-show="item.payment_method!='COD'" class="s_gray">支 </span>
+                <span ng-class="{'red bg_yellow':item.payment_method=='COD'}" class="red">{{item.pay_money}}</span>
+              </span>
+              <span ng-hide="item.shipping_price=='' || item.shipping_price == '0'" class="s_gray">
+                运 <span ng-class="{'dark bg_yellow':item.shipping_price!='0'}">{{item.shipping_price}}</span>
+              </span> 
+              <span ng-hide="item.points=='' || item.points == '0'"  class="s_gray">
+                分 <span class="green">{{item.points}}</span>
+              </span>
+              <span ng-hide="item.coupon=='' || item.coupon == '0'"  class="s_gray">
+                券 <span class="green">{{item.coupon}}</span>
+                </span>
+              <span ng-hide="item.order_tax =='' || item.order_tax == '0'"  class="s_gray">
+                税 <span class="red">{{item.order_tax}}</span>
+              </span>
+                总金额：{{ item.all_total_money }}</td>
+            <td class="tagc">
+              <button data-animation="am-fade-and-slide-top" class="btn btn-xs btn-warning" ng-click="show_one_all_info(item.send_id);">
+              合单</button>
+            </td>
           </tr>
-        </table> -->
+        </table>
       </div>
       <div class="modal-body">
-        <div ng-show="my_checked!=''" class="blue">确定合并以下订单？ <span class="green f20">已选择：{{check_all_num}}</span></div>
+        <div class="blue">确定合并以下订单？ <span class="green f20">已选择：{{check_all_num}}</span></div>
         <table ng-show="my_checked!=''" class="table table-bordered table-condensed mt20 red">
           <tr class="f12"><td class="tagc danger">序号</td><td class="tagc danger">订单号</td></tr>
           <tr ng-repeat="(key,val) in my_checked track by $index"><td class="tagc blue warning">{{$index+1}}</td><td class="tagc warning">{{val}}</td></tr>
         </table>
       </div>
       <div class="modal-footer">
-      	<button type="button" ng-disabled="my_checked=='' || check_all_num == 1" class="btn btn-primary" ng-click="hand_break();$hide()"><i class="fa fa-fw fa-undo"></i>拆单</button>
-        <button type="button" ng-disabled="my_checked=='' || check_all_num == 1" class="btn btn-success" ng-click="hand_common();$hide()"><i class="fa fa-fw fa-check-square-o"></i>确定合单</button>
+      	<button type="button" ng-disabled="my_checked=='' || check_all_num == 1" class="btn btn-primary" ng-click="hand_break()"><i class="fa fa-fw fa-undo"></i>拆单</button>
+        <button type="button" ng-disabled="my_checked=='' || check_all_num == 1" class="btn btn-success" ng-click="hand_common()"><i class="fa fa-fw fa-check-square-o"></i>确定合单</button>
         <button type="button" class="btn btn-default" ng-click="$hide()">关 闭</button>
       </div>
     </div>

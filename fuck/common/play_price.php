@@ -73,7 +73,7 @@ function play_order_price($station,$response_list,$response_info,$order_id){
 		$all_yfmoney = $res['all_yfmoney'];
 
 		// 合单金额 = 总订单金额 - 总COD手续费 + 一个COD手续费 - 运费（多出订单的）！！！！
-		$all_fee = $sum_total_money - $all_cod_fee + $cod_money - ($all_yfmoney * $count_H);
+	echo	$all_fee = $sum_total_money - $all_cod_fee + $cod_money - $all_yfmoney;
 
 		// 更新合单金额到 LIST
 		$sql = "UPDATE $response_list SET all_total_money = $all_fee WHERE send_id='{$send_id}'";

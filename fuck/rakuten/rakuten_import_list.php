@@ -97,14 +97,16 @@ if(isset($_GET['import_add_list'])){
 				$coupon = $strs[118];
 				$buyer_post_code = $strs[44].'-'.$strs[45];
 				$buyer_address = addslashes($strs[46].$strs[47].$strs[48]);
-				$buyer_name = $strs[49].$strs[50];
+				$buyer_name = $strs[49].$strs[50].'['.$strs[51].$strs[52].']';
 				$buyer_email = $strs[56];
 				$buyer_phone = $strs[53].$strs[54].$strs[55];
 				$post_code = $strs[88].'-'.$strs[89];
 				$address = addslashes($strs[90].$strs[91].$strs[92]);
-				$receive_name = $strs[93].$strs[94];
+				$receive_name = $strs[93].$strs[94].'['.$strs[95].$strs[96].']';
 				$receive_phone = $strs[97].$strs[98].$strs[99];
 				$buyer_send_method = $strs[66];
+				$buyer_name = str_replace('[]', '', $buyer_name);
+				$receive_name = str_replace('[]', '', $receive_name);
 
 				// 客人备注（配送)
 				$buyer_others = str_replace('[配送日時指定:]','',$buyer_others);

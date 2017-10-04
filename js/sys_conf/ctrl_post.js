@@ -29,7 +29,6 @@ app.controller('postCtrl', ['$scope','$state','$http','$log','$timeout', functio
     };
 
     // 下载 amz_mail
-
     $scope.down_amz_mail = function(){
         $scope.shadow('open','ss_make','正在生成 ..');
 

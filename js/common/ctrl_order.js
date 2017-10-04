@@ -3,7 +3,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
     // 去掉空格
     $scope.trim = function(str){
         return str.replace(/(^\s*)|(\s*$)/g, "");
-    }
+    };
 
 // 初始化开始
 	//默认tool_bar关闭
@@ -26,44 +26,44 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         $scope.post_cut = '';   //邮编未通过数
         $scope.post_no = '';    //无邮编数
         $scope.syn_end = false; //同步关闭
-    }
+    };
 
     //初始化日期筛选
     $scope.init_date_bar = function(){
         $scope.search_date = '';
-    }
+    };
     //初始化日期区间
     $scope.init_date = function(){
         $scope.s_date = '';
         $scope.e_date = '';
-    }
+    };
     //初始化字段
     $scope.init_s_field = function(){
         $scope.search_field = '';
-    }
+    };
     //初始化关键词
     $scope.init_s_key = function(){
         $scope.search_key = '';
-    }
+    };
 
     $scope.init_filter_bar = function(){    //初始化筛选组
         $scope.init_date_bar(); //初始化筛选日期
         $scope.init_date(); //初始化日期区间
         $scope.init_s_field();  //初始化筛选字段
         $scope.init_s_key();    //初始化关键词
-    }
+    };
     $scope.init_list(); //初始化列表数据
     $scope.init_filter_bar(); //初始化筛选组
 
     //筛选日期字段
     $scope.change_search_date = function(){
         $scope.init_date(); //初始化日期区间
-    }
+    };
 
     //筛选查询字段
     $scope.change_search_field = function(){
         $scope.init_s_key();    //初始化关键词
-    }
+    };
 
     //查询用户分页数
     $http.get('/fuck/common/list_order.php', {
@@ -93,7 +93,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         $scope.init_list(); //初始化列表数据
         $scope.get_count();     //分配页码
         $scope.to_page('1');   //再次初始化数据
-    }
+    };
 
 // 初始化结束
 // 订单同步开始
@@ -125,7 +125,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。error:亚马逊ListOrders通信失败。");
             $log.info("error:亚马逊ListOrders通信失败。");
         });
-    }
+    };
 
     // 判断订单是否重复
     $scope.has_orders = function(store){
@@ -143,7 +143,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:判断重复数据失败。");
         });
-    }
+    };
 
     //获取订单详单
     $scope.get_order_info = function(store){
@@ -171,7 +171,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。error:获取订单详单通信失败。");
             $log.info("error:获取订单详单通信失败。");
         });
-    }
+    };
 // 订单同步结束
 // 验证开始
 	// 获取需要验证订单数
@@ -187,7 +187,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。error:获取需要验证订单数失败。");
             $log.info("error:获取需要验证订单数失败。");
         });
-    }
+    };
     $scope.need_check_num();    //页面载入预读取
 
     // 点击验证按钮
@@ -211,7 +211,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。error:验证订单失败。");
             $log.info("error:验证订单失败。");
         });
-    }
+    };
 // 验证结束
 // 列表展示开始
     //查询总数
@@ -399,7 +399,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
     $scope.change_pay_method = function(){
         $scope.get_count();
         $scope.to_page(1);
-    }
+    };
 
     //修改分页参数
     $scope.change_pageSize = function(){
@@ -411,7 +411,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             $scope.get_count();     //分配页码
             $scope.to_page('1');   //再次初始化数据
         }
-    }
+    };
 
     //展示订单列表
     $scope.only_list = function(){
@@ -453,7 +453,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:运费代码读取失败。");
         });
-    }
+    };
 
 	// 读取邮编地址
     $scope.read_oms_post = function(post_code){
@@ -466,7 +466,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:读取邮编地址失败。");
         });
-    }
+    };
 
     // 读取邮编地址2
     $scope.read_oms_post2 = function(){
@@ -481,7 +481,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:读取邮编地址失败。");
         });
-    }
+    };
 
     // 读取运费代码列表
     $scope.read_yfcode_list = function(){
@@ -494,7 +494,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:读取邮运费代码列表失败。");
         });
-    }
+    };
 
     // --- 搜索邮编查询开始 ---
     $scope.search_oms_post = function(){
@@ -508,7 +508,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:搜索邮编地址失败。");
         });
-    }
+    };
     $scope.search_oms_addr = function(){
         $scope.search_post_code = '';   //清空另一个
         $http.get('/fuck/common/check_order.php', {
@@ -520,7 +520,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:搜索邮编地址失败。");
         });
-    }
+    };
     // --- 搜索邮编查询结束 ---
 
     //查看单个详情
@@ -595,7 +595,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:查看库存数失败。");
         });
-    }
+    };
 
     // 验证修改的list字段
     $scope.need_check_list = function(field_name,order_id){
@@ -622,7 +622,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:验证list失败。");
         });
-    }
+    };
 
     // 验证邮编、地址并修改
     $scope.change_post_addr = function(order_id){
@@ -647,14 +647,14 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
                 $scope.show_one_info(order_id);
                 $scope.plug_alert('success','通过。','fa fa-smile-o');
             }else{
-            $log.info(data)
+            $log.info(data);
                 $scope.plug_alert('danger',data,'fa fa-ban');
             }
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
             $log.info("error:验证list失败。");
         });
-    }
+    };
 
     // 修改list字段
     $scope.change_list_field = function(field_name,order_id,new_key){    //字段名，订单号
@@ -684,7 +684,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:修改list单个字段失败。");
         });
-    }
+    };
 
     // 价格计算
     $scope.play_price = function(order_id){
@@ -710,7 +710,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:订单价格计算失败。");
         });
-    }
+    };
 
     // 同步运费代码
     $scope.syn_yfcode = function (send_id,order_id) {
@@ -732,7 +732,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:同步运费代码失败。");
         });
-    }
+    };
 
     //修改info字段
     $scope.change_info_field = function(id,field_name,index,order_id){
@@ -759,7 +759,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:修改info单个字段失败。");
         });
-    }
+    };
 
     //验证电话号码格式
     $scope.check_phone = function(){
@@ -801,27 +801,27 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
                 $scope.plug_alert('danger','电话长度超过了。','fa fa-ban');
             }
         }   
-    }
+    };
 // 修改列表字段结束
 // 订单操作开始
 	//全选
     $scope.check_all_item = function(){
         angular.forEach($scope.get_order_list_data, function(value, index){
             $scope.get_order_list_data[index].is_click = true;
-        })
+        });
         $scope.cc_all = false;
         $scope.check_items();
-    }
+    };
     $scope.cc_all = true; //默认显示全选按钮
     
     //全不选
     $scope.check_no_item = function(){
         angular.forEach($scope.get_order_list_data, function(value, index){
             $scope.get_order_list_data[index].is_click = false;
-        })
+        });
         $scope.cc_all = true;
         $scope.check_items();
-    }
+    };
 
     //反选
     $scope.check_back_item = function(){
@@ -831,22 +831,34 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             }else{
                 $scope.get_order_list_data[index].is_click = true;
             }
-        })
+        });
         $scope.check_items();
-    }
+    };
 
     //check_items 选择项
     $scope.check_items = function(){
-        var my_checked = new Array();
+        var my_checked = [];
         angular.forEach($scope.get_order_list_data, function(value, index){
             if($scope.get_order_list_data[index].is_click == true){
                 my_checked.push("'"+$scope.get_order_list_data[index].order_id+"'");
             }
-        })
+        });
         $scope.check_all_num = my_checked.length;
         $scope.my_checked = my_checked;
         $scope.my_checked_items = my_checked.join(',');
-    }
+    };
+
+    $scope.check_items1 = function(){
+        var my_checked = [];
+        angular.forEach($scope.now_common_order, function(value, index){
+            if($scope.now_common_order[index].is_click == true){
+                my_checked.push("'"+$scope.now_common_order[index].order_id+"'");
+            }
+        });
+        $scope.check_all_num = my_checked.length;
+        $scope.my_checked = my_checked;
+        $scope.my_checked_items = my_checked.join(',');
+    };
 
     //备注
     $scope.save_note = function(order_id){
@@ -1535,6 +1547,28 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         });
     }
 
+    // 合单检测读取
+    $scope.read_check_common = function(e,index){
+        $scope.one_res_info = '';
+        $('.active_common').removeClass('active');
+        $('.ac_'+index).addClass('active');
+        var post_data = {
+            station:$scope.now_station,
+            store:$scope.now_store_bar,
+            read_check_common:e};
+
+        $http.post('/fuck/common/change_order.php', post_data).success(function(data) {
+            $scope.now_common_order = data;
+            angular.forEach($scope.now_common_order, function(value, index){
+                $scope.now_common_order[index].is_click = true;
+            });
+            $scope.check_items1();
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:合单检测读取。");
+        });
+    }
+
     // 手动合单
     $scope.hand_common = function(){
         var post_data = {
@@ -1547,6 +1581,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             if(data == 'ok'){
                 $scope.plug_alert('success','合单完成。','fa fa-smile-o');
                 $scope.to_page($scope.now_page);
+                $scope.read_check_common();
             }else{
                 $log.info(data);
                 $scope.plug_alert('danger',data,'fa fa-ban');
@@ -1569,6 +1604,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             if(data == 'ok'){
                 $scope.plug_alert('success','拆单完成。','fa fa-smile-o');
                 $scope.to_page($scope.now_page);
+                $scope.read_check_common();
             }else{
                 $log.info(data);
                 $scope.plug_alert('danger',data,'fa fa-ban');

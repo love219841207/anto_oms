@@ -137,12 +137,13 @@ if(isset($_GET['up_express_order'])){
 			history.buy_money = list.all_total_money - list.coupon - list.points - list.shipping_price,
 			history.cheap = list.coupon,
 			history.point = list.points,
-			history.ems_money = list.shipping_price
+			history.ems_money = list.shipping_price,
+			history.tax = list.order_tax
 			 WHERE history.order_id = list.order_id AND history.table_status = '2' AND history.station = 'rakuten'";
 		$res = $db->execute($sql);
 
 		// 乐天匹配 bill、tax
-		$sql = "UPDATE history_send history,rakuten_response_info info SET history.unit_price = info.unit_price,history.bill = info.cod_money,history.tax = info.item_tax WHERE history.info_id = info.id AND history.table_status = '2' AND history.station = 'rakuten'";
+		$sql = "UPDATE history_send history,rakuten_response_info info SET history.unit_price = info.unit_price,history.bill = info.cod_money WHERE history.info_id = info.id AND history.table_status = '2' AND history.station = 'rakuten'";
 		$res = $db->execute($sql);
 
 	$sql = "UPDATE history_send SET table_status = '3' WHERE table_status = '2'";

@@ -84,10 +84,8 @@ function gogogo($station,$response_list,$response_info,$send_id,$need_cod,$max_c
 	$db = new PdoMySQL();
 
 	// 客人指定配送方式判断
-	if($buyer_send_method !== $send_method){	// 如果不一致，更新为运费代码相同的配送方式，并过
-		$sql = "UPDATE $response_list SET send_method = '{$send_method}',yfcode_ok = 1 WHERE order_id in ({$order_ids})";
-		$res = $db->execute($sql);
-		$sql = "UPDATE $response_info SET yfcode_ok = 1 WHERE order_id in ({$order_ids})";
+	if($buyer_send_method !== $send_method){	// 如果不一致，更新为运费代码相同的配送方式
+		$sql = "UPDATE $response_list SET send_method = '{$send_method}' WHERE order_id in ({$order_ids})";
 		$res = $db->execute($sql);
 	}else{
 		// 分配配送方式
@@ -95,55 +93,63 @@ function gogogo($station,$response_list,$response_info,$send_id,$need_cod,$max_c
 		$res = $db->execute($sql);
 		$sql = "UPDATE $response_info SET yfcode_ok = 1 WHERE order_id in ({$order_ids}) AND yfcode = '{$max_code}'";
 		$res = $db->execute($sql);
-		// 运费计算
-			// 取前三字去模糊匹配
-		$address = mb_substr($address,0,3);	
-		$sql = "SELECT count(1) as count,yf_money,yf_add FROM yf_money WHERE yf_code = '{$max_code}' AND area like '%{$address}%'";
-		$res = $db->getOne($sql);
-		if($res['count'] == 1){
-			// 如果是特殊地区，取出特殊运费和特殊叠加运费
-			$final_yf_money = $res['yf_money'];
-			// 更新叠加运费
-			$sql = "UPDATE $response_info info,yf_money SET info.yf_add = yf_money.yf_add WHERE info.yfcode = yf_money.yf_code AND area like '%{$address}%' AND order_id in ({$order_ids})";
-			$res = $db->execute($sql);
+	}
 
-		}else{
-			// 正常运费
-			$final_yf_money = $default_yf;
-			// 更新叠加运费
-			$sql = "UPDATE $response_info info,yf_code SET info.yf_add = yf_code.default_one_yf WHERE info.yfcode = yf_code.yf_code_name AND order_id in ({$order_ids})";
-			$res = $db->execute($sql);
-		}
-				
-		// 求叠加运费
-		$sql = "SELECT sum(yf_add * goods_num) AS all_add FROM $response_info WHERE order_id in ({$order_ids})";
-		$res = $db->getOne($sql);
-		$all_add = $res['all_add'];
-
-		// 多加的追加运费
-		$sql = "SELECT yf_add FROM $response_info WHERE yfcode = '{$max_code}' AND order_id in ({$order_ids})";
-		$res = $db->getOne($sql);
-
-		// 最终计算运费
-		$final_yf_money = $final_yf_money + $all_add - $res['yf_add'];
-		$sql = "UPDATE $response_list SET all_yfmoney = '{$final_yf_money}' WHERE order_id in ({$order_ids})";
+	// 运费计算
+		// 取前2字去模糊匹配
+	$address = mb_substr($address,0,2);	
+	$sql = "SELECT count(1) as count,yf_money,yf_add FROM yf_money WHERE yf_code = '{$max_code}' AND area like '%{$address}%'";
+	$res = $db->getOne($sql);
+	if($res['count'] == 1){
+		// 如果是特殊地区，取出特殊运费和特殊叠加运费
+		$final_yf_money = $res['yf_money'];
+		// 更新叠加运费
+		$sql = "UPDATE $response_info info,yf_money SET info.yf_add = yf_money.yf_add WHERE info.yfcode = yf_money.yf_code AND area like '%{$address}%' AND order_id in ({$order_ids})";
 		$res = $db->execute($sql);
 
-		// 最终运费与获取的订单运费对比，不一致报错
-		$sql = "SELECT all_yfmoney - shipping_price as yf_pass FROM $response_list WHERE order_id in ({$order_ids})";
-		$res = $db->getOne($sql);
-		$yf_pass = $res['yf_pass'];
-
-		if($yf_pass == 0){
-			$sql = "UPDATE $response_list SET yfcode_ok = 1 WHERE order_id in ({$order_ids})";
-			$res = $db->execute($sql);
-			$sql = "UPDATE $response_info SET yfcode_ok = 1 WHERE order_id in ({$order_ids})";
-			$res = $db->execute($sql);
-		}else{
-			$sql = "UPDATE $response_list SET yfcode_ok = 2 WHERE order_id in ({$order_ids})";
-			$res = $db->execute($sql);
-			$sql = "UPDATE $response_info SET yfcode_ok = 2 WHERE order_id in ({$order_ids})";
-			$res = $db->execute($sql);
-		}	
+	}else{
+		// 正常运费
+		$final_yf_money = $default_yf;
+		// 更新叠加运费
+		$sql = "UPDATE $response_info info,yf_code SET info.yf_add = yf_code.default_one_yf WHERE info.yfcode = yf_code.yf_code_name AND order_id in ({$order_ids})";
+		$res = $db->execute($sql);
 	}
+			
+	// 求叠加运费
+	$sql = "SELECT sum(yf_add * goods_num) AS all_add FROM $response_info WHERE order_id in ({$order_ids})";
+	$res = $db->getOne($sql);
+	$all_add = $res['all_add'];
+
+	// 多加的追加运费
+	$sql = "SELECT yf_add FROM $response_info WHERE yfcode = '{$max_code}' AND order_id in ({$order_ids})";
+	$res = $db->getOne($sql);
+
+	// 最终计算运费
+	$final_yf_money = $final_yf_money + $all_add - $res['yf_add'];
+	$sql = "UPDATE $response_list SET all_yfmoney = '{$final_yf_money}' WHERE order_id in ({$order_ids})";
+	$res = $db->execute($sql);
+
+	// 如果是雅虎拍卖
+	if($station == 'p_yahoo'){
+		// 更新运费到最终运费
+		$sql = "UPDATE $response_list SET shipping_price = '{$final_yf_money}' WHERE order_id in ({$order_ids})";
+		$res = $db->execute($sql);
+	}
+
+	// 最终运费与获取的订单运费对比，不一致报错
+	$sql = "SELECT all_yfmoney - shipping_price as yf_pass FROM $response_list WHERE order_id in ({$order_ids})";
+	$res = $db->getOne($sql);
+	$yf_pass = $res['yf_pass'];
+
+	if($yf_pass == 0){
+		$sql = "UPDATE $response_list SET yfcode_ok = 1 WHERE order_id in ({$order_ids})";
+		$res = $db->execute($sql);
+		$sql = "UPDATE $response_info SET yfcode_ok = 1 WHERE order_id in ({$order_ids})";
+		$res = $db->execute($sql);
+	}else{
+		$sql = "UPDATE $response_list SET yfcode_ok = 2 WHERE order_id in ({$order_ids})";
+		$res = $db->execute($sql);
+		$sql = "UPDATE $response_info SET yfcode_ok = 2 WHERE order_id in ({$order_ids})";
+		$res = $db->execute($sql);
+	}	
 }

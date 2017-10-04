@@ -378,7 +378,7 @@
 		      	<button ng-disabled="my_checked==''" type="button" ng-click="check_items();del_true='false'" data-animation="am-fade-and-slide-top" data-template-url="/modal/down_item.html" bs-modal="modal" class="btn btn-default btn-sm green">
 		      		<i class="fa fa-download fa-fw"></i>下载
 		      	</button>
-		      	<button ng-show="now_station=='P_Yahoo' && search_order_line == 'ing'" type="button" ng-click="check_common();del_true='false'" data-animation="am-fade-and-slide-top" data-template-url="/modal/hand_common.html" bs-modal="modal" class="btn btn-default btn-sm green">
+		      	<button ng-show="now_station=='P_Yahoo' && search_order_line == 'ing' || search_order_line == '-2'" type="button" ng-click="check_common();del_true='false';read_check_common('')" data-animation="am-fade-and-slide-top" data-template-url="/modal/hand_common.html" bs-modal="modal" class="btn btn-default btn-sm green">
 		      		<i class="fa fa-inbox fa-fw"></i>手动合单
 		      	</button>
 		      	<button ng-show="search_order_line=='-1'" ng-disabled="my_checked==''" ng-click="check_items();del_true='true'" data-animation="am-fade-and-slide-top" data-template-url="/modal/del_item.html" bs-modal="modal" class="btn btn-danger btn-sm">
@@ -473,7 +473,7 @@
 								购买人：<span>{{item.buyer_name}}</span>
 							</span>
 							<span ng-show="now_station=='Rakuten' || now_station == 'P_Yahoo'">
-								<span class="s_gray">购：</span>{{item.buyer_name}} | 
+								<span class="s_gray">购：</span>{{item.buyer_name}} 
 								<span class="s_gray">收：</span><span class="yellow">{{item.receive_name}}</span>
 							</span>
 						</td>

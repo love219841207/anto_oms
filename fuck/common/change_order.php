@@ -419,10 +419,22 @@ if(isset($_POST['del_items'])){
 			// 删除response_list，取消标记
 			$sql = "UPDATE $response_list SET order_line = '-1',is_mark='0' WHERE order_id IN $del_items";
 			$res = $db->execute($sql);
+			// 删除response_info，退押记录
+			$sql = "UPDATE $response_info SET is_pause = '' WHERE order_id IN $del_items";
+			$res = $db->execute($sql);
 
 			//日志
-			$do = ' [删除订单]：【'.$del_log_items.'】';
-			oms_log($u_name,$do,'change_order',$station,$store,'-');
+
+			//日志
+			$res_log_items = explode(',', $_POST['del_items']);
+			foreach ($res_log_items as $value) {
+				$value = str_replace('\'', '', $value);
+				$sql = "SELECT id FROM $response_list WHERE order_id = '{$value}'";
+				$res = $db->getOne($sql);
+				$oms_id = $res['id'];
+				$do = ' [删除订单]：'.$value;
+				oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
+			}
 
 			echo 'ok';
 		}
@@ -708,7 +720,7 @@ if(isset($_POST['check_common'])){
 	$response_list = $station.'_response_list';
 
 	// 检测ing区是否可以合单
-	$sql = "SELECT count(1) as cc,receive_name FROM $response_list WHERE order_line = '1' GROUP BY phone,post_code,receive_name";
+	$sql = "SELECT count(1) as cc,receive_name FROM $response_list WHERE order_line in ('-2','1') GROUP BY phone,post_code,receive_name";
 	$res =  $db->getAll($sql);
 	foreach ($res as $key => $value) {
 		if($value['cc'] == 1){
@@ -718,12 +730,37 @@ if(isset($_POST['check_common'])){
 	echo json_encode($res);
 }
 
+// 合单检测读取
+if(isset($_POST['read_check_common'])){
+	$station = strtolower($_POST['station']);
+	$receive_name = addslashes($_POST['read_check_common']);
+	$store = $_POST['store'];
+	$response_list = $station.'_response_list';
+
+	$sql = "SELECT * FROM $response_list WHERE order_line in ('-2','1') AND receive_name = '{$receive_name}'";
+	$res =  $db->getAll($sql);
+	echo json_encode($res);
+}
+
+// 合单info读取
+if(isset($_POST['read_check_common_info'])){
+	$station = strtolower($_POST['station']);
+	$order_id = addslashes($_POST['read_check_common_info']);
+	$store = $_POST['store'];
+	$response_list = $station.'_response_list';
+
+	$sql = "SELECT * FROM $response_list WHERE order_line in ('-2','1') AND receive_name = '{$receive_name}'";
+	$res =  $db->getAll($sql);
+	echo json_encode($res);
+}
+
 // 手动合单
 if(isset($_POST['hand_common'])){
 	$my_checked_items = $_POST['my_checked_items'];
 	$station = strtolower($_POST['station']);
 	$store = $_POST['store'];
 	$response_list = $station.'_response_list';
+	$response_info = $station.'_response_info';
 
 	// 检测是否可以合单
 	$sql = "SELECT id,receive_name,phone,address FROM $response_list WHERE order_id IN ($my_checked_items) AND store = '{$store}'";
@@ -787,6 +824,13 @@ if(isset($_POST['hand_common'])){
 		$sql = "UPDATE $response_list SET send_id = '{$send_id}' WHERE order_id IN ($my_checked_items) AND store = '{$store}'";
 		$res = $db->execute($sql);
 
+		// 查出一个订单号进行计算
+		$sql = "SELECT order_id FROM $response_list WHERE send_id = '{$send_id}' AND store = '{$store}'";
+		$res = $db->getOne($sql);
+		$order_id = $res['order_id'];
+		play_yf_code($station,$response_list,$response_info,$send_id);
+		play_order_price($station,$response_list,$response_info,$order_id);
+
 		//日志
 		$do = '[手动合单]：'.$send_id;
 		foreach ($id_arr as $oms_id) {
@@ -803,7 +847,16 @@ if(isset($_POST['hand_break'])){
 	$station = strtolower($_POST['station']);
 	$store = $_POST['store'];
 	$response_list = $station.'_response_list';
+	$response_info = $station.'_response_info';
+
 	if($station == 'p_yahoo'){
+		// 查询出send_id进行金额回执
+		$sql = "SELECT send_id FROM $response_list WHERE order_id IN ($my_checked_items) AND store = '{$store}'";
+		$res = $db->getOne($sql);
+		$o_send_id = $res['send_id'];	// 原合单号
+		$sql = "SELECT order_id FROM $response_list WHERE send_id = '{$o_send_id}' AND store = '{$store}'";
+		$res_orders = $db->getAll($sql);	// 获取到所有的订单
+
 		$sql = "UPDATE $response_list SET send_id = concat('pya',id) WHERE order_id IN ($my_checked_items) AND store = '{$store}'";
 		$res = $db->execute($sql);
 
@@ -815,6 +868,22 @@ if(isset($_POST['hand_break'])){
 		}
 		$ids = trim($ids,',');
 		$id_arr = explode(',', $ids);
+
+		// pya+id 的send_id
+		$sql = "SELECT send_id FROM $response_list WHERE order_id IN ($my_checked_items) AND store = '{$store}'";
+		$res = $db->getAll($sql);
+		// send_id 计算运费代码的运费
+		foreach ($res as $value) {
+			$send_id = $value['send_id'];
+			play_yf_code($station,$response_list,$response_info,$send_id);
+		}
+
+		// 对所有该单进行金额回执计算
+		foreach ($res_orders as $value) {
+			$order_id = $value['order_id'];
+			play_order_price($station,$response_list,$response_info,$order_id);
+		}
+
 		//日志
 		foreach ($id_arr as $oms_id) {
 			$do = '[手动拆单]：'.'pya'.$oms_id;
