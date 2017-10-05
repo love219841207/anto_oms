@@ -74,7 +74,7 @@
 			<!-- <td>{{item.who_tel}}</td> -->
 			<!-- <td>{{item.who_post}}</td> -->
 			<!-- <td>{{item.who_house}}</td> -->
-			<td>{{item.who_name}}</td>
+			<td>{{item.who_name | name_filter}}</td>
 			<!-- <td>{{item.is_cod}}</td> -->
 			<td class="tagr" ng-class="{'red':item.is_cod=='COD'}">{{item.due_money}}</td>
 			<!-- <td>{{item.need_not_send}}</td> -->

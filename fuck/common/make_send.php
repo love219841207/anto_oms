@@ -135,6 +135,8 @@ if(isset($_POST['send_table'])){
 			}else if($value['want_time']=="午前中"){
 				$value['want_time']="01";
 			}
+			// 替换[]
+        	$value['who_name'] = preg_replace('/\[.*?\]/', '', $value['who_name']);
 			$objSheet->setCellValue("B".$j,$value['who_tel'])->setCellValue("C".$j,$value['who_post'])->setCellValue("D".$j,$value['who_house'])->setCellValue("G".$j,$value['who_name'])->setCellValue("I".$j,$value['pack_id'])->setCellValue("S".$j,$value['other_1'])->setCellValue("AB".$j,$value['want_date'])->setCellValueExplicit("AC".$j,$value['want_time'],PHPExcel_Cell_DataType::TYPE_STRING)->setCellValue("AE".$j,$due_money)->setCellValue("T".$j,$new_0)->setCellValue("U".$j,$new_1)->setCellValue("V".$j,$new_2)->setCellValue("W".$j,$new_3)->setCellValue("X".$j,$new_4)->setCellValue("AK".$j,$value['need_not_send'])->setCellValue("AM".$j,$yuan);
 			$j++;
 		}
@@ -274,6 +276,8 @@ if(isset($_POST['send_table'])){
 			}else{
 				
 			}
+			// 替换[]
+        	$value['P'] = preg_replace('/\[.*?\]/', '', $value['P']);
 			//判断付款金额
 			if(empty($value['due_money']) or $value['due_money'] == '0.00'){
 				//判断包裹种类

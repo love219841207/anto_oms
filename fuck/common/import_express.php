@@ -142,7 +142,7 @@ if(isset($_GET['up_express_order'])){
 			 WHERE history.order_id = list.order_id AND history.table_status = '2' AND history.station = 'rakuten'";
 		$res = $db->execute($sql);
 
-		// 乐天匹配 bill、tax
+		// 乐天匹配 bill
 		$sql = "UPDATE history_send history,rakuten_response_info info SET history.unit_price = info.unit_price,history.bill = info.cod_money WHERE history.info_id = info.id AND history.table_status = '2' AND history.station = 'rakuten'";
 		$res = $db->execute($sql);
 

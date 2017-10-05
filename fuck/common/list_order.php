@@ -133,9 +133,9 @@ if(isset($_GET['onekey_common_order'])){
 		$cct = 'yho';
 	}
 
-	if($store == 'p_yahoo'){
+	if($station == 'p_yahoo'){
 		// 拍卖店手动合单
-		
+		$cct = 'pyho';
 	}else{
 		//	重置单号
 		$sql = "UPDATE $response_list SET all_total_money = order_total_money,send_id = concat('{$cct}',id) WHERE order_line in (1,2)";

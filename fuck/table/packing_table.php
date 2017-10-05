@@ -164,6 +164,8 @@ if(isset($_GET['down_packing'])){
         if($value['pause_jp']=='0'){
             $value['pause_jp'] = '';
         }
+        // 替换[]
+        $value['who_name'] = preg_replace('/\[.*?\]/', '', $value['who_name']);
         $objPHPExcel->getActiveSheet()->setCellValue("A".$j,$value['import_day'])
                 ->setCellValueExplicit("B".$j,$value['pack_count'],PHPExcel_Cell_DataType::TYPE_STRING)
                 ->setCellValueExplicit("C".$j,$value['who_name'],PHPExcel_Cell_DataType::TYPE_STRING)
@@ -175,7 +177,7 @@ if(isset($_GET['down_packing'])){
         $j++;
         $ppk = $value['pack_count'];
     }
-     $ee = $jj + 1;
+     @$ee = $jj + 1;
     $objPHPExcel->getActiveSheet()->getStyle('A'.$ee.':H'.$ee)->getBorders()->getBottom()->getColor()->setARGB('1d9c73');
     $objPHPExcel->getActiveSheet()->getStyle('A'.$ee.':H'.$ee)->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
@@ -235,6 +237,9 @@ if(isset($_GET['down_packing'])){
         if($value['pause_jp']=='0'){
             $value['pause_jp'] = '';
         }
+        // 替换[]
+        $value['who_name'] = preg_replace('/\[.*?\]/', '', $value['who_name']);
+
         $objPHPExcel->getActiveSheet()->setCellValue("A".$j,$value['import_day'])
                 ->setCellValueExplicit("B".$j,$value['pack_count'],PHPExcel_Cell_DataType::TYPE_STRING)
                 ->setCellValueExplicit("C".$j,$value['who_name'],PHPExcel_Cell_DataType::TYPE_STRING)

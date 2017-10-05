@@ -3,7 +3,13 @@ var myFilters = angular.module('myApp');
 myFilters.filter('replace_symbol', function(){
     return function(item){
         return item.replace(/,/g,' ◆ ');
-    }
+    };
+});
+
+myFilters.filter('name_filter', function(){
+    return function(item){
+        return item.replace(/\[[^\)]*\]/g,""); 
+    };
 });
 
 myFilters.filter('over_upload', function(){
@@ -14,8 +20,8 @@ myFilters.filter('over_upload', function(){
         if(item == 1){
             return '上传过';
         }
-    }
-})
+    };
+});
 
 myFilters.filter('over_mail', function(){
     return function(item){
@@ -23,14 +29,14 @@ myFilters.filter('over_mail', function(){
             return '-';
         }
         if(item == 'ing'){
-            return '正在发送中...'
+            return '正在发送中...';
         }
         if(item == 1){
             return '已发送';
         }
-    }
+    };
 })
-
+;
 myFilters.filter('status', function(){
     return function(item){
         if(item == 0){
@@ -39,8 +45,8 @@ myFilters.filter('status', function(){
         if(item == 1){
             return '已开启';
         }
-    }
-})
+    };
+});
 
 myFilters.filter('is_pause', function(){
     return function(item){
@@ -56,8 +62,8 @@ myFilters.filter('is_pause', function(){
         if(item == 'back'){
             return '已退押。';
         }
-    }
-})
+    };
+});
 
 myFilters.filter('order_line', function(){
     return function(item){
@@ -97,5 +103,5 @@ myFilters.filter('order_line', function(){
         if(item == 9){
             return '保留';
         }
-    }
+    };
 });

@@ -236,7 +236,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
             cache: false,
             views:{
                 'show@site':{
-                    templateUrl: 'tpls/rakuten/pyahoo_syn_express.html',
+                    templateUrl: 'tpls/pyahoo/pyahoo_syn_express.html',
                     controller: function($scope){
                         $scope.status.isopen1 = false;
                         $scope.status.isopen2 = false;
