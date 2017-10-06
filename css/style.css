@@ -18,6 +18,9 @@ a:hover{
 li{
 	list-style: none;
 }
+.bg_f5{
+    background: #f5f5f5;
+}
 /*模态框移动头*/
 .modal-header{
 	cursor: move;

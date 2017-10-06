@@ -114,7 +114,7 @@ function gogogo($station,$response_list,$response_info,$send_id,$need_cod,$max_c
 		$sql = "UPDATE $response_info info,yf_code SET info.yf_add = yf_code.default_one_yf WHERE info.yfcode = yf_code.yf_code_name AND order_id in ({$order_ids})";
 		$res = $db->execute($sql);
 	}
-			
+	
 	// 求叠加运费
 	$sql = "SELECT sum(yf_add * goods_num) AS all_add FROM $response_info WHERE order_id in ({$order_ids})";
 	$res = $db->getOne($sql);

@@ -1,4 +1,37 @@
 var myFilters = angular.module('myApp');
+// 求和
+myFilters.filter('sum', function(){
+    return function(data, key){
+        if(typeof(data) === undefined || typeof(key) === undefined ) {
+            return 0;
+        }else{
+            var sum = 0;
+            i = data.length - 1;
+            for(; i >= 0; i--) {
+                sum += parseInt(data[i][key]);
+            }
+
+            return sum;
+        }
+        
+    };
+});
+myFilters.filter('no_sum', function(){
+    return function(data, key){
+        if(typeof(data) === undefined || typeof(key) === undefined ) {
+            return 0;
+        }else{
+            var sum = 0;
+            i = data.length - 1;
+            for(; i >= 0; i--) {
+                sum = parseInt(data[i][key]);
+            }
+
+            return sum;
+        }
+        
+    };
+});
 
 myFilters.filter('replace_symbol', function(){
     return function(item){
@@ -67,24 +100,24 @@ myFilters.filter('is_pause', function(){
 
 myFilters.filter('order_line', function(){
     return function(item){
-    	if(item == 0){
-    		return '无详单';
-    	}
-    	if(item == 1){
-    		return '未通过';
-    	}
-    	if(item == 2){
-    		return '已合单';
-    	}
-    	if(item == 3){
-    		return '冻结';
-    	}
-    	if(item == 5){
-    		return '待发货';
-    	}
-    	if(item == 6){
-    		return 'close';
-    	}
+        if(item == 0){
+            return '无详单';
+        }
+        if(item == 1){
+            return '未通过';
+        }
+        if(item == 2){
+            return '已合单';
+        }
+        if(item == 3){
+            return '冻结';
+        }
+        if(item == 5){
+            return '待发货';
+        }
+        if(item == 6){
+            return 'close';
+        }
         if(item == '-1'){
             return '回收站';
         }

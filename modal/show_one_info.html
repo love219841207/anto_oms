@@ -339,6 +339,20 @@
               <i ng-click="del_btn=!del_btn" class="fa fa-trash-o red pointer fa-fw"></i>
             </td>
           </tr>
+          <tr class="tagr blue bg_f5">
+            <td class="tagc">合 计</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>{{one_res_info | sum:'goods_num'}}</td>
+            <td></td>
+            <td>{{one_res_info | sum:'item_price'}}</td>
+            <td>{{one_res_info | no_sum:'cod_money'}}</td>
+            <td>{{one_res_info | sum:'pause_jp'}}</td>
+            <td>{{one_res_info | sum:'pause_ch'}}</td>
+            <td></td>
+            <td ng-hide="item.order_line>2"></td>
+          </tr>
         </table>
         <div class="clearfix"></div>
         <div class="btn btn-xs pull-right" ng-hide="item.order_line>2" ng-class="{'btn-success':!add_btn,'btn-danger':add_btn}" ng-click="add_btn = !add_btn;read_yfcode_list();"><i class="fa fa-fw" ng-class="{'fa-plus':!add_btn,'fa-close':add_btn}"></i></div>

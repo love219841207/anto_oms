@@ -4,6 +4,8 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
     $scope.trim = function(str){
         return str.replace(/(^\s*)|(\s*$)/g, "");
     };
+    // 初始化详单为空
+    $scope.one_res_info = [];
 
 // 初始化开始
 	//默认tool_bar关闭

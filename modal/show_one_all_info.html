@@ -56,6 +56,19 @@
             <!-- 扣库状态 -->
             <td class="red">{{item2.is_pause | is_pause}}</td>
           </tr>
+          <tr class="tagr blue bg_f5">
+            <td class="tagc">合 计</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>{{one_res_info | sum:'goods_num'}}</td>
+            <td></td>
+            <td>{{one_res_info | sum:'item_price'}}</td>
+            <td>{{one_res_info | no_sum:'cod_money'}}</td>
+            <td>{{one_res_info | sum:'pause_jp'}}</td>
+            <td>{{one_res_info | sum:'pause_ch'}}</td>
+            <td></td>
+          </tr>
         </table>
         <div class="clearfix"></div>
         <table ng-show="one_res_logs!=''" class="tagl table table-hover table-condensed table-bordered mt20">
