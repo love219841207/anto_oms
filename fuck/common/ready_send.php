@@ -451,11 +451,13 @@ if(isset($_GET['packing'])){
 	}
 
 	// 包裹ID分平台
-	$sql = "UPDATE send_table SET pack_id = concat('11',pack_id) WHERE station = 'amazon' AND has_pack = '0'";
+	$sql = "UPDATE send_table SET pack_id = concat('A',pack_id) WHERE station = 'amazon' AND has_pack = '0'";
 	$res = $db->execute($sql);
-	$sql = "UPDATE send_table SET pack_id = concat('22',pack_id) WHERE station = 'yahoo' AND has_pack = '0'";
+	$sql = "UPDATE send_table SET pack_id = concat('S',pack_id) WHERE station = 'yahoo' AND has_pack = '0'";
 	$res = $db->execute($sql);
-	$sql = "UPDATE send_table SET pack_id = concat('33',pack_id) WHERE station = 'rakuten' AND has_pack = '0'";
+	$sql = "UPDATE send_table SET pack_id = concat('R',pack_id) WHERE station = 'rakuten' AND has_pack = '0'";
+	$res = $db->execute($sql);
+	$sql = "UPDATE send_table SET pack_id = concat('P',pack_id) WHERE station = 'p_yahoo' AND has_pack = '0'";
 	$res = $db->execute($sql);
 
 	// 分包裹

@@ -13,10 +13,12 @@ if(isset($_GET['up_express_order'])){
 	$sql = "UPDATE send_table send,import_express import SET send.oms_order_express_num = import.express_num,send.express_day = import.express_date,send.table_status = '2',import.express_status = '1' WHERE import.pack_id = send.pack_id AND import.express_status = '0'";
 	$res = $db->execute($sql);
 
-	// 更新单号和快递日期到list表 三个平台次更新 order_line = 6
+	// 更新单号和快递日期到list表 四个平台次更新 order_line = 6
 	$sql = "UPDATE amazon_response_list list,send_table send SET list.express_company = send.express_company,list.send_method = send.send_method,list.oms_order_express_num = send.oms_order_express_num,list.express_day = send.express_day,list.order_line = '6' WHERE list.order_id = send.order_id AND send.table_status = '2'";
 	$res = $db->execute($sql);
 	$sql = "UPDATE rakuten_response_list list,send_table send SET list.express_company = send.express_company,list.send_method = send.send_method,list.oms_order_express_num = send.oms_order_express_num,list.express_day = send.express_day,list.order_line = '6' WHERE list.order_id = send.order_id AND send.table_status = '2'";
+	$res = $db->execute($sql);
+	$sql = "UPDATE p_yahoo_response_list list,send_table send SET list.express_company = send.express_company,list.send_method = send.send_method,list.oms_order_express_num = send.oms_order_express_num,list.express_day = send.express_day,list.order_line = '6' WHERE list.order_id = send.order_id AND send.table_status = '2'";
 	$res = $db->execute($sql);
 
 	// 移动 table_status = 2 到已出单
@@ -107,7 +109,7 @@ if(isset($_GET['up_express_order'])){
 	$res = $db->execute($sql);
 
 	//删除 history的bag
-	$sql = "DELETE FROM history_send WHERE order_id = 0";
+	$sql = "DELETE FROM history_send WHERE order_id = '0'";
 	$res = $db->execute($sql);
 
 	// table_status = 2 的订单进行原信息匹配
@@ -144,6 +146,27 @@ if(isset($_GET['up_express_order'])){
 
 		// 乐天匹配 bill
 		$sql = "UPDATE history_send history,rakuten_response_info info SET history.unit_price = info.unit_price,history.bill = info.cod_money WHERE history.info_id = info.id AND history.table_status = '2' AND history.station = 'rakuten'";
+		$res = $db->execute($sql);
+
+		// 拍卖匹配
+		$sql = "UPDATE history_send history,p_yahoo_response_list list SET 
+			history.buy_method = list.payment_method,
+			history.who_id = list.who_id,
+			history.who_name = list.buyer_name,
+			history.who_phone = list.buyer_phone,
+			history.who_code = list.buyer_post_code,
+			history.who_house = list.buyer_address,
+			history.total_money = list.all_total_money,
+			history.buy_money = list.all_total_money - list.coupon - list.points - list.shipping_price,
+			history.cheap = list.coupon,
+			history.point = list.points,
+			history.ems_money = list.shipping_price,
+			history.tax = list.order_tax
+			 WHERE history.order_id = list.order_id AND history.table_status = '2' AND history.station = 'p_yahoo'";
+		$res = $db->execute($sql);
+
+		// 拍卖匹配 bill
+		$sql = "UPDATE history_send history,p_yahoo_response_info info SET history.unit_price = info.unit_price,history.bill = info.cod_money WHERE history.info_id = info.id AND history.table_status = '2' AND history.station = 'p_yahoo'";
 		$res = $db->execute($sql);
 
 	$sql = "UPDATE history_send SET table_status = '3' WHERE table_status = '2'";
