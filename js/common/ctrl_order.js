@@ -7,6 +7,16 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
     // 初始化详单为空
     $scope.one_res_info = [];
 
+    // 移除shadow
+    $scope.remove_shadow = function(){
+        $timeout(function(){
+            var dom = document.querySelector('.modal-backdrop');
+            // angular.element(dom).remove();
+            angular.element(dom).css({"z-index":'1040'});
+        },300);
+        
+    };
+
 // 初始化开始
 	//默认tool_bar关闭
     $scope.tool_1 = false;
@@ -1517,7 +1527,13 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
     }
 
     // 配送指定时间
-    $scope.change_want_date = function(order_id){
+    $scope.change_want_date = function(order_id,open_info){
+        if(open_info == '1'){
+            $scope.open_info = 1;
+        }else{
+            $scope.open_info = 0;
+        }
+        
         $scope.change_want_date_order_id = order_id;
     }
 
@@ -1545,6 +1561,9 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
                     $scope.get_common_order($scope.common_send_id);
                 }
                 $scope.plug_alert('success','指定完成。','fa fa-smile-o');
+                if($scope.open_info == 1){
+                    $scope.show_one_info($scope.change_want_date_order_id);
+                }
             }else{
                 $scope.plug_alert('danger','系统出错，请联系管理员。','fa fa-ban');
             }

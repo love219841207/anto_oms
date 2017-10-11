@@ -4,7 +4,7 @@
       <div class="modal-header modal-drag">
         <i class="fa fa-close f20 close" ng-click="$hide()"></i>
         <h4 class="modal-title blue"><i class="fa fa-fw fa-info-circle"></i>
-          ({{item.id}})
+          [{{item.id}}] <span class="dark">{{item.order_line | order_line}}</span> 
           <span class="red"> {{item.order_id}}</span></h4>
       </div>
       <div class="modal-body">
@@ -29,7 +29,8 @@
               <i class="fa fa-user">&nbsp;&nbsp; {{item.buyer_name}}</i>&nbsp;&nbsp;
               <i class="fa fa-phone" ng-hide="now_station=='Amazon'">&nbsp;&nbsp; {{item.buyer_phone}}</i>&nbsp;&nbsp;
               <i class="fa fa-truck" ng-hide="now_station=='Amazon'">&nbsp;&nbsp; {{item.buyer_post_code}}</i>&nbsp;&nbsp;
-              <i class="fa fa-home" ng-hide="now_station=='Amazon'">&nbsp;&nbsp; {{item.buyer_address}}</i>
+              <i class="fa fa-home" ng-hide="now_station=='Amazon'">&nbsp;&nbsp; {{item.buyer_address}}</i>&nbsp;&nbsp;
+              <i class="fa fa-id-card-o" ng-show="item.who_id">&nbsp;&nbsp; {{item.who_id}}</i>
             </td>
           </tr>
           <!--///////////////////// line /////////////////////-->
@@ -223,6 +224,15 @@
             <td>
               <textarea placeholder="备注内容" style="resize: vertical;" class="form-control f12 red" id="change_note_key">{{item.order_note}}</textarea>
               <button class="btn btn-info btn-xs mt5 pull-right" ng-click="save_note(item.order_id);">更新备注</button>
+            </td>
+          </tr>
+          <!--///////////////////// line /////////////////////-->
+          <tr ng-hide="now_station=='Amazon'" class="s_gray">
+            <td>指定配送日期：
+              <span ng-class="{'red bg_yellow':item.want_date!=''}">{{item.want_date}}</span><i class="fa fa-fw fa-clock-o yellow pointer" data-animation="am-fade-and-slide-top" data-template-url="/modal/want_date.html" bs-modal="modal" ng-click="change_want_date(item.order_id,1);remove_shadow()"></i>
+            </td>
+            <td>指定配送时间：
+              <span ng-class="{'red bg_yellow':item.want_time!=''}">{{item.want_time}}</span><i class="fa fa-fw fa-clock-o yellow pointer" data-animation="am-fade-and-slide-top" data-template-url="/modal/want_date.html" bs-modal="modal" ng-click="change_want_date(item.order_id,1);remove_shadow()"></i>
             </td>
           </tr>
           <!--///////////////////// line /////////////////////-->
