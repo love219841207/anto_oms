@@ -104,7 +104,7 @@ myFilters.filter('order_line', function(){
             return '无详单';
         }
         if(item == 1){
-            return '未通过';
+            return '待处理';
         }
         if(item == 2){
             return '已合单';

@@ -44,7 +44,20 @@
             <td class="s_gray">
               <span class="red bg_yellow" ng-show="item.payment_method=='COD'">代引金额：{{item.pay_money}}</span>
               <span ng-show="item.coupon">优惠券：<span ng-class="{'red bg_yellow':item.coupon!=0}">{{item.coupon}}</span></span>
-              <span ng-show="item.points">积分：<span ng-class="{'red bg_yellow':item.points!=0}">{{item.points}}</span></span>
+              <span ng-show="item.points">
+                积分：<span ng-class="{'red bg_yellow':item.points!=0}">{{item.points}}
+                <i ng-click="aa_points=!aa_points" 
+                    class="fa fa-edit fa-fw pointer"
+                    ng-hide="item.order_line>3"
+                    ></i>
+                  <div ng-show="aa_points" class="input-group">
+                    <input class="form-control input-sm" placeholder="积分 更改为..." type="text" id="points">
+                    <span class="input-group-btn">
+                      <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="need_check_list('points',item.order_id);aa_points=!aa_points">确定</button>
+                    </span>
+                  </div>
+                </span>
+              </span>
               <span ng-hide="now_station=='Amazon'">
                 支付金额：<span class="red">{{item.pay_money}}
                   <i ng-click="aa_pay_money=!aa_pay_money" 
@@ -341,7 +354,7 @@
           </tr>
           <tr class="tagr blue bg_f5">
             <td class="tagc">合 计</td>
-            <td></td>
+            <td ng-hide="now_station=='Amazon'"></td>
             <td></td>
             <td></td>
             <td>{{one_res_info | sum:'goods_num'}}</td>

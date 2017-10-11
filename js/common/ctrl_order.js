@@ -674,6 +674,26 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
                 if($scope.list_type == 'list'){
                     $scope.to_page($scope.now_page);
                     $scope.show_one_info(order_id);
+                    $scope.play_price(order_id);    // 价格计算
+                    if(field_name == 'payment_method' && new_key == 'COD'){
+                        var time=new Date().getTime();
+                        if($scope.now_station == 'Rakuten'){
+                            // 刷新
+                            $state.go('site.rakuten_order',{data:time});
+                        }
+                        if($scope.now_station == 'Rakuten'){
+                            // 刷新
+                            $state.go('site.amazon_order',{data:time});
+                        }
+                        if($scope.now_station == 'Yahoo'){
+                            // 刷新
+                            $state.go('site.yahoo_order',{data:time});
+                        }
+                        if($scope.now_station == 'P_yahoo'){
+                            // 刷新
+                            $state.go('site.pyahoo_order',{data:time});
+                        }
+                    }
                 }
                 if($scope.list_type == 'common'){
                     $scope.get_common_order($scope.common_send_id);

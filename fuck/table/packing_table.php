@@ -167,7 +167,7 @@ if(isset($_GET['down_packing'])){
         // 替换[]
         $value['who_name'] = preg_replace('/\[.*?\]/', '', $value['who_name']);
         $objPHPExcel->getActiveSheet()->setCellValue("A".$j,$value['import_day'])
-                ->setCellValueExplicit("B".$j,$value['pack_count'],PHPExcel_Cell_DataType::TYPE_STRING)
+                ->setCellValueExplicit("B".$j,$value['pack_id'],PHPExcel_Cell_DataType::TYPE_STRING)
                 ->setCellValueExplicit("C".$j,$value['who_name'],PHPExcel_Cell_DataType::TYPE_STRING)
                 ->setCellValue("D".$j,$value['goods_code'])
                 ->setCellValue("E".$j,$value['pause_ch'])
@@ -241,7 +241,7 @@ if(isset($_GET['down_packing'])){
         $value['who_name'] = preg_replace('/\[.*?\]/', '', $value['who_name']);
 
         $objPHPExcel->getActiveSheet()->setCellValue("A".$j,$value['import_day'])
-                ->setCellValueExplicit("B".$j,$value['pack_count'],PHPExcel_Cell_DataType::TYPE_STRING)
+                ->setCellValueExplicit("B".$j,$value['pack_id'],PHPExcel_Cell_DataType::TYPE_STRING)
                 ->setCellValueExplicit("C".$j,$value['who_name'],PHPExcel_Cell_DataType::TYPE_STRING)
                 ->setCellValue("D".$j,$value['goods_code'])
                 ->setCellValue("E".$j,$value['pause_ch'])

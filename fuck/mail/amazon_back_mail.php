@@ -87,6 +87,9 @@ if(isset($_POST['store'])){
 	 	$all_total_money = $res['all_total_money'];	
 	 	$order_total_money = $res['order_total_money'];	
 	 	$payment_method = $res['payment_method'];	
+	 	// 替换[]
+    	$buyer_name = preg_replace('/\[.*?\]/', '', $buyer_name);
+    	$receive_name = preg_replace('/\[.*?\]/', '', $receive_name);
 
 	 	$sql = "SELECT sum(order_tax) as order_tax,sum(points) as points,sum(coupon) as coupon,sum(shipping_price) as shipping_price FROM amazon_response_list WHERE send_id = '{$value}'";
 	 	$res = $db->getOne($sql);

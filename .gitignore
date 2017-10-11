@@ -2,3 +2,8 @@
 uploads/
 down/
 pdo/
+vendor/
+composer.json
+composer.lock
+composer.phar
+fuck/yahoo/

@@ -278,6 +278,9 @@ if(isset($_POST['demo_mail'])){
  	}else{
  		$payment_method = "Amazon決済（前払い）";
  	}
+ 	// 替换[]
+    $buyer_name = preg_replace('/\[.*?\]/', '', $buyer_name);
+    $receive_name = preg_replace('/\[.*?\]/', '', $receive_name);
 
  	// 初始化title
  	$u_info = '';

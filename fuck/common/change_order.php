@@ -141,6 +141,7 @@ if(isset($_GET['change_list_field'])){
 	$new_key = addslashes($_GET['new_key']);
 
 	$response_list = $station.'_response_list';
+	$response_info = $station.'_response_info';
 
 	//查询原字段值
 	$sql = "SELECT id,$field_name as o_key FROM $response_list WHERE order_id = '{$order_id}'";
@@ -174,6 +175,19 @@ if(isset($_GET['change_list_field'])){
 	}
 	if($field_name == 'payment_method'){
 		$ch_field = '支付方式';
+		if($new_key <> 'COD'){
+			//卡运代的情况下 COD改成不是COD的情况下 放回待支付
+			$sql = "UPDATE $response_list SET $field_name = '{$new_key}',order_line = '-2' WHERE order_id = '{$order_id}'";
+		}else{
+			$sql = "UPDATE $response_info SET yfcode_ok = '0' WHERE order_id = '{$order_id}'";
+			$res = $db->execute($sql);
+
+			//如果改成COD，则进行验证
+			$sql = "UPDATE $response_list SET $field_name = '{$new_key}',yfcode_ok = '0',order_line = '1' WHERE order_id = '{$order_id}'";
+		}
+	}
+	if($field_name == 'points'){
+		$ch_field = '积分';
 		$sql = "UPDATE $response_list SET $field_name = '{$new_key}' WHERE order_id = '{$order_id}'";
 	}
 	
