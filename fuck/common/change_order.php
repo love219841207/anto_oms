@@ -325,6 +325,32 @@ if(isset($_GET['change_info_field'])){
 	
 }
 
+//修改要求
+if(isset($_GET['change_others'])){
+	$order_id = $_GET['change_others'];
+	$new_key = addslashes($_GET['note']);
+	$station = strtolower($_GET['station']);
+	$store = $_GET['store'];
+	$response_list = $station.'_response_list';
+	// 查询原客人要求
+	$sql = "SELECT buyer_others FROM $response_list WHERE order_id = '{$order_id}'";
+	$res = $db->getOne($sql);
+	$old_others = $res['buyer_others'];
+
+	$sql = "UPDATE $response_list SET buyer_others = '{$new_key}' WHERE order_id = '{$order_id}'";
+	$res = $db->execute($sql);
+
+	//查询OMS-ID
+	$sql = "SELECT id FROM $response_list WHERE order_id = '{$order_id}'";
+	$res = $db->getOne($sql);
+	$oms_id = $res['id'];
+
+	// 日志
+	$do = '修改 <客人要求>【'.$old_others.'】为【'.$new_key.'】';
+	oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
+	echo 'ok';
+}
+
 //修改订单备注
 if(isset($_GET['change_note'])){
 	$order_id = $_GET['change_note'];

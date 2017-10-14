@@ -892,6 +892,35 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         $scope.my_checked_items = my_checked.join(',');
     };
 
+    //要求
+    $scope.save_others = function(order_id){
+
+        var dom = document.querySelector('#change_others_key');
+        var change_others_key = angular.element(dom).val();
+
+        $scope.loading_shadow('open'); //打开loading
+        $http.get('/fuck/common/change_order.php', {
+            params:{
+                change_others:order_id,
+                note:change_others_key,
+                station:$scope.now_station,
+                store:$scope.now_store_bar
+            }
+        }).success(function(data) {
+            if(data == 'ok'){
+                $scope.to_page($scope.now_page);
+                $scope.show_one_info(order_id);
+                $scope.plug_alert('success','已保存。','fa fa-smile-o');
+            }else{
+                $scope.plug_alert('danger','保存失败。','fa fa-ban');
+            }
+            $timeout(function(){$scope.loading_shadow('close');},300); //关闭loading
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:备注保存失败。");
+        });
+    };
+
     //备注
     $scope.save_note = function(order_id){
 
@@ -919,7 +948,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:备注保存失败。");
         });
-    }
+    };
 
     //批量备注
     $scope.multi_note = function(){

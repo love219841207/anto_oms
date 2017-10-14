@@ -215,8 +215,9 @@
           </tr>
           <!--///////////////////// line /////////////////////-->
           <tr>
-            <td class="s_gray" ng-hide="now_station=='Amazon'" ng-class="{'red bg_yellow':item.buyer_others!=''}">客人要求：
-              <span>{{item.buyer_others}}</span>
+            <td class="s_gray" ng-hide="now_station=='Amazon'">
+              <textarea ng-class="{'red op_yellow':item.buyer_others!=''}" placeholder="客人要求" style="resize: vertical;" class="form-control f12 red" id="change_others_key">{{item.buyer_others}}</textarea>
+              <button class="btn btn-info btn-xs mt5 pull-right" ng-click="save_others(item.order_id);">更新客人要求</button>
             </td>
             <td ng-show="now_station=='Amazon'">最后发货时间：
               <span>{{item.latest_ship_date}}</span>
