@@ -18,7 +18,7 @@ if(isset($_POST['store'])){
     $station = 'p_yahoo';
 
     //读取店铺配置
-    $sql = "SELECT * FROM conf_p_yahoo WHERE store_name = '{$store}'";
+    $sql = "SELECT * FROM conf_P_Yahoo WHERE store_name = '{$store}'";
     $res = $db->getOne($sql);
 
     $mail_name = $res['mail_name'];
