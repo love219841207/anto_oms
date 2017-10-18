@@ -47,6 +47,7 @@
       <div class="modal-footer">
         <button type="button" ng-hide="send_ok_num || now_station!='Amazon'" ng-disabled="my_checked==''||to_mail_tpl==''" class="btn btn-primary" ng-click="amz_mail_items();$hide()"><i class="fa fa-fw fa-paper-plane"></i> Amazon发送</button>
         <button type="button" ng-hide="send_ok_num || now_station!='Rakuten'" ng-disabled="my_checked==''||to_mail_tpl==''" class="btn btn-primary" ng-click="rku_mail_items();$hide()"><i class="fa fa-fw fa-paper-plane"></i> Rakuten发送</button>
+        <button type="button" ng-hide="send_ok_num || now_station!='P_Yahoo'" ng-disabled="my_checked==''||to_mail_tpl==''" class="btn btn-primary" ng-click="pyahoo_mail_items();$hide()"><i class="fa fa-fw fa-paper-plane"></i> P_Yahoo发 送</button>
         <button type="button" class="btn btn-default" ng-click="$hide()">关 闭</button>
       </div>
     </div>

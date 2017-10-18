@@ -124,6 +124,16 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log','$timeout', functi
                 $scope.mail_port = data.mail_port;
                 $scope.mail_answer_addr = data.mail_answer_addr;
             }
+            if(station == 'P_Yahoo'){
+                $scope.mail_over_send = data.mail_over_send;
+                $scope.use_yfcode = data.use_yfcode;
+                $scope.mail_name = data.mail_name;
+                $scope.mail_id = data.mail_id;
+                $scope.mail_pwd = data.mail_pwd;
+                $scope.mail_smtp = data.mail_smtp;
+                $scope.mail_port = data.mail_port;
+                $scope.mail_answer_addr = data.mail_answer_addr;
+            }
         }).error(function(data) {
             alert("严重！店铺配置读取失败。");
             $log.info(data);
@@ -186,6 +196,29 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log','$timeout', functi
     };
     // 保存乐天店铺配置
     $scope.save_rakuten_conf = function(){
+        $http.get('/fuck/systems/store_manage.php', {
+            params:{
+                update_conf:$scope.conf_store_station,
+                store_name:$scope.conf_store_modal_title,
+                mail_name:$scope.mail_name,
+                mail_id:$scope.mail_id,
+                mail_pwd:$scope.mail_pwd,
+                mail_smtp:$scope.mail_smtp,
+                mail_port:$scope.mail_port,
+                mail_answer_addr:$scope.mail_answer_addr,
+                mail_over_send:$scope.mail_over_send,
+                use_yfcode:$scope.use_yfcode
+            }
+        }).success(function(data) {
+            $log.info(data);
+        }).error(function(data) {
+            alert("严重！保存店铺配置失败。");
+            $log.info(data);
+        });
+    };
+
+    // 保存拍卖店铺配置
+    $scope.save_P_Yahoo_conf = function(){
         $http.get('/fuck/systems/store_manage.php', {
             params:{
                 update_conf:$scope.conf_store_station,
@@ -515,6 +548,31 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log','$timeout', functi
             my_checked_items:$scope.my_checked_items};
 
         $http.post('/fuck/mail/rakuten_send_mail.php', post_data).success(function(data) {
+            if(data == 'ok'){
+                $scope.plug_alert('success','已经提交发信。','fa fa-smile-o');
+            }else{
+                $log.info(data);
+                $scope.plug_alert('danger','发信失败，请联系管理员。','fa fa-ban');
+            }
+            $timeout(function(){$scope.shadow('close');},500); //关闭shadow
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:发信失败。");
+        });
+    };
+
+    $scope.pyahoo_mail_custom_items = function(){
+        $scope.shadow('open','ss_make','P_Yahoo正在发信，请稍后。');
+        // $log.info($scope.my_checked_items);
+
+        var post_data = {
+            send_mail:'pyahoo',
+            store:$scope.now_store_bar,
+            station:'P_Yahoo',
+            mail_tpl:'custom',
+            my_checked_items:$scope.my_checked_items};
+
+        $http.post('/fuck/mail/pyahoo_send_mail.php', post_data).success(function(data) {
             if(data == 'ok'){
                 $scope.plug_alert('success','已经提交发信。','fa fa-smile-o');
             }else{

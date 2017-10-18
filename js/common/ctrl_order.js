@@ -1504,7 +1504,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:发信失败。");
         });
-    }
+    };
 
     $scope.rku_mail_items = function(){
         $scope.shadow('open','ss_make','Rakuten正在发信，请稍后。');
@@ -1529,7 +1529,32 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:发信失败。");
         });
-    }
+    };
+
+    $scope.pyahoo_mail_items = function(){
+        $scope.shadow('open','ss_make','P_Yahoo正在发信，请稍后。');
+        // $log.info($scope.my_checked_items);
+
+        var post_data = {
+            send_mail:'p_yahoo',
+            store:$rootScope.now_store_bar,
+            station:'p_yahoo',
+            mail_tpl:$scope.to_mail_tpl,
+            my_checked_items:$scope.my_checked_items};
+
+        $http.post('/fuck/mail/pyahoo_send_mail.php', post_data).success(function(data) {
+            $timeout(function(){$scope.shadow('close');},500); //关闭shadow
+            if(data == 'ok'){
+                $scope.plug_alert('success','已经提交发信。','fa fa-smile-o');
+            }else{
+                $log.info(data);
+                $scope.plug_alert('danger','发信失败，请联系管理员。','fa fa-ban');
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:发信失败。");
+        });
+    };
 
     //读取错误邮件info
     $scope.read_error_mail = function(){

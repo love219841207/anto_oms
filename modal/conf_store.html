@@ -159,25 +159,63 @@
         </div>
       <!-- 乐天模块 -->
         <div ng-show="conf_store_station=='Rakuten'">  
-          <!-- <div>店铺规则配置</div>
+          <div>邮箱参数配置</div>
           <div class="input-group auto mt10 ml20 mr20 ">
             <span class="input-group-addon" >
-              本店铺是否开启运费代码规则？
+              邮箱昵称
             </span>
             <input  type="text"
-            placeholder="是填：1，否填：0。" 
-            ng-model="use_yfcode" 
+            placeholder="发件人昵称" 
+            ng-model="mail_name" 
             class="form-control">
-          </div> -->
-          <!-- <div class="input-group auto mt10 ml20 mr20 ">
+          </div>
+          <div class="input-group auto mt10 ml20 mr20 ">
             <span class="input-group-addon" >
-              上传单号后是否发送邮件通知客户（发货通知信）？
+              邮箱账号
             </span>
             <input  type="text"
-            placeholder="是填：1，否填：0。" 
-            ng-model="mail_over_send" 
+            placeholder="例：anto@qq.com。" 
+            ng-model="mail_id" 
             class="form-control">
-          </div> -->
+          </div>
+          <div class="input-group auto mt10 ml20 mr20 ">
+            <span class="input-group-addon" >
+              邮箱密码
+            </span>
+            <input  type="password"
+            ng-model="mail_pwd" 
+            class="form-control">
+          </div>
+          <div class="input-group auto mt10 ml20 mr20 ">
+            <span class="input-group-addon" >
+              SMTP地址
+            </span>
+            <input  type="text"
+            placeholder="例：smtp.qq.com" 
+            ng-model="mail_smtp" 
+            class="form-control">
+          </div>
+          <div class="input-group auto mt10 ml20 mr20 ">
+            <span class="input-group-addon" >
+              邮箱端口号
+            </span>
+            <input  type="text"
+            placeholder="亚马逊：465，乐天：587。" 
+            ng-model="mail_port" 
+            class="form-control">
+          </div>
+          <div class="input-group auto mt10 ml20 mr20 ">
+            <span class="input-group-addon" >
+              邮件回复地址
+            </span>
+            <input  type="text"
+            placeholder="客人回复邮件的地址" 
+            ng-model="mail_answer_addr" 
+            class="form-control">
+          </div>
+        </div>
+        <!-- 雅虎拍卖模块 -->
+        <div ng-show="conf_store_station=='P_Yahoo'">  
           <div>邮箱参数配置</div>
           <div class="input-group auto mt10 ml20 mr20 ">
             <span class="input-group-addon" >
@@ -241,6 +279,8 @@
         <button ng-show="conf_store_station=='Yahoo'" type="button" class="btn btn-warning" ng-click="save_yahoo_conf();$hide()"><i class="fa fa-fw fa-save"></i> Yahoo 保存</button>
         <!-- 乐天按钮 -->
         <button ng-show="conf_store_station=='Rakuten'" type="button" class="btn btn-warning" ng-click="save_rakuten_conf();$hide()"><i class="fa fa-fw fa-save"></i> Rakuten 保存</button>
+        <!-- 拍卖按钮 -->
+        <button ng-show="conf_store_station=='P_Yahoo'" type="button" class="btn btn-warning" ng-click="save_P_Yahoo_conf();$hide()"><i class="fa fa-fw fa-save"></i> P_Yahoo 保存</button>
         <button type="button" class="btn btn-default" ng-click="$hide()">关 闭</button>
       </div>
     </div>

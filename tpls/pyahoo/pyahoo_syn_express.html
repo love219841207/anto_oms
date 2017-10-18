@@ -1,1 +1,93 @@
-pyahoo_syn_express.html
+<div class="container-fluid mt20" ng-controller="pyahooCtrl" ng-show="now_store_bar"> 
+    <div class="row">
+        <div class="col-lg-11">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <i class="fa fa-fw fa-cloud-download"></i>下载快递单
+                </div>
+                <div class="panel-body">
+                    <div class="modal-body ml20" ng-show="send_ok_num">
+                        <!-- 反馈结果 -->
+                        <div>发送成功数：<span class="green">{{send_ok_num}}</span></div>
+                        <div>发送失败数：<span class="red">{{send_error_num}}</span></div>
+                        <table ng-show="send_error_num" class="table table-bordered table-condensed table-striped mt10">
+                            <tr class="danger red">
+                                <td class="tagc"><i class="fa-sort-numeric-asc fa fa-fw"></i></td>
+                                <td>发件失败订单号</td>
+                                <td>错误详情</td>
+                            </tr>
+                            <tr ng-repeat="item in error_mail track by $index">
+                                <td class="tagc green">{{$index+1}}</td>
+                                <td class="blue">{{item.error_order_id}}</td>
+                                <td class="red">{{item.error_info}}</td>
+                            </tr>
+                        </table>
+                        <div class="btn btn-danger btn-xs mt10" ng-click="send_ok_num = !send_ok_num">关闭</div>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" ng-show="cc_all" class="btn btn-default" ng-click="check_all_item();">
+                            <i class="fa fa-square-o fa-fw s_gray"></i>全选
+                        </button>
+                        <button type="button" ng-hide="cc_all" class="btn btn-default" ng-click="check_no_item();">
+                            <i class="fa fa-check-square-o fa-fw s_gray"></i>不选
+                        </button>
+                        <button type="button" class="btn btn-default" ng-click="check_back_item();back_icon=!back_icon">
+                            <i class="fa fa-adjust fa-fw s_gray" ng-class="{'fa-flip-horizontal':back_icon}"></i>反选
+                        </button>
+                        <!-- <button type="button" class="btn btn-default" ng-click="check_no_up_item()">
+                            <i class="fa fa-unlink fa-fw s_gray"></i>未上传
+                        </button> -->
+                        <button type="button" class="btn btn-default" ng-click="check_no_mail_item()">
+                            <i class="fa fa-sticky-note-o fa-fw s_gray"></i>未去信
+                        </button>
+                        <button class="btn btn-default btn-sm">
+                            <span>
+                                <input placeholder="开始日期" class="date_icon blue" readonly="readonly" type="text" name="s_date" ng-flat-datepicker datepicker-config="datepickerConfig" ng-model="s_date"> - <input placeholder="结束日期" class="date_icon blue" readonly="readonly" type="text" name="e_date" ng-flat-datepicker datepicker-config="datepickerConfig" ng-model="e_date">
+                            </span>
+                        </button>
+                        
+                        <button class="btn btn-default blue" ng-click="get_express_list()"><i class="fa fa-eye fa-fw"></i> 查看</button>
+                        <button ng-disabled="my_checked == ''" class="btn btn-default green" ng-click="down_express_xlsx()"><i class="fa fa-fw fa-table"></i> .xlsx</button>
+                        <button ng-disabled="my_checked == ''" class="btn btn-default red" ng-click="send_over_mail()"><i class="fa fa-fw fa-envelope-o"></i> 发送发货通知信</button>
+                    </div>
+                    <table class="mt20 f12 table table-condensed table-bordered table-hover table-striped">
+                        <tr class="info blue">
+                            <td class="tagc" colspan="2">序 列</td>
+                            <td class="tagc">店 铺</td>
+                            <td>拍卖订单号</td>
+                            <td>快递公司</td>
+                            <td>配送方式</td>
+                            <td>快递单号</td>
+                            <td>支付方式</td>
+                            <td class="tagc">快递日期</td>
+                            <!-- <td class="tagc">上传状态</td> -->
+                            <td class="tagc">去信状态</td>
+                            <!-- <td class="tagc">操作工号</td> -->
+                        </tr>
+                        <tr ng-class="{'bg_yellow':item.is_click}" class="blue" ng-repeat="item in express_list track by $index">
+                            <td class="pointer" ng-click="item.is_click=!item.is_click;check_items()">
+                                <i class="fa red fa-lg fa-fw" ng-class="{'fa-square-o':item.is_click==false,'fa-check-square':item.is_click==true}"></i>
+                            </td>
+                            <td class="tagc">{{$index+1}}</td>
+                            <td class="tagc">{{item.store_name}}</td>
+                            <td>{{item.pyahoo_order_id}}</td>
+                            <td>{{item.express_company}}</td>
+                            <td>{{item.send_method}}</td>
+                            <td>{{item.oms_order_express_num}}</td>
+                            <td ng-class="{'red':item.buy_method=='DirectPayment'}">{{item.buy_method}}</td>
+                            <td class="tagc">{{item.express_day}}</td>
+                            <!-- <td class="tagc">{{item.over_upload | over_upload}}</td> -->
+                            <td class="tagc">{{item.over_mail | over_mail}}</td>
+                            <!-- <td class="tagc">{{item.u_num}}</td> -->
+                        </tr>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    点击【查看】列出待发货的订单。<br>
+                    点击【xlsx】下载表格。
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="end_height"></div>
+</div>
