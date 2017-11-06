@@ -141,7 +141,7 @@ function amz_mail_own_key(){
 	$res = $db->execute($sql);
 
 	// 检索amz_mail库
-	$sql = "SELECT goods_code FROM amz_mail ORDER BY ID";
+	$sql = "SELECT goods_code FROM amz_mail WHERE mail_type = 'DM便' ORDER BY ID";
 	$res = $db->getAll($sql);
 	$amz_mail = array();
 	foreach ($res as $value) {
@@ -151,6 +151,19 @@ function amz_mail_own_key(){
 
 	// 改mail便 
 	$sql = "UPDATE send_table SET send_method = 'DM便',express_company = 'ヤマト運輸' WHERE goods_code in ($amz_mail) AND station = 'amazon' AND has_pack = '0'";
+	$res = $db->execute($sql);
+
+	// 检索amz_mail库
+	$sql = "SELECT goods_code FROM amz_mail WHERE mail_type = 'ネコポス' ORDER BY ID";
+	$res = $db->getAll($sql);
+	$amz_mail1 = array();
+	foreach ($res as $value) {
+		array_push($amz_mail1, "'".$value['goods_code']."'");
+	}
+	$amz_mail1 = implode(',', $amz_mail1);
+
+	// 改mail便 
+	$sql = "UPDATE send_table SET send_method = 'ネコポス',express_company = 'ヤマト運輸' WHERE goods_code in ($amz_mail1) AND station = 'amazon' AND has_pack = '0'";
 	$res = $db->execute($sql);
 }
 
@@ -312,38 +325,38 @@ function make_bags(){
 			$res = $db->execute($sql);
 			$sql = "INSERT INTO send_table (goods_code,who_name,send_id,pack_id,pack_count,repo_status,import_day,oms_id,info_id,order_id,store_name,station,express_company,send_method,who_house,who_tel,who_post,other_1)VALUES('bag (3/3)','{$who_name}',concat('{$send_id}','-3'),'{$p_b}','{$p_b}','{$repo_status}','{$import_day}',0,0,0,'{$store_name}','{$station}','{$express_company}','{$send_method}','{$who_house}','{$who_tel}','{$who_post}','add')";
 			$res = $db->execute($sql);
-		}elseif (2401 > $sum_own_key AND $sum_own_key > 1800) {	
-			$ppc = $pack_id.'(1/4)';
-			$sql = "UPDATE send_table SET pack_id = '{$ppc}' WHERE pack_id = '{$pack_id}'";
-			$res = $db->execute($sql);
-			// 增加三个包裹
-			$p_a = $pack_id.'(2/4)';
-			$p_b = $pack_id.'(3/4)';
-			$p_c = $pack_id.'(4/4)';
-			$sql = "INSERT INTO send_table (goods_code,who_name,send_id,pack_id,pack_count,repo_status,import_day,oms_id,info_id,order_id,store_name,station,express_company,send_method,who_house,who_tel,who_post,other_1)VALUES('bag (2/4)','{$who_name}',concat('{$send_id}','-2'),'{$p_a}','{$p_a}','{$repo_status}','{$import_day}',0,0,0,'{$store_name}','{$station}','{$express_company}','{$send_method}','{$who_house}','{$who_tel}','{$who_post}','add')";
-			$res = $db->execute($sql);
-			$sql = "INSERT INTO send_table (goods_code,who_name,send_id,pack_id,pack_count,repo_status,import_day,oms_id,info_id,order_id,store_name,station,express_company,send_method,who_house,who_tel,who_post,other_1)VALUES('bag (3/4)','{$who_name}',concat('{$send_id}','-3'),'{$p_b}','{$p_b}','{$repo_status}','{$import_day}',0,0,0,'{$store_name}','{$station}','{$express_company}','{$send_method}','{$who_house}','{$who_tel}','{$who_post}','add')";
-			$res = $db->execute($sql);
-			$sql = "INSERT INTO send_table (goods_code,who_name,send_id,pack_id,pack_count,repo_status,import_day,oms_id,info_id,order_id,store_name,station,express_company,send_method,who_house,who_tel,who_post,other_1)VALUES('bag (4/4)','{$who_name}',concat('{$send_id}','-4'),'{$p_c}','{$p_c}','{$repo_status}','{$import_day}',0,0,0,'{$store_name}','{$station}','{$express_company}','{$send_method}','{$who_house}','{$who_tel}','{$who_post}','add')";
-			$res = $db->execute($sql);
-		}elseif (3001 > $sum_own_key AND $sum_own_key > 2400) {
-			$ppc = $pack_id.'(1/5)';
-			$sql = "UPDATE send_table SET pack_id = '{$ppc}' WHERE pack_id = '{$pack_id}'";
-			$res = $db->execute($sql);
-			// 增加四个包裹
-			$p_a = $pack_id.'(2/5)';
-			$p_b = $pack_id.'(3/5)';
-			$p_c = $pack_id.'(4/5)';
-			$p_d = $pack_id.'(5/5)';
-			$sql = "INSERT INTO send_table (goods_code,who_name,send_id,pack_id,pack_count,repo_status,import_day,oms_id,info_id,order_id,store_name,station,express_company,send_method,who_house,who_tel,who_post,other_1)VALUES('bag (2/5)','{$who_name}',concat('{$send_id}','-2'),'{$p_a}','{$p_a}','{$repo_status}','{$import_day}',0,0,0,'{$store_name}','{$station}','{$express_company}','{$send_method}','{$who_house}','{$who_tel}','{$who_post}','add')";
-			$res = $db->execute($sql);
-			$sql = "INSERT INTO send_table (goods_code,who_name,send_id,pack_id,pack_count,repo_status,import_day,oms_id,info_id,order_id,store_name,station,express_company,send_method,who_house,who_tel,who_post,other_1)VALUES('bag (3/5)','{$who_name}',concat('{$send_id}','-3'),'{$p_b}','{$p_b}','{$repo_status}','{$import_day}',0,0,0,'{$store_name}','{$station}','{$express_company}','{$send_method}','{$who_house}','{$who_tel}','{$who_post}','add')";
-			$res = $db->execute($sql);
-			$sql = "INSERT INTO send_table (goods_code,who_name,send_id,pack_id,pack_count,repo_status,import_day,oms_id,info_id,order_id,store_name,station,express_company,send_method,who_house,who_tel,who_post,other_1)VALUES('bag (4/5)','{$who_name}',concat('{$send_id}','-4'),'{$p_c}','{$p_c}','{$repo_status}','{$import_day}',0,0,0,'{$store_name}','{$station}','{$express_company}','{$send_method}','{$who_house}','{$who_tel}','{$who_post}','add')";
-			$res = $db->execute($sql);
-			$sql = "INSERT INTO send_table (goods_code,who_name,send_id,pack_id,pack_count,repo_status,import_day,oms_id,info_id,order_id,store_name,station,express_company,send_method,who_house,who_tel,who_post,other_1)VALUES('bag (5/5)','{$who_name}',concat('{$send_id}','-5'),'{$p_d}','{$p_d}','{$repo_status}','{$import_day}',0,0,0,'{$store_name}','{$station}','{$express_company}','{$send_method}','{$who_house}','{$who_tel}','{$who_post}','add')";
-			$res = $db->execute($sql);
-		}elseif (3000 < $sum_own_key){
+		// }elseif (2401 > $sum_own_key AND $sum_own_key > 1800) {	
+		// 	$ppc = $pack_id.'(1/4)';
+		// 	$sql = "UPDATE send_table SET pack_id = '{$ppc}' WHERE pack_id = '{$pack_id}'";
+		// 	$res = $db->execute($sql);
+		// 	// 增加三个包裹
+		// 	$p_a = $pack_id.'(2/4)';
+		// 	$p_b = $pack_id.'(3/4)';
+		// 	$p_c = $pack_id.'(4/4)';
+		// 	$sql = "INSERT INTO send_table (goods_code,who_name,send_id,pack_id,pack_count,repo_status,import_day,oms_id,info_id,order_id,store_name,station,express_company,send_method,who_house,who_tel,who_post,other_1)VALUES('bag (2/4)','{$who_name}',concat('{$send_id}','-2'),'{$p_a}','{$p_a}','{$repo_status}','{$import_day}',0,0,0,'{$store_name}','{$station}','{$express_company}','{$send_method}','{$who_house}','{$who_tel}','{$who_post}','add')";
+		// 	$res = $db->execute($sql);
+		// 	$sql = "INSERT INTO send_table (goods_code,who_name,send_id,pack_id,pack_count,repo_status,import_day,oms_id,info_id,order_id,store_name,station,express_company,send_method,who_house,who_tel,who_post,other_1)VALUES('bag (3/4)','{$who_name}',concat('{$send_id}','-3'),'{$p_b}','{$p_b}','{$repo_status}','{$import_day}',0,0,0,'{$store_name}','{$station}','{$express_company}','{$send_method}','{$who_house}','{$who_tel}','{$who_post}','add')";
+		// 	$res = $db->execute($sql);
+		// 	$sql = "INSERT INTO send_table (goods_code,who_name,send_id,pack_id,pack_count,repo_status,import_day,oms_id,info_id,order_id,store_name,station,express_company,send_method,who_house,who_tel,who_post,other_1)VALUES('bag (4/4)','{$who_name}',concat('{$send_id}','-4'),'{$p_c}','{$p_c}','{$repo_status}','{$import_day}',0,0,0,'{$store_name}','{$station}','{$express_company}','{$send_method}','{$who_house}','{$who_tel}','{$who_post}','add')";
+		// 	$res = $db->execute($sql);
+		// }elseif (3001 > $sum_own_key AND $sum_own_key > 2400) {
+		// 	$ppc = $pack_id.'(1/5)';
+		// 	$sql = "UPDATE send_table SET pack_id = '{$ppc}' WHERE pack_id = '{$pack_id}'";
+		// 	$res = $db->execute($sql);
+		// 	// 增加四个包裹
+		// 	$p_a = $pack_id.'(2/5)';
+		// 	$p_b = $pack_id.'(3/5)';
+		// 	$p_c = $pack_id.'(4/5)';
+		// 	$p_d = $pack_id.'(5/5)';
+		// 	$sql = "INSERT INTO send_table (goods_code,who_name,send_id,pack_id,pack_count,repo_status,import_day,oms_id,info_id,order_id,store_name,station,express_company,send_method,who_house,who_tel,who_post,other_1)VALUES('bag (2/5)','{$who_name}',concat('{$send_id}','-2'),'{$p_a}','{$p_a}','{$repo_status}','{$import_day}',0,0,0,'{$store_name}','{$station}','{$express_company}','{$send_method}','{$who_house}','{$who_tel}','{$who_post}','add')";
+		// 	$res = $db->execute($sql);
+		// 	$sql = "INSERT INTO send_table (goods_code,who_name,send_id,pack_id,pack_count,repo_status,import_day,oms_id,info_id,order_id,store_name,station,express_company,send_method,who_house,who_tel,who_post,other_1)VALUES('bag (3/5)','{$who_name}',concat('{$send_id}','-3'),'{$p_b}','{$p_b}','{$repo_status}','{$import_day}',0,0,0,'{$store_name}','{$station}','{$express_company}','{$send_method}','{$who_house}','{$who_tel}','{$who_post}','add')";
+		// 	$res = $db->execute($sql);
+		// 	$sql = "INSERT INTO send_table (goods_code,who_name,send_id,pack_id,pack_count,repo_status,import_day,oms_id,info_id,order_id,store_name,station,express_company,send_method,who_house,who_tel,who_post,other_1)VALUES('bag (4/5)','{$who_name}',concat('{$send_id}','-4'),'{$p_c}','{$p_c}','{$repo_status}','{$import_day}',0,0,0,'{$store_name}','{$station}','{$express_company}','{$send_method}','{$who_house}','{$who_tel}','{$who_post}','add')";
+		// 	$res = $db->execute($sql);
+		// 	$sql = "INSERT INTO send_table (goods_code,who_name,send_id,pack_id,pack_count,repo_status,import_day,oms_id,info_id,order_id,store_name,station,express_company,send_method,who_house,who_tel,who_post,other_1)VALUES('bag (5/5)','{$who_name}',concat('{$send_id}','-5'),'{$p_d}','{$p_d}','{$repo_status}','{$import_day}',0,0,0,'{$store_name}','{$station}','{$express_company}','{$send_method}','{$who_house}','{$who_tel}','{$who_post}','add')";
+		// 	$res = $db->execute($sql);
+		}elseif (1800 < $sum_own_key){
 			// 转宅配
 			$sql = "UPDATE send_table SET express_company = '',send_method = '宅配便' WHERE pack_id = '{$pack_id}'";
 			$res = $db->execute($sql);
@@ -397,18 +410,18 @@ function make_bags(){
 			$p_a = $pack_id.'(2/2)';
 			$sql = "INSERT INTO send_table (goods_code,who_name,send_id,pack_id,pack_count,repo_status,import_day,oms_id,info_id,order_id,store_name,station,express_company,send_method,who_house,who_tel,who_post,other_1)VALUES('bag (2/2)','{$who_name}',concat('{$send_id}','-2'),'{$p_a}','{$p_a}','{$repo_status}','{$import_day}',0,0,0,'{$store_name}','{$station}','{$express_company}','{$send_method}','{$who_house}','{$who_tel}','{$who_post}','add')";
 			$res = $db->execute($sql);
-		}elseif (1801 > $sum_own_key AND $sum_own_key > 1200) {		
-			$ppc = $pack_id.'(1/3)';
-			$sql = "UPDATE send_table SET pack_id = '{$ppc}' WHERE pack_id = '{$pack_id}'";
-			$res = $db->execute($sql);
-			// 增加两个包裹
-			$p_a = $pack_id.'(2/3)';
-			$p_b = $pack_id.'(3/3)';
-			$sql = "INSERT INTO send_table (goods_code,who_name,send_id,pack_id,pack_count,repo_status,import_day,oms_id,info_id,order_id,store_name,station,express_company,send_method,who_house,who_tel,who_post,other_1)VALUES('bag (2/3)','{$who_name}',concat('{$send_id}','-2'),'{$p_a}','{$p_a}','{$repo_status}','{$import_day}',0,0,0,'{$store_name}','{$station}','{$express_company}','{$send_method}','{$who_house}','{$who_tel}','{$who_post}','add')";
-			$res = $db->execute($sql);
-			$sql = "INSERT INTO send_table (goods_code,who_name,send_id,pack_id,pack_count,repo_status,import_day,oms_id,info_id,order_id,store_name,station,express_company,send_method,who_house,who_tel,who_post,other_1)VALUES('bag (3/3)','{$who_name}',concat('{$send_id}','-3'),'{$p_b}','{$p_b}','{$repo_status}','{$import_day}',0,0,0,'{$store_name}','{$station}','{$express_company}','{$send_method}','{$who_house}','{$who_tel}','{$who_post}','add')";
-			$res = $db->execute($sql);
-		}elseif (1800 < $sum_own_key){
+		// }elseif (1801 > $sum_own_key AND $sum_own_key > 1200) {		
+		// 	$ppc = $pack_id.'(1/3)';
+		// 	$sql = "UPDATE send_table SET pack_id = '{$ppc}' WHERE pack_id = '{$pack_id}'";
+		// 	$res = $db->execute($sql);
+		// 	// 增加两个包裹
+		// 	$p_a = $pack_id.'(2/3)';
+		// 	$p_b = $pack_id.'(3/3)';
+		// 	$sql = "INSERT INTO send_table (goods_code,who_name,send_id,pack_id,pack_count,repo_status,import_day,oms_id,info_id,order_id,store_name,station,express_company,send_method,who_house,who_tel,who_post,other_1)VALUES('bag (2/3)','{$who_name}',concat('{$send_id}','-2'),'{$p_a}','{$p_a}','{$repo_status}','{$import_day}',0,0,0,'{$store_name}','{$station}','{$express_company}','{$send_method}','{$who_house}','{$who_tel}','{$who_post}','add')";
+		// 	$res = $db->execute($sql);
+		// 	$sql = "INSERT INTO send_table (goods_code,who_name,send_id,pack_id,pack_count,repo_status,import_day,oms_id,info_id,order_id,store_name,station,express_company,send_method,who_house,who_tel,who_post,other_1)VALUES('bag (3/3)','{$who_name}',concat('{$send_id}','-3'),'{$p_b}','{$p_b}','{$repo_status}','{$import_day}',0,0,0,'{$store_name}','{$station}','{$express_company}','{$send_method}','{$who_house}','{$who_tel}','{$who_post}','add')";
+		// 	$res = $db->execute($sql);
+		}elseif (1200 < $sum_own_key){
 			// 转宅配
 			$sql = "UPDATE send_table SET express_company = '',send_method = '宅配便' WHERE pack_id = '{$pack_id}'";
 			$res = $db->execute($sql);

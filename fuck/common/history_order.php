@@ -61,7 +61,7 @@ if(isset($_GET['onekey_repair'])){
 			send_method,
 			oms_order_express_num,
 			express_day
-		 FROM history_send WHERE table_status = '3' GROUP BY receive_phone";
+		 FROM history_send WHERE table_status = '3' GROUP BY receive_phone,receive_house";
 	$res = $db->getAll($sql);
 	foreach ($res as $val) {
 		$who_email = $val['who_email'];
