@@ -35,6 +35,7 @@
 	<div ng-show="all_pause_orders!='' && radioModel=='Left'" class="btn-group pull-right">
 		<button ng-disabled="my_checked_items==''" class="btn btn-default mt10 btn-sm red" ng-click="sub_repo()"><i class="fa fa-cubes fa-fw"></i> 扣库存</button>
 		<button class="btn btn-default mt10 btn-sm green" ng-click="down_pauseorders()"><i class="fa fa-download fa-fw"></i> 下载冻结表</button>
+		<button class="btn btn-default mt10 btn-sm yellow" ng-click="sub_repo('common')"><i class="fa fa-cubes fa-fw"></i> 合单扣库存</button>
 	</div>
 	<div class="clearfix"></div>
 

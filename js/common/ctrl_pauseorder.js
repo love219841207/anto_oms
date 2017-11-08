@@ -391,11 +391,11 @@ app.controller('pauseorderCtrl', ['$rootScope','$scope','$state','$http','$log',
     }
 
     //扣库存
-    $scope.sub_repo = function(){
+    $scope.sub_repo = function(method){
         $scope.shadow('open','ss_write','正在扣库存，请稍后。');
 
         var post_data = {
-            sub_repo:'get',
+            sub_repo:method,
             station:'all_station',
             my_checked_items:$scope.my_checked_items
         };

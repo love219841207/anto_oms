@@ -1371,7 +1371,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
     }
 
     //扣库存
-    $scope.sub_repo = function(){
+    $scope.sub_repo = function(method){
     	$scope.shadow('open','ss_write','正在扣库存，请稍后。');
     	$scope.init_list(); //初始化列表数据
 

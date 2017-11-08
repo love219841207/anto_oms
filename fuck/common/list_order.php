@@ -295,15 +295,21 @@ if(isset($_POST['sub_repo'])){
 	$today = date('y-m-d',time()); //获取日期
 	
 	$now_station = strtolower($_POST['station']);
+	$sub_repo = strtolower($_POST['sub_repo']);
 
 	// 清空冻结订单表
 	$sql = "TRUNCATE repo_pause";
 	$res = $db->execute($sql);
 
 	if($now_station == 'all_station'){
-		$my_checked_items = $_POST['my_checked_items'];
-		// 如果是所有平台扣库存，即冻结表
-		$sql = "SELECT id,station,send_id FROM amazon_response_list WHERE order_line = 3 AND order_id in ($my_checked_items) UNION ALL SELECT id,station,send_id FROM rakuten_response_list WHERE order_line = 3 AND order_id in ($my_checked_items)";
+		if($sub_repo == 'common'){
+			// 扣冻结表里的合单
+			$sql = "SELECT id,station,send_id FROM amazon_response_list WHERE order_line = 3 AND send_id LIKE 'H%' UNION ALL SELECT id,station,send_id FROM rakuten_response_list WHERE order_line = 3 AND send_id LIKE 'H%' UNION ALL SELECT id,station,send_id FROM p_yahoo_response_list WHERE order_line = 3 AND send_id LIKE 'H%'";	
+		}else{
+			$my_checked_items = $_POST['my_checked_items'];
+			// 如果是所有平台扣库存，即冻结表
+			$sql = "SELECT id,station,send_id FROM amazon_response_list WHERE order_line = 3 AND order_id in ($my_checked_items) UNION ALL SELECT id,station,send_id FROM rakuten_response_list WHERE order_line = 3 AND order_id in ($my_checked_items) UNION ALL SELECT id,station,send_id FROM p_yahoo_response_list WHERE order_line = 3 AND order_id in ($my_checked_items)";	
+		}
 
 	}else{
 		// 单个平台正常店铺发货
