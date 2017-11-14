@@ -365,6 +365,7 @@ app.controller('FileController', ['$rootScope','$scope','$state', 'Upload' , '$t
                     $timeout(function(){$scope.shadow('close');},1000);
                     $scope.plug_alert('success','数据导入完成。','fa fa-smile-o');
                 }
+                $log.info(data);
             }).error(function(data) {
                 alert("系统错误，请联系管理员。");
                 $log.info(file_name+" 日本邮编导入失败");

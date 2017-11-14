@@ -11,7 +11,7 @@ if(isset($_GET['import_file'])){
     $sql = "TRUNCATE oms_post;";
     $res = $db->execute($sql);
 
-	$sql = "LOAD DATA INFILE '/Users/ycmbcd/工程/anto_oms/uploads/post.csv'	INTO TABLE oms_post fields terminated by '\,' optionally enclosed by '\"' lines terminated by '\n' ignore 1 lines;";
+	$sql = "LOAD DATA INFILE '/opt/web/anto_oms/uploads/post.csv'	INTO TABLE oms_post fields terminated by '\,' optionally enclosed by '\"' lines terminated by '\n' ignore 1 lines;";
 	// $sql = "LOAD DATA INFILE '/opt/anto_oms_data/post.csv'	INTO TABLE oms_post fields terminated by '\,' optionally enclosed by '\"' lines terminated by '\n' ignore 1 lines;";
 	$res = $db->execute($sql);
 
