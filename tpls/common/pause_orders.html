@@ -13,7 +13,9 @@
     <div class="btn-group pull-left ml20">
         <div class="btn btn-primary btn-sm mt10" ng-click="show_pause_info()" ng-model="radioModel" uib-btn-radio="'Left'">冻结表</div>
         <div class="btn btn-primary btn-sm mt10" ng-click="show_back_info()" ng-model="radioModel" uib-btn-radio="'Right'">退押表</div>
+        <div class="btn btn-primary btn-sm mt10" ng-click="show_pause_ing_info()" ng-model="radioModel" uib-btn-radio="'mid'">押货表</div>
     </div>
+
     <div class="btn btn-warning btn-sm mt10 ml20" ng-click="show_pause_order();pause_orders=!pause_orders">上次冻结订单 <span ng-show="pause_orders" class="red">点击关闭</span></div>
     <div ng-show="pause_orders" class="am-fade-and-slide-top">
     	<div class="col-lg-4">
@@ -34,8 +36,11 @@
     </div> -->
 	<div ng-show="all_pause_orders!='' && radioModel=='Left'" class="btn-group pull-right">
 		<button ng-disabled="my_checked_items==''" class="btn btn-default mt10 btn-sm red" ng-click="sub_repo()"><i class="fa fa-cubes fa-fw"></i> 扣库存</button>
-		<button class="btn btn-default mt10 btn-sm green" ng-click="down_pauseorders()"><i class="fa fa-download fa-fw"></i> 下载冻结表</button>
+		<button class="btn btn-default mt10 btn-sm blue" ng-click="down_pauseorders()"><i class="fa fa-download fa-fw"></i> 下载冻结表</button>
 		<button class="btn btn-default mt10 btn-sm yellow" ng-click="sub_repo('common')"><i class="fa fa-cubes fa-fw"></i> 合单扣库存</button>
+	</div>
+	<div ng-show="radioModel=='mid'" class="btn-group pull-right">
+		<button class="btn btn-default mt10 btn-sm green" ng-click="down_pause_ing()"><i class="fa fa-download fa-fw"></i> 下载押货表</button>
 	</div>
 	<div class="clearfix"></div>
 
@@ -62,7 +67,7 @@
 
 	<table ng-show="all_pause_orders" class="table-responsive table table-bordered table-condensed table-hover table-striped mt20 f12">
 		<tr class="blue info animate slide-right">
-			<td class="tagc">筛选</td>
+			<td class="tagc" ng-show="radioModel=='Left'">筛选</td>
 			<td class="tagc"><i class="fa-sort-numeric-asc fa fa-fw"></i></td>
 			<td>冻结时间</td>
 			<td>同步时间</td>
@@ -74,11 +79,11 @@
 			<td class="tagr">押日本</td>
 			<td class="tagr">单价 × 数量 = 子订单价格</td>
 			<td class="tagr">代引手续费</td>
-			<td class="tagc">操作</td>
+			<td class="tagc" ng-hide="radioModel=='mid'">操作</td>
 			<td class="tagc">发货ID</td>
 		</tr>
 		<tr class="am-fade-and-slide-right blue" ng-class="{'bg_yellow':item.is_click}" ng-repeat="item in all_pause_orders | orderBy:'pause_time'">
-			<td class="pointer tagc" ng-click="item.is_click=!item.is_click;check_items()">
+			<td ng-show="radioModel=='Left'" class="pointer tagc" ng-click="item.is_click=!item.is_click;check_items()">
 				<i class="fa red fa-lg fa-fw" ng-class="{'fa-square-o':item.is_click==false,'fa-check-square':item.is_click==true}"></i>
 			</td>
 			<td class="tagc">{{$index+1}}</td>

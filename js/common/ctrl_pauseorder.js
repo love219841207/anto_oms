@@ -73,8 +73,24 @@ app.controller('pauseorderCtrl', ['$rootScope','$scope','$state','$http','$log',
             alert("系统错误，请联系管理员。");
             $log.info("error:查询所有平台冻结订单info失败。");
         });
-    }
+    };
     $scope.show_pause_info();
+
+    // 查询所有平台冻结订单押货表
+    $scope.show_pause_ing_info = function(){
+        // $scope.all_pause_orders = '';
+        $http.get('/fuck/common/pause_order.php', {
+            params:{
+                show_pause_ing_info:'get'
+            }
+        }).success(function(data) {
+            $scope.all_pause_orders = data;
+            $scope.check_no_item();
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:查询所有平台冻结订单info失败。");
+        });
+    };
 
     // 查询冻结退押info表
     $scope.show_back_info = function(){
@@ -109,6 +125,25 @@ app.controller('pauseorderCtrl', ['$rootScope','$scope','$state','$http','$log',
             $log.info("error:下载冻结订单表失败。");
         });
 	}
+
+    // 冻结押货表
+    $scope.down_pause_ing = function(){
+        $scope.shadow('open','ss_read','正在导出');
+        $http.get('/fuck/common/pause_order.php', {
+            params:{
+                down_pause_ing:'down'
+            }
+        }).success(function(data) {
+            $log.info(data)
+            if(data == 'ok'){
+                window.location="/down/down_pause_ing.xlsx";
+            }
+            $timeout(function(){$scope.shadow('close');},1000); //关闭shadow
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:下载冻结订单表失败。");
+        });
+    }
 
     // 退押
     $scope.back_pause = function(id,store,station){

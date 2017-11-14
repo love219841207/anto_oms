@@ -22,6 +22,22 @@ if(isset($_GET['pause_order'])){
 	echo json_encode($res);
 }
 
+// 读取所有冻结订单押货表
+if(isset($_GET['show_pause_ing_info'])){
+    //  获取所有平台 ******************** select * (select * from t1 union all select * from t2) tmp order by tmp.createDate时间戳
+    $sql = "SELECT info.id,info.station,list.send_id,list.pause_time,info.store,info.order_id,info.goods_code,info.goods_num,info.pause_ch,info.pause_jp,info.unit_price,info.item_price,info.cod_money,info.import_time FROM amazon_response_list list,amazon_response_info info WHERE list.order_id = info.order_id AND info.is_pause = 'pass' AND list.order_line = '3' ORDER BY list.pause_time";
+    $res1 = $db->getAll($sql);
+    //  获取所有平台 ******************** select * (select * from t1 union all select * from t2) tmp order by tmp.createDate时间戳
+    $sql = "SELECT info.id,info.station,list.send_id,list.pause_time,info.store,info.order_id,info.goods_code,info.goods_num,info.pause_ch,info.pause_jp,info.unit_price,info.item_price,info.cod_money,info.import_time FROM rakuten_response_list list,rakuten_response_info info WHERE list.order_id = info.order_id AND info.is_pause = 'pass' AND list.order_line = '3' ORDER BY list.pause_time";
+    $res2 = $db->getAll($sql);
+    //  获取所有平台 ******************** select * (select * from t1 union all select * from t2) tmp order by tmp.createDate时间戳
+    $sql = "SELECT info.id,info.station,list.send_id,list.pause_time,info.store,info.order_id,info.goods_code,info.goods_num,info.pause_ch,info.pause_jp,info.unit_price,info.item_price,info.cod_money,info.import_time FROM p_yahoo_response_list list,p_yahoo_response_info info WHERE list.order_id = info.order_id AND info.is_pause = 'pass' AND list.order_line = '3' ORDER BY list.pause_time";
+    $res3 = $db->getAll($sql);
+    $res = array_merge($res1, $res2, $res3); 
+
+    echo json_encode($res);
+}
+
 // 读取所有冻结退押订单info表
 if(isset($_GET['back_order'])){
     //  获取所有平台 ******************** select * (select * from t1 union all select * from t2) tmp order by tmp.createDate时间戳
@@ -324,6 +340,78 @@ if(isset($_GET['down_pause_orders_table'])){
     // $objPHPExcel->getActiveSheet()->getColumnDimension()->setAutoSize(true);
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
     $objWriter->save($dir."/../../down/pause_orders_table.xlsx");   //保存在服务器
+    echo "ok";
+}
+
+// 下载冻结ing订单表
+if(isset($_GET['down_pause_ing'])){
+    require_once($dir."/../PHPExcel/PHPExcel.php");//引入PHPExcel
+    
+    //制作时间
+    date_default_timezone_set("Asia/Shanghai");
+    $now_time = date("Y-m-d H'i's");
+
+    //PHPExcel
+    $objPHPExcel = new PHPExcel();
+    $objSheet = $objPHPExcel->getActiveSheet();
+    $objSheet->setTitle('冻结ing@'.$now_time);//表名
+    $objSheet->setCellValue("A1","冻结日期")
+            ->setCellValue("B1","注文番号")
+            ->setCellValue("C1","OMS-ID")
+            ->setCellValue("D1","商品代码")
+            ->setCellValue("E1","数量")
+            ->setCellValue("F1","押中")
+            ->setCellValue("G1","押日")
+            ->setCellValue("I1","收件人")
+            ->setCellValue("M1","店铺");    //表头值
+    $objSheet->getDefaultStyle()->getFont()->setName("微软雅黑")->setSize(12);  //默认字体
+    $objPHPExcel->getActiveSheet()->getStyle('A1:M1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
+    $objPHPExcel->getActiveSheet()->getStyle('A:M')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
+    $objPHPExcel->getActiveSheet()->getStyle('A1:M1')->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_WHITE);//前景色
+    $objSheet->getStyle('A1:M1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+    $objSheet->getStyle('A1:M1')->getFill()->getStartColor()->setRGB('1d9c73'); //背景色
+    // $objSheet->getDefaultRowDimension()->setRowHeight(28);   //单元格高
+    $objSheet->getColumnDimension('A')->setWidth(12);;//单元格宽
+    $objSheet->getColumnDimension('B')->setWidth(20);//单元格宽
+    $objSheet->getColumnDimension('D')->setWidth(34);//单元格宽
+    $objSheet->freezePane('A2');//冻结表头
+    $objPHPExcel->getActiveSheet()->getStyle('A')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);//左对齐
+
+    //SQL
+    $sql = "SELECT FROM_UNIXTIME(list.pause_time, '%Y-%m-%d %H:%I:%S') as pause_time,list.order_id,list.id,info.goods_code,info.goods_num,info.pause_ch,info.pause_jp,list.receive_name,list.store FROM amazon_response_list list,amazon_response_info info WHERE list.order_id = info.order_id AND info.is_pause = 'pass' AND list.order_line = '3' ORDER BY pause_time";
+    $res1 = $db->getAll($sql);
+    $sql = "SELECT FROM_UNIXTIME(list.pause_time, '%Y-%m-%d %H:%I:%S') as pause_time,list.order_id,list.id,info.goods_code,info.goods_num,info.pause_ch,info.pause_jp,list.receive_name,list.store FROM rakuten_response_list list,rakuten_response_info info WHERE list.order_id = info.order_id AND info.is_pause = 'pass' AND list.order_line = '3' ORDER BY pause_time";
+    $res2 = $db->getAll($sql);
+    $sql = "SELECT FROM_UNIXTIME(list.pause_time, '%Y-%m-%d %H:%I:%S') as pause_time,list.order_id,list.id,info.goods_code,info.goods_num,info.pause_ch,info.pause_jp,list.receive_name,list.store FROM p_yahoo_response_list list,p_yahoo_response_info info WHERE list.order_id = info.order_id AND info.is_pause = 'pass' AND list.order_line = '3' ORDER BY pause_time";
+    $res3 = $db->getAll($sql);
+    $res = array_merge($res1,$res2,$res3);
+    sort($res);
+
+    $j=2;
+    $now_order_id = '';
+    foreach ($res as $key => $value) {
+        if($now_order_id == $value['order_id']){
+            $value['pause_time'] = '';
+            $value['order_id'] = '';
+            $value['receive_name'] = '';
+        }else{
+            $now_order_id = $value['order_id'];
+        }
+        $objSheet->setCellValue("A".$j,$value['pause_time'])
+                ->setCellValue("B".$j,$value['order_id'])
+                ->setCellValue("C".$j,$value['id'])
+                ->setCellValue("D".$j,$value['goods_code'])
+                ->setCellValue("E".$j,$value['goods_num'])
+                ->setCellValue("F".$j,$value['pause_ch'])
+                ->setCellValue("G".$j,$value['pause_jp'])
+                ->setCellValue("I".$j,$value['receive_name'])
+                ->setCellValue("M".$j,$value['store']);
+        $j++;
+    }
+
+    // $objPHPExcel->getActiveSheet()->getColumnDimension()->setAutoSize(true);
+    $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+    $objWriter->save($dir."/../../down/down_pause_ing.xlsx");   //保存在服务器
     echo "ok";
 }
 

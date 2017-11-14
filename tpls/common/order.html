@@ -401,7 +401,7 @@
                 <button ng-show="search_order_line == '-2'" ng-disabled="my_checked==''" type="button" ng-click="check_items();del_true='false'" data-animation="am-fade-and-slide-top" data-template-url="/modal/pay_ok.html" bs-modal="modal" class="btn btn-default btn-sm yellow">
                     <i class="fa fa-jpy fa-fw"></i>确认入金
                 </button>
-                <button ng-show="search_order_line=='ing' || search_order_line=='-3' || search_order_line=='-5'" ng-disabled="my_checked==''" type="button" ng-click="check_items();del_true='false';stop_order();" class="btn btn-default btn-sm yellow">
+                <button ng-show="search_order_line=='yfcode_ok' || search_order_line=='ing' || search_order_line=='-3' || search_order_line=='-4' || search_order_line=='-5'" ng-disabled="my_checked==''" type="button" ng-click="check_items();del_true='false';stop_order();" class="btn btn-default btn-sm yellow">
                     <i class="fa fa-shopping-basket fa-fw"></i>保留
                 </button>
                 <button ng-show="search_order_line=='9'" ng-disabled="my_checked==''" type="button" ng-click="check_items();del_true='false';stop_back_order();" class="btn btn-default btn-sm yellow">
