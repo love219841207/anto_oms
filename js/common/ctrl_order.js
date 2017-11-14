@@ -1710,4 +1710,30 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         });
     }
 
+    //添加中继料
+    $scope.add_zhong = function(order_id){
+        var dom = document.querySelector('#zhong');
+        var zhong = angular.element(dom).val();
+        var post_data = {
+            station:$scope.now_station,
+            store:$scope.now_store_bar,
+            add_zhong:order_id,
+            zhong:zhong
+            };
+
+        $http.post('/fuck/common/change_order.php', post_data).success(function(data) {
+            if(data == 'ok'){
+                $scope.plug_alert('success','操作完成。','fa fa-smile-o');
+                $scope.to_page($scope.now_page);
+                $scope.show_one_info(order_id);
+            }else{
+                $log.info(data);
+                $scope.plug_alert('danger',data,'fa fa-ban');
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:中继料。");
+        });
+    }
+
 }])

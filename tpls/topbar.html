@@ -14,9 +14,11 @@
 				<option value="">选择店铺 ..</option>
 				<option ng-repeat="item in now_store track by $index">{{item}}</option>
 			</select>
+			{{now_store_bar | store}}
 <!-- 			<a href="/tpls/common/mail_status.html" target="_blank">
 				<button class="btn btn-default btn-xs ml10"><i class="fa fa-fw fa-info-circle green"></i>发信状态</button>
 			</a> -->
+
 		</div>
 		<ol class="breadcrumb bdr_no pull-right">
 			<li>

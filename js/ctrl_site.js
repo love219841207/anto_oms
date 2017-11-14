@@ -353,7 +353,7 @@ app.controller('FileController', ['$rootScope','$scope','$state', 'Upload' , '$t
                 }
             }).error(function(data) {
                 alert("系统错误，请联系管理员。");
-                $log.info(file_name+" 快递单导入失败");
+                $log.info(file_name+" 快递单导入失败了"+data);
             });
         }else if(file_name == 'post'){  //导入邮编
             console.log('update_post');
@@ -446,7 +446,7 @@ app.controller('FileController', ['$rootScope','$scope','$state', 'Upload' , '$t
             }
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
-            $log.info(file_name+" 快递单导入失败");
+            $log.info(file_name+" 快递单导入失败.."+data);
         });
     };
 }]);

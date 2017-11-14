@@ -933,3 +933,117 @@ if(isset($_POST['hand_break'])){
 		echo "ok";
 	}
 }
+
+// 添加中继料
+if(isset($_POST['add_zhong'])){
+	$zhong = $_POST['zhong'];
+	$order_id = $_POST['add_zhong'];
+	$station = strtolower($_POST['station']);
+	$store = $_POST['store'];
+	$response_list = $station.'_response_list';
+	$response_info = $station.'_response_info';
+
+	// 更新 send_table
+	// 查询send_table是否存在此订单
+	$sql = "SELECT count(1) AS send_count FROM send_table WHERE order_id = '{$order_id}'";
+	$res = $db->getOne($sql);
+	$send_count = $res['send_count'];
+	if($send_count == 0){
+		echo '发货区无此订单。';
+	}else{
+		// 查询OMS-ID
+		$sql = "SELECT id FROM $response_list WHERE order_id = '{$order_id}'";
+		$res = $db->getOne($sql);
+
+		$oms_id = $res['id'];
+
+		// 查询是否包含中继料
+		$sql = "SELECT count(1) AS count,item_price FROM $response_info WHERE order_id = '{$order_id}' AND goods_code = '中継料済み'";
+		$res = $db->getOne($sql);
+
+		$count = $res['count'];
+		$old_zhong = $res['item_price'];
+
+		if($count == 0){
+			// 日志
+			$do = '添加 <中继料>：为【'.$zhong.'】';
+			oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
+
+			// 添加
+			$sql = "INSERT INTO $response_info (station,store,order_id,goods_title,sku,goods_code,goods_num,pause_ch,is_pause,unit_price,item_price)
+			values ('{$station}','{$store}','{$order_id}','中継料済み','中継料済み','中継料済み','1','1','pass','{$zhong}','{$zhong}')";
+		}else{
+			// 日志
+			$do = '修改 <中继料>：【'.$old_zhong.'】为【'.$zhong.'】';
+			oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
+
+			// 更新
+			$sql = "UPDATE $response_info SET unit_price = '{$zhong}',item_price = '{$zhong}' WHERE order_id = '{$order_id}' AND goods_code = '中継料済み'";
+		}
+		$res = $db->execute($sql);
+
+		// 计算订单价格
+		play_order_price($station,$response_list,$response_info,$order_id);
+
+		// 发货区删除此单
+		$sql = "DELETE FROM send_table WHERE order_id = '{$order_id}'";
+		$res = $db->execute($sql);
+
+		$today = date('y-m-d',time()); //获取日期
+		// 此单重新转入发货区
+		$sql = "INSERT INTO send_table (
+			station,
+			order_id,
+			send_id,	#合单发货ID
+			oms_id,	#OMS-ID
+			info_id, #info-ID
+			sku, 	#sku，客人看
+			goods_code,	#商品代码，仓库看
+			out_num,	#商品数量
+			pause_jp,	#押日本
+			pause_ch,	#押中国
+			repo_status,    #出仓方式
+			who_tel,	#配送电话
+			who_post,	#邮编
+			who_house,	#地址
+			who_name,	#收货人
+			is_cod,		#是否代引
+			due_money,	#代引金额，写出全部的item金额，根据cod，更新是否是代引
+			send_method,
+			who_email,	#邮箱
+			store_name,	#店铺名
+			holder,		#担当者
+			want_date,	#指定配送日
+			want_time,	#指定配送时间
+			import_day) SELECT	#导入日期 
+			list.station,
+			list.order_id,
+			list.send_id,
+			list.id,
+			info.id,
+			info.sku,
+			info.goods_code,
+			info.goods_num,
+			info.pause_jp,
+			info.pause_ch,
+			list.repo_status,
+			list.phone,
+			list.post_code,
+			list.address,
+			list.receive_name,
+			list.payment_method,
+			list.pay_money,	#带引金额
+			list.send_method,
+			list.buyer_email,
+			list.store,
+			'{$u_name}',
+			want_date,
+			want_time,
+			'{$today}' from $response_list list,$response_info info where list.order_id = info.order_id AND list.order_id = '{$order_id}'";
+		$res = $db->execute($sql);
+
+		echo 'ok';
+	}
+
+	
+}

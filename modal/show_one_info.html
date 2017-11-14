@@ -379,7 +379,22 @@
           </tr>
         </table>
         <div class="clearfix"></div>
+
+        <!-- add -->
         <div class="btn btn-xs pull-right" ng-hide="item.order_line>2" ng-class="{'btn-success':!add_btn,'btn-danger':add_btn}" ng-click="add_btn = !add_btn;read_yfcode_list();"><i class="fa fa-fw" ng-class="{'fa-plus':!add_btn,'fa-close':add_btn}"></i></div>
+
+        <!-- 中继料 中継料済み-->
+        <div class="pull-left" ng-show="item.order_line==5" style="width: 200px;">
+          <div class="btn btn-default btn-xs pull-left" ng-click="show_zhong=!show_zhong">中継料済み</div>
+          <div class="clearfix"></div>
+          <div class="input-group mt10" ng-show="show_zhong">
+            <input type="number" placeholder="金额" id="zhong" class="form-control">
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="button" ng-click="add_zhong(item.order_id)" >确定</button>
+            </span>
+          </div>
+        </div>
+
         <div class="clearfix"></div>
         <div class="col-lg-8 col-lg-offset-2 animate slide-down" ng-show="add_btn">
           <table class="table table-responsive mt20 tagl">
@@ -424,6 +439,7 @@
             </tr>
           </table>
         </div>
+
         <table ng-show="one_res_logs!=''" class="tagl table table-hover table-condensed table-bordered mt20">
           <tr class="warning">
             <td style="width:50px;" class="tagc">操作人</td>

@@ -6,7 +6,7 @@ $dir = dirname(__FILE__);
 set_time_limit(0);
 ini_set("memory_limit", "1024M");
 
-// 下载冻结表
+// 下载订单项目
 if(isset($_POST['order_table'])){
 
     $store = $_POST['store'];
@@ -27,11 +27,11 @@ if(isset($_POST['order_table'])){
     $objSheet = $objPHPExcel->getActiveSheet();
     $objSheet->setTitle('订单@'.$now_time);//表名
     $objSheet->getDefaultStyle()->getFont()->setName("微软雅黑")->setSize(12);  //默认字体
-    $objPHPExcel->getActiveSheet()->getStyle('A1:AB1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
-    $objPHPExcel->getActiveSheet()->getStyle('A:AB')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
-    $objPHPExcel->getActiveSheet()->getStyle('A1:AB1')->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_WHITE);//前景色
-    $objSheet->getStyle('A1:AB1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
-    $objSheet->getStyle('A1:AB1')->getFill()->getStartColor()->setRGB('1d9c73'); //背景色
+    $objPHPExcel->getActiveSheet()->getStyle('A1:AC1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
+    $objPHPExcel->getActiveSheet()->getStyle('A:AC')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
+    $objPHPExcel->getActiveSheet()->getStyle('A1:AC1')->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_WHITE);//前景色
+    $objSheet->getStyle('A1:AC1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+    $objSheet->getStyle('A1:AC1')->getFill()->getStartColor()->setRGB('1d9c73'); //背景色
     // $objSheet->getDefaultRowDimension()->setRowHeight(28);   //单元格高
     // $objSheet->getColumnDimension('A')->setWidth(34);//单元格宽
     $objSheet->freezePane('A2');//冻结表头
@@ -65,7 +65,8 @@ if(isset($_POST['order_table'])){
             ->setCellValue("Y1","单价")
             ->setCellValue("Z1","该项价格")
             ->setCellValue("AA1","代引金额")
-            ->setCellValue("AB1","同步日期");    //表头值
+            ->setCellValue("AB1","同步日期")
+            ->setCellValue("AC1","配送方式");    //表头值
         //SQL
         $sql = "SELECT 
                 list.id,    #OMS-ID
@@ -95,7 +96,8 @@ if(isset($_POST['order_table'])){
                 info.unit_price,    #单价
                 info.item_price,    #该项价格
                 info.cod_money, #代引金额
-                list.syn_day   #同步日期
+                list.syn_day,   #同步日期
+                list.send_method #配送方式
          FROM $response_list list,$response_info info WHERE list.order_id = info.order_id AND list.order_id in ($my_checked_items)";
          $res = $db->getAll($sql);
         $j=2;
@@ -127,7 +129,8 @@ if(isset($_POST['order_table'])){
                     ->setCellValue("Y".$j,$value['unit_price'])
                     ->setCellValue("Z".$j,$value['item_price'])
                     ->setCellValue("AA".$j,$value['cod_money'])
-                    ->setCellValue("AB".$j,$value['syn_day']);
+                    ->setCellValue("AB".$j,$value['syn_day'])
+                    ->setCellValue("AC".$j,$value['send_method']);
             $j++;
         }
     // }
