@@ -198,20 +198,20 @@ if(isset($_GET['back_order'])){
  	$sql = "UPDATE history_send SET back_status = '正在退单' WHERE station = '{$station}' AND order_id = '{$back_order}'";
  	$res = $db->execute($sql);
 
-	// 退单到仓库
-	$sql = "SELECT goods_code,out_num,pause_ch,pause_jp FROM history_send WHERE back_status = '正在退单'";
-	$res = $db->getAll($sql);
+	// // 退单到仓库
+	// $sql = "SELECT goods_code,out_num,pause_ch,pause_jp FROM history_send WHERE back_status = '正在退单'";
+	// $res = $db->getAll($sql);
 
-	foreach ($res as $val) {
-		$goods_code = $val['goods_code'];
-		$pause_ch = $val['pause_ch'];
-		$pause_jp = $val['pause_jp'];
-		$sql = "UPDATE goods_type SET a_repo = a_repo + $pause_ch,b_repo = b_repo + $pause_jp WHERE goods_code = '{$goods_code}'";
-		$res = $rdb->execute($sql);
-		// 日志
-		$do = '[退单] '.$back_order.' <商品代码> '.$goods_code.' <还中国> '.$pause_ch.' <还日本> '.$pause_jp;
-		oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
-	}
+	// foreach ($res as $val) {
+	// 	$goods_code = $val['goods_code'];
+	// 	$pause_ch = $val['pause_ch'];
+	// 	$pause_jp = $val['pause_jp'];
+	// 	$sql = "UPDATE goods_type SET a_repo = a_repo + $pause_ch,b_repo = b_repo + $pause_jp WHERE goods_code = '{$goods_code}'";
+	// 	$res = $rdb->execute($sql);
+	// 	// 日志
+	// 	$do = '[退单] '.$back_order.' <商品代码> '.$goods_code.' <还中国> '.$pause_ch.' <还日本> '.$pause_jp;
+	// 	oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
+	// }
 
 	// 标记 list 表退单
 	$sql = "UPDATE $response_list SET order_line = '-4' WHERE order_id = '{$back_order}'";

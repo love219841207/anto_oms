@@ -637,6 +637,33 @@ if(isset($_POST['stop_back_order'])){
 	$sql = "UPDATE $response_info SET is_pause = '' WHERE order_id IN $stop_order";
 	$res = $db->execute($sql);
 
+	// 还库存
+	$sql = "SELECT id,order_id FROM $response_list WHERE order_id IN $stop_order";
+	$res = $db->getAll($sql);
+
+	foreach ($res as $value) {
+		$oms_id = $value['id'];
+		$order_id = $value['order_id'];
+		// 退单到仓库
+		$sql = "SELECT goods_code,goods_num,pause_ch,pause_jp FROM $response_info WHERE order_id = '{$order_id}'";
+		$res = $db->getAll($sql);
+
+		foreach ($res as $val) {
+			$goods_code = $val['goods_code'];
+			$pause_ch = $val['pause_ch'];
+			$pause_jp = $val['pause_jp'];
+			$sql = "UPDATE goods_type SET a_repo = a_repo + $pause_ch,b_repo = b_repo + $pause_jp WHERE goods_code = '{$goods_code}'";
+			$res = $rdb->execute($sql);
+			// 日志
+			$do = '[还库存] '.$order_id.' <商品代码> '.$goods_code.' <还中国> '.$pause_ch.' <还日本> '.$pause_jp;
+			oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
+		}
+	}
+	
+	// 修改退押情况下info
+	$sql = "UPDATE $response_info SET pause_ch = 0,pause_jp = 0 WHERE order_id IN $stop_order";
+	$res = $db->execute($sql);
+
 	$log_items = str_replace('\'', '', $del_log_items);
 	$log_items = str_replace('\\', '', $log_items);
 	$arr = explode(',', $log_items);

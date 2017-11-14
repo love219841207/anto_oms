@@ -1,7 +1,7 @@
 <div class="container-fluid" ng-controller="historyCtrl">
 	<div class="btn-group mt10">
 		<div class="btn btn-default btn-sm">
-			<input style="width: 200px;" class="key_words blue" ng-model="search_key" type="text" placeholder="完整的订单号 ..">
+			<input style="width: 200px;" class="key_words blue" ng-model="search_key" type="text" placeholder="完整的订单号 ..不退还库存">
 		</div>
 		<button ng-disabled="search_key==''" class="btn btn-primary" ng-click="search_back_order()"><i class="fa fa-search fa-fw"></i></button>
 	</div>
