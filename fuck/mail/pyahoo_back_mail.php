@@ -91,7 +91,7 @@ if(isset($_POST['store'])){
         $buyer_name = preg_replace('/\[.*?\]/', '', $buyer_name);
         $receive_name = preg_replace('/\[.*?\]/', '', $receive_name);
 
-        $sql = "SELECT sum(order_tax) as order_tax,sum(points) as points,sum(coupon) as coupon,sum(shipping_price) as shipping_price FROM p_yahoo_response_list WHERE send_id = '{$value}'";
+        $sql = "SELECT sum(order_tax) as order_tax,sum(points) as points,sum(coupon) as coupon,shipping_price FROM p_yahoo_response_list WHERE send_id = '{$value}'";
         $res = $db->getOne($sql);
 
         $order_tax = $res['order_tax']; 

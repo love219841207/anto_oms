@@ -696,6 +696,8 @@ if(isset($_POST['sub_repo'])){
 	// $res = $db->execute($sql);
 	$sql = "UPDATE rakuten_response_list SET order_line = '5' WHERE order_line = '4'";
 	$res = $db->execute($sql);
+	$sql = "UPDATE p_yahoo_response_list SET order_line = '5' WHERE order_line = '4'";
+	$res = $db->execute($sql);
 	echo 'ok';
 
 }

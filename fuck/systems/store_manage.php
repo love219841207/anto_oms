@@ -300,7 +300,7 @@ if(isset($_POST['demo_mail'])){
 	$res = $db->getOne($sql);
 	$send_id = $res['send_id'];
 
-	$sql = "SELECT sum(order_tax) as order_tax,sum(points) as points,sum(coupon) as coupon,sum(shipping_price) as shipping_price FROM $response_list WHERE send_id = '{$send_id}'";
+	$sql = "SELECT sum(order_tax) as order_tax,sum(points) as points,sum(coupon) as coupon,shipping_price FROM $response_list WHERE send_id = '{$send_id}'";
 	$res = $db->getOne($sql);
 
  	$order_tax = $res['order_tax'];	
