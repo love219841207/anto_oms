@@ -328,6 +328,9 @@ if(isset($_POST['demo_mail'])){
 	foreach ($res as $val) {
 		$goods_title = $val['goods_title'];
 		$sku = $val['sku'];
+		if($station == 'p_yahoo'){
+			$sku = $val['goods_code'];
+		}
 		$goods_num = $val['goods_num'];
 		$unit_price = $val['unit_price'];
 		$item_price = $val['item_price'];

@@ -213,12 +213,16 @@ if(isset($_GET['back_order'])){
 	// 	oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
 	// }
 
+	// 日志
+	$do = '[退单] ';
+	oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
+
 	// 标记 list 表退单
 	$sql = "UPDATE $response_list SET order_line = '-4' WHERE order_id = '{$back_order}'";
 	$res = $db->execute($sql);
 
-	// 标记 history 表退单
- 	$sql = "UPDATE history_send SET back_status = '已退单' WHERE station = '{$station}' AND order_id = '{$back_order}'";
+ 	// 退单记录清除
+ 	$sql = "DELETE FROM history_send WHERE station = '{$station}' AND order_id = '{$back_order}'";
  	$res = $db->execute($sql);
 
 	// 是否通知售后系统？

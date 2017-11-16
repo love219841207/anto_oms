@@ -128,6 +128,8 @@ if(isset($_GET['import_add_list'])){
 					$want_time = '18:00～20:00';
 				}else if($want_time == '～21:00'){
 					$want_time = '20:00～21:00';
+				}else if($want_time == '午前中'){
+					$want_time = '09:00～12:00';
 				}else{
 					$want_time = '';
 				}
