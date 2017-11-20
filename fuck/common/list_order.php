@@ -321,6 +321,7 @@ if(isset($_POST['sub_repo'])){
 
 	// 按照 send_id 扣库存	
 	$res = $db->getAll($sql);
+
 	if(empty($res)){
 		echo 'ok';die;
 	}
@@ -330,6 +331,19 @@ if(isset($_POST['sub_repo'])){
 		$response_list = $val['station'].'_response_list';
 		$response_info = $val['station'].'_response_info';
 		$send_id = $val['send_id'];
+		// 查询send_id 的order_line
+		$sql = "SELECT order_line FROM $response_list WHERE send_id = '{$send_id}'";
+		$res = $db->getAll($sql);
+		$ooddll = '1';
+		foreach ($res as $value) {
+			$order_line = $value['order_line'];
+			if($order_line == '1'){
+				$ooddll = '0';
+			}
+		}
+
+		if($ooddll == '0')continue;
+
 
 		// 查询出每个 send_id 对应的 order_id 的 商品代码
 		$sql = "SELECT info.store,info.order_id as order_id,info.id as info_id,info.goods_code as goods_code,info.pause_ch as pause_ch,info.pause_jp as pause_jp,info.goods_num as goods_num FROM $response_info info,$response_list list WHERE list.order_id = info.order_id AND list.send_id = '{$send_id}'";
@@ -349,6 +363,7 @@ if(isset($_POST['sub_repo'])){
 			$store = $val2['store'];
 
 			$goods_num = $u_goods_num - $pause_ch - $pause_jp;	//实际需要库存数 = 购买数 - 押中国 - 押日本
+
 			$info_id = $val2['info_id'];
 
 			$order_ids = '\''.$now_order_id.'\','.$order_ids;	# 拼接总订单号集合

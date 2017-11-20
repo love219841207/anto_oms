@@ -663,6 +663,9 @@ if(isset($_POST['stop_back_order'])){
 	// 修改退押情况下info
 	$sql = "UPDATE $response_info SET pause_ch = 0,pause_jp = 0 WHERE order_id IN $stop_order";
 	$res = $db->execute($sql);
+	// 清空发货ID
+	$sql = "UPDATE $response_list SET send_id = '' WHERE order_id IN $stop_order";
+	$res = $db->execute($sql);
 
 	$log_items = str_replace('\'', '', $del_log_items);
 	$log_items = str_replace('\\', '', $log_items);
