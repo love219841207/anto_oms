@@ -97,7 +97,7 @@ function gogogo($station,$response_list,$response_info,$send_id,$need_cod,$max_c
 
 	// 运费计算
 		// 取前2字去模糊匹配
-	$address = mb_substr($address,0,2);	
+	$address = mb_substr($address,0,2, "utf-8");	
 	$sql = "SELECT count(1) as count,yf_money,yf_add FROM yf_money WHERE yf_code = '{$max_code}' AND area like '%{$address}%'";
 	$res = $db->getOne($sql);
 	if($res['count'] == 1){
