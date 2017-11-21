@@ -1736,4 +1736,18 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         });
     }
 
+    // clear_add_txt 新增商品清空
+    $scope.clear_add_txt = function(){
+        var dom = document.querySelector('#add_goods_code');
+        angular.element(dom).val('');
+        var dom = document.querySelector('#add_yfcode');
+        angular.element(dom).val('');
+        var dom = document.querySelector('#add_goods_num');
+        angular.element(dom).val('');
+        var dom = document.querySelector('#add_unit_price');
+        angular.element(dom).val('');
+        var dom = document.querySelector('#add_cod_money');
+        angular.element(dom).val('');
+    }
+
 }])

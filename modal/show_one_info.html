@@ -381,7 +381,7 @@
         <div class="clearfix"></div>
 
         <!-- add -->
-        <div class="btn btn-xs pull-right" ng-hide="item.order_line>2" ng-class="{'btn-success':!add_btn,'btn-danger':add_btn}" ng-click="add_btn = !add_btn;read_yfcode_list();"><i class="fa fa-fw" ng-class="{'fa-plus':!add_btn,'fa-close':add_btn}"></i></div>
+        <div class="btn btn-xs pull-right" ng-hide="item.order_line>2" ng-class="{'btn-success':!add_btn,'btn-danger':add_btn}" ng-click="add_btn = !add_btn;read_yfcode_list();clear_add_txt();"><i class="fa fa-fw" ng-class="{'fa-plus':!add_btn,'fa-close':add_btn}"></i></div>
 
         <!-- 中继料 中継料済み-->
         <div class="pull-left" ng-show="item.order_line==5" style="width: 200px;">
