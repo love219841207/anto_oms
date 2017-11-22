@@ -77,39 +77,46 @@ if(isset($_GET['one_pause'])){
 if(isset($_GET['back_pause'])){
     $store = $_GET['store'];
     $station = strtolower($_GET['station']);
-    $info_id = $_GET['back_pause'];
+    $send_id = $_GET['back_pause'];
 
     $response_info = $station.'_response_info';
     $response_list = $station.'_response_list';
 
-    // 查询该 info_id 订单号、所押的中国和日本数及goods_code
-    $sql = "SELECT order_id,pause_ch,pause_jp,goods_code FROM $response_info WHERE id = '{$info_id}'";
-    $res = $db->getOne($sql);
-    $order_id = $res['order_id'];
-    $pause_ch = $res['pause_ch'];
-    $pause_jp = $res['pause_jp'];
-    $goods_code = $res['goods_code'];
+    // 查询该 send_id 对应的 order_id 的 商品代码 中国和日本押数
+    $sql = "SELECT info.order_id as order_id,info.id as info_id,info.goods_code as goods_code,info.pause_ch as pause_ch,info.pause_jp as pause_jp,info.goods_num as goods_num FROM $response_info info,$response_list list WHERE list.order_id = info.order_id AND list.send_id = '{$send_id}'";
+    $res2 = $db->getAll($sql);
+
+    //遍历出订单
+    foreach ($res2 as $val2) {
+        $order_id = $val2['order_id'];
+        $goods_code = $val2['goods_code'];
+        $goods_num = $val2['goods_num'];
+        $pause_ch = $val2['pause_ch'];
+        $pause_jp = $val2['pause_jp'];
+
+        // 还库存
+        $sql = "UPDATE goods_type SET a_repo = a_repo + $pause_ch,b_repo = b_repo + $pause_jp WHERE goods_code = '{$goods_code}'";
+        $res = $rdb->execute($sql);
+    }
 
     // 更改 order_line 为退押状态
-    $sql = "UPDATE $response_list SET order_line = '-3' WHERE order_id = '{$order_id}'";
+    $sql = "UPDATE $response_list SET order_line = '-3' WHERE send_id = '{$send_id}'";
     $res = $db->execute($sql);
 
-    // 还库存
-    $sql = "UPDATE goods_type SET a_repo = a_repo + $pause_ch,b_repo = b_repo + $pause_jp WHERE goods_code = '{$goods_code}'";
-    $res = $rdb->execute($sql);
-
     // 对押的数目清零及is_pause 状态修改
-    $sql = "UPDATE $response_info SET pause_jp = 0,pause_ch = 0,is_pause = 'back' WHERE id = '{$info_id}'";
+    $sql = "UPDATE $response_info info,$response_list list SET info.pause_jp = 0,info.pause_ch = 0,info.is_pause = 'back' WHERE list.order_id = info.order_id AND list.send_id = '{$send_id}'";
     $res = $db->execute($sql);
 
     // 查询OMS-ID
-    $sql = "SELECT id FROM $response_list WHERE order_id = '{$order_id}'";
-    $res = $db->getOne($sql);
+    $sql = "SELECT id FROM $response_list WHERE send_id = '{$send_id}'";
+    $res = $db->getAll($sql);
 
-    // 日志
-    $oms_id = $res['id'];
-    $do = '[退押]：'.$order_id;
-    oms_log($u_name,$do,'change_order',$station,$store,$oms_id); 
+    foreach ($res as $value) {
+        // 日志
+        $oms_id = $value['id'];
+        $do = '[退押]：'.$send_id;
+        oms_log($u_name,$do,'change_order',$station,$store,$oms_id); 
+    }
 
     echo 'ok';
 }

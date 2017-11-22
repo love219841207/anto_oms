@@ -15,10 +15,10 @@ app.controller('pauseorderCtrl', ['$rootScope','$scope','$state','$http','$log',
     $scope.check_no_item = function(){
         angular.forEach($scope.all_pause_orders, function(value, index){
             $scope.all_pause_orders[index].is_click = false;
-        })
+        });
         $scope.cc_all = true;
         $scope.check_items();
-    }
+    };
 
     //反选
     $scope.check_back_item = function(){
@@ -28,9 +28,9 @@ app.controller('pauseorderCtrl', ['$rootScope','$scope','$state','$http','$log',
             }else{
                 $scope.all_pause_orders[index].is_click = true;
             }
-        })
+        });
         $scope.check_items();
-    }
+    };
 
     //check_items 选择项
     $scope.check_items = function(){
@@ -39,12 +39,12 @@ app.controller('pauseorderCtrl', ['$rootScope','$scope','$state','$http','$log',
             if($scope.all_pause_orders[index].is_click == true){
                 my_checked.push("'"+$scope.all_pause_orders[index].order_id+"'");
             }
-        })
+        });
         my_checked = unique1(my_checked);
         $scope.my_checked = my_checked;
         $scope.my_checked_items = my_checked.join(',');
         // $log.info($scope.my_checked_items)
-    }
+    };
     $scope.check_items();
 
     // 数组去重
@@ -105,7 +105,7 @@ app.controller('pauseorderCtrl', ['$rootScope','$scope','$state','$http','$log',
             alert("系统错误，请联系管理员。");
             $log.info("error:查询所有平台退押订单info失败。");
         });
-    }
+    };
 
     // 冻结订单表
     $scope.down_pauseorders = function(){
@@ -124,7 +124,7 @@ app.controller('pauseorderCtrl', ['$rootScope','$scope','$state','$http','$log',
             alert("系统错误，请联系管理员。");
             $log.info("error:下载冻结订单表失败。");
         });
-	}
+	};
 
     // 冻结押货表
     $scope.down_pause_ing = function(){
@@ -134,7 +134,7 @@ app.controller('pauseorderCtrl', ['$rootScope','$scope','$state','$http','$log',
                 down_pause_ing:'down'
             }
         }).success(function(data) {
-            $log.info(data)
+            // $log.info(data);
             if(data == 'ok'){
                 window.location="/down/down_pause_ing.xlsx";
             }
@@ -143,19 +143,24 @@ app.controller('pauseorderCtrl', ['$rootScope','$scope','$state','$http','$log',
             alert("系统错误，请联系管理员。");
             $log.info("error:下载冻结订单表失败。");
         });
-    }
+    };
 
     // 退押
-    $scope.back_pause = function(id,store,station){
+    $scope.back_pause = function(send_id,store,station){
         $http.get('/fuck/common/pause_order.php', {
             params:{
                 store:store,
                 station:station,
-                back_pause:id
+                back_pause:send_id
             }
         }).success(function(data) {
             if(data == 'ok'){
-                $scope.show_pause_info();
+                if($scope.radioModel=='Left'){
+                    $scope.show_pause_info();  
+                }
+                if($scope.radioModel=='mid'){
+                    $scope.show_pause_ing_info();
+                }
             }else{
                 $log.info(data);
                 $scope.plug_alert('danger','退押失败。','fa fa-ban');
@@ -164,7 +169,7 @@ app.controller('pauseorderCtrl', ['$rootScope','$scope','$state','$http','$log',
             alert("系统错误，请联系管理员。");
             $log.info("error:退押失败。");
         });
-    }
+    };
 
     // 还原
     $scope.to_pause = function(id,store,station){
