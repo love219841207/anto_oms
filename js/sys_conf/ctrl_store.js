@@ -1,5 +1,5 @@
 var app=angular.module('myApp');
-app.controller('storeCtrl', ['$scope','$state','$http','$log','$timeout', function($scope,$state,$http,$log,$timeout){
+app.controller('storeCtrl', ['$rootScope','$scope','$state','$http','$log','$timeout', function($rootScope,$scope,$state,$http,$log,$timeout){
     //调用下拉
     $scope.plug_dropdown();
 
@@ -401,16 +401,19 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log','$timeout', functi
 
     //保存邮件自定义模板
     $scope.save_mail_custom = function(){
+        $scope.can_custom = '0';
         var post_data = {   
             save_mail_custom:'custom',
             mail_topic:$scope.mail_tpl_topic,
             mail_html:$scope.mail_tpl_html,
             mail_txt:$scope.mail_tpl_txt
         };
+        $log.info($scope.can_custom);
 
         $http.post('/fuck/systems/store_manage.php', post_data).success(function(data) {  
             if(data == 'ok'){
                 $scope.plug_alert('success','已保存。','fa fa-smile-o');
+                $scope.can_custom = '1';
             }else{
                 $scope.plug_alert('danger','系统错误，请联系管理员。','fa fa-ban');
                 $log.info(data);
@@ -512,78 +515,101 @@ app.controller('storeCtrl', ['$scope','$state','$http','$log','$timeout', functi
 
     // 发信
     $scope.amz_mail_custom_items = function(){
-        $scope.shadow('open','ss_make','Amazon正在发信，请稍后。');
         // $log.info($scope.my_checked_items);
+        
+        $timeout(function(){
+            if($scope.can_custom == '1'){
+                $scope.shadow('open','ss_make','Amazon正在发信，请稍后。');
+                var post_data = {
+                    send_mail:'amazon',
+                    store:$scope.now_store_bar,
+                    station:'Amazon',
+                    mail_tpl:'custom',
+                    my_checked_items:$scope.my_checked_items};
 
-        var post_data = {
-            send_mail:'amazon',
-            store:$scope.now_store_bar,
-            station:'Amazon',
-            mail_tpl:'custom',
-            my_checked_items:$scope.my_checked_items};
-
-        $http.post('/fuck/mail/amazon_send_mail.php', post_data).success(function(data) {
-            if(data == 'ok'){
-                $scope.plug_alert('success','已经提交发信。','fa fa-smile-o');
+                    $http.post('/fuck/mail/amazon_send_mail.php', post_data).success(function(data) {
+                        if(data == 'ok'){
+                            $scope.plug_alert('success','已经提交发信。','fa fa-smile-o');
+                        }else{
+                            $log.info(data);
+                            $scope.plug_alert('danger','发信失败，请联系管理员。','fa fa-ban');
+                        }
+                    $timeout(function(){$scope.shadow('close');},500); //关闭shadow
+                }).error(function(data) {
+                    alert("系统错误，请联系管理员。");
+                    $log.info("error:发信失败。");
+                });
             }else{
-                $log.info(data);
-                $scope.plug_alert('danger','发信失败，请联系管理员。','fa fa-ban');
+                $scope.plug_alert('danger','保存失败，请重试。','fa fa-ban');
             }
-            $timeout(function(){$scope.shadow('close');},500); //关闭shadow
-        }).error(function(data) {
-            alert("系统错误，请联系管理员。");
-            $log.info("error:发信失败。");
-        });
+
+        },5000);   
+        
     };
 
     $scope.rku_mail_custom_items = function(){
-        $scope.shadow('open','ss_make','Rakuten正在发信，请稍后。');
+
         // $log.info($scope.my_checked_items);
+        $timeout(function(){
+            if($scope.can_custom == '1'){
+                $scope.shadow('open','ss_make','Rakuten正在发信，请稍后。');
+                var post_data = {
+                    send_mail:'rakuten',
+                    store:$scope.now_store_bar,
+                    station:'Rakuten',
+                    mail_tpl:'custom',
+                    my_checked_items:$scope.my_checked_items};
 
-        var post_data = {
-            send_mail:'rakuten',
-            store:$scope.now_store_bar,
-            station:'Rakuten',
-            mail_tpl:'custom',
-            my_checked_items:$scope.my_checked_items};
-
-        $http.post('/fuck/mail/rakuten_send_mail.php', post_data).success(function(data) {
-            if(data == 'ok'){
-                $scope.plug_alert('success','已经提交发信。','fa fa-smile-o');
+                    $http.post('/fuck/mail/rakuten_send_mail.php', post_data).success(function(data) {
+                        if(data == 'ok'){
+                            $scope.plug_alert('success','已经提交发信。','fa fa-smile-o');
+                        }else{
+                            $log.info(data);
+                            $scope.plug_alert('danger','发信失败，请联系管理员。','fa fa-ban');
+                        }
+                    $timeout(function(){$scope.shadow('close');},500); //关闭shadow
+                }).error(function(data) {
+                    alert("系统错误，请联系管理员。");
+                    $log.info("error:发信失败。");
+                });
             }else{
-                $log.info(data);
-                $scope.plug_alert('danger','发信失败，请联系管理员。','fa fa-ban');
+                $scope.plug_alert('danger','保存失败，请重试。','fa fa-ban');
             }
-            $timeout(function(){$scope.shadow('close');},500); //关闭shadow
-        }).error(function(data) {
-            alert("系统错误，请联系管理员。");
-            $log.info("error:发信失败。");
-        });
+
+        },5000); 
+
     };
 
     $scope.pyahoo_mail_custom_items = function(){
-        $scope.shadow('open','ss_make','P_Yahoo正在发信，请稍后。');
-        // $log.info($scope.my_checked_items);
 
-        var post_data = {
-            send_mail:'pyahoo',
-            store:$scope.now_store_bar,
-            station:'P_Yahoo',
-            mail_tpl:'custom',
-            my_checked_items:$scope.my_checked_items};
+            // $log.info($scope.my_checked_items);
+            $timeout(function(){
+                if($scope.can_custom == '1'){
+                    $scope.shadow('open','ss_make','P_Yahoo正在发信，请稍后。');
+                    var post_data = {
+                        send_mail:'pyahoo',
+                        store:$scope.now_store_bar,
+                        station:'P_Yahoo',
+                        mail_tpl:'custom',
+                        my_checked_items:$scope.my_checked_items};
 
-        $http.post('/fuck/mail/pyahoo_send_mail.php', post_data).success(function(data) {
-            if(data == 'ok'){
-                $scope.plug_alert('success','已经提交发信。','fa fa-smile-o');
+                        $http.post('/fuck/mail/pyahoo_send_mail.php', post_data).success(function(data) {
+                            if(data == 'ok'){
+                                $scope.plug_alert('success','已经提交发信。','fa fa-smile-o');
+                            }else{
+                                $log.info(data);
+                                $scope.plug_alert('danger','发信失败，请联系管理员。','fa fa-ban');
+                            }
+                    $timeout(function(){$scope.shadow('close');},500); //关闭shadow
+                }).error(function(data) {
+                    alert("系统错误，请联系管理员。");
+                    $log.info("error:发信失败。");
+                });
             }else{
-                $log.info(data);
-                $scope.plug_alert('danger','发信失败，请联系管理员。','fa fa-ban');
+                $scope.plug_alert('danger','保存失败，请重试。','fa fa-ban');
             }
-            $timeout(function(){$scope.shadow('close');},500); //关闭shadow
-        }).error(function(data) {
-            alert("系统错误，请联系管理员。");
-            $log.info("error:发信失败。");
-        });
+        },5000);
+
     };
 
 }]);
