@@ -27,11 +27,11 @@ if(isset($_POST['order_table'])){
     $objSheet = $objPHPExcel->getActiveSheet();
     $objSheet->setTitle('订单@'.$now_time);//表名
     $objSheet->getDefaultStyle()->getFont()->setName("微软雅黑")->setSize(12);  //默认字体
-    $objPHPExcel->getActiveSheet()->getStyle('A1:AF1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
-    $objPHPExcel->getActiveSheet()->getStyle('A:AF')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
-    $objPHPExcel->getActiveSheet()->getStyle('A1:AF1')->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_WHITE);//前景色
-    $objSheet->getStyle('A1:AF1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
-    $objSheet->getStyle('A1:AF1')->getFill()->getStartColor()->setRGB('1d9c73'); //背景色
+    $objPHPExcel->getActiveSheet()->getStyle('A1:AG1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
+    $objPHPExcel->getActiveSheet()->getStyle('A:AG')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
+    $objPHPExcel->getActiveSheet()->getStyle('A1:AG1')->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_WHITE);//前景色
+    $objSheet->getStyle('A1:AG1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+    $objSheet->getStyle('A1:AG1')->getFill()->getStartColor()->setRGB('1d9c73'); //背景色
     // $objSheet->getDefaultRowDimension()->setRowHeight(28);   //单元格高
     // $objSheet->getColumnDimension('A')->setWidth(34);//单元格宽
     $objSheet->freezePane('A2');//冻结表头
@@ -69,7 +69,9 @@ if(isset($_POST['order_table'])){
             ->setCellValue("AC1","配送方式")
             ->setCellValue("AD1","客人备注")
             ->setCellValue("AE1","指定日期")
-            ->setCellValue("AF1","指定时间");    //表头值
+            ->setCellValue("AF1","指定时间")
+            ->setCellValue("AG1","订单状态")
+            ;    //表头值
         //SQL
         $sql = "SELECT 
                 list.id,    #OMS-ID
@@ -103,11 +105,48 @@ if(isset($_POST['order_table'])){
                 list.send_method, #配送方式
                 list.buyer_others, #客人备注
                 list.want_date, #指定日期
-                list.want_time #指定时间
+                list.want_time, #指定时间
+                list.order_line #指定时间
          FROM $response_list list,$response_info info WHERE list.order_id = info.order_id AND list.order_id in ($my_checked_items)";
          $res = $db->getAll($sql);
         $j=2;
         foreach ($res as $key => $value) {
+            if($value['order_line'] == 0){
+                $value['order_line'] = '无详单';
+            }
+            if($value['order_line'] == 1){
+                $value['order_line'] = '待处理';
+            }
+            if($value['order_line'] == 2){
+                $value['order_line'] = '已合单';
+            }
+            if($value['order_line'] == 3){
+                $value['order_line'] = '冻结';
+            }
+            if($value['order_line'] == 5){
+                $value['order_line'] = '待发货';
+            }
+            if($value['order_line'] == 6){
+                $value['order_line'] = 'close';
+            }
+            if($value['order_line'] == '-1'){
+                $value['order_line'] = '回收站';
+            }
+            if($value['order_line'] == '-2'){
+                $value['order_line'] = '待支付';   // 待支付
+            }
+            if($value['order_line'] == '-3'){   // 冻结退单
+                $value['order_line'] = '已退押';   
+            }
+            if($value['order_line'] == '-4'){   // 已出快递单退单
+                $value['order_line'] = '已退单';
+            }
+            if($value['order_line'] == '-5'){   // 待发货退回
+                $value['order_line'] = '已退库';
+            }
+            if($value['order_line'] == 9){
+                $value['order_line'] = '保留';
+            }
             $objSheet->setCellValue("A".$j,$value['id'])
                     ->setCellValue("B".$j,$value['station'])
                     ->setCellValue("C".$j,$value['store'])
@@ -139,7 +178,9 @@ if(isset($_POST['order_table'])){
                     ->setCellValue("AC".$j,$value['send_method'])
                     ->setCellValue("AD".$j,$value['buyer_others'])
                     ->setCellValue("AE".$j,$value['want_date'])
-                    ->setCellValue("AF".$j,$value['want_time']);
+                    ->setCellValue("AF".$j,$value['want_time'])
+                    ->setCellValue("AG".$j,$value['order_line'])
+                    ;
             $j++;
         }
     // }

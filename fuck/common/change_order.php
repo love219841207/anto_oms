@@ -668,7 +668,13 @@ if(isset($_POST['stop_back_order'])){
 	$sql = "UPDATE $response_info SET pause_ch = 0,pause_jp = 0 WHERE order_id IN $stop_order";
 	$res = $db->execute($sql);
 	// 清空发货ID
-	$sql = "UPDATE $response_list SET send_id = '' WHERE order_id IN $stop_order";
+	if($station == 'amazon'){
+		$sql = "UPDATE $response_list SET send_id = concat('amz',id) WHERE order_id IN $stop_order";
+	}else if($station == 'rakuten'){
+		$sql = "UPDATE $response_list SET send_id = concat('rku',id) WHERE order_id IN $stop_order";
+	}else if($station == 'p_yahoo'){
+		$sql = "UPDATE $response_list SET send_id = concat('pya',id) WHERE order_id IN $stop_order";
+	}
 	$res = $db->execute($sql);
 
 	$log_items = str_replace('\'', '', $del_log_items);
