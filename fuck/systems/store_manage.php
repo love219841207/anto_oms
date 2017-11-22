@@ -277,8 +277,14 @@ if(isset($_POST['demo_mail'])){
  	$send_method = $res['send_method'];	#配送方式
  	$express_num = $res['oms_order_express_num'];	#快递单号
  	$express_day = $res['express_day'];	#快递日期
- 	$post_code = $res['post_code'];	#客人邮编
-	 $address = $res['address'];	#配送地址
+ 	if($station == 'amazon'){
+ 		$address = '';
+ 		$post_code = '';
+ 	}else{
+ 		$post_code = $res['post_code'];	#客人邮编
+	 	$address = $res['buyer_address'];	#配送地址
+ 	}
+
  	$all_total_money = $res['all_total_money'];	
  	$order_total_money = $res['order_total_money'];	
  	$payment_method = $res['payment_method'];	

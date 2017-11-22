@@ -79,8 +79,10 @@ if(isset($_POST['store'])){
 	 	$receive_name = $res['receive_name'];	#收货人
 	 	$order_id = $res['order_id'];	#订单号
 	 	$express_company = $res['express_company'];	#快递公司
-	 	$post_code = $res['post_code'];	#客人邮编
-	 	$address = $res['address'];	#配送地址
+	 	// $post_code = $res['post_code'];	#客人邮编
+	 	$post_code = '';	#客人邮编
+	 	// $address = $res['address'];	#配送地址
+	 	$address = '';	#配送地址
 	 	$send_method = $res['send_method'];	#配送方式
 	 	$express_num = $res['oms_order_express_num'];	#快递单号
 	 	$express_day = $res['express_day'];	#快递日期
@@ -203,7 +205,7 @@ if(isset($_POST['store'])){
 	 	</table>
 	 	<table width="100%" border="1" bordercolor="no" cellspacing="1" cellpadding="6" style="border-collapse: collapse;font-size:12px;border-color: #FFF;width:100%;line-height: 10px; font-family: Meiryo;">
 	 	<tr>
-	 	<td>〒'.$post_code.'</td>
+	 	<td>'.$post_code.'</td>
 	 	<td style="text-align:right;">'.$store.'</td>
 	 	</tr>
 	 	<tr>
@@ -234,7 +236,7 @@ if(isset($_POST['store'])){
 	 	</td>
 	 	</tr>
 	 	<tr>
-	 	<td>〒'.$post_code.'</td>
+	 	<td>'.$post_code.'</td>
 	 	<td colspan="3" style="text-align: right;">
 	 	<span style="color:#009688;">ご注文番号：</span>
 	 	<span style="width:150px;text-align:left;display: inline-block;">'.$now_order_ids.'</span>

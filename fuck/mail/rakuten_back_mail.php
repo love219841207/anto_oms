@@ -81,7 +81,7 @@ if(isset($_POST['store'])){
         $express_company = $res['express_company']; #快递公司
         $send_method = $res['send_method']; #配送方式
         $post_code = $res['post_code']; #客人邮编
-        $address = $res['address']; #配送地址
+        $address = $res['buyer_address']; #购买人地址
         $express_num = $res['oms_order_express_num'];   #快递单号
         $express_day = $res['express_day']; #快递日期
         $all_total_money = $res['all_total_money']; 
