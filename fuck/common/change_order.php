@@ -644,6 +644,9 @@ if(isset($_POST['stop_back_order'])){
 	foreach ($res as $value) {
 		$oms_id = $value['id'];
 		$order_id = $value['order_id'];
+		// 重新计算金额
+		play_order_price($station,$response_list,$response_info,$order_id);
+
 		// 退单到仓库
 		$sql = "SELECT goods_code,goods_num,pause_ch,pause_jp FROM $response_info WHERE order_id = '{$order_id}'";
 		$res = $db->getAll($sql);
@@ -660,6 +663,7 @@ if(isset($_POST['stop_back_order'])){
 		}
 	}
 	
+
 	// 修改退押情况下info
 	$sql = "UPDATE $response_info SET pause_ch = 0,pause_jp = 0 WHERE order_id IN $stop_order";
 	$res = $db->execute($sql);
@@ -790,7 +794,7 @@ if(isset($_POST['check_common'])){
 	$response_list = $station.'_response_list';
 
 	// 检测ing区是否可以合单
-	$sql = "SELECT count(1) as cc,receive_name FROM $response_list WHERE order_line in ('-2','1') GROUP BY phone,post_code,receive_name";
+	$sql = "SELECT count(1) as cc,receive_name FROM $response_list WHERE order_line in ('-2','1') AND store='{$store}' GROUP BY phone,post_code,receive_name";
 	$res =  $db->getAll($sql);
 	foreach ($res as $key => $value) {
 		if($value['cc'] == 1){
@@ -807,7 +811,7 @@ if(isset($_POST['read_check_common'])){
 	$store = $_POST['store'];
 	$response_list = $station.'_response_list';
 
-	$sql = "SELECT * FROM $response_list WHERE order_line in ('-2','1') AND receive_name = '{$receive_name}'";
+	$sql = "SELECT * FROM $response_list WHERE order_line in ('-2','1') AND store='{$store}' AND receive_name = '{$receive_name}'";
 	$res =  $db->getAll($sql);
 	echo json_encode($res);
 }
@@ -819,7 +823,7 @@ if(isset($_POST['read_check_common_info'])){
 	$store = $_POST['store'];
 	$response_list = $station.'_response_list';
 
-	$sql = "SELECT * FROM $response_list WHERE order_line in ('-2','1') AND receive_name = '{$receive_name}'";
+	$sql = "SELECT * FROM $response_list WHERE order_line in ('-2','1') AND store='{$store}' AND receive_name = '{$receive_name}'";
 	$res =  $db->getAll($sql);
 	echo json_encode($res);
 }
