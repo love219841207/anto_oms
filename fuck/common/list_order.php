@@ -337,7 +337,7 @@ if(isset($_POST['sub_repo'])){
 		$ooddll = '1';
 		foreach ($res as $value) {
 			$order_line = $value['order_line'];
-			if($order_line == '1'){
+			if($order_line == '1' or $order_line == '-2' or $order_line == '-3' or $order_line == '-4' or $order_line == '-5' or $order_line == '9' or $order_line == '0'){
 				$ooddll = '0';
 			}
 		}

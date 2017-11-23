@@ -327,6 +327,8 @@ if(isset($_POST['store'])){
 	 	</table>
 	 	';
 
+	 	$now_order_ids = str_replace('\'', '', $now_order_ids);
+	 	
 		//替换信件变量
 	 	$mail_topic = str_replace('#buyer_name#', $buyer_name, $mail_topic);
 	 	$mail_topic = str_replace('#receive_name#', $receive_name, $mail_topic);
@@ -382,7 +384,6 @@ if(isset($_POST['store'])){
 				$do = '发信： <'.$mail_topic.'>';
 				oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
 			}
-			$now_order_ids = str_replace('\'', '', $now_order_ids);
 			// 插入mail_history表
 			$sql="INSERT INTO mail_history (store,order_id,mail_tpl,buyer_name,mail_title,do_time,who_name)VALUES('{$store}','{$now_order_ids}','{$mail_tpl}','{$buyer_name}','{$mail_topic}',NULL,'{$u_name}');";
 			$res = $db->execute($sql);
