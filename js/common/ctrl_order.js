@@ -1271,7 +1271,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
     //合单
     //一键合单
     $scope.onekey_common_order = function(){
-        $scope.shadow('open','ss_write','正在合单');
+        $scope.shadow('open','ss_write','正在确认合单及订单金额审核，稍后请核对无误订单金额，再【扣库存】。');
         $scope.init_list(); //初始化列表数据
         $http.get('/fuck/common/list_order.php', {
             params:{
@@ -1636,6 +1636,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
 
         $http.post('/fuck/common/change_order.php', post_data).success(function(data) {
             $scope.can_common_orders = data;
+            // $log.info(data)
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
             $log.info("error:合单检测。");

@@ -122,49 +122,49 @@ if(isset($_GET['onekey_common_order'])){
 	$station = strtolower($_GET['station']);
 	$response_list = $station.'_response_list';
 	$response_info = $station.'_response_info';
-	$response_info = $station.'_response_info';
-	if($station == 'amazon'){
-		$cct = 'amz';
-	}
-	if($station == 'rakuten'){
-		$cct = 'rku';
-	}
-	if($station == 'yahoo'){
-		$cct = 'yho';
-	}
 
-	if($station == 'p_yahoo'){
-		// 拍卖店手动合单
-		$cct = 'pyho';
-	}else{
-		//	重置单号
-		$sql = "UPDATE $response_list SET all_total_money = order_total_money,send_id = concat('{$cct}',id) WHERE order_line in (1,2)";
-		$res = $db->execute($sql);
+	// if($station == 'amazon'){
+	// 	$cct = 'amz';
+	// }
+	// if($station == 'rakuten'){
+	// 	$cct = 'rku';
+	// }
+	// if($station == 'yahoo'){
+	// 	$cct = 'yho';
+	// }
 
-		$sql = "
-			UPDATE $response_list a,
-			(SELECT a.id FROM $response_list a,
-			(SELECT phone,post_code,count(id) as num
-			FROM $response_list WHERE store='{$store}' AND post_ok = '1' AND tel_ok = '1' AND sku_ok = '1' AND yfcode_ok='1' AND order_line in (1,2)
-			group by phone,post_code
-			having num>1) b
-			WHERE a.phone = b.phone and a.post_code = b.post_code and a.order_line in(1,2)) b
-			SET a.send_id = concat('H',a.phone)
-			WHERE a.id = b.id";
-		$res = $db->execute($sql);
+	// if($station == 'p_yahoo'){
+	// 	// 拍卖店手动合单
+	// 	$cct = 'pyho';
+	// }else{
+	// 	//	重置单号
+	// 	$sql = "UPDATE $response_list SET all_total_money = order_total_money,send_id = concat('{$cct}',id) WHERE order_line in (1,2)";
+	// 	$res = $db->execute($sql);
 
-		//修正合单号
-		$sql = "SELECT send_id FROM $response_list WHERE store='{$store}' AND order_line in (1,2) AND send_id LIKE 'H%' GROUP BY send_id";
-		$res = $db->getAll($sql);
-		foreach ($res as $value) {
-			$now_send_id = $value['send_id'];
-			$sql = "SELECT id FROM $response_list WHERE send_id = '{$now_send_id}' LIMIT 1";
-			$res = $db->getOne($sql);
-			$id = $res['id'];
-			$sql = "UPDATE $response_list SET send_id = concat('H','{$cct}',$id) WHERE send_id = '{$now_send_id}'";
-			$res = $db->execute($sql);
-		}
-	}
+	// 	$sql = "
+	// 		UPDATE $response_list a,
+	// 		(SELECT a.id FROM $response_list a,
+	// 		(SELECT phone,post_code,count(id) as num
+	// 		FROM $response_list WHERE store='{$store}' AND post_ok = '1' AND tel_ok = '1' AND sku_ok = '1' AND yfcode_ok='1' AND order_line in (1,2)
+	// 		group by phone,post_code
+	// 		having num>1) b
+	// 		WHERE a.phone = b.phone and a.post_code = b.post_code and a.order_line in(1,2)) b
+	// 		SET a.send_id = concat('H',a.phone)
+	// 		WHERE a.id = b.id";
+	// 	$res = $db->execute($sql);
+
+	// 	//修正合单号
+	// 	$sql = "SELECT send_id FROM $response_list WHERE store='{$store}' AND order_line in (1,2) AND send_id LIKE 'H%' GROUP BY send_id";
+	// 	$res = $db->getAll($sql);
+	// 	foreach ($res as $value) {
+	// 		$now_send_id = $value['send_id'];
+	// 		$sql = "SELECT id FROM $response_list WHERE send_id = '{$now_send_id}' LIMIT 1";
+	// 		$res = $db->getOne($sql);
+	// 		$id = $res['id'];
+	// 		$sql = "UPDATE $response_list SET send_id = concat('H','{$cct}',$id) WHERE send_id = '{$now_send_id}'";
+	// 		$res = $db->execute($sql);
+	// 	}
+	// }
 
 	//order_line
 	$sql = "UPDATE $response_list SET order_line = '2' WHERE order_line = '1' AND store = '{$store}' AND post_ok = '1' AND tel_ok = '1' AND sku_ok = '1' AND yfcode_ok='1'";
@@ -177,6 +177,7 @@ if(isset($_GET['onekey_common_order'])){
 	// 查询所有合单号
 	$sql = "SELECT send_id FROM $response_list WHERE store='{$store}' AND order_line = '2' AND send_id LIKE 'H%' GROUP BY send_id";
 	$res3 = $db->getAll($sql);
+
 	$all_one = '';
 	foreach ($res3 as $value) {
 		$all_one = $all_one.'['.$value['send_id'].']';
@@ -202,7 +203,7 @@ if(isset($_GET['onekey_common_order'])){
 		$res = $db->getAll($sql);
 		foreach ($res as $value) {
 			$oms_id = $value['id'];
-			$do = '[本单合单]：'.$send_id;
+			$do = '[请确认合单及最终金额]：'.$send_id;
 			oms_log($u_name,$do,'change_order',$station,$store,$oms_id);
 		}
 	}
@@ -211,7 +212,7 @@ if(isset($_GET['onekey_common_order'])){
 	if($all_one ==''){
 		$do = '[合单]：本次无合单';
 	}else{
-		$do = '[合单]：'.$all_one;
+		$do = '[合单及金额确认]：'.$all_one;
 	}
 	$play = $station.'_order';
 	oms_log($u_name,$do,$play,$station,$store,'-');

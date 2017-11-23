@@ -799,15 +799,38 @@ if(isset($_POST['check_common'])){
 	$store = $_POST['store'];
 	$response_list = $station.'_response_list';
 
-	// 检测ing区是否可以合单
-	$sql = "SELECT count(1) as cc,receive_name FROM $response_list WHERE order_line in ('-2','1') AND store='{$store}' GROUP BY phone,post_code,receive_name";
-	$res =  $db->getAll($sql);
-	foreach ($res as $key => $value) {
+	// 检测ing区是否可以进行合单
+	$sql = "SELECT count(1) as cc,receive_name FROM $response_list WHERE order_line in ('-2','1','2') AND store='{$store}' GROUP BY phone,post_code,receive_name,address";
+	$res1 =  $db->getAll($sql);
+
+	$new_arr1 = array();
+	$new_arr2 = array();
+
+	foreach ($res1 as $key => $value) {
 		if($value['cc'] == 1){
-			unset($res[$key]);
+			// unset($res1[$key]);
+		}else{
+			// 推入新数组
+			array_push($new_arr1,$value['receive_name']);
 		}
 	}
-	echo json_encode($res);
+	$final_res['res1'] = $new_arr1;
+
+	// 检测ing区是否有可能合单，电话、地址不同
+	$sql = "SELECT count(1) as cc,receive_name FROM $response_list WHERE order_line in ('-2','1','2') AND store='{$store}' GROUP BY post_code,receive_name";
+	$res2 =  $db->getAll($sql);
+	foreach ($res2 as $key => $value) {
+		if($value['cc'] == 1){
+			// unset($res2[$key]);
+		}else{
+			// 推入新数组
+			array_push($new_arr2,$value['receive_name']);
+		}
+	}
+	$res2 = array_diff($new_arr2, $new_arr1);
+
+	$final_res['res2'] = $res2;
+	echo json_encode($final_res);
 }
 
 // 合单检测读取
@@ -817,7 +840,7 @@ if(isset($_POST['read_check_common'])){
 	$store = $_POST['store'];
 	$response_list = $station.'_response_list';
 
-	$sql = "SELECT * FROM $response_list WHERE order_line in ('-2','1') AND store='{$store}' AND receive_name = '{$receive_name}'";
+	$sql = "SELECT * FROM $response_list WHERE order_line in ('-2','1','2') AND store='{$store}' AND receive_name = '{$receive_name}'";
 	$res =  $db->getAll($sql);
 	echo json_encode($res);
 }
@@ -929,7 +952,7 @@ if(isset($_POST['hand_break'])){
 	$response_list = $station.'_response_list';
 	$response_info = $station.'_response_info';
 
-	if($station == 'p_yahoo'){
+	// if($station == 'p_yahoo'){
 		// 查询出send_id进行金额回执
 		$sql = "SELECT send_id FROM $response_list WHERE order_id IN ($my_checked_items) AND store = '{$store}'";
 		$res = $db->getOne($sql);
@@ -971,7 +994,7 @@ if(isset($_POST['hand_break'])){
 		}
 
 		echo "ok";
-	}
+	// }
 }
 
 // 添加中继料

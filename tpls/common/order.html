@@ -115,7 +115,7 @@
                             list_type = 'common';
                             is_active('active_tools','5')"
                         ng-hide="tool_1 || tool_2 || tool_3">
-                        <i class="fa fa-inbox fa-fw"></i> 合单扣库
+                        <i class="fa fa-inbox fa-fw"></i> 确认扣库
                     </button>
                     
                     <!-- tool_1 日期筛选按钮组 -->
@@ -193,7 +193,7 @@
                             ng-show="tool_2" 
                             ng-click="onekey_common_order();is_active('active_tools','51')"
                             ng-class="{'active':active_tools_51}">
-                            <i class="fa fa-coffee fa-fw"></i> 一键合单
+                            <i class="fa fa-coffee fa-fw"></i> 订单确认
                     </button>
                     <button type="button" 
                             id="active_tools52"
@@ -379,7 +379,7 @@
                 <button ng-disabled="my_checked==''" type="button" ng-click="check_items();del_true='false'" data-animation="am-fade-and-slide-top" data-template-url="/modal/down_item.html" bs-modal="modal" class="btn btn-default btn-sm green">
                     <i class="fa fa-download fa-fw"></i>下载
                 </button>
-                <button ng-show="now_station=='P_Yahoo' && (search_order_line == 'ing' || search_order_line == '-2')" type="button" ng-click="check_common();del_true='false';read_check_common('')" data-animation="am-fade-and-slide-top" data-template-url="/modal/hand_common.html" bs-modal="modal" class="btn btn-default btn-sm green">
+                <button ng-show="search_order_line == 'ing' || search_order_line == '-2'" type="button" ng-click="check_common();del_true='false';read_check_common('')" data-animation="am-fade-and-slide-top" data-template-url="/modal/hand_common.html" bs-modal="modal" class="btn btn-default btn-sm green">
                     <i class="fa fa-inbox fa-fw"></i>手动合单
                 </button>
                 <button ng-show="search_order_line=='-1'" ng-disabled="my_checked==''" ng-click="check_items();del_true='true'" data-animation="am-fade-and-slide-top" data-template-url="/modal/del_item.html" bs-modal="modal" class="btn btn-danger btn-sm">

@@ -1,13 +1,18 @@
 <div class="modal op_yellow" tabindex="-1" role="dialog">
-  <div class="modal-dialog" style="width:1100px;">
+  <div class="modal-dialog" style="width:1150px;">
     <div class="modal-content">
       <div class="modal-header">
         <i class="fa fa-close f20 close" ng-click="$hide()"></i>
         <h4 class="modal-title green"><i class="fa fa-fw fa-inbox"></i> 手动合单 <span class="dark f12">检测到以下客人可以合单：</span></h4>
       </div>
       <div class="mt10 ml10 mr10">
-        <div class="btn-group">
-            <div ng-click="read_check_common(item.receive_name,$index);"  class="btn btn-default btn-sm active_common ac_{{$index}}" ng-repeat="item in can_common_orders">{{ item.receive_name }}</div>
+        <div>
+            <div ng-click="read_check_common(item,$index);"  class="btn btn-default btn-sm active_common ac_{{$index}} mr10 mt10" ng-repeat="item in can_common_orders.res1">{{ item }}</div>
+        </div>
+        <hr>
+        检测到以下客人电话、地址不同，但可以合单：
+        <div>
+            <div ng-click="read_check_common(item,10000);" class="btn btn-danger btn-sm mr10 mt10" ng-repeat="item in can_common_orders.res2">{{ item }}</div>
         </div>
         <table class="tagl table table-hover table-condensed table-bordered f12 mt20" ng-show="one_res_info">
           <tr class="info blue">
@@ -64,7 +69,8 @@
             <td><i class="fa fa-fw fa-sort-numeric-asc"></i></td>
             <td>订单号</td>
             <td>手机号</td>
-            <td>邮编地址</td>
+            <td>邮编</td>
+            <td>地址</td>
             <td>收件人</td>
             <td>客人要求</td>
             <td>金额区</td>
@@ -80,6 +86,7 @@
             <td>{{ item.order_id }}</td>
             <td>{{ item.phone }}</td>
             <td>{{ item.post_code }} <span class="green">{{ item.address | limitTo:3}}</span></td>
+            <td>{{ item.address }}</td>
             <td>{{ item.receive_name }}</td>
             <td>{{ item.buyer_others }}</td>
             <td class="tagr red">
