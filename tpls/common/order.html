@@ -408,7 +408,10 @@
                     <i class="fa fa-undo fa-fw"></i>取回
                 </button>
                 <button ng-show="search_order_line=='ing' && now_station!='Amazon'" ng-disabled="my_checked==''" type="button" data-animation="am-fade-and-slide-right" data-template-url="/modal/pay_ok_back.html" bs-modal="modal"  ng-click="check_items();del_true='false';" class="btn btn-default btn-sm yellow">
-                    <i class="fa fa-jpy fa-fw"></i>转回待支付
+                    <i class="fa fa-undo fa-fw"></i>转回待支付
+                </button>
+                <button ng-show="search_order_line=='ing'" ng-disabled="my_checked==''" type="button" data-animation="am-fade-and-slide-left" data-template-url="/modal/vip_send.html" bs-modal="modal"  ng-click="check_items();del_true='false';" class="btn btn-default btn-sm green">
+                    <i class="fa fa-cubes fa-fw"></i> 优先扣库
                 </button>
             </div>
             <div ng-repeat="item in get_order_list_data track by $index" class="animate slide-left">

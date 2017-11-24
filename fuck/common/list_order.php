@@ -291,6 +291,24 @@ if(isset($_GET['break_common_order'])){
 	echo 'ok';
 }
 
+// vip扣库存
+if(isset($_POST['vip_send'])){
+	$station = strtolower($_POST['station']);
+	$response_list = $station.'_response_list';
+	$response_info = $station.'_response_info';
+	$my_checked_items = $_POST['my_checked_items'];
+
+	// 查询勾选订单是否已经合单验证过
+	$sql = "SELECT count(1) as count FROM $response_list WHERE order_line <> '2' AND order_id IN ($my_checked_items)";
+	$res = $db->getOne($sql);
+	if($res['count'] > 0){
+		echo '勾选不合理，请检查。';
+	}else{
+		// 进行扣库存
+		echo 'ok';
+	}
+}
+
 //扣库存
 if(isset($_POST['sub_repo'])){
 	$today = date('y-m-d',time()); //获取日期
@@ -313,11 +331,19 @@ if(isset($_POST['sub_repo'])){
 		}
 
 	}else{
-		// 单个平台正常店铺发货
-		$store = $_POST['store'];
-		$now_response_list = $now_station.'_response_list';
+		if($sub_repo == 'vip_send'){
+			// vip 发货
+			$store = $_POST['store'];
+			$now_response_list = $now_station.'_response_list';
+			$my_checked_items = $_POST['my_checked_items'];
+			$sql = "SELECT station,send_id FROM $now_response_list WHERE order_line = 2 AND store = '{$store}' AND order_id in ($my_checked_items) GROUP BY send_id";
+		}else{
+			// 单个平台正常店铺发货
+			$store = $_POST['store'];
+			$now_response_list = $now_station.'_response_list';
 
-		$sql = "SELECT station,send_id FROM $now_response_list WHERE order_line = 2 AND store = '{$store}' GROUP BY send_id";
+			$sql = "SELECT station,send_id FROM $now_response_list WHERE order_line = 2 AND store = '{$store}' GROUP BY send_id";
+		}
 	}
 
 	// 按照 send_id 扣库存	

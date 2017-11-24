@@ -1751,4 +1751,47 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         angular.element(dom).val('');
     }
 
+    // vip扣库
+    $scope.vip_send = function(){
+        var post_data = {
+            station:$scope.now_station,
+            store:$scope.now_store_bar,
+            vip_send:'vip_send',
+            my_checked_items:$scope.my_checked_items};
+
+        $http.post('/fuck/common/list_order.php', post_data).success(function(data) {
+            if(data == 'ok'){
+                // $scope.plug_alert('success','验证完成，正在扣库。','fa fa-smile-o');
+                $scope.start_vip_send();
+            }else{
+                $log.info(data);
+                $scope.plug_alert('danger',data,'fa fa-ban');
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:vip扣库。");
+        });
+    }
+
+    // 开始VIP扣库
+    $scope.start_vip_send = function(){
+        var post_data = {
+            station:$scope.now_station,
+            store:$scope.now_store_bar,
+            sub_repo:'vip_send',
+            my_checked_items:$scope.my_checked_items};
+        $http.post('/fuck/common/list_order.php', post_data).success(function(data) {
+            if(data == 'ok'){
+                $scope.plug_alert('success','扣库完成。','fa fa-smile-o');
+                $scope.to_page($scope.now_page);
+            }else{
+                $log.info(data);
+                $scope.plug_alert('danger',data,'fa fa-ban');
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:vip扣库。");
+        });
+    }
+
 }])
