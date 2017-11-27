@@ -35,10 +35,10 @@ myFilters.filter('no_sum', function(){
 
 myFilters.filter('store', function(){
     return function(item){
-        if(item == 'ULTRA光ヤフオク!店'){
+        if(item == 'antoanto7883-yahoo-auction'){
             return '7883';
         }
-        if(item == 'safety-eye'){
+        if(item == 'mac7428-yahoo-auction'){
             return '7428';
         }
     };
