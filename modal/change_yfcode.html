@@ -1,0 +1,51 @@
+<div class="modal" tabindex="-1" role="dialog" ng-controller="yfcodeCtrl">
+    <div class="modal-dialog" style="width:600px;">
+        <div class="modal-content">
+            <div class="modal-header modal-drag">
+                <i class="fa fa-close f20 close" ng-click="$hide()"></i>
+                <h4 class="modal-title blue"><span class="red">{{now_cg_yfcode}}</span> <i class="fa fa-fw fa-edit"></i> 修改运费代码  </h4>
+            </div>
+            <div class="modal-body">
+                <table class="tagl table table-hover table-bordered table-condensed">
+                    <tr>
+                        <td class="s_gray" style="width:30%">优先级</td>
+                        <td class="s_gray">
+                            <input type="number" ng-value="now_level" id='new_level'>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="s_gray">
+                        包裹类型</td>
+                        <td class="s_gray">
+                            <select class="btn btn-default btn-sm selecter" id="new_send_method">
+                                <option ng-selected="now_send_method=='宅配便'" value="宅配便">宅配便</option>
+                                <option ng-selected="now_send_method=='DM便'" value="DM便">DM便</option>
+                                <option ng-selected="now_send_method=='ネコポス'" value="ネコポス">ネコポス</option>
+                            </select>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="s_gray">默认基础运费</td>
+                        <td class="s_gray">
+                            <input type="number" ng-value="now_default_yf" id='new_default_yf'>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="s_gray">默认单件运费</td>
+                        <td class="s_gray">
+                            <input type="number" ng-value="now_default_one_yf" id='new_default_one_yf'>
+                        </td>
+                    </tr>
+                </table>
+                <div class="clearfix"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" ng-click="save_cg_yfcode();$hide()"><i class="fa fa-save"></i> 保 存</button>
+                <button type="button" class="btn btn-default" ng-click="$hide()">关 闭</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -13,7 +13,8 @@
 				<div class="btn btn-default btn-sm">
 					<select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="send_method" ng-change="change_search_field()">
 						<option value="">配送方式 ..</option>
-						<option value="メール便">メール便</option>
+						<option value="DM便">DM便</option>
+						<option value="ネコポス">ネコポス</option>
 						<option value="宅配便">宅配便</option>
 					</select>
 				</div>
@@ -58,6 +59,7 @@
 						<td><div class="btn btn-primary btn-xs" data-animation="am-fade-and-slide-top" data-template-url="/modal/yf_code.html" bs-modal="modal" ng-click="change_yfcode = item.yf_code_name;get_spe_list(item.yf_code_name)">查看</div></td>
 						<td ng-class="{'green success':item.status==1,'red danger':item.status==0}">{{item.status | status}} <i class="blue pointer fa fa-hand-pointer-o fa-fw" ng-click="change_status(item.id,'status')"></i></td>
 						<td>
+							<button class="btn btn-primary btn-xs mr5" data-animation="am-fade-and-slide-top" data-template-url="/modal/change_yfcode.html" bs-modal="modal" ng-click="cg_yfcode(item.yf_code_name,item.level,item.default_yf,item.default_one_yf,item.send_method)"><i class="fa fa-edit fa-fw"></i>修 改</button>
 							<button class="btn btn-default btn-xs mr5" ng-click="is_del=!is_del"><i class="fa fa-question-circle fa-fw"></i>删 除</button>
               				<button class="btn btn-danger btn-xs" ng-disabled="!is_del" ng-click="del_yfcode(item.id)"><i class="fa fa-trash-o fa-fw"></i>删 除</button>
               			</td>

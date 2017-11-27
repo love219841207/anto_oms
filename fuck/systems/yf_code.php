@@ -85,3 +85,16 @@ if(isset($_GET['add_spe_yfcode'])){
 	$res = $db->execute($sql);
 	echo 'ok';
 }
+
+
+// 运费代码参数修改
+if(isset($_GET['save_cg_yfcode'])){
+	$save_cg_yfcode = $_GET['save_cg_yfcode'];
+	$new_send_method = $_GET['new_send_method'];
+	$new_level = $_GET['new_level'];
+	$new_default_yf = $_GET['new_default_yf'];
+	$new_default_one_yf = $_GET['new_default_one_yf'];
+	$sql = "UPDATE yf_code SET level = '{$new_level}',send_method = '{$new_send_method}',default_yf = '{$new_default_yf}',default_one_yf = '{$new_default_one_yf}' WHERE yf_code_name = '{$save_cg_yfcode}'";
+	$res = $db->execute($sql);
+	echo 'ok';
+}

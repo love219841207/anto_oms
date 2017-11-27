@@ -13,7 +13,7 @@ app.controller('yfcodeCtrl', ['$scope','$state','$http','$log','$timeout', funct
             }
         }
         
-    }
+    };
 
     // 读取运费代码表
     $scope.get_table = function(){
@@ -29,7 +29,7 @@ app.controller('yfcodeCtrl', ['$scope','$state','$http','$log','$timeout', funct
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
         });
-    }
+    };
     $scope.get_table();
 
 
@@ -64,7 +64,7 @@ app.controller('yfcodeCtrl', ['$scope','$state','$http','$log','$timeout', funct
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
         });
-    }
+    };
 
     // 开启关闭状态及COD
     $scope.change_status = function(id,field){
@@ -85,7 +85,7 @@ app.controller('yfcodeCtrl', ['$scope','$state','$http','$log','$timeout', funct
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
         });
-    }
+    };
 
     // 删除运费代码
     $scope.del_yfcode = function(id){
@@ -105,7 +105,7 @@ app.controller('yfcodeCtrl', ['$scope','$state','$http','$log','$timeout', funct
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
         });
-    }
+    };
 
     // 读取地区
     $scope.get_area = function(){
@@ -118,7 +118,7 @@ app.controller('yfcodeCtrl', ['$scope','$state','$http','$log','$timeout', funct
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
         });
-    }
+    };
     $scope.get_area();
 
     // 特殊运费代码 - - - - - - - - - - - - - - - - - - -
@@ -134,7 +134,7 @@ app.controller('yfcodeCtrl', ['$scope','$state','$http','$log','$timeout', funct
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
         });
-    }
+    };
 
     // 新增
     $scope.add_spe_yfcode = function(){
@@ -158,7 +158,7 @@ app.controller('yfcodeCtrl', ['$scope','$state','$http','$log','$timeout', funct
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
         });
-    }
+    };
 
     // 删除
     $scope.del_spe = function(id){
@@ -173,7 +173,47 @@ app.controller('yfcodeCtrl', ['$scope','$state','$http','$log','$timeout', funct
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
         });
-    }
+    };
 
+    // 修改运费代码
+    $scope.cg_yfcode = function(now_cg_yfcode,now_level,now_default_yf,now_default_one_yf,now_send_method){
+        $scope.now_cg_yfcode = now_cg_yfcode;
+        $scope.now_send_method = now_send_method;
+        $scope.now_level = now_level;
+        $scope.now_default_yf = now_default_yf;
+        $scope.now_default_one_yf = now_default_one_yf;
+    };
 
-}])
+    // 保存修改的运费代码
+    $scope.save_cg_yfcode = function(){
+
+        var dom1 = document.querySelector('#new_level');
+        var new_level = angular.element(dom1).val();
+        var dom2 = document.querySelector('#new_send_method');
+        var new_send_method = angular.element(dom2).val();
+        var dom3 = document.querySelector('#new_default_yf');
+        var new_default_yf = angular.element(dom3).val();
+        var dom4 = document.querySelector('#new_default_one_yf');
+        var new_default_one_yf = angular.element(dom4).val();
+
+        $http.get('/fuck/systems/yf_code.php', {
+            params:{
+                save_cg_yfcode:$scope.now_cg_yfcode,
+                new_level:new_level,
+                new_send_method:new_send_method,
+                new_default_yf:new_default_yf,
+                new_default_one_yf:new_default_one_yf
+            }
+        }).success(function(data) {
+            if(data == 'ok'){
+                var time=new Date().getTime();
+                $state.go('site.yf_code',{data:time});
+            }else{
+                $scope.plug_alert('danger',data,'fa fa-ban');
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+        });
+    };
+
+}]);
