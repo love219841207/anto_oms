@@ -33,6 +33,7 @@
 			<!-- <td>INFO-ID</td> -->
 			<td>快递公司</td>
 			<td>配送方式</td>
+			<td>运费代码</td>
 			<td>包裹ID</td>
 			<!-- <td>SKU（出品SKU，客人看）</td> -->
 			<td>商品代码</td>
@@ -55,7 +56,7 @@
 		<tr class="am-fade-and-slide-right s_gray" ng-repeat="item in send_table track by $index">
 
 			<td class="tagc">{{$index+1}}</td>
-			<td>{{item.send_id}}</td>
+			<td ng-class="{'red warning':item.send_id.indexOf('H') >= 0}">{{item.send_id}}</td>
 			<td>{{item.store_name}}</td>
 			<td class="red">{{item.import_day}}</td>
 			<td ng-class="{'green':item.table_status=='1'}">{{item.order_id}}</td>
@@ -63,6 +64,7 @@
 			<!-- <td>{{item.info_id}}</td> -->
 			<td>{{item.express_company}} <i class="fa fa-edit pointer" data-animation="am-fade-and-slide-top" data-template-url="/modal/change_company.html" bs-modal="modal" ng-click="new_company=item.express_company;new_method=item.send_method"></i></td>
 			<td>{{item.send_method}}</td>
+			<td>{{item.yfcode}}</td>
 			<td>{{item.pack_id}}</td>
 			<!-- <td>{{item.sku}}</td> -->
 			<td ng-class="{'red danger':item.error_info=='no_sku'}">{{item.goods_code}}

@@ -116,24 +116,20 @@ if(isset($_GET['sell_detail_table'])){
     $j=2;
     $o_who_name = '';
     $o_receive_name = '';
+    $o_send_id = '';
     foreach ($res as $key => $value) {
         if($value['order_id'] == '0'){
             continue;
         }
         $k = $value['total_money'] - $value['point'] - $value['cheap'];
-        if($value['who_name'] == $o_who_name){
+
+        if($value['send_id'] == $o_send_id){
             $value['who_name'] = '';
             $value['ems_money'] = '';
             $value['bill'] = '';
             $value['tax'] = '';
             $value['point'] = '';
             $value['cheap'] = '';
-            $k = '';
-        }else{
-            $o_who_name = $value['who_name'];
-        }
-        
-        if($value['receive_name'] == $o_receive_name){
             $value['receive_name'] = '';
             $value['ems_money'] = '';
             $value['bill'] = '';
@@ -141,8 +137,9 @@ if(isset($_GET['sell_detail_table'])){
             $value['point'] = '';
             $value['cheap'] = '';
             $k = '';
+
         }else{
-            $o_receive_name = $value['receive_name'];
+            $o_send_id = $value['send_id'];
         }
 
         $objSheet->setCellValue("A".$j,$value['who_name'])

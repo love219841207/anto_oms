@@ -123,10 +123,6 @@ function reset_express(){
 	$sql = "UPDATE send_table SET send_method = '宅配便' WHERE send_method = '宅急便' AND has_pack = '0'";
 	$res = $db->execute($sql);
 
-	// 如果是乐天重置配送方式
-	$sql = "UPDATE send_table SET send_method = 'メール便' WHERE send_method in ('DM便','ネコポス') AND station = 'rakuten'";
-	$res = $db->execute($sql);
-
 	// item_line
 	$sql = "UPDATE send_table SET item_line = '0' WHERE has_pack = '0'";
 	$res = $db->execute($sql);
@@ -140,7 +136,7 @@ function amz_mail_own_key(){
 	$sql = "UPDATE send_table SET send_method = '宅配便' WHERE station = 'amazon' AND has_pack = '0'";
 	$res = $db->execute($sql);
 
-	// 检索amz_mail库
+	// 检索amz_mail库的 DM便
 	$sql = "SELECT goods_code FROM amz_mail WHERE mail_type = 'DM便' ORDER BY ID";
 	$res = $db->getAll($sql);
 	$amz_mail = array();
@@ -149,11 +145,11 @@ function amz_mail_own_key(){
 	}
 	$amz_mail = implode(',', $amz_mail);
 
-	// 改mail便 
+	// 改亚马逊 mail便 的为DM便
 	$sql = "UPDATE send_table SET send_method = 'DM便',express_company = 'ヤマト運輸' WHERE goods_code in ($amz_mail) AND station = 'amazon' AND has_pack = '0'";
 	$res = $db->execute($sql);
 
-	// 检索amz_mail库
+	// 检索amz_mail库的 乃口pos
 	$sql = "SELECT goods_code FROM amz_mail WHERE mail_type = 'ネコポス' ORDER BY ID";
 	$res = $db->getAll($sql);
 	$amz_mail1 = array();
@@ -194,7 +190,7 @@ function make_bags(){
 		}
 	}
 
-	// 同捆中存在mail便和宅配则改为宅配
+	// 同捆中存在ネコポス便和宅配则改为宅配
 	$sql = "SELECT pack_id,count(1) as cct FROM send_table WHERE has_pack = '0' GROUP BY pack_id";
 	$res = $db->getAll($sql);
 	foreach ($res as $val) {
@@ -207,40 +203,16 @@ function make_bags(){
 			$res = $db->getOne($sql);
 			$zpb = $res['zpb'];
 			if($zpb > 0){	//如果至少有一单宅配
-				$sql = "SELECT count(1) as dmb FROM send_table WHERE send_method = 'メール便' AND pack_id = '{$pid}'";
+				$sql = "SELECT count(1) as dmb FROM send_table WHERE send_method = 'ネコポス' AND pack_id = '{$pid}'";
 				$res = $db->getOne($sql);
 				$dmb = $res['dmb'];
-				if($dmb > 0){	//如果至少有一单DM便
+				if($dmb > 0){	//如果至少有一单ネコポス
 					$sql = "UPDATE send_table SET send_method = '宅配便',express_company = '' WHERE pack_id = '{$pid}'";
 					$res = $db->execute($sql);
 				}
 			}	
 		}
 	}
-
-	// mail便更新DM便
-	$sql = "SELECT goods_code FROM amz_mail WHERE mail_type = 'DM便' ORDER BY ID";
-	$res = $db->getAll($sql);
-	$amz_mail = array();
-	foreach ($res as $value) {
-		array_push($amz_mail, "'".$value['goods_code']."'");
-	}
-	$amz_mail = implode(',', $amz_mail);
-	$sql = "UPDATE send_table SET send_method = 'DM便',express_company = 'ヤマト運輸' WHERE goods_code in ($amz_mail) AND has_pack = '0' AND send_method='メール便'";
-	$res = $db->execute($sql);
-
-	// 更新乃口pos
-	$sql = "SELECT goods_code FROM amz_mail WHERE mail_type = 'ネコポス' ORDER BY ID";
-	$res = $db->getAll($sql);
-	$amz_mail = array();
-	foreach ($res as $value) {
-		array_push($amz_mail, "'".$value['goods_code']."'");
-	}
-	$amz_mail = implode(',', $amz_mail);
-
-	// 改mail便 
-	$sql = "UPDATE send_table SET send_method = 'ネコポス',express_company = 'ヤマト運輸' WHERE goods_code in ($amz_mail) AND send_method = 'メール便' AND has_pack = '0'";
-	$res = $db->execute($sql);
 
 	// 这里判断 一单包括 DM便 和 乃口pos 的情况
 	$sql = "SELECT pack_id,count(1) as cct FROM send_table WHERE has_pack = '0' GROUP BY pack_id";
@@ -325,37 +297,6 @@ function make_bags(){
 			$res = $db->execute($sql);
 			$sql = "INSERT INTO send_table (goods_code,who_name,send_id,pack_id,pack_count,repo_status,import_day,oms_id,info_id,order_id,store_name,station,express_company,send_method,who_house,who_tel,who_post,other_1)VALUES('bag (3/3)','{$who_name}',concat('{$send_id}','-3'),'{$p_b}','{$p_b}','{$repo_status}','{$import_day}',0,0,0,'{$store_name}','{$station}','{$express_company}','{$send_method}','{$who_house}','{$who_tel}','{$who_post}','add')";
 			$res = $db->execute($sql);
-		// }elseif (2401 > $sum_own_key AND $sum_own_key > 1800) {	
-		// 	$ppc = $pack_id.'(1/4)';
-		// 	$sql = "UPDATE send_table SET pack_id = '{$ppc}' WHERE pack_id = '{$pack_id}'";
-		// 	$res = $db->execute($sql);
-		// 	// 增加三个包裹
-		// 	$p_a = $pack_id.'(2/4)';
-		// 	$p_b = $pack_id.'(3/4)';
-		// 	$p_c = $pack_id.'(4/4)';
-		// 	$sql = "INSERT INTO send_table (goods_code,who_name,send_id,pack_id,pack_count,repo_status,import_day,oms_id,info_id,order_id,store_name,station,express_company,send_method,who_house,who_tel,who_post,other_1)VALUES('bag (2/4)','{$who_name}',concat('{$send_id}','-2'),'{$p_a}','{$p_a}','{$repo_status}','{$import_day}',0,0,0,'{$store_name}','{$station}','{$express_company}','{$send_method}','{$who_house}','{$who_tel}','{$who_post}','add')";
-		// 	$res = $db->execute($sql);
-		// 	$sql = "INSERT INTO send_table (goods_code,who_name,send_id,pack_id,pack_count,repo_status,import_day,oms_id,info_id,order_id,store_name,station,express_company,send_method,who_house,who_tel,who_post,other_1)VALUES('bag (3/4)','{$who_name}',concat('{$send_id}','-3'),'{$p_b}','{$p_b}','{$repo_status}','{$import_day}',0,0,0,'{$store_name}','{$station}','{$express_company}','{$send_method}','{$who_house}','{$who_tel}','{$who_post}','add')";
-		// 	$res = $db->execute($sql);
-		// 	$sql = "INSERT INTO send_table (goods_code,who_name,send_id,pack_id,pack_count,repo_status,import_day,oms_id,info_id,order_id,store_name,station,express_company,send_method,who_house,who_tel,who_post,other_1)VALUES('bag (4/4)','{$who_name}',concat('{$send_id}','-4'),'{$p_c}','{$p_c}','{$repo_status}','{$import_day}',0,0,0,'{$store_name}','{$station}','{$express_company}','{$send_method}','{$who_house}','{$who_tel}','{$who_post}','add')";
-		// 	$res = $db->execute($sql);
-		// }elseif (3001 > $sum_own_key AND $sum_own_key > 2400) {
-		// 	$ppc = $pack_id.'(1/5)';
-		// 	$sql = "UPDATE send_table SET pack_id = '{$ppc}' WHERE pack_id = '{$pack_id}'";
-		// 	$res = $db->execute($sql);
-		// 	// 增加四个包裹
-		// 	$p_a = $pack_id.'(2/5)';
-		// 	$p_b = $pack_id.'(3/5)';
-		// 	$p_c = $pack_id.'(4/5)';
-		// 	$p_d = $pack_id.'(5/5)';
-		// 	$sql = "INSERT INTO send_table (goods_code,who_name,send_id,pack_id,pack_count,repo_status,import_day,oms_id,info_id,order_id,store_name,station,express_company,send_method,who_house,who_tel,who_post,other_1)VALUES('bag (2/5)','{$who_name}',concat('{$send_id}','-2'),'{$p_a}','{$p_a}','{$repo_status}','{$import_day}',0,0,0,'{$store_name}','{$station}','{$express_company}','{$send_method}','{$who_house}','{$who_tel}','{$who_post}','add')";
-		// 	$res = $db->execute($sql);
-		// 	$sql = "INSERT INTO send_table (goods_code,who_name,send_id,pack_id,pack_count,repo_status,import_day,oms_id,info_id,order_id,store_name,station,express_company,send_method,who_house,who_tel,who_post,other_1)VALUES('bag (3/5)','{$who_name}',concat('{$send_id}','-3'),'{$p_b}','{$p_b}','{$repo_status}','{$import_day}',0,0,0,'{$store_name}','{$station}','{$express_company}','{$send_method}','{$who_house}','{$who_tel}','{$who_post}','add')";
-		// 	$res = $db->execute($sql);
-		// 	$sql = "INSERT INTO send_table (goods_code,who_name,send_id,pack_id,pack_count,repo_status,import_day,oms_id,info_id,order_id,store_name,station,express_company,send_method,who_house,who_tel,who_post,other_1)VALUES('bag (4/5)','{$who_name}',concat('{$send_id}','-4'),'{$p_c}','{$p_c}','{$repo_status}','{$import_day}',0,0,0,'{$store_name}','{$station}','{$express_company}','{$send_method}','{$who_house}','{$who_tel}','{$who_post}','add')";
-		// 	$res = $db->execute($sql);
-		// 	$sql = "INSERT INTO send_table (goods_code,who_name,send_id,pack_id,pack_count,repo_status,import_day,oms_id,info_id,order_id,store_name,station,express_company,send_method,who_house,who_tel,who_post,other_1)VALUES('bag (5/5)','{$who_name}',concat('{$send_id}','-5'),'{$p_d}','{$p_d}','{$repo_status}','{$import_day}',0,0,0,'{$store_name}','{$station}','{$express_company}','{$send_method}','{$who_house}','{$who_tel}','{$who_post}','add')";
-		// 	$res = $db->execute($sql);
 		}elseif (1800 < $sum_own_key){
 			// 转宅配
 			$sql = "UPDATE send_table SET express_company = '',send_method = '宅配便' WHERE pack_id = '{$pack_id}'";
@@ -410,17 +351,6 @@ function make_bags(){
 			$p_a = $pack_id.'(2/2)';
 			$sql = "INSERT INTO send_table (goods_code,who_name,send_id,pack_id,pack_count,repo_status,import_day,oms_id,info_id,order_id,store_name,station,express_company,send_method,who_house,who_tel,who_post,other_1)VALUES('bag (2/2)','{$who_name}',concat('{$send_id}','-2'),'{$p_a}','{$p_a}','{$repo_status}','{$import_day}',0,0,0,'{$store_name}','{$station}','{$express_company}','{$send_method}','{$who_house}','{$who_tel}','{$who_post}','add')";
 			$res = $db->execute($sql);
-		// }elseif (1801 > $sum_own_key AND $sum_own_key > 1200) {		
-		// 	$ppc = $pack_id.'(1/3)';
-		// 	$sql = "UPDATE send_table SET pack_id = '{$ppc}' WHERE pack_id = '{$pack_id}'";
-		// 	$res = $db->execute($sql);
-		// 	// 增加两个包裹
-		// 	$p_a = $pack_id.'(2/3)';
-		// 	$p_b = $pack_id.'(3/3)';
-		// 	$sql = "INSERT INTO send_table (goods_code,who_name,send_id,pack_id,pack_count,repo_status,import_day,oms_id,info_id,order_id,store_name,station,express_company,send_method,who_house,who_tel,who_post,other_1)VALUES('bag (2/3)','{$who_name}',concat('{$send_id}','-2'),'{$p_a}','{$p_a}','{$repo_status}','{$import_day}',0,0,0,'{$store_name}','{$station}','{$express_company}','{$send_method}','{$who_house}','{$who_tel}','{$who_post}','add')";
-		// 	$res = $db->execute($sql);
-		// 	$sql = "INSERT INTO send_table (goods_code,who_name,send_id,pack_id,pack_count,repo_status,import_day,oms_id,info_id,order_id,store_name,station,express_company,send_method,who_house,who_tel,who_post,other_1)VALUES('bag (3/3)','{$who_name}',concat('{$send_id}','-3'),'{$p_b}','{$p_b}','{$repo_status}','{$import_day}',0,0,0,'{$store_name}','{$station}','{$express_company}','{$send_method}','{$who_house}','{$who_tel}','{$who_post}','add')";
-		// 	$res = $db->execute($sql);
 		}elseif (1200 < $sum_own_key){
 			// 转宅配
 			$sql = "UPDATE send_table SET express_company = '',send_method = '宅配便' WHERE pack_id = '{$pack_id}'";
@@ -449,7 +379,7 @@ if(isset($_GET['packing'])){
 	$sql = "UPDATE send_table SET pack_id = oms_id,pack_count = '' WHERE has_pack = '0'";
 	$res = $db->execute($sql);
 
-	// 如果是合单
+	// 如果是合单的 pack_id
 	$sql = "SELECT send_id FROM send_table WHERE has_pack = '0' AND item_line = '0' AND send_id LIKE 'H%' GROUP BY send_id";
 	$res = $db->getAll($sql);
 	foreach ($res as $value) {
@@ -473,27 +403,46 @@ if(isset($_GET['packing'])){
 	$sql = "UPDATE send_table SET pack_id = concat('P',pack_id) WHERE station = 'p_yahoo' AND has_pack = '0'";
 	$res = $db->execute($sql);
 
-	// 分包裹
-	make_bags();
-
-	//先变成佐川
-	$sql = "UPDATE send_table SET express_company ='佐川急便' WHERE express_company ='' or express_company ='无' AND has_pack = '0'";
+	// 先变成佐川
+	$sql = "UPDATE send_table SET express_company = '佐川急便' WHERE express_company = '' or express_company = '无' AND has_pack = '0'";
 	$res = $db->execute($sql);
 
 	// 如果是乐天,客人指定的配送方式
-	$sql = "UPDATE send_table SET express_company = 'ヤマト運輸',send_method = 'DM便' WHERE send_method = 'メール便' AND station = 'rakuten'";
+	// $sql = "UPDATE send_table SET express_company = 'ヤマト運輸',send_method = 'DM便' WHERE send_method = 'メール便' AND station = 'rakuten'";
+	// $res = $db->execute($sql);
+
+	// 其他平台，根据运费代码进行配送方式分配，同步运费代码
+
+	// 乐天
+	$sql = "UPDATE send_table send,rakuten_response_info info SET send.yfcode = info.yfcode WHERE send.info_id = info.id AND send.station = 'rakuten'";
 	$res = $db->execute($sql);
 
-	//地址分配配送公司，更新黑猫地址	（神奈川県，埼玉県，茨城県，群馬県，山梨県）
+	// 拍卖
+	$sql = "UPDATE send_table send,p_yahoo_response_info info SET send.yfcode = info.yfcode WHERE send.info_id = info.id AND send.station = 'p_yahoo'";
+	$res = $db->execute($sql);
+
+	// 雅虎？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？
+	// $sql = "UPDATE send_table send,yahoo_response_info info SET send.yfcode = info.yfcode WHERE send.info_id = info.id AND send.station = 'yahoo'";
+	// $res = $db->execute($sql);
+
+	// 运费代码配送方式
+	$sql = "UPDATE send_table send,yf_code yf SET send.send_method = yf.send_method WHERE send.yfcode = yf.yf_code_name";
+	$res = $db->execute($sql);
+
+
+	// 所有的mail发黑猫
+	$sql = "UPDATE send_table SET express_company = 'ヤマト運輸' WHERE  send_method in ('DM便','ネコポス') AND has_pack = '0'";
+	$res = $db->execute($sql);
+	
+	// 地址分配配送公司，更新黑猫地址	（神奈川県，埼玉県，茨城県，群馬県，山梨県）
 	$sql = "UPDATE send_table SET express_company = 'ヤマト運輸',send_method = '宅急便' WHERE has_pack = '0' AND send_method = '宅配便' AND (who_house LIKE '%神奈川県%' OR who_house LIKE '%埼玉県%' OR who_house LIKE '%茨城県%' OR who_house LIKE '%群馬県%' OR who_house LIKE '%山梨県%')";
 	$res = $db->execute($sql);
 
+	// 分包裹
+	make_bags();
+
 	// item_line
 	$sql = "UPDATE send_table SET item_line = '1'";
-	$res = $db->execute($sql);
-
-	// 更新单号和快递日期到list表 三个平台次更新 
-	$sql = "UPDATE amazon_response_list list,send_table send SET list.express_company = send.express_company,list.send_method = send.send_method WHERE list.order_id = send.order_id";
 	$res = $db->execute($sql);
 
 	echo 'ok';
