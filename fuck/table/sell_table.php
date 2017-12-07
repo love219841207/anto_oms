@@ -141,6 +141,9 @@ if(isset($_GET['sell_detail_table'])){
         }else{
             $o_send_id = $value['send_id'];
         }
+        // 替换[]
+        $value['who_name'] = preg_replace('/\[.*?\]/', '', $value['who_name']);
+        $value['receive_name'] = preg_replace('/\[.*?\]/', '', $value['receive_name']);
 
         $objSheet->setCellValue("A".$j,$value['who_name'])
                 ->setCellValue("B".$j,$value['receive_name'])
