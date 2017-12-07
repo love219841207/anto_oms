@@ -27,11 +27,11 @@ if(isset($_POST['order_table'])){
     $objSheet = $objPHPExcel->getActiveSheet();
     $objSheet->setTitle('订单@'.$now_time);//表名
     $objSheet->getDefaultStyle()->getFont()->setName("微软雅黑")->setSize(12);  //默认字体
-    $objPHPExcel->getActiveSheet()->getStyle('A1:AG1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
-    $objPHPExcel->getActiveSheet()->getStyle('A:AG')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
-    $objPHPExcel->getActiveSheet()->getStyle('A1:AG1')->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_WHITE);//前景色
-    $objSheet->getStyle('A1:AG1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
-    $objSheet->getStyle('A1:AG1')->getFill()->getStartColor()->setRGB('1d9c73'); //背景色
+    $objPHPExcel->getActiveSheet()->getStyle('A1:AH1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
+    $objPHPExcel->getActiveSheet()->getStyle('A:AH')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
+    $objPHPExcel->getActiveSheet()->getStyle('A1:AH1')->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_WHITE);//前景色
+    $objSheet->getStyle('A1:AH1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+    $objSheet->getStyle('A1:AH1')->getFill()->getStartColor()->setRGB('1d9c73'); //背景色
     // $objSheet->getDefaultRowDimension()->setRowHeight(28);   //单元格高
     // $objSheet->getColumnDimension('A')->setWidth(34);//单元格宽
     $objSheet->freezePane('A2');//冻结表头
@@ -71,6 +71,7 @@ if(isset($_POST['order_table'])){
             ->setCellValue("AE1","指定日期")
             ->setCellValue("AF1","指定时间")
             ->setCellValue("AG1","订单状态")
+            ->setCellValue("AH1","落扎者ID")
             ;    //表头值
         //SQL
 
@@ -108,7 +109,8 @@ if(isset($_POST['order_table'])){
                 0, #客人备注
                 list.want_date, #指定日期
                 list.want_time, #指定时间
-                list.order_line #指定时间
+                list.order_line, #指定时间
+                list.who_id
          FROM $response_list list,$response_info info WHERE list.order_id = info.order_id AND list.order_id in ($my_checked_items)";
          }else{
                     $sql = "SELECT 
@@ -144,7 +146,8 @@ if(isset($_POST['order_table'])){
                 list.buyer_others, #客人备注
                 list.want_date, #指定日期
                 list.want_time, #指定时间
-                list.order_line #指定时间
+                list.order_line, #指定时间
+                list.who_id
          FROM $response_list list,$response_info info WHERE list.order_id = info.order_id AND list.order_id in ($my_checked_items)";
          }
          $res = $db->getAll($sql);
@@ -215,10 +218,11 @@ if(isset($_POST['order_table'])){
                     ->setCellValue("AA".$j,$value['cod_money'])
                     ->setCellValue("AB".$j,$value['syn_day'])
                     ->setCellValue("AC".$j,$value['send_method'])
-                    ->setCellValue("AD".$j,$value['buyer_others'])
+                    ->setCellValue("AD".$j,@$value['buyer_others'])
                     ->setCellValue("AE".$j,$value['want_date'])
                     ->setCellValue("AF".$j,$value['want_time'])
                     ->setCellValue("AG".$j,$value['order_line'])
+                    ->setCellValue("AH".$j,$value['who_id'])
                     ;
             $j++;
         }
