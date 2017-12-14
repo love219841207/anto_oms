@@ -167,6 +167,9 @@ if(isset($_GET['change_list_field'])){
 	}
 	if($field_name == 'pay_money'){
 		$ch_field = '支付金额';
+		//修改发货区的支付金额
+		$sql = "UPDATE send_table SET due_money = '{$new_key}' WHERE order_id = '{$order_id}'";
+		$res = $db->execute($sql);
 		$sql = "UPDATE $response_list SET $field_name = '{$new_key}' WHERE order_id = '{$order_id}'";
 	}
 	if($field_name == 'shipping_price'){
