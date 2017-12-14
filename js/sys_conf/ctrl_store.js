@@ -178,12 +178,12 @@ app.controller('storeCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             params:{
                 update_conf:$scope.conf_store_station,
                 store_name:$scope.conf_store_modal_title,
-                // mail_name:$scope.mail_name,
-                // mail_id:$scope.mail_id,
-                // mail_pwd:$scope.mail_pwd,
-                // mail_smtp:$scope.mail_smtp,
-                // mail_port:$scope.mail_port,
-                // mail_answer_addr:$scope.mail_answer_addr,
+                mail_name:$scope.mail_name,
+                mail_id:$scope.mail_id,
+                mail_pwd:$scope.mail_pwd,
+                mail_smtp:$scope.mail_smtp,
+                mail_port:$scope.mail_port,
+                mail_answer_addr:$scope.mail_answer_addr,
                 mail_over_send:$scope.mail_over_send,
                 use_yfcode:$scope.use_yfcode
             }
@@ -194,6 +194,7 @@ app.controller('storeCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             $log.info(data);
         });
     };
+    
     // 保存乐天店铺配置
     $scope.save_rakuten_conf = function(){
         $http.get('/fuck/systems/store_manage.php', {
@@ -594,6 +595,38 @@ app.controller('storeCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
                         my_checked_items:$scope.my_checked_items};
 
                         $http.post('/fuck/mail/pyahoo_send_mail.php', post_data).success(function(data) {
+                            if(data == 'ok'){
+                                $scope.plug_alert('success','已经提交发信。','fa fa-smile-o');
+                            }else{
+                                $log.info(data);
+                                $scope.plug_alert('danger','发信失败，请联系管理员。','fa fa-ban');
+                            }
+                    $timeout(function(){$scope.shadow('close');},500); //关闭shadow
+                }).error(function(data) {
+                    alert("系统错误，请联系管理员。");
+                    $log.info("error:发信失败。");
+                });
+            }else{
+                $scope.plug_alert('danger','保存失败，请重试。','fa fa-ban');
+            }
+        },5000);
+
+    };
+
+    $scope.yahoo_mail_custom_items = function(){
+
+            // $log.info($scope.my_checked_items);
+            $timeout(function(){
+                if($scope.can_custom == '1'){
+                    $scope.shadow('open','ss_make','Yahoo正在发信，请稍后。');
+                    var post_data = {
+                        send_mail:'yahoo',
+                        store:$scope.now_store_bar,
+                        station:'Yahoo',
+                        mail_tpl:'custom',
+                        my_checked_items:$scope.my_checked_items};
+
+                        $http.post('/fuck/mail/yahoo_send_mail.php', post_data).success(function(data) {
                             if(data == 'ok'){
                                 $scope.plug_alert('success','已经提交发信。','fa fa-smile-o');
                             }else{

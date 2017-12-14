@@ -1,11 +1,13 @@
 <div class="modal" tabindex="-1" role="dialog">
-  <div class="modal-dialog" style="width:1000px;">
+  <div class="modal-dialog" style="width:1200px;">
     <div class="modal-content">
       <div class="modal-header modal-drag">
         <i class="fa fa-close f20 close" ng-click="$hide()"></i>
         <h4 class="modal-title blue"><i class="fa fa-fw fa-info-circle"></i>
+          <span ng-show="now_station=='Yahoo'"> {{item.drives | ya_drives}}</span>
           [{{item.id}}] <span class="dark">{{item.order_line | order_line}}</span> 
-          <span class="red"> {{item.order_id}}</span></h4>
+          <span class="red"> {{item.order_id}}</span>
+          </h4>
       </div>
       <div class="modal-body">
         <table class="tagl table table-hover table-bordered table-condensed" ng-repeat="item in one_res_list track by $index">
@@ -84,11 +86,23 @@
                 <button type="button" class="btn btn-default btn-sm">
                   <select id="payment_method" class="selecter" ng-model="payment_method">
                     <option value="">更改为...</option>
-                    <option value="クレジットカード">クレジットカード</option>
-                    <option value="楽天バンク決済">楽天バンク決済</option>
-                    <option value="銀行振込">銀行振込</option>
-                    <option value="楽天Edy決済">楽天Edy決済</option>
                     <option value="COD">COD</option>
+                    <option ng-show="now_station == 'Rakuten'" value="クレジットカード">クレジットカード</option>
+                    <option ng-show="now_station == 'Rakuten'" value="楽天バンク決済">楽天バンク決済</option>
+                    <option ng-show="now_station == 'Rakuten'" value="銀行振込">銀行振込</option>
+                    <option ng-show="now_station == 'Rakuten'" value="楽天Edy決済">楽天Edy決済</option>
+                    <option ng-show="now_station == 'P_Yahoo'" value="Yahoo!かんたん">Yahoo!かんたん</option>
+                    <option ng-show="now_station == 'Yahoo'" value="Yahoo!マネー/預金払い">Yahoo!マネー/預金払い</option>
+                    <option ng-show="now_station == 'Yahoo'" value="クレジットカード決済">クレジットカード決済</option>
+                    <option ng-show="now_station == 'Yahoo'" value="ドコモケータイ払い">ドコモケータイ払い</option>
+                    <option ng-show="now_station == 'Yahoo'" value="auかんたん決済">auかんたん決済</option>
+                    <option ng-show="now_station == 'Yahoo'" value="ソフトバンクまとめて支払い">ソフトバンクまとめて支払い</option>
+                    <option ng-show="now_station == 'Yahoo'" value="モバイルSuica">モバイルSuica</option>
+                    <option ng-show="now_station == 'Yahoo'" value="コンビニ（セブン-イレブン）">コンビニ（セブン-イレブン）</option>
+                    <option ng-show="now_station == 'Yahoo'" value="コンビニ（ファミリーマート、ローソン、その他）">コンビニ（ファミリーマート、ローソン、その他）</option>
+                    <option ng-show="now_station == 'Yahoo'" value="銀行振込（ペイジー）">銀行振込（ペイジー）</option>
+                    <option ng-show="now_station == 'Yahoo'" value="銀行振込（前払い）">銀行振込（前払い）</option>
+                    <option ng-show="now_station == 'Yahoo'" value="ポイント全額払い">ポイント全額払い</option>
                     <option value="Other">Other</option>
                   </select>
                 </button>
@@ -247,6 +261,7 @@
           <tr class="info blue">
             <td>品名</td>
             <td ng-hide="now_station=='Amazon'">运费代码</td>
+            <td ng-show="now_station=='Yahoo'">商品选项</td>
             <td>SKU</td>
             <td>商品代码</td>
             <td>数量</td>
@@ -256,6 +271,7 @@
             <td>押日本</td>
             <td>押中国</td>
             <td>扣库状态</td>
+            <td ng-show="now_station=='Yahoo'">配送要求</td>
             <td ng-hide="item.order_line>2">删除</td>
           </tr>
           <tr ng-repeat="item2 in one_res_info track by $index">
@@ -292,6 +308,7 @@
                 <button class="btn btn-default btn-danger" ng-disabled="yf_change==''" type="button" ng-click="change_info_field(item2.id,'yfcode',$index,item2.order_id);aa_yfcode=!aa_yfcode">确定</button>
               </div>
             </td>
+            <td ng-show="now_station=='Yahoo'">{{item2.goods_option}}<br> <i class="fa fa-arrow-circle-right"></i> {{item2.goods_info}}</td>
             <!-- sku -->
             <td>{{item2.sku}}</td>
             <td class="green" ng-class="{'danger red':item2.sku_ok==2}">{{item2.goods_code}}
@@ -358,6 +375,8 @@
             <td class="red tagr">{{item2.pause_ch}}</td>
             <!-- 扣库状态 -->
             <td class="red">{{item2.is_pause | is_pause}}</td>
+            <!-- 配送要求 -->
+            <td ng-show="now_station=='Yahoo'" class="red">{{item2.goods_send_info}}</td>
             <td ng-hide="item.order_line>2">
               <div ng-show="del_btn" class="btn btn-xs btn-danger" ng-click="del_item(item2.order_id,item2.id)">删除</div>
               <i ng-click="del_btn=!del_btn" class="fa fa-trash-o red pointer fa-fw"></i>
@@ -367,6 +386,7 @@
             <td class="tagc">合 计</td>
             <td ng-hide="now_station=='Amazon'"></td>
             <td></td>
+            <td ng-show="now_station=='Yahoo'">
             <td></td>
             <td>{{one_res_info | sum:'goods_num'}}</td>
             <td></td>
@@ -375,6 +395,7 @@
             <td>{{one_res_info | sum:'pause_jp'}}</td>
             <td>{{one_res_info | sum:'pause_ch'}}</td>
             <td></td>
+            <td ng-show="now_station=='Yahoo'"></td>
             <td ng-hide="item.order_line>2"></td>
           </tr>
         </table>

@@ -1,4 +1,22 @@
 var myFilters = angular.module('myApp');
+// 雅虎设备
+myFilters.filter('ya_drives', function(){
+    return function(item){
+        if(item == 1){
+            return '电脑';
+        }
+        if(item == 2){
+            return '传统手机';
+        }
+        if(item == 3){
+            return '智能机';
+        }
+        if(item == 4){
+            return '平板';
+        }
+    };
+});
+
 // 求和
 myFilters.filter('sum', function(){
     return function(data, key){

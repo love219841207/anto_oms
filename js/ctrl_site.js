@@ -268,6 +268,20 @@ app.controller('FileController', ['$rootScope','$scope','$state', 'Upload' , '$t
         }
     });
 
+    //yahoo_check watch
+    $scope.$watch('upload_file',  function(newValue, oldValue) {
+        if (newValue === oldValue) { return; }
+        var x  =  $scope.upload_file.name;
+        if(x.indexOf("order") > 0){
+            $scope.yahoo_check_order = 1;
+            $scope.yahoo_check_items = 0;
+        }
+        if(x.indexOf("item") > 0){
+            $scope.yahoo_check_items = 1;
+            $scope.yahoo_check_order = 0;
+        }
+    });
+
     //选择文件
     $scope.chose_file = function(){
         $scope.upload_ok = false;
@@ -303,6 +317,9 @@ app.controller('FileController', ['$rootScope','$scope','$state', 'Upload' , '$t
                     }
                     if(station == 'p_yahoo'){
                         $timeout(function(){$scope.p_yahoo_import_file(file_name);},1000);   
+                    }
+                    if(station == 'yahoo'){
+                        $timeout(function(){$scope.yahoo_import_file(file_name);},1000);   
                     }
                 },1000);
             }
@@ -426,12 +443,35 @@ app.controller('FileController', ['$rootScope','$scope','$state', 'Upload' , '$t
                 
                 // 刷新
                 var time=new Date().getTime();
-                $state.go('site.rakuten_order',{data:time});
+                $state.go('site.p_yahoo_order',{data:time});
             }
             $timeout(function(){$scope.shadow('close');},1000);
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
             $log.info(file_name+" 雅虎拍卖订单导入失败");
+        });
+    };
+
+    // 雅虎订单导入
+    $scope.yahoo_import_file = function(file_name){
+        $http.get('/fuck/yahoo/yahoo_import_list.php', {params:{import_add_list:file_name,store:$scope.upload_store}
+        }).success(function(data) {
+            // console.log(data);
+            if(data == 'ok'){
+                $scope.plug_alert('success','数据导入完成。','fa fa-smile-o');
+                
+                // 刷新
+                var time=new Date().getTime();
+                $state.go('site.yahoo_order',{data:time});
+            }
+            if(data == 'order'){
+                $scope.plug_alert('success','导入完成，别忘了导入 item 表！！！！！！别忘了导入 item 表！！！！！！！！！！！！别忘了导入 item 表！！！！！！！！！！！！！！！！！！！！！！！','fa fa-smile-o');
+            }
+            $timeout(function(){$scope.shadow('close');},1000);
+        }).error(function(data) {
+            console.log(data);
+            alert("系统错误，请联系管理员。");
+            $log.info(file_name+" 雅虎订单导入失败");
         });
     };
 

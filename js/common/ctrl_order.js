@@ -1556,6 +1556,32 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         });
     };
 
+
+    $scope.yahoo_mail_items = function(){
+        $scope.shadow('open','ss_make','Yahoo正在发信，请稍后。');
+        // $log.info($scope.my_checked_items);
+
+        var post_data = {
+            send_mail:'yahoo',
+            store:$rootScope.now_store_bar,
+            station:'yahoo',
+            mail_tpl:$scope.to_mail_tpl,
+            my_checked_items:$scope.my_checked_items};
+
+        $http.post('/fuck/mail/yahoo_send_mail.php', post_data).success(function(data) {
+            $timeout(function(){$scope.shadow('close');},500); //关闭shadow
+            if(data == 'ok'){
+                $scope.plug_alert('success','已经提交发信。','fa fa-smile-o');
+            }else{
+                $log.info(data);
+                $scope.plug_alert('danger','发信失败，请联系管理员。','fa fa-ban');
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:发信失败。");
+        });
+    };
+
     //读取错误邮件info
     $scope.read_error_mail = function(){
         $http.get('/fuck/mail/amazon_send_mail.php', {

@@ -113,6 +113,15 @@ if(isset($_GET['update_conf'])){
 		$mail_answer_addr = $_GET['mail_answer_addr'];
 		$sql = "UPDATE conf_P_Yahoo SET mail_name = '{$mail_name}',mail_id = '{$mail_id}',mail_pwd = '{$mail_pwd}',mail_smtp = '{$mail_smtp}',mail_port = '{$mail_port}',mail_answer_addr = '{$mail_answer_addr}' WHERE store_name = '{$store_name}'";
 	}
+	if($station == 'Yahoo'){
+		$mail_name = $_GET['mail_name'];
+		$mail_id = $_GET['mail_id'];
+		$mail_pwd = $_GET['mail_pwd'];
+		$mail_smtp = $_GET['mail_smtp'];
+		$mail_port = $_GET['mail_port'];
+		$mail_answer_addr = $_GET['mail_answer_addr'];
+		$sql = "UPDATE conf_Yahoo SET mail_name = '{$mail_name}',mail_id = '{$mail_id}',mail_pwd = '{$mail_pwd}',mail_smtp = '{$mail_smtp}',mail_port = '{$mail_port}',mail_answer_addr = '{$mail_answer_addr}' WHERE store_name = '{$store_name}'";
+	}
     $res = $db->execute($sql);
     echo 'ok';
 }
@@ -431,7 +440,7 @@ $pin_book = '
 		<td style="text-align:right;">木833-15</td>
 	</tr>
 	<tr>
-		<td colspan="3" style="line-height: 18px;">この度は、「gtx-amazon」にてお買い上げいただきまして、誠にありがとうございました。
+		<td colspan="3" style="line-height: 18px;">この度は、「'.$store.'」にてお買い上げいただきまして、誠にありがとうございました。
 お買い上げ明細書を送付いたしますので、ご確認いただけますようお願い申し上げます。</td>
 	</tr>
 	<tr style="line-height:30px;border-bottom: 2px solid #009688;color:#009688;font-size: 14px;text-align: center;">
