@@ -51,17 +51,6 @@ myFilters.filter('no_sum', function(){
     };
 });
 
-myFilters.filter('store', function(){
-    return function(item){
-        if(item == 'antoanto7883-yahoo-auction'){
-            return '7883';
-        }
-        if(item == 'mac7428-yahoo-auction'){
-            return '7428';
-        }
-    };
-});
-
 myFilters.filter('replace_symbol', function(){
     return function(item){
         return item.replace(/,/g,' ◆ ');

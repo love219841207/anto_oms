@@ -2,7 +2,7 @@
 	<div ng-controller="siteCtrl">
 		<div ui-view="topbar" class="navbar-fixed-top"></div>
 		<div ui-view="sidebar"></div>
-		<div ui-view="show" id="show_box" class="animate slide-top" ng-class="{'to_200':side_bar_open,'to_60':!side_bar_open}"><h3 style="padding-left:30px" class="blue">欢迎使用{{now_store_bar|store}}</h3></div>
+		<div ui-view="show" id="show_box" class="animate slide-top" ng-class="{'to_200':side_bar_open,'to_60':!side_bar_open}"><h3 style="padding-left:30px" class="blue">欢迎使用{{now_store_bar}} {{now_mail_name}}</h3></div>
 	</div>
 
 	<!-- alert消息弹框 -->

@@ -83,6 +83,16 @@ if(isset($_POST['cg_store_conf'])){
 	echo 'ok';
 }
 
+// 获取 mail_name
+if(isset($_GET['get_mail_name'])){
+    $station = $_GET['station'];
+    $conf = 'conf_'.$station;
+    $store_name = $_GET['get_mail_name'];
+    $sql = "SELECT mail_name FROM $conf WHERE store_name = '{$store_name}'";
+    $res = $db->getOne($sql);
+    echo $res['mail_name'];
+}
+
 //topbar 获取员工现有店铺
 if(isset($_GET['get_my_store'])){
 	$station = $_GET['get_my_store'];

@@ -185,6 +185,17 @@ app.controller('topCtrl', ['$rootScope','$scope','$state','$stateParams','$http'
     };
     $scope.ping_repair();
 
+    // 获取 get_mail_name 
+    $scope.get_mail_name = function(){
+        $http.get('/fuck/systems/users_manage.php', {params:{get_mail_name:$scope.now_store_bar,station:$scope.now_station}
+        }).success(function(data) {
+            $scope.now_mail_name = data;
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("系统登出失败。");
+        });
+    };
+
     //平台切换
     $scope.change_station = function(){
         $rootScope.now_station = $scope.now_station;

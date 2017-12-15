@@ -196,7 +196,7 @@ if(isset($_POST['store'])){
 	 	$pin_book = '
 	 	<table width="100%" border="1" bordercolor="no" cellspacing="1" cellpadding="6" style="border-collapse: collapse;font-size:12px;border-color: #ddd;width:100%; font-family: Meiryo;">
 	 	<tr style="border-color: #FFF;">
-	 	<td>'.$store.'</td>
+	 	<td>'.$mail_name.'</td>
 	 	<td colspan="2" style="text-align: right;">発行日：'.$express_day.'</td>
 	 	</tr>
 	 	<th colspan="3" style="border-color: #FFF;border-bottom:4px solid #009688;color:#009688;text-align: center;font-size:18px;">
@@ -206,7 +206,7 @@ if(isset($_POST['store'])){
 	 	<table width="100%" border="1" bordercolor="no" cellspacing="1" cellpadding="6" style="border-collapse: collapse;font-size:12px;border-color: #FFF;width:100%;line-height: 10px; font-family: Meiryo;">
 	 	<tr>
 	 	<td>'.$post_code.'</td>
-	 	<td style="text-align:right;">'.$store.'</td>
+	 	<td style="text-align:right;">'.$mail_name.'</td>
 	 	</tr>
 	 	<tr>
 	 	<td>'.$address.'</td>
@@ -221,7 +221,7 @@ if(isset($_POST['store'])){
 	 	<td style="text-align:right;">木833-15</td>
 	 	</tr>
 	 	<tr>
-	 	<td colspan="3" style="line-height: 18px;">この度は、「'.$store.'」にてお買い上げいただきまして、誠にありがとうございました。
+	 	<td colspan="3" style="line-height: 18px;">この度は、「'.$mail_name.'」にてお買い上げいただきまして、誠にありがとうございました。
 	 	お買い上げ明細書を送付いたしますので、ご確認いただけますようお願い申し上げます。</td>
 	 	</tr>
 	 	<tr style="line-height:30px;border-bottom: 2px solid #009688;color:#009688;font-size: 14px;text-align: center;">

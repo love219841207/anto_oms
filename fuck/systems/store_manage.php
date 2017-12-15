@@ -243,6 +243,7 @@ if(isset($_POST['save_mail_custom'])){
 if(isset($_POST['demo_mail'])){
 	$value = $_POST['demo_mail'];
 	$method = $_POST['method'];
+	$conf = 'conf_'.$_POST['station'];
 	$station = strtolower($_POST['station']);
 	$response_list = $station.'_response_list';
 	$response_info = $station.'_response_info';
@@ -286,6 +287,12 @@ if(isset($_POST['demo_mail'])){
  	$send_method = $res['send_method'];	#配送方式
  	$express_num = $res['oms_order_express_num'];	#快递单号
  	$express_day = $res['express_day'];	#快递日期
+
+ 	//店铺名替换为邮箱昵称
+	$sql = "SELECT mail_name FROM $conf WHERE store_name = '{$store}'";
+	$res1 = $db->getOne($sql);
+	$store = $res1['mail_name'];
+
  	if($station == 'amazon'){
  		$address = '';
  		$post_code = '';

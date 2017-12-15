@@ -10,11 +10,11 @@
 				<option>P_Yahoo</option>
 			</select>
 			<i ng-show="now_station!==''" class="fa fa-fw am-fade-and-slide-left" ng-class="{'green_light fa-exchange':now_store_bar!='','red_light fa-long-arrow-right':now_store_bar==''}"></i>
-			<select ng-show="now_station!==''" ng-change="change_now_store()" ng-model='now_store_bar' ng-class="{'green':now_store_bar!='','red':now_store_bar==''}" class="selecter am-fade-and-slide-left">
+			<select ng-show="now_station!==''" ng-change="change_now_store();get_mail_name()" ng-model='now_store_bar' ng-class="{'green':now_store_bar!='','red':now_store_bar==''}" class="selecter am-fade-and-slide-left">
 				<option value="">选择店铺 ..</option>
 				<option ng-repeat="item in now_store track by $index">{{item}}</option>
 			</select>
-			{{now_store_bar | store}}
+			&nbsp;{{ now_mail_name }}
 <!-- 			<a href="/tpls/common/mail_status.html" target="_blank">
 				<button class="btn btn-default btn-xs ml10"><i class="fa fa-fw fa-info-circle green"></i>发信状态</button>
 			</a> -->
