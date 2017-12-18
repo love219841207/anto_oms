@@ -301,7 +301,28 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
             cache: false,
             views:{
                 'show@site':{
-                    templateUrl: 'tpls/amazon/amazon_syn_express.html',
+                    templateUrl: 'tpls/yahoo/yahoo_syn_express.html',
+                    controller: function($scope){
+                        $scope.status.isopen1 = false;
+                        $scope.status.isopen2 = false;
+                        $scope.status.isopen3 = true;
+                        $scope.status.isopen4 = false;
+                        $scope.status.isopen5 = false;
+                        $scope.status.isopen6 = false;
+                        $scope.status.isopen7 = false;
+                        $scope.status.isopen8 = false;
+                    }
+                }
+            }
+        })
+
+        // 雅虎拍卖邮件模板
+        .state('site.mail_tpl4',{
+            url: '/mail_tpl/{data}',
+            cache: false,
+            views:{
+                'show@site':{
+                    templateUrl: 'tpls/common/mail_tpl.html',
                     controller: function($scope){
                         $scope.status.isopen1 = false;
                         $scope.status.isopen2 = false;

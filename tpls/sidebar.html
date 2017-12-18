@@ -51,13 +51,17 @@
 	        		<i class="fa fa-fw fa-yahoo"></i>
 	        		<span class="am-fade" ng-show="side_bar"> 雅虎</span><i class="pull-right fa fa-angle-right weight" ng-class="{'scroll_90': status.isopen3,'scroll_0': !status.isopen3}"></i>
 	     	 	</uib-accordion-heading>
-	     	 	<div ui-sref="site.yahoo_order" ui-sref-active="active" class="list-group-item">
+	     	 	<div ng-mouseenter="side_info('订单操作')" ui-sref="site.yahoo_order" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-file-text-o ml5"></i>
 					<span class="am-fade" ng-show="side_bar"> 订单操作</span>
 				</div>
-				<div ui-sref="site.yahoo_syn_express" ui-sref-active="active" class="list-group-item">
-					<i class="fa fa-fw fa-cloud-upload ml5"></i>
-					<span class="am-fade" ng-show="side_bar"> 上传快递单</span>
+				<div ng-mouseenter="side_info('下载快递单')" ui-sref="site.yahoo_syn_express" ui-sref-active="active" class="list-group-item">
+					<i class="fa fa-fw fa-cloud-download ml5"></i>
+					<span class="am-fade" ng-show="side_bar"> 下载快递单</span>
+				</div>
+				<div ng-mouseenter="side_info('邮件状态&模板')" ui-sref="site.mail_tpl4" ui-sref-active="active" class="list-group-item">
+					<i class="fa fa-fw fa-envelope-o ml5"></i>
+					<span class="am-fade" ng-show="side_bar"> 邮件状态&模板</span>
 				</div>
 			</div>
 			<!-- 雅虎拍卖店平台 -->

@@ -183,7 +183,7 @@ function make_bags(){
 				$res = $db->getOne($sql);
 				$dmb = $res['dmb'];
 				if($dmb > 0){	//如果至少有一单DM便
-					$sql = "UPDATE send_table SET send_method = '宅配便',express_company = '' WHERE pack_id = '{$pid}'";
+					$sql = "UPDATE send_table SET send_method = '宅配便',express_company = '佐川急便' WHERE pack_id = '{$pid}'";
 					$res = $db->execute($sql);
 				}
 			}	
@@ -207,7 +207,7 @@ function make_bags(){
 				$res = $db->getOne($sql);
 				$dmb = $res['dmb'];
 				if($dmb > 0){	//如果至少有一单ネコポス
-					$sql = "UPDATE send_table SET send_method = '宅配便',express_company = '' WHERE pack_id = '{$pid}'";
+					$sql = "UPDATE send_table SET send_method = '宅配便',express_company = '佐川急便' WHERE pack_id = '{$pid}'";
 					$res = $db->execute($sql);
 				}
 			}	
@@ -299,7 +299,7 @@ function make_bags(){
 			$res = $db->execute($sql);
 		}elseif (1800 < $sum_own_key){
 			// 转宅配
-			$sql = "UPDATE send_table SET express_company = '',send_method = '宅配便' WHERE pack_id = '{$pack_id}'";
+			$sql = "UPDATE send_table SET express_company = '佐川急便',send_method = '宅配便' WHERE pack_id = '{$pack_id}'";
 			$res = $db->execute($sql);
 		}else{
 			// 如果小于 600，转回原型
@@ -421,14 +421,13 @@ if(isset($_GET['packing'])){
 	$sql = "UPDATE send_table send,p_yahoo_response_info info SET send.yfcode = info.yfcode WHERE send.info_id = info.id AND send.station = 'p_yahoo'";
 	$res = $db->execute($sql);
 
-	// 雅虎？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？
-	// $sql = "UPDATE send_table send,yahoo_response_info info SET send.yfcode = info.yfcode WHERE send.info_id = info.id AND send.station = 'yahoo'";
-	// $res = $db->execute($sql);
+	// 雅虎
+	$sql = "UPDATE send_table send,yahoo_response_info info SET send.yfcode = info.yfcode WHERE send.info_id = info.id AND send.station = 'yahoo'";
+	$res = $db->execute($sql);
 
 	// 运费代码配送方式
 	$sql = "UPDATE send_table send,yf_code yf SET send.send_method = yf.send_method WHERE send.yfcode = yf.yf_code_name";
 	$res = $db->execute($sql);
-
 
 	// 所有的mail发黑猫
 	$sql = "UPDATE send_table SET express_company = 'ヤマト運輸' WHERE  send_method in ('DM便','ネコポス') AND has_pack = '0'";

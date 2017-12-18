@@ -58,7 +58,7 @@ if(isset($_GET['import_add_list'])){
 		$buyer_address = addslashes($strs[71].$strs[73]);
 		$buyer_name = $strs[66];
 		$order_payment_method = $strs[15];
-		$buyer_others = $strs[16];
+		$buyer_others = addslashes($strs[16]);
 		$goods_title = $strs[21].'@'.$strs[20];
 		$sku = $strs[20];
 		$goods_num = $strs[18];
@@ -419,7 +419,7 @@ if(isset($_GET['import_add_list'])){
 			$str=mb_convert_encoding($str,"UTF-8","shift-jis");
 			$strs = explode("|*|",$str);
 			$order_id = $strs[0].'-'.$strs[1];
-			$buyer_others = $strs[31];
+			$buyer_others = addslashes($strs[31]);
 
 			// 查询是否存在此订单
 			$sql = "UPDATE p_yahoo_response_list SET buyer_others = '{$buyer_others}' WHERE order_id = '{$order_id}'";

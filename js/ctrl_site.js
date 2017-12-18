@@ -454,7 +454,7 @@ app.controller('FileController', ['$rootScope','$scope','$state', 'Upload' , '$t
                 
                 // 刷新
                 var time=new Date().getTime();
-                $state.go('site.p_yahoo_order',{data:time});
+                $state.go('site.pyahoo_order',{data:time});
             }
             $timeout(function(){$scope.shadow('close');},1000);
         }).error(function(data) {

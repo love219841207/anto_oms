@@ -625,7 +625,57 @@ if(isset($_POST['sub_repo'])){
 		'{$today}' from amazon_response_list list,amazon_response_info info where list.order_id = info.order_id AND list.order_line = '4'";
 	$res = $db->execute($sql);
 
-	// 雅虎转入发货表 !!!!!!!!!!!!!!!!!!!!!!!!!!!
+	// 雅虎转入发货表
+	$sql = "INSERT INTO send_table (
+		station,
+		order_id,
+		send_id,	#合单发货ID
+		oms_id,	#OMS-ID
+		info_id, #info-ID
+		sku, 	#sku，客人看
+		goods_code,	#商品代码，仓库看
+		out_num,	#商品数量
+		pause_jp,	#押日本
+		pause_ch,	#押中国
+		repo_status,    #出仓方式
+		who_tel,	#配送电话
+		who_post,	#邮编
+		who_house,	#地址
+		who_name,	#收货人
+		is_cod,		#是否代引
+		due_money,	#代引金额，写出全部的item金额，根据cod，更新是否是代引
+		send_method,
+		who_email,	#邮编
+		store_name,	#店铺名
+		holder,		#担当者
+		want_date,	#指定配送日
+		want_time,	#指定配送时间
+		import_day) SELECT	#导入日期 
+		'yahoo',
+		list.order_id,
+		list.send_id,
+		list.id,
+		info.id,
+		info.sku,
+		info.goods_code,
+		info.goods_num,
+		info.pause_jp,
+		info.pause_ch,
+		list.repo_status,
+		list.phone,
+		list.post_code,
+		list.address,
+		list.receive_name,
+		list.payment_method,
+		list.pay_money,	#带引金额
+		list.send_method,
+		list.buyer_email,
+		list.store,
+		'{$u_name}',
+		want_date,
+		want_time,
+		'{$today}' from yahoo_response_list list,yahoo_response_info info where list.order_id = info.order_id AND list.order_line = '4'";
+	$res = $db->execute($sql);
 
 	// 乐天转入发货表
 	$sql = "INSERT INTO send_table (
@@ -734,8 +784,8 @@ if(isset($_POST['sub_repo'])){
 	// 更新order_line
 	$sql = "UPDATE amazon_response_list SET order_line = '5' WHERE order_line = '4'";
 	$res = $db->execute($sql);
-	// $sql = "UPDATE yahoo_response_list SET order_line = '5' WHERE order_line = '4'";
-	// $res = $db->execute($sql);
+	$sql = "UPDATE yahoo_response_list SET order_line = '5' WHERE order_line = '4'";
+	$res = $db->execute($sql);
 	$sql = "UPDATE rakuten_response_list SET order_line = '5' WHERE order_line = '4'";
 	$res = $db->execute($sql);
 	$sql = "UPDATE p_yahoo_response_list SET order_line = '5' WHERE order_line = '4'";

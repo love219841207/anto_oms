@@ -27,6 +27,7 @@
 			<!-- <td>INFO-ID</td> -->
 			<td>快递公司</td>
 			<td>配送方式</td>
+			<td>运费代码</td>
 			<td>包裹ID</td>
 			<!-- <td>SKU（出品SKU，客人看）</td> -->
 			<td>商品代码</td>
@@ -57,6 +58,7 @@
 			<!-- <td>{{item.info_id}}</td> -->
 			<td>{{item.express_company}}</td>
 			<td>{{item.send_method}}</td>
+			<td class="tagc">{{item.yfcode}}</td>
 			<td>{{item.pack_id}}</td>
 			<!-- <td>{{item.sku}}</td> -->
 			<td ng-class="{'red danger':item.error_info=='no_sku'}">{{item.goods_code}}

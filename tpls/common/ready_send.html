@@ -64,7 +64,7 @@
 			<!-- <td>{{item.info_id}}</td> -->
 			<td>{{item.express_company}} <i class="fa fa-edit pointer" data-animation="am-fade-and-slide-top" data-template-url="/modal/change_company.html" bs-modal="modal" ng-click="new_company=item.express_company;new_method=item.send_method"></i></td>
 			<td>{{item.send_method}}</td>
-			<td>{{item.yfcode}}</td>
+			<td class="tagc">{{item.yfcode}}</td>
 			<td>{{item.pack_id}}</td>
 			<!-- <td>{{item.sku}}</td> -->
 			<td ng-class="{'red danger':item.error_info=='no_sku'}">{{item.goods_code}}

@@ -20,6 +20,8 @@ if(isset($_GET['up_express_order'])){
 	$res = $db->execute($sql);
 	$sql = "UPDATE p_yahoo_response_list list,send_table send SET list.express_company = send.express_company,list.send_method = send.send_method,list.oms_order_express_num = send.oms_order_express_num,list.express_day = send.express_day,list.order_line = '6' WHERE list.order_id = send.order_id AND send.table_status = '2'";
 	$res = $db->execute($sql);
+	$sql = "UPDATE yahoo_response_list list,send_table send SET list.express_company = send.express_company,list.send_method = send.send_method,list.oms_order_express_num = send.oms_order_express_num,list.express_day = send.express_day,list.order_line = '6' WHERE list.order_id = send.order_id AND send.table_status = '2'";
+	$res = $db->execute($sql);
 
 	// 移动 table_status = 2 到已出单
 	$sql = "INSERT INTO history_send (
@@ -126,7 +128,27 @@ if(isset($_GET['up_express_order'])){
 		$res = $db->execute($sql);
 		$sql = "UPDATE history_send SET buy_method = 'Amazon決済（前払い）' WHERE station = 'amazon' AND is_cod <> 'COD' AND table_status = '2'";
 		$res = $db->execute($sql);
+
 		// 雅虎匹配
+		$sql = "UPDATE history_send history,yahoo_response_list list SET 
+			history.buy_method = list.payment_method,
+			history.who_id = list.who_id,
+			history.who_name = list.buyer_name,
+			history.who_phone = list.buyer_phone,
+			history.who_code = list.buyer_post_code,
+			history.who_house = list.buyer_address,
+			history.total_money = list.all_total_money,
+			history.buy_money = list.all_total_money - list.coupon - list.points - list.shipping_price,
+			history.cheap = list.coupon,
+			history.point = list.points,
+			history.ems_money = list.shipping_price,
+			history.tax = list.order_tax
+			 WHERE history.order_id = list.order_id AND history.table_status = '2' AND history.station = 'yahoo'";
+		$res = $db->execute($sql);
+
+		// 雅虎匹配 bill
+		$sql = "UPDATE history_send history,yahoo_response_info info SET history.unit_price = info.unit_price,history.bill = info.cod_money WHERE history.info_id = info.id AND history.table_status = '2' AND history.station = 'yahoo'";
+		$res = $db->execute($sql);
 
 		// 乐天匹配
 		$sql = "UPDATE history_send history,rakuten_response_list list SET 

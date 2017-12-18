@@ -17,7 +17,10 @@ if(isset($_GET['look_pause'])){
     // 读取雅虎拍卖冻结表
     $sql = "SELECT list.station,FROM_UNIXTIME(list.pause_time, '%Y-%m-%d %H:%I:%S') as pause_time,info.goods_code,sum(info.goods_num-info.pause_ch-info.pause_jp) as pause_num FROM p_yahoo_response_list list,p_yahoo_response_info info WHERE list.order_id = info.order_id AND info.is_pause = 'pause' group by info.goods_code,pause_time ORDER BY pause_time DESC";
     $res3 = $db->getAll($sql);
-    $res = array_merge($res1,$res2,$res3);
+    // 雅虎拍卖冻结表
+    $sql = "SELECT list.station,FROM_UNIXTIME(list.pause_time, '%Y-%m-%d %H:%I:%S') as pause_time,info.goods_code,sum(info.goods_num-info.pause_ch-info.pause_jp) as pause_num FROM yahoo_response_list list,yahoo_response_info info WHERE list.order_id = info.order_id AND info.is_pause = 'pause' group by info.goods_code,pause_time ORDER BY pause_time DESC";
+    $res4 = $db->getAll($sql);
+    $res = array_merge($res1,$res2,$res3,$res4);
 	echo json_encode($res);
 }
 
@@ -56,7 +59,9 @@ if(isset($_GET['down_pause'])){
     $res2 = $db->getAll($sql);
     $sql = "SELECT list.station as station,FROM_UNIXTIME(list.pause_time, '%Y-%m-%d %H:%I:%S') as pause_time,info.goods_code,sum(info.goods_num-info.pause_ch-info.pause_jp) as pause_num FROM p_yahoo_response_list list,p_yahoo_response_info info WHERE list.order_id = info.order_id AND info.is_pause = 'pause' group by info.goods_code,pause_time ORDER BY pause_time DESC";
     $res3 = $db->getAll($sql);
-    $res = array_merge($res1,$res2,$res3);
+    $sql = "SELECT list.station as station,FROM_UNIXTIME(list.pause_time, '%Y-%m-%d %H:%I:%S') as pause_time,info.goods_code,sum(info.goods_num-info.pause_ch-info.pause_jp) as pause_num FROM yahoo_response_list list,yahoo_response_info info WHERE list.order_id = info.order_id AND info.is_pause = 'pause' group by info.goods_code,pause_time ORDER BY pause_time DESC";
+    $res4 = $db->getAll($sql);
+    $res = array_merge($res1,$res2,$res3,$res4);
     $j=2;
     foreach ($res as $key => $value) {
         $objSheet->setCellValue("A".$j,$value['goods_code'])
