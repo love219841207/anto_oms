@@ -89,6 +89,16 @@ if(isset($_POST['store'])){
 	 	$all_total_money = $res['all_total_money'];	
 	 	$order_total_money = $res['order_total_money'];	
 	 	$payment_method = $res['payment_method'];	
+	 	$want_date = $res['want_date'];   #希望配送日期
+        $want_time = $res['want_time'];   #希望配送时间
+        if ($want_date == '') {
+	    	$want_date = '希望日なし';
+	    };
+
+	    if ($want_time == '') {
+	    	$want_time = '希望時間なし';
+	    };
+
 	 	// 替换[]
     	$buyer_name = preg_replace('/\[.*?\]/', '', $buyer_name);
     	$receive_name = preg_replace('/\[.*?\]/', '', $receive_name);
@@ -260,14 +270,14 @@ if(isset($_POST['store'])){
 	 	<td></td>
 	 	<td colspan="3" style="text-align: right;">
 	 	<span style="color:#009688;">お届け希望日：</span>
-	 	<span style="width:150px;text-align:left;display: inline-block;">希望日なし</span>
+	 	<span style="width:150px;text-align:left;display: inline-block;">'.$want_date.'</span>
 	 	</td>
 	 	</tr>
 	 	<tr>
 	 	<td></td>
 	 	<td colspan="3" style="text-align: right;">
 	 	<span style="color:#009688;">お届け希望時間：</span>
-	 	<span style="width:150px;text-align:left;display: inline-block;">希望時間なし</span>
+	 	<span style="width:150px;text-align:left;display: inline-block;">'.$want_time.'</span>
 	 	</td>
 	 	</tr>
 	 	</table>

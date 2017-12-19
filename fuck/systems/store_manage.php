@@ -287,6 +287,15 @@ if(isset($_POST['demo_mail'])){
  	$send_method = $res['send_method'];	#配送方式
  	$express_num = $res['oms_order_express_num'];	#快递单号
  	$express_day = $res['express_day'];	#快递日期
+ 	$want_date = $res['want_date'];   #希望配送日期
+    $want_time = $res['want_time'];   #希望配送时间
+    if ($want_date == '') {
+    	$want_date = '希望日なし';
+    };
+
+    if ($want_time == '') {
+    	$want_time = '希望時間なし';
+    };
 
  	//店铺名替换为邮箱昵称
 	$sql = "SELECT mail_name FROM $conf WHERE store_name = '{$store}'";
@@ -486,14 +495,14 @@ $pin_book = '
 		<td></td>
 		<td colspan="2" style="text-align: right;">
 			<span style="color:#009688;">お届け希望日：</span>
-			<span style="width:150px;text-align:left;display: inline-block;">希望日なし</span>
+			<span style="width:150px;text-align:left;display: inline-block;">'.$want_date.'</span>
 		</td>
 	</tr>
 	<tr>
 		<td></td>
 		<td colspan="2" style="text-align: right;">
 			<span style="color:#009688;">お届け希望時間：</span>
-			<span style="width:150px;text-align:left;display: inline-block;">希望時間なし</span>
+			<span style="width:150px;text-align:left;display: inline-block;">'.$want_time.'</span>
 		</td>
 	</tr>
 </table>
