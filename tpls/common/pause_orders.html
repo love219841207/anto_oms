@@ -79,7 +79,7 @@
 			<td class="tagr">押日本</td>
 			<td class="tagr">单价 × 数量 = 子订单价格</td>
 			<td class="tagr">代引手续费</td>
-			<td class="tagc" ng-hide="radioModel=='mid'">操作</td>
+			<td class="tagc" ng-show="radioModel=='Left'">操作</td>
 			<td class="tagc">发货ID</td>
 		</tr>
 		<tr class="am-fade-and-slide-right blue" ng-class="{'bg_yellow':item.is_click}" ng-repeat="item in all_pause_orders | orderBy:'pause_time'">
@@ -98,17 +98,17 @@
 			<td class="tagr">{{item.unit_price}} × {{item.goods_num}} = {{item.item_price}}</td>
 			<td class="tagr">{{item.cod_money}}</td>
 			<td class="tagc" ng-show="radioModel=='Left'"><div ng-click="back_pause(item.send_id,item.store,item.station)" class="btn btn-xs btn-primary">退押</div></td>
-			<td class="tagc" ng-show="radioModel=='Right'">
+			<!-- <td class="tagc" ng-show="radioModel=='Right'"> -->
 				<!-- <div class="btn btn-xs btn-primary mr5" data-animation="am-fade-and-slide-top" data-template-url="/modal/edit_pause_item.html" bs-modal="modal" ng-click="pause_modal(item.id,item.store,item.station);get_station(item.store)">
 					<i class="fa fa-edit fa-fw"></i>编辑
 				</div> -->
-				<div class="btn btn-xs btn-success mr5" ng-click="to_pause(item.send_id,item.store,item.station)">
+<!-- 				<div class="btn btn-xs btn-success mr5" ng-click="to_pause(item.send_id,item.store,item.station)">
 					<i class="fa fa-undo fa-fw"></i>还原
-				</div>
+				</div> -->
 				<!-- <div class="btn btn-xs btn-danger" data-animation="am-fade-and-slide-top" data-template-url="/modal/del_pause_item.html" bs-modal="modal" ng-click="pause_modal(item.id,item.store,item.station);get_station(item.store)">
 					<i class="fa fa-trash-o fa-fw"></i>删除
 				</div> -->
-			</td>
+			<!-- </td> -->
 			<td ng-class="{'red':item.send_id.indexOf('H') >= 0}">{{item.send_id}}</td>
 		</tr>
 	</table>
