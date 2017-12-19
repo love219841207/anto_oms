@@ -399,8 +399,11 @@
                 <button class="btn btn_fff btn-xs" style="height: 30px;" ng-show="search_order_line == '-2'">
                     <select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="search_pay_method" ng-change="change_pay_method()">
                         <option value="all">- 支付方式 -</option>
-                        <option ng-show="now_station == 'Rakuten'" value="クレジットカード">クレジットカード</option>
                         <option ng-show="now_station == 'Rakuten'" value="楽天バンク決済">楽天バンク決済</option>
+                        <option ng-show="now_station == 'Yahoo'" value="ポイント全額払い">ポイント全額払い</option>
+                        <option ng-show="now_station == 'Yahoo'" value="銀行振込（前払い）">銀行振込（前払い）</option>
+                        <option ng-show="now_station == 'Yahoo'" value="銀行振込（ペイジー）">銀行振込（ペイジー）</option>
+                        <option ng-show="now_station == 'Rakuten'" value="クレジットカード">クレジットカード</option>
                         <option ng-show="now_station == 'Rakuten'" value="銀行振込">銀行振込</option>
                         <option ng-show="now_station == 'Rakuten'" value="楽天Edy決済">楽天Edy決済</option>
                         <option ng-show="now_station == 'P_Yahoo'" value="Yahoo!かんたん">Yahoo!かんたん</option>
@@ -412,9 +415,6 @@
                         <option ng-show="now_station == 'Yahoo'" value="モバイルSuica">モバイルSuica</option>
                         <option ng-show="now_station == 'Yahoo'" value="コンビニ（セブン-イレブン）">コンビニ（セブン-イレブン）</option>
                         <option ng-show="now_station == 'Yahoo'" value="コンビニ（ファミリーマート、ローソン、その他）">コンビニ（ファミリーマート、ローソン、その他）</option>
-                        <option ng-show="now_station == 'Yahoo'" value="銀行振込（ペイジー）">銀行振込（ペイジー）</option>
-                        <option ng-show="now_station == 'Yahoo'" value="銀行振込（前払い）">銀行振込（前払い）</option>
-                        <option ng-show="now_station == 'Yahoo'" value="ポイント全額払い">ポイント全額払い</option>
                     </select>
                 </button>
                 <button ng-show="search_order_line == '-2'" ng-disabled="my_checked==''" type="button" ng-click="check_items();del_true='false'" data-animation="am-fade-and-slide-top" data-template-url="/modal/pay_ok.html" bs-modal="modal" class="btn btn-default btn-sm yellow">

@@ -289,6 +289,7 @@ if(isset($_POST['demo_mail'])){
  	$express_day = $res['express_day'];	#快递日期
  	$want_date = $res['want_date'];   #希望配送日期
     $want_time = $res['want_time'];   #希望配送时间
+    $payment_method = $res['payment_method'];  
     if ($want_date == '') {
     	$want_date = '希望日なし';
     };
@@ -296,6 +297,8 @@ if(isset($_POST['demo_mail'])){
     if ($want_time == '') {
     	$want_time = '希望時間なし';
     };
+
+    $payment_method = str_replace('COD', '商品代引', $payment_method);
 
  	//店铺名替换为邮箱昵称
 	$sql = "SELECT mail_name FROM $conf WHERE store_name = '{$store}'";
@@ -312,12 +315,11 @@ if(isset($_POST['demo_mail'])){
 
  	$all_total_money = $res['all_total_money'];	
  	$order_total_money = $res['order_total_money'];	
- 	$payment_method = $res['payment_method'];	
- 	if($payment_method == 'COD'){
- 		$payment_method = "DirectPayment";
- 	}else{
- 		$payment_method = "Amazon決済（前払い）";
- 	}
+ 	// if($payment_method == 'COD'){
+ 	// 	$payment_method = "DirectPayment";
+ 	// }else{
+ 	// 	$payment_method = "Amazon決済（前払い）";
+ 	// }
  	// 替换[]
     $buyer_name = preg_replace('/\[.*?\]/', '', $buyer_name);
     $receive_name = preg_replace('/\[.*?\]/', '', $receive_name);

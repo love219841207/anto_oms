@@ -111,7 +111,7 @@ if(isset($_POST['order_table'])){
                 list.want_time, #指定时间
                 list.order_line, #指定时间
                 list.who_id
-         FROM $response_list list,$response_info info WHERE list.order_id = info.order_id AND list.order_id in ($my_checked_items)";
+         FROM $response_list list,$response_info info WHERE list.order_id = info.order_id AND list.order_id in ($my_checked_items) ORDER BY send_id";
          }else{
                     $sql = "SELECT 
                 list.id,    #OMS-ID
@@ -148,7 +148,7 @@ if(isset($_POST['order_table'])){
                 list.want_time, #指定时间
                 list.order_line, #指定时间
                 list.who_id
-         FROM $response_list list,$response_info info WHERE list.order_id = info.order_id AND list.order_id in ($my_checked_items)";
+         FROM $response_list list,$response_info info WHERE list.order_id = info.order_id AND list.order_id in ($my_checked_items) ORDER BY send_id";
          }
          $res = $db->getAll($sql);
         $j=2;
