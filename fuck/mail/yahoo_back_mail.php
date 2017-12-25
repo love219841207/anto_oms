@@ -97,6 +97,7 @@ if(isset($_POST['store'])){
         if ($want_time == '') {
             $want_time = '希望時間なし';
         };
+        $payment_method = str_replace('COD', '商品代引', $payment_method);
 
         // 替换[]
         $buyer_name = preg_replace('/\[.*?\]/', '', $buyer_name);

@@ -261,7 +261,7 @@
           <tr class="info blue">
             <td>品名</td>
             <td ng-hide="now_station=='Amazon'">运费代码</td>
-            <td ng-show="now_station=='Yahoo'">商品选项</td>
+            <td ng-show="now_station=='Yahoo'">选项</td>
             <td>SKU</td>
             <td>商品代码</td>
             <td>数量</td>
@@ -308,7 +308,9 @@
                 <button class="btn btn-default btn-danger" ng-disabled="yf_change==''" type="button" ng-click="change_info_field(item2.id,'yfcode',$index,item2.order_id);aa_yfcode=!aa_yfcode">确定</button>
               </div>
             </td>
-            <td ng-show="now_station=='Yahoo'">{{item2.goods_option}}<br> <i class="fa fa-arrow-circle-right"></i> {{item2.goods_info}}</td>
+            <td class="tagc" ng-show="now_station=='Yahoo'">
+              <i class="fa fa-arrow-circle-right pointer" popover-placement="top-left" uib-popover="【 {{item2.goods_option}} >>> {{item2.goods_info}} >>> {{item2.goods_id}}】" popover-trigger="'click'"></i>
+            </td>
             <!-- sku -->
             <td>{{item2.sku}}</td>
             <td class="green" ng-class="{'danger red':item2.sku_ok==2}">{{item2.goods_code}}

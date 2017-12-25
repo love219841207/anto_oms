@@ -64,7 +64,7 @@ if(isset($_POST['order_table'])){
             ->setCellValue("X1","发货仓库")
             ->setCellValue("Y1","单价")
             ->setCellValue("Z1","该项价格")
-            ->setCellValue("AA1","代引金额")
+            ->setCellValue("AA1","代引手续费")
             ->setCellValue("AB1","同步日期")
             ->setCellValue("AC1","配送方式")
             ->setCellValue("AD1","客人备注")

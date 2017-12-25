@@ -209,63 +209,123 @@ if(isset($_GET['check_all_field'])){
 	    $res = $rdb->getOne($sql);
 	    $count_new = $res['count(1)'];
 	    if($count_new > 0){	//如果是福袋/别名
-	    	$sql = "SELECT goods_code FROM new_name WHERE new_name='{$new_name}'";
+	    	$sql = "SELECT goods_code FROM new_name WHERE new_name='{$new_name}' order by id";
 	    	$res = $rdb->getAll($sql);
+	    	//生成随机标识符
+	    	$rand_key = rand(10000,99999);
 	    	foreach ($res as $val) {
-	    		//拆单、并且sku通过sku_ok = 1
-	    		$sql = "INSERT INTO $response_info (
-	    		store,
-	    		order_id,
-	    		holder,
-	    		is_back,
-	    		goods_title,
-	    		sku_ok,
-	    		yfcode_ok,
-	    		yfcode,
-	    		yf_money,
-	    		sku,
-	    		goods_code,
-	    		goods_num,
-	    		b_repo_num,
-	    		is_pause,
-	    		shipping_price,
-	    		shipping_tax,
-	    		gift_price,
-	    		gift_tax,
-	    		item_price,
-	    		item_tax,
-	    		promotion_discount,
-	    		shipping_discount,
-	    		cod_money) SELECT 
-				store,
-	    		order_id,
-	    		holder,
-	    		is_back,
-	    		goods_title,
-	    		'1',
-	    		yfcode_ok,
-	    		yfcode,
-	    		yf_money,
-	    		sku,
-	    		'{$val['goods_code']}',
-	    		goods_num,
-	    		b_repo_num,
-	    		is_pause,
-	    		shipping_price,
-	    		shipping_tax,
-	    		gift_price,
-	    		gift_tax,
-	    		item_price,
-	    		item_tax,
-	    		promotion_discount,
-	    		shipping_discount,
-	    		cod_money
-	    		 FROM $response_info WHERE id = '{$now_id}'";
-	    		$res = $db->execute($sql);
+	    		// 雅虎平台商品选项
+		    	if($station == 'yahoo'){
+		    		//拆单、并且sku通过sku_ok = 1
+		    		$sql = "INSERT INTO $response_info (
+		    		station,
+		    		store,
+		    		order_id,
+		    		holder,
+		    		is_back,
+		    		goods_title,
+		    		sku_ok,
+		    		yfcode_ok,
+		    		yfcode,
+		    		sku,
+		    		goods_code,
+		    		goods_option,
+		    		goods_info,
+		    		goods_id,
+		    		goods_num,
+		    		unit_price,
+		    		is_pause,
+		    		item_price,
+		    		item_tax,
+		    		import_time,
+		    		cod_money) SELECT 
+		    		station,
+					store,
+		    		order_id,
+		    		'{$rand_key}',
+		    		is_back,
+		    		goods_title,
+		    		'1',
+		    		yfcode_ok,
+		    		yfcode,
+		    		sku,
+		    		'{$val['goods_code']}',
+		    		goods_option,
+		    		goods_info,
+		    		goods_id,
+		    		goods_num,
+		    		unit_price,
+		    		is_pause,
+		    		item_price,
+		    		item_tax,
+		    		import_time,
+		    		cod_money
+		    		 FROM $response_info WHERE id = '{$now_id}'";
+		    		$res = $db->execute($sql);
+		    	}else{
+		    		//拆单、并且sku通过sku_ok = 1
+		    		$sql = "INSERT INTO $response_info (
+		    		station,
+		    		store,
+		    		order_id,
+		    		holder,
+		    		is_back,
+		    		goods_title,
+		    		sku_ok,
+		    		yfcode_ok,
+		    		yfcode,
+		    		sku,
+		    		goods_code,
+		    		goods_num,
+		    		unit_price,
+		    		is_pause,
+		    		item_price,
+		    		item_tax,
+		    		import_time,
+		    		cod_money) SELECT 
+		    		station,
+					store,
+		    		order_id,
+		    		'{$rand_key}',
+		    		is_back,
+		    		goods_title,
+		    		'1',
+		    		yfcode_ok,
+		    		yfcode,
+		    		sku,
+		    		'{$val['goods_code']}',
+		    		goods_num,
+		    		unit_price,
+		    		is_pause,
+		    		item_price,
+		    		item_tax,
+		    		import_time,
+		    		cod_money
+		    		 FROM $response_info WHERE id = '{$now_id}'";
+		    		$res = $db->execute($sql);
+		    	}
 	    	}
+	    	// 查询该单订单号
+	    	$sql = "SELECT order_id FROM $response_info WHERE id = '{$now_id}'";
+	    	$res = $db->getOne($sql);
+	    	$nn_order_id = $res['order_id'];
+
 	    	// 删除原福袋item
 	    	$sql = "DELETE FROM $response_info WHERE id = '{$now_id}'";
 	    	$res = $db->execute($sql);
+
+	    	// 清空单价为0
+	    	$sql = "SELECT id FROM $response_info WHERE order_id = '{$nn_order_id}' AND holder = '{$rand_key}'";
+	    	$res = $db->getAll($sql);
+	    	$k = 0;
+	    	foreach ($res as $value) {
+	    		if($k > 0){
+	    			$nn_id = $value['id'];
+		    		$sql = "UPDATE $response_info SET unit_price = '0',item_price = '0' WHERE id = '{$nn_id}'";
+		    		$res = $db->execute($sql);
+	    		}
+	    		$k = $k + 1;
+	    	}
 	    }else{	//如果不是福袋，则检测 商品代码 是否存在
 	    	$sql = "SELECT 1 FROM goods_type WHERE goods_code='{$new_name}' limit 1";
 	        $res = $rdb->getOne($sql);

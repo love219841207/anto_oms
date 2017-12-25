@@ -399,6 +399,7 @@
                 <button class="btn btn_fff btn-xs" style="height: 30px;" ng-show="search_order_line == '-2'">
                     <select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="search_pay_method" ng-change="change_pay_method()">
                         <option value="all">- 支付方式 -</option>
+                        <option ng-show="now_station == 'Yahoo'" value="クレジットカード決済">クレジットカード決済</option>
                         <option ng-show="now_station == 'Rakuten'" value="楽天バンク決済">楽天バンク決済</option>
                         <option ng-show="now_station == 'Yahoo'" value="ポイント全額払い">ポイント全額払い</option>
                         <option ng-show="now_station == 'Yahoo'" value="銀行振込（前払い）">銀行振込（前払い）</option>
@@ -408,7 +409,6 @@
                         <option ng-show="now_station == 'Rakuten'" value="楽天Edy決済">楽天Edy決済</option>
                         <option ng-show="now_station == 'P_Yahoo'" value="Yahoo!かんたん">Yahoo!かんたん</option>
                         <option ng-show="now_station == 'Yahoo'" value="Yahoo!マネー/預金払い">Yahoo!マネー/預金払い</option>
-                        <option ng-show="now_station == 'Yahoo'" value="クレジットカード決済">クレジットカード決済</option>
                         <option ng-show="now_station == 'Yahoo'" value="ドコモケータイ払い">ドコモケータイ払い</option>
                         <option ng-show="now_station == 'Yahoo'" value="auかんたん決済">auかんたん決済</option>
                         <option ng-show="now_station == 'Yahoo'" value="ソフトバンクまとめて支払い">ソフトバンクまとめて支払い</option>
