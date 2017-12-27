@@ -136,7 +136,7 @@ if(isset($_POST['store'])){
 	 	$goods_money = 0;
 	 	foreach ($res as $val) {
 	 		$goods_title = $val['goods_title'];
-	 		$sku = $val['sku'];
+	 		$sku = $val['goods_code'];
 	 		$goods_num = $val['goods_num'];
 	 		$unit_price = $val['unit_price'];
 	 		$item_price = $val['item_price'];

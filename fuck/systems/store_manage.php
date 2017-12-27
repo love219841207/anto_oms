@@ -360,7 +360,7 @@ if(isset($_POST['demo_mail'])){
 	$goods_money = 0;
 	foreach ($res as $val) {
 		$goods_title = $val['goods_title'];
-		$sku = $val['sku'];
+		$sku = $val['goods_code'];
 		if($station == 'p_yahoo'){
 			$sku = $val['goods_code'];
 		}
