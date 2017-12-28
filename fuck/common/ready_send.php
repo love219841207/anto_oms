@@ -426,7 +426,7 @@ if(isset($_GET['packing'])){
 	$res = $db->execute($sql);
 
 	// 运费代码配送方式
-	$sql = "UPDATE send_table send,yf_code yf SET send.send_method = yf.send_method WHERE send.yfcode = yf.yf_code_name";
+	$sql = "UPDATE send_table send,yf_code yf SET send.send_method = yf.send_method WHERE send.yfcode = yf.yf_code_name AND has_pack = '0'";
 	$res = $db->execute($sql);
 
 	// 所有的mail发黑猫
