@@ -85,15 +85,16 @@ if(isset($_GET['sell_detail_table'])){
     // $objSheet->getColumnDimension('A')->setWidth(34);//单元格宽
     $objSheet->freezePane('A2');//冻结表头
     // $objPHPExcel->getActiveSheet()->getStyle('A')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);//左对齐
+    $objPHPExcel->getActiveSheet()->getStyle('L')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
 
-	$t_title = '销售明细@';
-	$objSheet->setCellValue("A1","购买者")
+    $t_title = '销售明细@';
+    $objSheet->setCellValue("A1","购买者")
         ->setCellValue("B1","配送者")
         ->setCellValue("C1","商品")
-		->setCellValue("D1","数量")
-		->setCellValue("E1","单价")
-		->setCellValue("F1","送料")
-		->setCellValue("G1","手数料")
+        ->setCellValue("D1","数量")
+        ->setCellValue("E1","单价")
+        ->setCellValue("F1","送料")
+        ->setCellValue("G1","手数料")
         ->setCellValue("H1","消費税")
         ->setCellValue("I1","ポイント")
         ->setCellValue("J1","クーポン")
@@ -110,8 +111,8 @@ if(isset($_GET['sell_detail_table'])){
         ->setCellValue("S1",$s_date)
         ->setCellValue("U1",$e_date);
 
-	$sql_line = "SELECT * FROM history_send WHERE express_day BETWEEN '{$s_date}' AND '{$e_date}' ORDER BY send_id,id";
-	$res = $db->getAll($sql_line);
+    $sql_line = "SELECT * FROM history_send WHERE express_day BETWEEN '{$s_date}' AND '{$e_date}' ORDER BY send_id,id";
+    $res = $db->getAll($sql_line);
 
     $j=2;
     $o_who_name = '';
@@ -127,15 +128,9 @@ if(isset($_GET['sell_detail_table'])){
             $value['who_name'] = '';
             $value['ems_money'] = '';
             $value['bill'] = '';
-            $value['tax'] = '';
             $value['point'] = '';
             $value['cheap'] = '';
             $value['receive_name'] = '';
-            $value['ems_money'] = '';
-            $value['bill'] = '';
-            $value['tax'] = '';
-            $value['point'] = '';
-            $value['cheap'] = '';
             $k = '';
 
         }else{
@@ -144,6 +139,8 @@ if(isset($_GET['sell_detail_table'])){
         // 替换[]
         $value['who_name'] = preg_replace('/\[.*?\]/', '', $value['who_name']);
         $value['receive_name'] = preg_replace('/\[.*?\]/', '', $value['receive_name']);
+        // $value['express_day'] = str_replace('-', '', $value['express_day']);
+        // $value['express_day'] = date('Y-m-d',strtotime($value['express_day']))
 
         $objSheet->setCellValue("A".$j,$value['who_name'])
                 ->setCellValue("B".$j,$value['receive_name'])
@@ -157,6 +154,14 @@ if(isset($_GET['sell_detail_table'])){
                 ->setCellValue("J".$j,$value['cheap'])
                 ->setCellValue("K".$j,$k)
                 ->setCellValue("L".$j,$value['express_day'])
+                // ->setCellValue("L".$j,$value['express_day'],PHPExcel_Shared_Date::PHPToExcel(time()))
+                // ->setCellValue("L".$j, $value['express_day'],PHPExcel_Shared_Date::ExcelToPHP(time()))
+                // ->setCellValue($value['express_day'],PHPExcel_Shared_Date::PHPToExcel( gmmktime(0,0,0,date(‘m’,$j),date(‘d’,$j),date(‘Y’,$j)) ))
+                // PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2
+                // ->setCellValue('L'.$j, '=DATEVALUE(A'.$value['express_day'].')')
+                // ->setFormatCode("L".$j,$value['express_day'],PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD)  
+                // gmdate("Y-m-d", PHPExcel_Shared_Date::ExcelToPHP($value))
+                // ->$objPHPExcel->getActiveSheet()->getStyle($str)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_XLSX15)
                 ->setCellValue("M".$j,'新規')
                 ->setCellValue("N".$j,$value['holder'])
                 ->setCellValue("O".$j,$value['store_name'])
@@ -171,6 +176,9 @@ if(isset($_GET['sell_detail_table'])){
         $j++;
         
     }
+    // $objSheet->getStyle('L1:L100')->getNumberFormat()->setFormatCode(PHPExcel_Cell_DataType::FORMAT_DATE_YYYYMMDD2);
+    // $worksheet->getStyle($col_row)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
+          // ->setFormatCode('yyyy/mm/dd');
 
 	$objSheet->setTitle($t_title.$now_time);//表名
     
