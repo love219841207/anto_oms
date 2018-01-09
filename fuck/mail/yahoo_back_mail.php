@@ -139,10 +139,13 @@ if(isset($_POST['store'])){
             $unit_price = $val['unit_price'];
             $item_price = $val['item_price'];
             $cod_money = $val['cod_money'];
+            $goods_arr = explode(';', $val['goods_info']);
+            $goods_info = $goods_arr[0].';'.$goods_arr[1];
 
             $u_info = $u_info.'<tr >
             <td style="color: #616161;">'.$goods_title.'</td>
             <td>'.$sku.'</td>
+            <td>'.$goods_info.'</td>
             <td style="text-align: right;font-family: monospace;">'.$unit_price.' * '.$goods_num.' = '.$item_price.'円</td>
             </tr>';
 
@@ -152,51 +155,53 @@ if(isset($_POST['store'])){
         $order_info = '
         <table width="100%" border="1" bordercolor="no" cellspacing="1" cellpadding="6" style="border-collapse: collapse;font-size:12px;border-color: #ddd;width:100%; font-family: Meiryo;">
         <tr style="background: #009688;color: #FFF;">
-        <td style="text-align: center;">商品名/商品オプション</td>
-        <td width="25%">商品コード/サブコード</td>
-        <td style="text-align:right;" width="20%">単価 * 数量 = 小計</td>
+            <td style="text-align: center;">商品名/商品オプション</td>
+            <td width="25%">商品コード/サブコード</td>
+            <td style="text-align: center;">オプション</td>
+            <td style="text-align:right;" width="20%">単価 * 数量 = 小計</td>
         </tr>
         '.$u_info.'
         <tr>
+        <td></td>
         <td rowspan="7" style="text-align: left; font-size:14px;color: #018276;">
         </td>
-        <td colspan="2" style="text-align: right;">
+        <td colspan="3" style="text-align: right;">
         <span style="color:#009688;">商品金額合計:</span>
         <span style="width:80px;display: inline-block;">'.$goods_money.'円</span>
         </td>
         </tr>
         <tr>
-        <td colspan="2" style="text-align: right;">
+        <td colspan="3" style="text-align: right;">
         <span style="color:#009688;">消费税:</span>
         <span style="width:80px;display: inline-block;">'.$order_tax.'円</span>
         </td>
         </tr>
         <tr>
-        <td colspan="2" style="text-align: right;">
+        <td colspan="3" style="text-align: right;">
         <span style="color:#009688;">送料:</span>
         <span style="width:80px;display: inline-block;">'.$shipping_price.'円</span>
         </td>
         </tr>
         <tr>
-        <td colspan="2" style="text-align: right;">
+        <td colspan="3" style="text-align: right;">
         <span style="color:#009688;">値引き:</span>
         <span style="width:80px;display: inline-block;">'.$coupon.'円</span>
         </td>
         </tr>
         <tr>
-        <td colspan="2" style="text-align: right;">
+        <td colspan="3" style="text-align: right;">
         <span style="color:#009688;">ポイント利用分:</span>
         <span style="width:80px;display: inline-block;">'.$points.'</span>
         </td>
         </tr>
         <tr>
-        <td colspan="2" style="text-align: right;">
+        <td colspan="3" style="text-align: right;">
         <span style="color:#009688;">手数料:</span>
         <span style="width:80px;display: inline-block;">'.$cod_money.'</span>
         </td>
         </tr>
         <tr>
-        <td colspan="2" style="text-align: right;">
+        <td colspan="3" style="text-align: right;">
         <span style="color:#009688;">合計金額（税込）:</span>
         <span style="width:80px;display: inline-block;color:#ff5722;font-weight: bold;font-size: 14px;">'.$all_total_money.'円</span>
         </td>

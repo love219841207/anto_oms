@@ -344,10 +344,10 @@ if(isset($_GET['import_add_list'])){
                         )VALUES(
                             '{$store}', #店铺名
                             '{$order_id}',  #订单号
-                            '{$goods_title}', #商品名
+                            '', #商品名
                             '{$goods_id}', #商品ID
-                            '{$goods_option}', #商品选项
-                            '{$goods_info}',    #选项信息
+                            '', #商品选项
+                            '',    #选项信息
                             '{$now_goods_code}',   #SKU
                             '{$goods_num}',     #购买数量
                             '{$unit_price}',    #单价
