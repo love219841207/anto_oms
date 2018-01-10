@@ -40,8 +40,8 @@ if(isset($_POST['down_express_xlsx'])){
     $objSheet->setCellValue("A1","OrderId")
             ->setCellValue("B1","OrderStatus")
             ->setCellValue("C1","ShipMethod")
-            ->setCellValue("D1","ipInvoiceNumber1")
-            ->setCellValue("E1","ipInvoiceNumber2")
+            ->setCellValue("D1","ShipInvoiceNumber1")
+            ->setCellValue("E1","ShipInvoiceNumber2")
             ->setCellValue("F1","ShipUrl")
             ->setCellValue("G1","ShipDate")
             ->setCellValue("H1","ShipCharge")
@@ -65,7 +65,9 @@ if(isset($_POST['down_express_xlsx'])){
         if($value['express_company'] == 'ヤマト運輸'){
             $url = 'http://toi.kuronekoyamato.co.jp/cgi-bin/tneko';
         }
-        $objSheet->setCellValue("A".$j,$value['yahoo_order_id'])
+        $arr = explode('-', $value['yahoo_order_id']);
+
+        $objSheet->setCellValue("A".$j,$arr['1'])
                  ->setCellValue("D".$j,$value['oms_order_express_num'])
                  ->setCellValue("F".$j,$url)
                  ->setCellValue("G".$j,$value['express_day'])

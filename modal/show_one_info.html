@@ -18,7 +18,7 @@
               <span class="green">{{item.purchase_date}}</span>
             </td>
             <td>
-              <span class="dark">订单号：</span> 
+              <span class="dark">[{{item.id}}]  订单号：</span> 
               <span class="red">{{item.order_id}}</span>
             </td>
           </tr>
@@ -308,8 +308,19 @@
                 <button class="btn btn-default btn-danger" ng-disabled="yf_change==''" type="button" ng-click="change_info_field(item2.id,'yfcode',$index,item2.order_id);aa_yfcode=!aa_yfcode">确定</button>
               </div>
             </td>
+            <!-- 选项 -->
             <td class="tagc" ng-show="now_station=='Yahoo'">
               <i class="fa fa-arrow-circle-right pointer" popover-placement="top-left" uib-popover="【 {{item2.goods_option}} >>> {{item2.goods_info}} >>> {{item2.goods_id}}】" popover-trigger="'click'"></i>
+              <i ng-click="aa_goods_info=!aa_goods_info" 
+                class="fa fa-edit fa-fw pointer"
+                ng-hide="item.order_line>2"
+                ></i>
+              <div ng-show="aa_goods_info" class="input-group">
+                <input ng-blur="check_int('goods_info_'+$index)" style="width:400px;" value="{{item2.goods_info}}" class="form-control input-sm" placeholder="选项 更改为..." type="text" id="goods_info_{{$index}}">
+                <span class="input-group-btn">
+                  <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="change_info_field(item2.id,'goods_info',$index,item2.order_id);aa_goods_info=!aa_goods_info">确定</button>
+                </span>
+              </div>
             </td>
             <!-- sku -->
             <td>{{item2.sku}}</td>

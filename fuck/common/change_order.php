@@ -268,6 +268,9 @@ if(isset($_GET['change_info_field'])){
 	if($field_name == 'cod_money'){
 		$ch_field = '代引手续费';
 	}
+	if($field_name == 'goods_info'){
+		$ch_field = '商品选项';
+	}
 
 	//查询原字段值
 	$sql = "SELECT $field_name as o_key FROM $response_info WHERE id = '{$id}'";

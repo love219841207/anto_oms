@@ -117,6 +117,7 @@ if(isset($_POST['store'])){
 
         // 初始化title
         $u_info = '';
+        $u_info2 = '';
         $cod_money = '';
 
         // 读取购买信息
@@ -149,6 +150,12 @@ if(isset($_POST['store'])){
             <td style="text-align: right;font-family: monospace;">'.$unit_price.' * '.$goods_num.' = '.$item_price.'円</td>
             </tr>';
 
+            $u_info2 = $u_info2.'<tr >
+            <td style="color: #616161;">'.$goods_title.'</td>
+            <td>'.$sku.'</td>
+            <td style="text-align: right;font-family: monospace;">'.$unit_price.' * '.$goods_num.' = '.$item_price.'円</td>
+            </tr>';
+
             $goods_money = $goods_money + $item_price;
         }
 
@@ -171,37 +178,37 @@ if(isset($_POST['store'])){
         </td>
         </tr>
         <tr>
-        <td colspan="3" style="text-align: right;">
+        <td colspan="4" style="text-align: right;">
         <span style="color:#009688;">消费税:</span>
         <span style="width:80px;display: inline-block;">'.$order_tax.'円</span>
         </td>
         </tr>
         <tr>
-        <td colspan="3" style="text-align: right;">
+        <td colspan="4" style="text-align: right;">
         <span style="color:#009688;">送料:</span>
         <span style="width:80px;display: inline-block;">'.$shipping_price.'円</span>
         </td>
         </tr>
         <tr>
-        <td colspan="3" style="text-align: right;">
+        <td colspan="4" style="text-align: right;">
         <span style="color:#009688;">値引き:</span>
         <span style="width:80px;display: inline-block;">'.$coupon.'円</span>
         </td>
         </tr>
         <tr>
-        <td colspan="3" style="text-align: right;">
+        <td colspan="4" style="text-align: right;">
         <span style="color:#009688;">ポイント利用分:</span>
         <span style="width:80px;display: inline-block;">'.$points.'</span>
         </td>
         </tr>
         <tr>
-        <td colspan="3" style="text-align: right;">
+        <td colspan="4" style="text-align: right;">
         <span style="color:#009688;">手数料:</span>
         <span style="width:80px;display: inline-block;">'.$cod_money.'</span>
         </td>
         </tr>
         <tr>
-        <td colspan="3" style="text-align: right;">
+        <td colspan="4" style="text-align: right;">
         <span style="color:#009688;">合計金額（税込）:</span>
         <span style="width:80px;display: inline-block;color:#ff5722;font-weight: bold;font-size: 14px;">'.$all_total_money.'円</span>
         </td>
@@ -292,7 +299,7 @@ if(isset($_POST['store'])){
         <td width="25%">商品コード/サブコード</td>
         <td style="text-align:right;" width="20%">単価 * 数量 = 小計</td>
         </tr>
-        '.$u_info.'
+        '.$u_info2.'
         <tr>
         <td rowspan="7" style="text-align: left; font-size:14px;color: #018276;">
         ■ 備考
