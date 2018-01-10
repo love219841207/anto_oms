@@ -381,6 +381,11 @@ if(isset($_POST['demo_mail'])){
 			<td style="text-align:center;">'.$goods_info.'</td>
 			<td style="text-align: right;font-family: monospace;">'.$unit_price.' * '.$goods_num.' = '.$item_price.'円</td>
 		</tr>';
+		$u_info2 = $u_info2.'<tr >
+			<td style="color: #616161;">'.$goods_title.'</td>
+			<td>'.$sku.'</td>
+			<td style="text-align: right;font-family: monospace;">'.$unit_price.' * '.$goods_num.' = '.$item_price.'円</td>
+		</tr>';
 		$goods_money = $goods_money + $item_price;
 	}
 			
@@ -522,7 +527,7 @@ $pin_book = '
 		<td width="25%">商品コード/サブコード</td>
 		<td style="text-align:right;" width="20%">単価 * 数量 = 小計</td>
 	</tr>
-	'.$u_info.'
+	'.$u_info2.'
 	<tr>
 		<td rowspan="7" style="text-align: left; font-size:14px;color: #018276;">
 		■ 備考
