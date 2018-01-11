@@ -184,6 +184,10 @@ if(isset($_GET['check_all_field'])){
 			$new_name = str_replace($replace_line,"-",$new_name);
 		}
 		
+		// 拆亚马逊CSP
+		$arr = explode('-CSP', $new_name);
+		$new_name = $arr[0];
+
 		// echo $new_name;
 		if($new_name != $now_goods){
 			$sql = "UPDATE $response_info SET goods_code = '{$new_name}' WHERE id = '{$now_id}'";
