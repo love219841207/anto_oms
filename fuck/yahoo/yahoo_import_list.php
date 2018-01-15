@@ -51,7 +51,7 @@ if(isset($_GET['import_add_list'])){
             // echo count($arr);echo ' # ';
             if(is_array($arr) && !empty($arr)){
                 $str = '';
-                for($i=0; $i<113; $i++){
+                for($i=0; $i<114; $i++){
                     // echo $arr[$i]."<br>";
                     $str .= $arr[$i]."|*|";
                 }
@@ -89,7 +89,15 @@ if(isset($_GET['import_add_list'])){
                     $points = $strs[107];
                     $pay_money = $strs[109];
                     $order_total_money = $strs[110];
-                    $coupon = $strs[112];
+                    $coupon1 = $strs[112];
+                    $coupon2 = $strs[113];
+                    if($coupon1 == ''){
+                        $coupon1 = 0;
+                    }
+                    if($coupon2 == ''){
+                        $coupon2 = 0;
+                    }
+                    $coupon = $coupon1 - $coupon2;
 
                     $buyer_name = str_replace('[]', '', $buyer_name);
                     $receive_name = str_replace('[]', '', $receive_name);

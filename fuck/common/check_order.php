@@ -185,7 +185,7 @@ if(isset($_GET['check_all_field'])){
 		}
 		
 		// 拆亚马逊CSP
-		$arr = explode('-CSP', $new_name);
+		$arr = explode('-CSP0', $new_name);
 		$new_name = $arr[0];
 
 		// echo $new_name;
