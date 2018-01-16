@@ -116,7 +116,7 @@ if(isset($_GET['up_express_order'])){
 
 	// table_status = 2 的订单进行原信息匹配
 		// 亚马逊匹配
-		$sql = "UPDATE history_send history,amazon_response_list list SET history.buy_method = list.payment_method,history.who_name = list.buyer_name,history.total_money = list.all_total_money,history.buy_money = list.all_total_money WHERE history.order_id = list.order_id AND history.table_status = '2' AND history.station = 'amazon'";
+		$sql = "UPDATE history_send history,amazon_response_list list SET history.buy_method = list.payment_method,history.point=list.points,history.who_name = list.buyer_name,history.total_money = list.all_total_money,history.buy_money = list.all_total_money - list.coupon - list.points - list.shipping_price WHERE history.order_id = list.order_id AND history.table_status = '2' AND history.station = 'amazon'";
 		$res = $db->execute($sql);
 
 		// 亚马逊匹配 bill
@@ -138,7 +138,7 @@ if(isset($_GET['up_express_order'])){
 			history.who_code = list.buyer_post_code,
 			history.who_house = list.buyer_address,
 			history.total_money = list.all_total_money,
-			history.buy_money = list.all_total_money - list.coupon - list.points - list.shipping_price,
+			history.buy_money = list.pay_money,
 			history.cheap = list.coupon,
 			history.point = list.points,
 			history.ems_money = list.shipping_price,
@@ -158,7 +158,7 @@ if(isset($_GET['up_express_order'])){
 			history.who_code = list.buyer_post_code,
 			history.who_house = list.buyer_address,
 			history.total_money = list.all_total_money,
-			history.buy_money = list.all_total_money - list.coupon - list.points - list.shipping_price,
+			history.buy_money = list.pay_money,
 			history.cheap = list.coupon,
 			history.point = list.points,
 			history.ems_money = list.shipping_price,
@@ -179,7 +179,7 @@ if(isset($_GET['up_express_order'])){
 			history.who_code = list.buyer_post_code,
 			history.who_house = list.buyer_address,
 			history.total_money = list.all_total_money,
-			history.buy_money = list.all_total_money - list.coupon - list.points - list.shipping_price,
+			history.buy_money = list.pay_money,
 			history.cheap = list.coupon,
 			history.point = list.points,
 			history.ems_money = list.shipping_price,

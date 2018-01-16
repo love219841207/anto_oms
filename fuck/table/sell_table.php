@@ -118,23 +118,44 @@ if(isset($_GET['sell_detail_table'])){
     $o_who_name = '';
     $o_receive_name = '';
     $o_send_id = '';
+    $o_order_id = '';
     foreach ($res as $key => $value) {
         if($value['order_id'] == '0'){
             continue;
         }
-        $k = $value['total_money'] - $value['point'] - $value['cheap'];
+        $now_send_id = $value['send_id'];
 
+        // 如果是合单
+        if(strstr($now_send_id, 'H') == true){
+            // $k = total_money - sum(point) -sum(cheap);
+            // 查询该订单的总积分和总优惠券
+            $sql = "SELECT SUM(point) as sum_point,SUM(cheap) as sum_cheap FROM history_send WHERE send_id = '{$now_send_id}'";
+            $res = $db->getOne($sql);
+            $k = $value['total_money'] - $res['sum_point'] - $res['sum_cheap'];
+        }else{
+            // 单订单
+            $k = $value['total_money'] - $value['point'] - $value['cheap'];
+        }        
+
+        // 依照发货ID计算的有：运费、支付金额
         if($value['send_id'] == $o_send_id){
-            $value['who_name'] = '';
             $value['ems_money'] = '';
             $value['bill'] = '';
-            $value['point'] = '';
-            $value['cheap'] = '';
-            $value['receive_name'] = '';
+            // 如果亚马逊 支付金额根据send_id计算
             $k = '';
-
         }else{
             $o_send_id = $value['send_id'];
+        }
+
+        // 依照订单ID计算的有：名字、税、积分、优惠券、总金额
+        if($value['order_id'] == $o_order_id){
+            $value['who_name'] = '';
+            $value['receive_name'] = '';
+            $value['tax'] = '';
+            $value['point'] = '';
+            $value['cheap'] = '';
+        }else{
+            $o_order_id = $value['order_id'];
         }
         // 替换[]
         $value['who_name'] = preg_replace('/\[.*?\]/', '', $value['who_name']);
