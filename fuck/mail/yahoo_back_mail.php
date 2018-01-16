@@ -382,7 +382,7 @@ if(isset($_POST['store'])){
         $mail->Port = $mail_port;                                    // 邮件端口
         $mail->setFrom($mail_id, $mail_name);
         $mail->addAddress($to_mail, $buyer_name);     // 收件人
-        $mail->addBCC('329331097@qq.com');  //秘密抄送
+        // $mail->addBCC('329331097@qq.com');  //秘密抄送
         $mail->addReplyTo($mail_answer_addr, '');   //邮件回复地址
         $mail->isHTML(true);                                  // Set email format to HTML
         $mail->Subject = $mail_topic;   //邮件标题
