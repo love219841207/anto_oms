@@ -434,8 +434,10 @@
                 <button ng-show="search_order_line=='ing'" ng-disabled="my_checked==''" type="button" data-animation="am-fade-and-slide-left" data-template-url="/modal/vip_send.html" bs-modal="modal"  ng-click="check_items();del_true='false';" class="btn btn-default btn-sm green">
                     <i class="fa fa-cubes fa-fw"></i> 优先扣库
                 </button>
+                <button class="btn btn-default btn-sm" ng-click="orderby_order=!orderby_order;order_by_list_order()" ng-class="{'green':orderby_order,'red':!orderby_order}"><i class="fa" ng-class="{'fa-long-arrow-up':orderby_order,'fa-long-arrow-down':!orderby_order}"></i> 注文时间排序</button>
+                <button class="btn btn-default btn-sm" ng-click="orderby_id=!orderby_id;order_by_list_id()" ng-class="{'green':orderby_id,'red':!orderby_id}"><i class="fa" ng-class="{'fa-sort-numeric-asc':orderby_id,'fa-sort-numeric-desc':!orderby_id}"></i> ID排序</button>
             </div>
-            <div ng-repeat="item in get_order_list_data track by $index" class="animate slide-left">
+            <div ng-repeat="item in get_order_list_data | orderBy:obo track by $index" class="animate slide-left">
                 <table class="table table-condensed table-hover table-bordered f12" >
                     <tr class="white" ng-class="
                             {'danger':item.order_line=='0' || item.post_ok=='2' || item.tel_ok=='2' || item.sku_ok=='2' || item.yfcode_ok=='2',

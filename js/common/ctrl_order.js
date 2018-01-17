@@ -26,6 +26,23 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
     //筛选默认值
     $scope.search_order_line = 'ing';
 
+    //排序
+    $scope.order_by_list_order = function(){
+        if($scope.orderby_order){
+            $scope.obo = '-purchase_date';
+        }else{
+            $scope.obo = 'purchase_date';
+        }
+    };
+
+    $scope.order_by_list_id = function(){
+        if($scope.orderby_id){
+            $scope.obo = 'id';
+        }else{
+            $scope.obo = '-id';
+        }
+    };
+
     //初始化数据view层
     $scope.init_list = function(){
         $scope.get_order_list_data = '';    //订单列表数据
