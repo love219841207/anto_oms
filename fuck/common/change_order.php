@@ -193,6 +193,10 @@ if(isset($_GET['change_list_field'])){
 		$ch_field = '积分';
 		$sql = "UPDATE $response_list SET $field_name = '{$new_key}' WHERE order_id = '{$order_id}'";
 	}
+	if($field_name == 'coupon'){
+		$ch_field = '优惠券';
+		$sql = "UPDATE $response_list SET $field_name = '{$new_key}' WHERE order_id = '{$order_id}'";
+	}
 	
 	$res = $db->execute($sql);
 

@@ -46,7 +46,20 @@
           <tr>
             <td class="s_gray">
               <span class="red bg_yellow" ng-show="item.payment_method=='COD'">代引金额：{{item.pay_money}}</span>
-              <span ng-show="item.coupon">优惠券：<span ng-class="{'red bg_yellow':item.coupon!=0}">{{item.coupon}}</span></span>
+              <span ng-show="item.coupon">
+                优惠券：<span ng-class="{'red bg_yellow':item.coupon!=0}">{{item.coupon}}</span>
+                <i ng-click="aa_coupon=!aa_coupon" 
+                    class="fa fa-edit fa-fw pointer"
+                    ng-hide="item.order_line>3"
+                    ></i>
+                  <div ng-show="aa_coupon" class="input-group">
+                    <input class="form-control input-sm" placeholder="优惠券 更改为..." type="text" id="coupon">
+                    <span class="input-group-btn">
+                      <button class="btn btn-default btn-danger btn-sm" type="button" ng-click="need_check_list('coupon',item.order_id);aa_coupon=!aa_coupon">确定</button>
+                    </span>
+                  </div>
+                </span>
+              </span>
               <span ng-show="item.points">
                 积分：<span ng-class="{'red bg_yellow':item.points!=0}">{{item.points}}
                 <i ng-click="aa_points=!aa_points" 
