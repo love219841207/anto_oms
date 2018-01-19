@@ -366,12 +366,11 @@ if(isset($_GET['import_add_list'])){
                         $res = $db->execute($sql);
                     }
                 }
-
-                // 更新 cod_money
-                $sql = "UPDATE yahoo_response_info info,yahoo_response_list list SET info.cod_money = list.cod_money WHERE info.order_id = list.order_id AND import_time = '{$now_time}'";
-                $res = $db->execute($sql);
             }
         }
+        // 更新 cod_money
+        $sql = "UPDATE yahoo_response_info info,yahoo_response_list list SET info.cod_money = list.cod_money WHERE info.order_id = list.order_id AND import_time = '{$now_time}'";
+        $res = $db->execute($sql);
         echo 'ok';
     }
 }
