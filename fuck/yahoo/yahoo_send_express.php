@@ -67,7 +67,7 @@ if(isset($_POST['down_express_xlsx'])){
         }
         $arr = explode('-', $value['yahoo_order_id']);
 
-        $objSheet->setCellValue("A".$j,$arr['1'])
+        $objSheet->setCellValue("A".$j,end($arr))
                  ->setCellValue("D".$j,$value['oms_order_express_num'])
                  ->setCellValue("F".$j,$url)
                  ->setCellValue("G".$j,$value['express_day'])
