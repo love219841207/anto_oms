@@ -8,7 +8,7 @@ app.controller('sendCtrl', ['$rootScope','$scope','$state','$http','$log','$time
     $scope.e_date = today;
     $scope.init_express = function(){
         $scope.express_response = false;
-    }
+    };
 
     // 下载发货单
     $scope.send_table = function(type,company){
@@ -31,7 +31,7 @@ app.controller('sendCtrl', ['$rootScope','$scope','$state','$http','$log','$time
             alert("系统错误，请联系管理员。");
             $log.info("error:下载通信失败。");
         });
-    }
+    };
 
     // 读取快递单
     $scope.look_express = function(){
@@ -45,7 +45,7 @@ app.controller('sendCtrl', ['$rootScope','$scope','$state','$http','$log','$time
             alert("系统错误，请联系管理员。");
             $log.info("快递单读取失败");
         });
-    }
+    };
 
     // 清空快递单
     $scope.truncate_yes = function(){
@@ -61,7 +61,7 @@ app.controller('sendCtrl', ['$rootScope','$scope','$state','$http','$log','$time
             alert("系统错误，请联系管理员。");
             $log.info("快递单清空失败");
         });
-    }
+    };
 
     // 更新快递单
     $scope.up_express_order = function(){
@@ -71,12 +71,28 @@ app.controller('sendCtrl', ['$rootScope','$scope','$state','$http','$log','$time
             if(data == 'ok'){
                 $scope.look_express();
             }else{
-                $log.info(data)
+                $log.info(data);
             }
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
-            $log.info("更新快递单失败");
+            $log.info("更新OMS快递单失败");
         });
-    }
+    };
 
-}])
+    // 更新售后快递单
+    $scope.up_repair_express = function(){
+         $scope.shadow('open','ss_make','..正在删除 OMS 快递单');
+        $http.get('/fuck/common/import_express.php', {params:{up_repair_express:'update'}
+        }).success(function(data) {
+            if(data == 'ok'){
+                $timeout(function(){$scope.look_express();},3000);
+            }else{
+                $log.info(data);
+            }
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("更新售后快递单失败");
+        });
+    };
+
+}]);

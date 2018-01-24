@@ -6,7 +6,19 @@ require_once("../log.php");
 $dir = dirname(__FILE__);
 
 set_time_limit(0);
-
+// 更新售后快递单号
+if(isset($_GET['up_repair_express'])){
+	// 清空OMS单号
+	$sql = "DELETE FROM import_express WHERE pack_id not like 'b%'";
+	$res = $db->execute($sql);
+	// 更新单号到售后系统
+	$sql = "SELECT * FROM import_express";
+	$res = $db->getAll();
+	foreach ($res as $value) {
+		
+	}
+	echo 'ok';
+}
 // 更新快递单号
 if(isset($_GET['up_express_order'])){
 	// 更新单号和快递日期到 send_table，并且table_status = 2,express_status = 1
