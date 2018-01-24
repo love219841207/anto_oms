@@ -27,11 +27,11 @@ if(isset($_POST['order_table'])){
     $objSheet = $objPHPExcel->getActiveSheet();
     $objSheet->setTitle('订单@'.$now_time);//表名
     $objSheet->getDefaultStyle()->getFont()->setName("微软雅黑")->setSize(12);  //默认字体
-    $objPHPExcel->getActiveSheet()->getStyle('A1:AH1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
-    $objPHPExcel->getActiveSheet()->getStyle('A:AH')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
-    $objPHPExcel->getActiveSheet()->getStyle('A1:AH1')->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_WHITE);//前景色
-    $objSheet->getStyle('A1:AH1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
-    $objSheet->getStyle('A1:AH1')->getFill()->getStartColor()->setRGB('1d9c73'); //背景色
+    $objPHPExcel->getActiveSheet()->getStyle('A1:AI1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
+    $objPHPExcel->getActiveSheet()->getStyle('A:AI')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);//垂直居中
+    $objPHPExcel->getActiveSheet()->getStyle('A1:AI1')->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_WHITE);//前景色
+    $objSheet->getStyle('A1:AI1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+    $objSheet->getStyle('A1:AI1')->getFill()->getStartColor()->setRGB('1d9c73'); //背景色
     // $objSheet->getDefaultRowDimension()->setRowHeight(28);   //单元格高
     // $objSheet->getColumnDimension('A')->setWidth(34);//单元格宽
     $objSheet->freezePane('A2');//冻结表头
@@ -72,6 +72,7 @@ if(isset($_POST['order_table'])){
             ->setCellValue("AF1","指定时间")
             ->setCellValue("AG1","订单状态")
             ->setCellValue("AH1","落扎者ID")
+            ->setCellValue("AI1","配送要求")
             ;    //表头值
         //SQL
 
@@ -111,6 +112,44 @@ if(isset($_POST['order_table'])){
                 list.want_time, #指定时间
                 list.order_line, #指定时间
                 list.who_id
+         FROM $response_list list,$response_info info WHERE list.order_id = info.order_id AND list.order_id in ($my_checked_items) ORDER BY send_id";
+         }else if($station == 'yahoo'){
+            $sql = "SELECT 
+                list.id,    #OMS-ID
+                list.station,   #平台
+                list.store, #店铺
+                list.order_id,  #注文番号
+                list.purchase_date,     #注文时间
+                list.order_note,    #备注
+                list.buyer_name,    #购买者
+                list.buyer_email,   #email
+                list.all_total_money,   #总金额
+                list.order_total_money, #订单金额
+                list.payment_method,    #支付方式
+                list.pay_money, #待支付
+                list.phone, #电话
+                list.post_code, #邮编
+                list.address,   #配送地址
+                list.receive_name,  #收件人
+                info.goods_title,   #品名
+                list.shipping_price,  #运费
+                info.sku,   #商品SKU
+                info.goods_code,    #商品代码
+                info.goods_num, #数量
+                info.pause_ch,  #押中国
+                info.pause_jp,  #押日本
+                list.repo_status,   #发货仓库
+                info.unit_price,    #单价
+                info.item_price,    #该项价格
+                info.cod_money, #代引金额
+                list.syn_day,   #同步日期
+                list.send_method, #配送方式
+                list.buyer_others, #客人备注
+                list.want_date, #指定日期
+                list.want_time, #指定时间
+                list.order_line, #指定时间
+                list.who_id,
+                info.goods_send_info
          FROM $response_list list,$response_info info WHERE list.order_id = info.order_id AND list.order_id in ($my_checked_items) ORDER BY send_id";
          }else{
                     $sql = "SELECT 
@@ -223,6 +262,7 @@ if(isset($_POST['order_table'])){
                     ->setCellValue("AF".$j,$value['want_time'])
                     ->setCellValue("AG".$j,$value['order_line'])
                     ->setCellValue("AH".$j,$value['who_id'])
+                    ->setCellValue("AI".$j,$value['goods_send_info'])
                     ;
             $j++;
         }
