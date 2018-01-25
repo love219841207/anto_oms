@@ -247,6 +247,7 @@ app.controller('storeCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         $scope.express_mail_modal_store = store_name;
         $http.get('/fuck/systems/store_manage.php', {params:{get_express_mail:store_name}
         }).success(function(data) {
+            $log.info(data);
             $scope.express_mail_modal_topic = data.mail_topic;
             $scope.express_mail_html = data.mail_html;
             $scope.express_mail_txt = data.mail_txt;

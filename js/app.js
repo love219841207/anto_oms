@@ -485,6 +485,27 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
             }
         })
 
+        //更新快递单
+        .state('site.repair_mail',{
+            url: '/repair_mail/{data}',
+            cache: false,
+            views:{
+                'show@site':{
+                    templateUrl: 'tpls/common/repair_mail.html',
+                    controller: function($scope){
+                        $scope.status.isopen1 = false;
+                        $scope.status.isopen2 = false;
+                        $scope.status.isopen3 = false;
+                        $scope.status.isopen4 = true;
+                        $scope.status.isopen5 = false;
+                        $scope.status.isopen6 = false;
+                        $scope.status.isopen7 = false;
+                        $scope.status.isopen8 = false;
+                    }
+                }
+            }
+        })
+
         // 退单
         .state('site.back',{
             url: '/back/{data}',

@@ -11,7 +11,7 @@
         <h4 class="modal-title blue"><i class="fa fa-fw fa-envelope"></i> {{express_mail_modal_store}} 发货通知信</h4>
       </div>
       <div class="modal-body">
-        <table class="table table-condensed table-bordered f12 tagc info">
+        <table ng-hide="express_mail_modal_store == 'repair'" class="table table-condensed table-bordered f12 tagc info">
           <tr>
             <td class="pointer" ng-click="add_var('#buyer_name#')">购买人<div class="red">#buyer_name#</div></td>
             <td class="pointer" ng-click="add_var('#receive_name#')">收件人<div class="red">#receive_name#</div></td>
@@ -23,6 +23,17 @@
             <td class="pointer" ng-click="add_var('#send_method#')">配送方式<div class="red">#send_method#</div></td>
             <td class="pointer" ng-click="add_var('#express_num#')">快递单号<div class="red">#express_num#</div></td>
             <td class="pointer" ng-click="add_var('#pin_book#')">纳品书<div class="red">#pin_book#</div></td>
+          </tr>
+        </table>
+        <table ng-show="express_mail_modal_store == 'repair'" class="table table-condensed table-bordered f12 tagc info">
+          <tr>
+            <td class="pointer" ng-click="add_var('#order_id#')">订单号<div class="red">#order_id#</div></td>
+            <td class="pointer" ng-click="add_var('#express_company#')">店铺<div class="red">#express_company#</div></td>
+            <td class="pointer" ng-click="add_var('#send_method#')">收件人<div class="red">#send_method#</div></td>
+            <td class="pointer" ng-click="add_var('#express_num#')">保修快递公司<div class="red">#express_num#</div></td>
+            <td class="pointer" ng-click="add_var('#pin_book#')">保修快递单号<div class="red">#pin_book#</div></td>
+            <td class="pointer" ng-click="add_var('#pin_book#')">返修商品<div class="red">#pin_book#</div></td>
+            <td class="pointer" ng-click="add_var('#pin_book#')">保修快递日期 <div class="red">#pin_book#</div></td>
           </tr>
         </table>
 
