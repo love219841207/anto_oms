@@ -2,6 +2,8 @@
 require_once("../header.php");
 require_once("../PHPExcel/PHPExcel.php");//引入PHPExcel
 require_once("../log.php");
+require_once("../../pdo/repair.PdoMySQL.class.php");//REPAIR_PDO
+$shdb = new RepairPdoMySQL();
 
 $dir = dirname(__FILE__);
 
@@ -13,9 +15,14 @@ if(isset($_GET['up_repair_express'])){
 	$res = $db->execute($sql);
 	// 更新单号到售后系统
 	$sql = "SELECT * FROM import_express";
-	$res = $db->getAll();
+	$res = $db->getAll($sql);
 	foreach ($res as $value) {
-		
+		$now_id = str_replace('b', '', $value['pack_id']);
+		$express_num = $value['express_num'];
+		$express_name = $value['express_name'];
+		$express_date = $value['express_date'];
+		$sql = "UPDATE repair_list SET re_express = '{$express_num}',re_company = '{$express_name}',re_date = '{$express_date}',re_mail = '-' WHERE id = {$now_id}";
+		$res = $shdb->execute($sql);
 	}
 	echo 'ok';
 }

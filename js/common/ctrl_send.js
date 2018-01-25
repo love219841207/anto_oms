@@ -81,11 +81,13 @@ app.controller('sendCtrl', ['$rootScope','$scope','$state','$http','$log','$time
 
     // 更新售后快递单
     $scope.up_repair_express = function(){
-         $scope.shadow('open','ss_make','..正在删除 OMS 快递单');
+        $scope.shadow('open','ss_make','..正在删除 OMS 快递单');
+        $timeout(function(){$scope.shadow('open','ss_syn','..正在更新快递单到【售后系统】');},1000);
         $http.get('/fuck/common/import_express.php', {params:{up_repair_express:'update'}
         }).success(function(data) {
             if(data == 'ok'){
-                $timeout(function(){$scope.look_express();},3000);
+                $timeout(function(){$scope.shadow('open','ss_write','更新完成');},3000);
+                $timeout(function(){$scope.look_express();},6000);
             }else{
                 $log.info(data);
             }
