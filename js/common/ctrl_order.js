@@ -1837,4 +1837,9 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         });
     }
 
+    // 售后拉取订单
+    $scope.syn_repair_order = function(){
+        alert($scope.e_date)
+    }
+
 }])

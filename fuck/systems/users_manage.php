@@ -125,3 +125,12 @@ if(isset($_GET['can_send'])){
 	$res = $db->execute($sql);
 	echo 'ok';
 }
+
+// 是否可售后操作
+if(isset($_GET['can_repair'])){
+    $u_num = $_GET['can_repair'];
+
+    $sql = "UPDATE user_oms SET can_repair = (CASE can_repair WHEN  '0' THEN '1' WHEN '1' THEN '0' END) WHERE u_num = '{$u_num}'";
+    $res = $db->execute($sql);
+    echo 'ok';
+}

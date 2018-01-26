@@ -23,10 +23,11 @@
 									<td><i class="fa fa-hashtag fa-fw"></i> 工 号</td>
 									<td><i class="fa fa-user fa-fw"></i> 员 工</td>
 									<td><i class="fa fa-send fa-fw"></i> 发货操作</td>
-									<td><i class="fa fa-amazon fa-fw"></i> 亚马逊</td>
-									<td><i class="fa fa-registered fa-fw"></i> 乐 天</td>
-									<td><i class="fa fa-yahoo fa-fw"></i> 雅 虎</td>
-									<td><i class="fa fa-fw fa-product-hunt"></i> 雅虎拍卖</td>
+									<td><i class="fa fa-heart red fa-fw"></i> 售后操作</td>
+									<td style="width: 168px;"><i class="fa fa-amazon fa-fw"></i> 亚马逊</td>
+									<td style="width: 168px;"><i class="fa fa-registered fa-fw"></i> 乐 天</td>
+									<td style="width: 168px;"><i class="fa fa-yahoo fa-fw"></i> 雅 虎</td>
+									<td style="width: 168px;"><i class="fa fa-fw fa-product-hunt"></i> 雅虎拍卖</td>
 									<td><i class="fa fa-cog fa-fw fa-spin"></i> 操 作</td>
 								</tr>
 								<tr class="s_gray" ng-repeat="item in all_users track by $index">
@@ -34,20 +35,25 @@
 									<td>{{item.u_num}}</td>
 									<td>{{item.u_name}}</td>
 									<td ng-class="{'green success':item.can_send==1,'red danger':item.can_send==0}">{{item.can_send | status}} <i class="green pointer fa fa-hand-pointer-o fa-fw" ng-click="can_send(item.u_num)"></i></td>
+									<td ng-class="{'green success':item.can_repair==1,'red danger':item.can_repair==0}">{{item.can_repair | status}} <i class="green pointer fa fa-hand-pointer-o fa-fw" ng-click="can_repair(item.u_num)"></i></td>
 									<td class="tagl green">
-										&nbsp;{{item.u_amazon | replace_symbol}} <i ng-hide="item.u_num<1001" data-animation="am-fade-and-slide-top" data-template-url="/modal/change_user_store.html" bs-modal="modal" ng-click="change_usaer_store_modal('Amazon',item.u_num)" class="fa fa-edit pointer s_gray"></i>
+										<i ng-hide="item.u_num<1001" data-animation="am-fade-and-slide-top" data-template-url="/modal/change_user_store.html" bs-modal="modal" ng-click="change_usaer_store_modal('Amazon',item.u_num)" class="fa fa-edit pointer s_gray"></i>
+										&nbsp;{{item.u_amazon | replace_symbol}}
 									</td>
 									<td class="tagl green">
-										&nbsp;{{item.u_rakuten | replace_symbol}} <i ng-hide="item.u_num<1001" data-animation="am-fade-and-slide-top" data-template-url="/modal/change_user_store.html" bs-modal="modal" ng-click="change_usaer_store_modal('Rakuten',item.u_num)" class="fa fa-edit pointer s_gray"></i>
+										<i ng-hide="item.u_num<1001" data-animation="am-fade-and-slide-top" data-template-url="/modal/change_user_store.html" bs-modal="modal" ng-click="change_usaer_store_modal('Rakuten',item.u_num)" class="fa fa-edit pointer s_gray"></i>
+										&nbsp;{{item.u_rakuten | replace_symbol}}
 									</td>
 									<td class="tagl green">
-										&nbsp;{{item.u_yahoo | replace_symbol}} <i ng-hide="item.u_num<1001" data-animation="am-fade-and-slide-top" data-template-url="/modal/change_user_store.html" bs-modal="modal" ng-click="change_usaer_store_modal('Yahoo',item.u_num)" class="fa fa-edit pointer s_gray"></i>
+										<i ng-hide="item.u_num<1001" data-animation="am-fade-and-slide-top" data-template-url="/modal/change_user_store.html" bs-modal="modal" ng-click="change_usaer_store_modal('Yahoo',item.u_num)" class="fa fa-edit pointer s_gray"></i>
+										&nbsp;{{item.u_yahoo | replace_symbol}}
 									</td>
 									<td class="tagl green">
-										&nbsp;{{item.u_p_yahoo | replace_symbol}} <i ng-hide="item.u_num<1001" data-animation="am-fade-and-slide-top" data-template-url="/modal/change_user_store.html" bs-modal="modal" ng-click="change_usaer_store_modal('P_Yahoo',item.u_num)" class="fa fa-edit pointer s_gray"></i>
+										<i ng-hide="item.u_num<1001" data-animation="am-fade-and-slide-top" data-template-url="/modal/change_user_store.html" bs-modal="modal" ng-click="change_usaer_store_modal('P_Yahoo',item.u_num)" class="fa fa-edit pointer s_gray"></i>
+										&nbsp;{{item.u_p_yahoo | replace_symbol}} 
 									</td>
 									<td>
-										<div ng-hide="item.u_num<1000" data-animation="am-fade-and-slide-top" data-template-url="/modal/re_pwd_user.html" bs-modal="modal" ng-click="re_pwd_modal(item.u_num,item.u_name)" class="btn btn-xs btn-warning mr20"><i class="fa-undo fa fa-fw"></i>重置密码</div>
+										<div ng-hide="item.u_num<1000" data-animation="am-fade-and-slide-top" data-template-url="/modal/re_pwd_user.html" bs-modal="modal" ng-click="re_pwd_modal(item.u_num,item.u_name)" class="btn btn-xs btn-warning mr5"><i class="fa-undo fa fa-fw"></i>重置密码</div>
 										<div ng-hide="item.u_num<1000" data-animation="am-fade-and-slide-top" data-template-url="/modal/del_user.html" bs-modal="modal" ng-click="del_user_modal(item.u_num,item.u_name)" class="btn-danger btn btn-xs"><i class="fa fa-trash-o fa-fw"></i>删 除</div>
 									</td>
 								</tr>

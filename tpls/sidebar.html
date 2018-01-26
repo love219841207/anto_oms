@@ -113,10 +113,6 @@
 					<i class="fa fa-fw fa-refresh ml5"></i>
 					<span class="am-fade" ng-show="side_bar"> 更新快递单</span>
 				</div>
-				<div ng-mouseenter="side_info('售后发货通知信')" ui-sref="site.repair_mail" ui-sref-active="active" class="list-group-item">
-					<i class="fa fa-fw fa-envelope ml5"></i>
-					<span class="am-fade" ng-show="side_bar"> 售后发货通知信</span>
-				</div>
 				<div ng-mouseenter="side_info('已出单+转售后')" ui-sref="site.history" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-plane ml5"></i>
 					<span class="am-fade" ng-show="side_bar"> 已出单+售后</span>
@@ -147,6 +143,25 @@
 				<div ng-mouseenter="side_info('历史订单')" ui-sref="site.history_order" ui-sref-active="active" class="list-group-item">
 					<i class="fa fa-fw fa-database ml5"></i>
 					<span class="am-fade" ng-show="side_bar"> 历史订单</span>
+				</div>
+			</div>
+			<!-- 售后订单 -->
+			<div ng-mouseenter="side_info('售后订单')" ng-hide="ucan_repair=='0'" uib-accordion-group is-open="status.isopen9" ng-class="{'open_down':status.isopen9}" class="panel-default hover">
+				<uib-accordion-heading>
+	        		<i class="fa fa-fw fa-heart red"></i>
+	        		<span class="am-fade" ng-show="side_bar"> 售后订单</span><i class="pull-right fa fa-angle-right weight" ng-class="{'scroll_90': status.isopen9,'scroll_0': !status.isopen9}"></i>
+	     	 	</uib-accordion-heading>
+				<div ng-mouseenter="side_info('售后转入')" ui-sref="site.repair_add" ui-sref-active="active" class="list-group-item">
+					<i class="fa fa-fw fa-arrow-up ml5"></i>
+					<span class="am-fade" ng-show="side_bar"> 订单转入</span>
+				</div>
+				<div ng-mouseenter="side_info('保修发货')" ui-sref="site.repair_order" ui-sref-active="active" class="list-group-item">
+					<i class="fa fa-fw fa-file-text-o ml5"></i>
+					<span class="am-fade" ng-show="side_bar"> 保修发货</span>
+				</div>
+				<div ng-mouseenter="side_info('售后发货通知信')" ui-sref="site.repair_mail" ui-sref-active="active" class="list-group-item">
+					<i class="fa fa-fw fa-envelope ml5"></i>
+					<span class="am-fade" ng-show="side_bar"> 售后发货通知信</span>
 				</div>
 			</div>
 			<!-- 个人设置 -->

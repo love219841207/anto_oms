@@ -21,7 +21,8 @@ if(isset($_POST['u_num'])){
     }else{
 		$_SESSION['oms_u_num'] = $u_num;
 		$_SESSION['oms_u_name'] = $res['u_name'];
-		$_SESSION['oms_can_send'] = $res['can_send'];
+        $_SESSION['oms_can_send'] = $res['can_send'];
+        $_SESSION['oms_can_repair'] = $res['can_repair'];
 
 		//日志
 		$do = '[Login] 登入系统';
@@ -47,7 +48,8 @@ if(isset($_GET['u_num'])){
 		echo 'logout';die;
 	}
 	$final_res['u_num'] = $_SESSION['oms_u_num'];
-	$final_res['can_send'] = $_SESSION['oms_can_send'];
+    $final_res['can_send'] = $_SESSION['oms_can_send'];
+	$final_res['can_repair'] = $_SESSION['oms_can_repair'];
 	echo json_encode($final_res);
 }
 

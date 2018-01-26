@@ -1,0 +1,27 @@
+<div class="container-fluid" ng-controller="orderCtrl">
+    <div class="btn-group pull-left">
+        <button type="button" ng-show="cc_all" class="btn btn-default btn-sm mt10" ng-click="check_all_item();">
+            <i class="fa fa-square-o fa-fw s_gray"></i>全选
+        </button>
+        <button type="button" ng-hide="cc_all" class="btn btn-default btn-sm mt10" ng-click="check_no_item();">
+            <i class="fa fa-check-square-o fa-fw s_gray"></i>不选
+        </button>
+        <button type="button" class="btn btn-default btn-sm mt10" ng-click="check_back_item();back_icon=!back_icon">
+            <i class="fa fa-adjust fa-fw s_gray" ng-class="{'fa-flip-horizontal':back_icon}"></i>反选
+        </button>
+    </div>
+
+    <div class="btn-group pull-left ml20">
+        <div class="btn btn-default mt10 disabled">終了日</div>
+        <button type="button" class="btn btn_fff btn-sm mt10" >
+            <span>
+                <input placeholder="开始日期" class="date_icon blue" readonly="readonly" type="text" name="s_date" ng-flat-datepicker datepicker-config="datepickerConfig" ng-model="s_date"> - <input placeholder="结束日期" class="date_icon blue" readonly="readonly" type="text" name="e_date" ng-flat-datepicker datepicker-config="datepickerConfig" ng-model="e_date">
+            </span>
+        </button>
+
+        <div class="btn btn-success mt10" ng-disabled="s_date=='' || e_date==''" ng-click="syn_repair_order()"><i class="fa fa-refresh fa-fw"></i>拉取订单</div>
+        <div class="btn btn-primary mt10" ng-click="show_back_info()"><i class="fa fa-check fa-fw"></i>确认拉取</div>
+    </div>
+    <div style="height: 700px;"></div>
+        
+</div>

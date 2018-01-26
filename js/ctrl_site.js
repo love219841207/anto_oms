@@ -51,6 +51,7 @@ app.controller('siteCtrl', ['$rootScope','$scope','$state','$stateParams','$http
     }).success(function(data) {
         $scope.u_num = data.u_num;
         $scope.ucan_send = data.can_send;
+        $scope.ucan_repair = data.can_repair;
         if($scope.u_num < '1003'){  //系统设置权限 is_admin
             $scope.is_admin = true;
         }
