@@ -993,7 +993,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:备注保存失败。");
         });
-    }
+    };
 
     // 标记订单
     $scope.mark_orders = function(e){
@@ -1018,7 +1018,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:订单标记失败。");
         });
-    }
+    };
 
     // 确认入金
     $scope.pay_ok = function(){
@@ -1041,7 +1041,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:确认入金失败。");
         });
-    }
+    };
 
     // 转回待支付
     $scope.pay_ok_back = function(){
@@ -1066,7 +1066,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:转回待支付失败。");
         });
-    }
+    };
 
     // 删除订单
     $scope.del_items = function(method){
@@ -1091,7 +1091,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:删除订单失败。");
         });
-    }
+    };
 
     //还原订单
     $scope.amz_return =  function(){
@@ -1114,7 +1114,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:删除订单失败。");
         });
-    }
+    };
 
     // 保留订单
     $scope.stop_order = function(){
@@ -1139,7 +1139,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:保留订单失败。");
         });
-    }
+    };
 
     // 不保留订单，取回订单
     $scope.stop_back_order = function(){
@@ -1162,7 +1162,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:取回订单订单失败。");
         });
-    }
+    };
 
     // 检测商品代码
     $scope.check_goods_code = function(){
@@ -1194,7 +1194,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:商品代码检测失败。");
         });
-    }
+    };
 
     // 检测正数
     $scope.check_int = function(e){
@@ -1207,7 +1207,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         }else{
             $scope[e] = true;
         }
-    }
+    };
 
     // 下载订单
     $scope.down_items = function(){
@@ -1227,7 +1227,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:下载订单失败。");
         });
-    }
+    };
 
     // 添加item
     $scope.add_item = function(order_id){
@@ -1263,7 +1263,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:添加item失败。");
         });
-    }
+    };
 
     // 删除item
     $scope.del_item = function(order_id,id){
@@ -1283,7 +1283,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:删除item失败。");
         });
-    }
+    };
 
     //合单
     //一键合单
@@ -1297,14 +1297,14 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             }
         }).success(function(data) {
             $scope.cc_com_order();  //cc收件人地址
-            $log.info(data)
+            $log.info(data);
             $scope.common_order_data = data;
             $timeout(function(){$scope.shadow('close');},500); //关闭shadow
         }).error(function(data) {
             alert("系统错误，请联系管理员。");
             $log.info("error:一键合单失败。");
         });
-    }
+    };
 
 
     //获取某个合单
@@ -1324,7 +1324,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:获取某个合单失败。");
         });
-    }
+    };
 
     //获取合单列表
     $scope.list_common_order = function(){
@@ -1343,7 +1343,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:获取合单列表失败。");
         });
-    }
+    };
 
     // 合单收件人地址再核对
     $scope.cc_com_order = function(send_id){
@@ -1360,7 +1360,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         }).error(function(data) {
             alert("系统错误，请联系管理员核对。");
         });
-    }
+    };
 
     //拆单
     $scope.break_common_order = function(send_id){
@@ -1377,7 +1377,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
                 $scope.plug_alert('success','拆单完成。','fa fa-smile-o');
                 $scope.list_common_order();
             }else{
-                $log.info(data)
+                $log.info(data);
                 $scope.plug_alert('danger','拆单失败。','fa fa-ban');
             }
             $timeout(function(){$scope.shadow('close');},500); //关闭shadow
@@ -1385,7 +1385,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:获取合单列表失败。");
         });
-    }
+    };
 
     //扣库存
     $scope.sub_repo = function(method){
@@ -1409,7 +1409,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:扣库存失败。");
         });
-    }
+    };
 // 订单操作结束
 
 
@@ -1423,7 +1423,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:订单发货列表查询失败。");
         });
-    }
+    };
 
     //订单发货
     $scope.send_express = function(){
@@ -1442,7 +1442,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:单品发货失败。");
         });
-    }  
+    };
 
     // 邮件模板查询
     $scope.get_mail_tpl = function(){
@@ -1456,14 +1456,14 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:邮件模板查询失败。");
         });
-    }
+    };
 
     // 默认模板为空
     $scope.to_mail_tpl = '';
 
     // 读取邮件模板内容
     $scope.read_mail_info = function(){
-        $log.info($scope.to_mail_tpl)
+        // $log.info($scope.to_mail_tpl)
         $http.get('/fuck/systems/store_manage.php', {
             params:{
                 edit_mail_tpl:$scope.to_mail_tpl
@@ -1475,7 +1475,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:邮件内容读取失败。");
         });
-    }
+    };
 
     // 邮件预览
     $scope.demo_mail = function(order_id){
@@ -1485,17 +1485,17 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
                 station:$scope.now_station,
                 to_mail_tpl:$scope.to_mail_tpl
             };
-            $log.info(post_data)
+            // $log.info(post_data)
 
         $http.post('/fuck/systems/store_manage.php', post_data).success(function(data) {  
-            $log.info(data)
+            // $log.info(data)
             document.getElementById('mail_info_topic').innerHTML = data.mail_topic;
             document.getElementById('mail_info_html').innerHTML = data.mail_html;
         }).error(function(data) {  
             alert("系统错误，请联系管理员。");
             $log.info("error:邮件内容读取失败。");
         }); 
-    }
+    };
 
     // 发模板信
     $scope.amz_mail_items = function(){
@@ -1612,7 +1612,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:邮件内容读取失败。");
         });
-    }
+    };
 
     // 跳转筛选
     $scope.jump_cut = function(line){
@@ -1621,7 +1621,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         $scope.tool_1 = true;
         $scope.open_check = true;
         $scope.filter_bar_submit();
-    }
+    };
 
     // 配送指定时间
     $scope.change_want_date = function(order_id,open_info){
@@ -1632,7 +1632,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         }
         
         $scope.change_want_date_order_id = order_id;
-    }
+    };
 
     // 保存配送指定日期时间
     $scope.save_want_date = function(){  
@@ -1668,7 +1668,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:保存配送指定日期时间失败。");
         });
-    }
+    };
 
     // 合单检测
     $scope.check_common = function(){
@@ -1684,7 +1684,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:合单检测。");
         });
-    }
+    };
 
     // 合单检测读取
     $scope.read_check_common = function(e,index){
@@ -1706,7 +1706,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:合单检测读取。");
         });
-    }
+    };
 
     // 手动合单
     $scope.hand_common = function(){
@@ -1729,7 +1729,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:手动合单。");
         });
-    }
+    };
 
     // 手动拆单
     $scope.hand_break = function(){
@@ -1752,7 +1752,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:手动拆单。");
         });
-    }
+    };
 
     //添加中继料
     $scope.add_zhong = function(order_id){
@@ -1778,7 +1778,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:中继料。");
         });
-    }
+    };
 
     // clear_add_txt 新增商品清空
     $scope.clear_add_txt = function(){
@@ -1792,7 +1792,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         angular.element(dom).val('');
         var dom = document.querySelector('#add_cod_money');
         angular.element(dom).val('');
-    }
+    };
 
     // vip扣库
     $scope.vip_send = function(){
@@ -1814,7 +1814,7 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:vip扣库。");
         });
-    }
+    };
 
     // 开始VIP扣库
     $scope.start_vip_send = function(){
@@ -1835,11 +1835,42 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
             alert("系统错误，请联系管理员。");
             $log.info("error:vip扣库。");
         });
-    }
+    };
 
     // 售后拉取订单
     $scope.syn_repair_order = function(){
-        alert($scope.e_date)
-    }
+        $scope.shadow('open','ss_syn','正在拉取售后订单，请稍后...');
+        var post_data = {
+            syn_repair_order:'syn',
+            s_date:$scope.s_date,
+            e_date:$scope.e_date};
+        $http.post('/fuck/repair/repair_import_order.php', post_data).success(function(data) {
+            if(data == 'ok'){
+                $scope.plug_alert('success','拉取完成，正在验证！！！！。','fa fa-smile-o');
+                $scope.read_repair_order();
+            }else{
+                $log.info(data);
+                $scope.plug_alert('danger',data,'fa fa-ban');
+            }
+            $timeout(function(){$scope.shadow('close');},1000); //关闭shadow
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:售后拉取订单。");
+        });
+    };
 
-}])
+    // 读取售后订单
+    $scope.read_repair_order = function(){
+        $http.get('/fuck/repair/repair_import_order.php', {
+            params:{
+                read_repair_order:'read'}
+        }).success(function(data) {
+            $scope.repair_list = data;
+            // $log.info(data);
+        }).error(function(data) {
+            alert("系统错误，请联系管理员。");
+            $log.info("error:读取售后订单失败。");
+        });
+    };
+
+}]);
