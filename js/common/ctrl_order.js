@@ -1837,40 +1837,4 @@ app.controller('orderCtrl', ['$rootScope','$scope','$state','$http','$log','$tim
         });
     };
 
-    // 售后拉取订单
-    $scope.syn_repair_order = function(){
-        $scope.shadow('open','ss_syn','正在拉取售后订单，请稍后...');
-        var post_data = {
-            syn_repair_order:'syn',
-            s_date:$scope.s_date,
-            e_date:$scope.e_date};
-        $http.post('/fuck/repair/repair_import_order.php', post_data).success(function(data) {
-            if(data == 'ok'){
-                $scope.plug_alert('success','拉取完成，正在验证！！！！。','fa fa-smile-o');
-                $scope.read_repair_order();
-            }else{
-                $log.info(data);
-                $scope.plug_alert('danger',data,'fa fa-ban');
-            }
-            $timeout(function(){$scope.shadow('close');},1000); //关闭shadow
-        }).error(function(data) {
-            alert("系统错误，请联系管理员。");
-            $log.info("error:售后拉取订单。");
-        });
-    };
-
-    // 读取售后订单
-    $scope.read_repair_order = function(){
-        $http.get('/fuck/repair/repair_import_order.php', {
-            params:{
-                read_repair_order:'read'}
-        }).success(function(data) {
-            $scope.repair_list = data;
-            // $log.info(data);
-        }).error(function(data) {
-            alert("系统错误，请联系管理员。");
-            $log.info("error:读取售后订单失败。");
-        });
-    };
-
 }]);

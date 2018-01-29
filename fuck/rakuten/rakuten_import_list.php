@@ -89,7 +89,7 @@ if(isset($_GET['import_add_list'])){
 				$pay_money = $strs[23];
 				$order_total_money = $strs[24];
 				$points = $strs[68];
-				$goods_title = $strs[101].'@'.$strs[102];
+				$goods_title = addslashes($strs[101]).'@'.addslashes($strs[102]);
 				$sku = $strs[102];
 				$goods_num = $strs[105];
 				$unit_price = $strs[104];

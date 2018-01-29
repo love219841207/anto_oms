@@ -12,7 +12,7 @@ if(isset($_GET['look_sell'])){
 
 	$sql = "SELECT sum(total_money) AS sum_total_money,sum(ems_money) AS sum_ems_money,sum(bill) AS sum_bill,sum(point) AS sum_point,sum(cheap) AS sum_cheap,sum(tax) AS sum_tax,sum(buy_money)-sum(ems_money)-sum(bill)-sum(point)-sum(cheap)-sum(tax) AS sum_buy_money FROM history_send WHERE express_day BETWEEN '{$s_date}' AND '{$e_date}'";
 	$res = $db->getAll($sql);
-	$final_res['table'] = $res; 
+	$final_res['table'] = $res;
 
 	$sql = "SELECT express_day,sum(total_money) AS sum_total_money,sum(ems_money) AS sum_ems_money,sum(bill) AS sum_bill,sum(point) AS sum_point,sum(cheap) AS sum_cheap,sum(tax) AS sum_tax,sum(buy_money)-sum(ems_money)-sum(bill)-sum(point)-sum(cheap)-sum(tax) AS sum_buy_money FROM history_send WHERE express_day BETWEEN '{$s_date}' AND '{$e_date}' GROUP BY express_day";
 	$res = $db->getAll($sql);
@@ -127,14 +127,14 @@ if(isset($_GET['sell_detail_table'])){
 
         // 如果是合单
         if(strstr($now_send_id, 'H') == true){
-            // $k = total_money - sum(point) -sum(cheap);
+            // $k = all_total_money - sum(point) -sum(cheap);
             // 查询该订单的总积分和总优惠券
             $sql = "SELECT SUM(point) as sum_point,SUM(cheap) as sum_cheap FROM history_send WHERE send_id = '{$now_send_id}'";
             $res = $db->getOne($sql);
-            $k = $value['total_money'] - $res['sum_point'] - $res['sum_cheap'];
+            $k = $value['all_total_money'] - $res['sum_point'] - $res['sum_cheap'];
         }else{
             // 单订单
-            $k = $value['total_money'] - $value['point'] - $value['cheap'];
+            $k = $value['all_total_money'] - $value['point'] - $value['cheap'];
         }        
 
         // 依照发货ID计算的有：运费、支付金额

@@ -281,7 +281,7 @@ if(isset($_GET['import_add_list'])){
                 $goods_id = $strs[4];
                 $sku = $strs[5];
                 $goods_code = $strs[5];
-                $goods_title = $strs[6];
+                $goods_title = addslashes($strs[6]);
                 $goods_option = $strs[7];
                 $goods_info = $strs[8];
                 $unit_price = $strs[12]+$strs[19];

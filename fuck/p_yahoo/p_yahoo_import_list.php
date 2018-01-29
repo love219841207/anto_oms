@@ -56,10 +56,10 @@ if(isset($_GET['import_add_list'])){
 		$buyer_phone = $strs[75];
 		$buyer_post_code = $strs[70];
 		$buyer_address = addslashes($strs[71].$strs[73]);
-		$buyer_name = $strs[66];
+		$buyer_name = addslashes($strs[66]);
 		$order_payment_method = $strs[15];
 		$buyer_others = addslashes($strs[16]);
-		$goods_title = $strs[21].'@'.$strs[20];
+		$goods_title = addslashes($strs[21]).'@'.addslashes($strs[20]);
 		$sku = $strs[20];
 		$goods_num = $strs[18];
 		$unit_price = $strs[22];
@@ -71,7 +71,7 @@ if(isset($_GET['import_add_list'])){
 		$who_id = $strs[32];
 		$buyer_email = $strs[33];
 		$address = addslashes($strs[6].$strs[8]);
-		$receive_name = $strs[12];
+		$receive_name = addslashes($strs[12]);
 		$receive_phone = $strs[4];
 		$post_code = $strs[5];
 		$buyer_send_method = $strs[85];
