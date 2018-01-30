@@ -1,6 +1,6 @@
 <div class="container-fluid mt20" ng-controller="amazonCtrl" ng-show="now_store_bar"> 
 	<div class="row">
-		<div class="col-lg-11">
+		<div class="col-lg-12">
 			<div class="panel panel-primary">
 				<div class="panel-heading">
 					<i class="fa fa-fw fa-cloud-upload"></i>上传快递单
@@ -40,6 +40,17 @@
 				      	<button type="button" class="btn btn-default" ng-click="check_no_mail_item()">
 				      		<i class="fa fa-sticky-note-o fa-fw s_gray"></i>未去信
 				      	</button>
+				      	<button type="button" class="btn btn-default" ng-click="check_no_mail_item()">
+				      		<i class="fa fa-sticky-note-o fa-fw s_gray"></i>未去信
+				      	</button>
+				      	<button type="button" class="btn btn_fff btn-sm">
+	                        <select class="btn btn-default btn-sm selecter pull-left mr5 blue" ng-model="c_send_method" ng-change="check_send_method()">
+	                            <option value="">配送筛选</option>
+	                            <option value="宅配便">宅配便</option>
+	                            <option value="DM便">DM便</option>
+	                            <option value="宅急便">宅急便</option>
+	                        </select>
+	                    </button>
 						<button class="btn btn-default btn-sm">
 							<span>
 								<input placeholder="开始日期" class="date_icon blue" readonly="readonly" type="text" name="s_date" ng-flat-datepicker datepicker-config="datepickerConfig" ng-model="s_date"> - <input placeholder="结束日期" class="date_icon blue" readonly="readonly" type="text" name="e_date" ng-flat-datepicker datepicker-config="datepickerConfig" ng-model="e_date">

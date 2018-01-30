@@ -52,6 +52,23 @@ app.controller('amazonCtrl', ['$scope','$state','$http','$log','$timeout', funct
         $scope.check_items();
     };
 
+    // 选择配送方式
+    $scope.check_send_method = function(){
+        if($scope.c_send_method == ''){
+            $scope.check_no_item();
+        }else{
+            angular.forEach($scope.express_list, function(value, index){
+            if($scope.express_list[index].send_method == $scope.c_send_method){
+                $scope.express_list[index].is_click = true;
+            }else{
+                $scope.express_list[index].is_click = false;
+            }
+            });
+            $scope.check_items();
+        }
+        
+    };
+
     // 选择未上传状态
     $scope.check_no_mail_item = function(){
         angular.forEach($scope.express_list, function(value, index){

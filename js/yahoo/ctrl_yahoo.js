@@ -52,7 +52,7 @@ app.controller('yahooCtrl', ['$scope','$state','$http','$log','$timeout', functi
         $scope.check_items();
     };
 
-    // 选择未上传状态
+    // 选择未发信状态
     $scope.check_no_mail_item = function(){
         angular.forEach($scope.express_list, function(value, index){
             if($scope.express_list[index].over_mail == 0){
@@ -62,6 +62,23 @@ app.controller('yahooCtrl', ['$scope','$state','$http','$log','$timeout', functi
             }
         });
         $scope.check_items();
+    };
+
+    // 选择配送方式
+    $scope.check_send_method = function(){
+        if($scope.c_send_method == ''){
+            $scope.check_no_item();
+        }else{
+            angular.forEach($scope.express_list, function(value, index){
+            if($scope.express_list[index].send_method == $scope.c_send_method){
+                $scope.express_list[index].is_click = true;
+            }else{
+                $scope.express_list[index].is_click = false;
+            }
+            });
+            $scope.check_items();
+        }
+        
     };
 
     //check_items 选择项
