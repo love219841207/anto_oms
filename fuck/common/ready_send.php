@@ -437,7 +437,7 @@ if(isset($_GET['packing'])){
 	make_bags();
 	
 	// 地址分配配送公司，更新黑猫地址	（神奈川県，埼玉県，茨城県，群馬県，山梨県）
-	$sql = "UPDATE send_table SET express_company = 'ヤマト運輸',send_method = '宅急便' WHERE has_pack = '0' AND send_method = '宅配便' AND (who_house LIKE '%神奈川県%' OR who_house LIKE '%埼玉県%' OR who_house LIKE '%茨城県%' OR who_house LIKE '%群馬県%' OR who_house LIKE '%山梨県%')";
+	$sql = "UPDATE send_table SET express_company = 'ヤマト運輸',send_method = '宅急便' WHERE has_pack = '0' AND send_method = '宅配便' AND repo_status = '日' AND (who_house LIKE '%神奈川県%' OR who_house LIKE '%埼玉県%' OR who_house LIKE '%茨城県%' OR who_house LIKE '%群馬県%' OR who_house LIKE '%山梨県%')";
 	$res = $db->execute($sql);
 
 	// item_line
