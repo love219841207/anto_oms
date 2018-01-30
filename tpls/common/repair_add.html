@@ -1,40 +1,42 @@
 <div class="container-fluid" ng-controller="repairCtrl">
-    <div class="btn-group pull-left">
-        <button type="button" ng-show="cc_all" ng-disabled="!repair_list" class="btn btn-default mt10 red" ng-click="check_all_item();">
-            <i class="fa fa-square-o fa-fw"></i>全选错误
-        </button>
-        <button type="button" ng-hide="cc_all" ng-disabled="!repair_list" class="btn btn-default mt10 red" ng-click="check_no_item();">
-            <i class="fa fa-check-square-o fa-fw"></i>不选错误
-        </button>
-        <button type="button" class="btn btn-default mt10 red" ng-disabled="!repair_list" ng-click="check_back_item();back_icon=!back_icon">
-            <i class="fa fa-adjust fa-fw" ng-class="{'fa-flip-horizontal':back_icon}"></i>反选错误
-        </button>
-        <button type="button" ng-show="cc_all2" ng-disabled="!repair_list2" class="btn btn-default mt10 green" ng-click="check_all_item2();">
-            <i class="fa fa-square-o fa-fw"></i>全选正常
-        </button>
-        <button type="button" ng-hide="cc_all2" ng-disabled="!repair_list2" class="btn btn-default mt10 green" ng-click="check_no_item2();">
-            <i class="fa fa-check-square-o fa-fw"></i>不选正常
-        </button>
-        <button type="button" class="btn btn-default mt10 green" ng-disabled="!repair_list2" ng-click="check_back_item2();back_icon2=!back_icon2">
-            <i class="fa fa-adjust fa-fw" ng-class="{'fa-flip-horizontal':back_icon2}"></i>反选正常
-        </button>
-        <button ng-disabled="my_checked == ''" class="btn btn-default red mt10" ng-click="check_items();del_true='false'" data-animation="am-fade-and-slide-top" data-template-url="/modal/del_repair_item.html" bs-modal="modal"><i class="fa fa-trash-o fa-fw"></i>删除</button>             
-    </div>
+    <div style="position:fixed; top: 50px;right: -1px;width:1230px;padding:0 12px 12px 20px;background: rgba(248,248,248,0.8);border:1px solid #ddd;border-bottom-left-radius: 10px;">
+        <div class="btn-group pull-left">
+            <button type="button" ng-show="cc_all" ng-disabled="!repair_list" class="btn btn-default mt10 red" ng-click="check_all_item();">
+                <i class="fa fa-square-o fa-fw"></i>全选错误
+            </button>
+            <button type="button" ng-hide="cc_all" ng-disabled="!repair_list" class="btn btn-default mt10 red" ng-click="check_no_item();">
+                <i class="fa fa-check-square-o fa-fw"></i>不选错误
+            </button>
+            <button type="button" class="btn btn-default mt10 red" ng-disabled="!repair_list" ng-click="check_back_item();back_icon=!back_icon">
+                <i class="fa fa-adjust fa-fw" ng-class="{'fa-flip-horizontal':back_icon}"></i>反选错误
+            </button>
+            <button type="button" ng-show="cc_all2" ng-disabled="!repair_list2" class="btn btn-default mt10 green" ng-click="check_all_item2();">
+                <i class="fa fa-square-o fa-fw"></i>全选正常
+            </button>
+            <button type="button" ng-hide="cc_all2" ng-disabled="!repair_list2" class="btn btn-default mt10 green" ng-click="check_no_item2();">
+                <i class="fa fa-check-square-o fa-fw"></i>不选正常
+            </button>
+            <button type="button" class="btn btn-default mt10 green" ng-disabled="!repair_list2" ng-click="check_back_item2();back_icon2=!back_icon2">
+                <i class="fa fa-adjust fa-fw" ng-class="{'fa-flip-horizontal':back_icon2}"></i>反选正常
+            </button>
+            <button ng-disabled="my_checked == ''" class="btn btn-default red mt10" ng-click="check_items();remove_shadow();" data-animation="am-fade-and-slide-top" data-template-url="/modal/del_repair_item.html" bs-modal="modal"><i class="fa fa-trash-o fa-fw"></i>删除</button>             
+        </div>
 
-    <div class="btn-group pull-left ml20">
-        <div class="btn btn-warning mt10" ng-click="read_repair_order()"><i class="fa fa-eye"></i> 已拉取订单</div>
-        <div class="btn btn-default mt10 disabled">終了日</div>
-        <button type="button" class="btn btn_fff btn-sm mt10" >
-            <span>
-                <input placeholder="开始日期" class="date_icon blue" readonly="readonly" type="text" name="s_date" ng-flat-datepicker datepicker-config="datepickerConfig" ng-model="s_date"> - <input placeholder="结束日期" class="date_icon blue" readonly="readonly" type="text" name="e_date" ng-flat-datepicker datepicker-config="datepickerConfig" ng-model="e_date">
-            </span>
-        </button>
+        <div class="btn-group pull-left ml20">
+            <div class="btn btn-warning mt10" ng-click="read_repair_order()"><i class="fa fa-eye"></i> 已拉取订单</div>
+            <div class="btn btn-default mt10 disabled">終了日</div>
+            <button type="button" class="btn btn_fff btn-sm mt10" >
+                <span>
+                    <input placeholder="开始日期" class="date_icon blue" readonly="readonly" type="text" name="s_date" ng-flat-datepicker datepicker-config="datepickerConfig" ng-model="s_date"> - <input placeholder="结束日期" class="date_icon blue" readonly="readonly" type="text" name="e_date" ng-flat-datepicker datepicker-config="datepickerConfig" ng-model="e_date">
+                </span>
+            </button>
 
-        <div class="btn btn-success mt10" ng-disabled="s_date=='' || e_date==''" ng-dblclick="syn_repair_order()"><i class="fa fa-refresh"></i> 拉取</div>
+            <div class="btn btn-success mt10" ng-disabled="s_date=='' || e_date==''" ng-dblclick="syn_repair_order()"><i class="fa fa-refresh"></i> 拉取</div>
+        </div>
+        <div class="btn btn-primary mt10 pull-right" ng-click="pass_repair()"><i class="fa fa-check"></i> Pass 到发货区</div>
+        <div class="clearfix"></div>
     </div>
-    <div class="btn btn-primary mt10 pull-right" ng-click="pass_repair()"><i class="fa fa-check"></i> Pass 到发货区</div>
-    <div class="clearfix"></div>
-    <table ng-show="repair_list" class="table table-bordered table-condensed table-hover table-striped f12 mt20">
+    <table ng-show="repair_list" class="table table-bordered table-condensed table-hover table-striped f12 mt70">
         <tr style="background: #666;color:#CF0;">
             <td class="tagc">ID</td>
             <td>筛选</td>
